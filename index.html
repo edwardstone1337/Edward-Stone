@@ -13,12 +13,12 @@
     <div class="container">
       <header>
         <div class="logo">
-          <a href="/Edward-Stone/index.html">Edward Stone</a>
+          <a href="index.html">Edward Stone</a>
         </div>
         <nav>
           <ul>
             <li><a href="#" class="active">Home</a></li>
-            <li><a href="/Edward-Stone/about.html">About</a></li>
+            <li><a href="about.html">About</a></li>
             <li><a href="#">Work</a></li>
           </ul>
         </nav>
@@ -49,15 +49,5 @@
         </div>
       </main>
     </div>
-    <script>
-      document.querySelectorAll("nav a").forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          document.querySelector(this.getAttribute("href")).scrollIntoView({
-            behavior: "smooth",
-          });
-        });
-      });
-    </script>
   </body>
 </html>
