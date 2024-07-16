@@ -39,6 +39,15 @@ header {
   align-items: center;
   position: relative;
 }
+.logo {
+  position: absolute;
+  left: var(--number-12);
+  /* Add these lines */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Adjust this value as needed */
+}
 .logo a {
   color: var(--colour-white-white);
   text-decoration: none;
@@ -49,6 +58,7 @@ header {
   line-height: normal;
   letter-spacing: -1px;
   transition: color 0.3s ease; /* Smooth transition for hover effect */
+  display: inline-block; /* Add this line */
 }
 .logo a:hover,
 .logo a:focus {
