@@ -17,6 +17,7 @@
   --number-12-rem: 0.75rem;
   --colour-black-secondary: rgba(51, 48, 70, 0.8);
   --colour-black-tertiary: rgba(51, 48, 70, 0.6);
+  --transition-effect: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 * {
   margin: 0;
@@ -58,7 +59,7 @@ header {
   font-weight: 700;
   line-height: normal;
   letter-spacing: -1px;
-  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  transition: var(--transition-effect);
   display: inline-block; /* Add this line */
 }
 .logo a:hover,
@@ -94,6 +95,7 @@ nav ul li a {
   font-style: normal;
   font-weight: 400;
   line-height: 24px; /* 150% */
+  transition: var(--transition-effect);
 }
 nav ul li a:hover{
   color: var(--colour-call-to-action);
@@ -137,7 +139,7 @@ h1 {
   margin-bottom: 0;
 }
 h2 {
-  margin-top: -5px;
+  margin-top: 2px;
 }
 h1 span,
 h2 span {
@@ -165,6 +167,7 @@ p {
   border-radius: var(--number-16);
   text-decoration: none;
   font-weight: bold;
+  transition: var(--transition-effect);
 }
 .btn-primary {
   background: var(--colour-call-to-action);
