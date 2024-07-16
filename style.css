@@ -192,6 +192,18 @@ p {
   background-color: var(--colour-black-primary);
 }
 
+.projects {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 16px;
+  height: 320px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 40px;
+}
+
 @media (max-width: 768px) {
   header {
     padding: var(--number-12);
