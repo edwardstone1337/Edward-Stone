@@ -9,6 +9,7 @@
   --colour-white-secondary: rgba(255, 255, 255, 0.8);
   --colour-white-tertiary: rgba(255, 255, 255, 0.6);
   --colour-black-alt: #221f35;
+  --component: #8b53f4;
   --number-24: 24px;
   --number-24-rem: 1.5rem;
   --number-8: 8px;
@@ -17,7 +18,8 @@
   --number-12-rem: 0.75rem;
   --colour-black-secondary: rgba(51, 48, 70, 0.8);
   --colour-black-tertiary: rgba(51, 48, 70, 0.6);
-  --transition-effect: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  --transition-effect: background 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
 }
 * {
   margin: 0;
@@ -80,7 +82,7 @@ nav ul {
   margin: 0;
 }
 nav ul li {
-  margin: 0 5px;
+  margin: 0 4px;
 }
 nav ul li a {
   display: inline-flex;
@@ -97,12 +99,14 @@ nav ul li a {
   line-height: 24px; /* 150% */
   transition: var(--transition-effect);
 }
-nav ul li a:hover{
+nav ul li a:hover {
   color: var(--colour-call-to-action);
 }
 nav ul li a.active {
   color: var(--colour-call-to-action);
+  background-color: var(--colour-black-alt);
   font-weight: 600;
+  border-radius: var(--number-16);
 }
 main {
   display: flex;
@@ -111,8 +115,9 @@ main {
   justify-content: center;
   align-items: center;
   gap: var(--number-24);
-  margin: 50px auto;
+  margin: 48px auto;
 }
+
 .profile-img {
   width: 80px;
   height: 80px;
@@ -179,11 +184,12 @@ p {
 .btn-secondary {
   border: 1px solid var(--colour-call-to-action);
   color: var(--colour-call-to-action);
-  background: transparent;
+  background-color: var(--colour-black-alt);
 }
-.btn-secondary:hover{
+.btn-secondary:hover {
   border-color: var(--call-to-action-hover);
   color: var(--call-to-action-hover);
+  background-color: var(--colour-black-primary);
 }
 
 @media (max-width: 768px) {
