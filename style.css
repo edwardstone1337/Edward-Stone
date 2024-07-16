@@ -48,9 +48,12 @@ header {
   font-weight: 700;
   line-height: normal;
   letter-spacing: -1px;
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
-.logo a:hover {
+.logo a:hover,
+.logo a:focus {
   color: var(--colour-call-to-action);
+  text-decoration: none; /* Ensure no underline on hover/focus */
 }
 nav {
   display: flex;
