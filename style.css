@@ -2,6 +2,7 @@
   --number-16: 16px;
   --number-16-rem: 1rem;
   --colour-call-to-action: #dbfc56;
+  --call-to-action-hover: #f0feb9;
   --colour-black-primary: #333046;
   --colour-white-white: #ffffff;
   --colour-border: #adacb5;
@@ -94,6 +95,9 @@ nav ul li a {
   font-weight: 400;
   line-height: 24px; /* 150% */
 }
+nav ul li a:hover{
+  color: var(--colour-call-to-action);
+}
 nav ul li a.active {
   color: var(--colour-call-to-action);
   font-weight: 600;
@@ -166,10 +170,17 @@ p {
   background: var(--colour-call-to-action);
   color: var(--colour-black-primary);
 }
+.btn-primary:hover {
+  background: var(--call-to-action-hover);
+}
 .btn-secondary {
   border: 1px solid var(--colour-call-to-action);
   color: var(--colour-call-to-action);
   background: transparent;
+}
+.btn-secondary:hover{
+  border-color: var(--call-to-action-hover);
+  color: var(--call-to-action-hover);
 }
 
 @media (max-width: 768px) {
