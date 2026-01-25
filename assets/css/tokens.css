@@ -1,0 +1,183 @@
+/**
+ * Design Tokens
+ * 
+ * Single source of truth for all design decisions.
+ * This file must be loaded before style.css.
+ * 
+ * Structure:
+ * 1. Primitive Tokens - Raw values (colors, spacing, typography)
+ * 2. Semantic Tokens - Contextual aliases (text-primary, background-secondary)
+ * 3. Component Tokens - Component-specific variables (button, card, nav)
+ */
+
+/* ============================================
+   Global/Primitive Tokens
+   ============================================ */
+:root {
+  /* Spacing (8pt grid) */
+  --spacing-2: 2px;
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+
+  /* Type Scale - Major Third (1.25 ratio) */
+  --font-size-xs: 13px;      /* 0.800 × base */
+  --font-size-sm: 14px;      /* Slight adjustment for small UI text */
+  --font-size-base: 16px;    /* Base size */
+  --font-size-md: 18px;      /* 1.125 × base */
+  --font-size-lg: 20px;      /* 1.250 × base */
+  --font-size-xl: 25px;      /* 1.563 × base */
+  --font-size-1-5xl: 28px;   /* Intermediate size */
+  --font-size-2xl: 31px;     /* 1.953 × base */
+  --font-size-3xl: 39px;     /* 2.441 × base */
+  --font-size-4xl: 49px;     /* 3.052 × base */
+
+  /* Font Families */
+  --font-family-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-heading: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Greyscale Colors (10 steps) - Cool-toned */
+  --color-grey-0: #ffffff;
+  --color-grey-50: #f8f9fa;
+  --color-grey-100: #f1f3f5;
+  --color-grey-200: #e2e6ea;
+  --color-grey-300: #c4cdd5;
+  --color-grey-400: #9ca8b3;
+  --color-grey-500: #7a8791;
+  --color-grey-600: #5d6b75;
+  --color-grey-700: #3f4a52;
+  --color-grey-800: #2a3338;
+  --color-grey-900: #1a1f23;
+  --color-grey-1000: #000000;
+
+  /* Accent Colors - Cool-toned (Muted Blue/Teal) */
+  --color-accent-50: #e8f4f8;
+  --color-accent-100: #c8e4ed;
+  --color-accent-200: #a8d4e2;
+  --color-accent-300: #88c4d7;
+  --color-accent-400: #6ba8c0;
+  --color-accent-500: #5b8fa8; /* Main accent */
+  --color-accent-600: #4a7a8f;
+  --color-accent-700: #3a5f70;
+  --color-accent-800: #2a4551;
+  --color-accent-900: #1a2b32;
+}
+
+/* ============================================
+   Alias/Semantic Tokens
+   ============================================ */
+:root {
+  /* Semantic Colors */
+  --color-background-primary: var(--color-grey-0); /* white */
+  --color-background-secondary: var(--color-grey-100); /* light grey */
+  --color-text-primary: var(--color-grey-1000); /* black */
+  --color-text-secondary: var(--color-grey-700); /* dark grey */
+  --color-text-tertiary: var(--color-grey-500); /* medium grey */
+  --color-border: var(--color-grey-300); /* light grey */
+  --color-cta: var(--color-accent-500); /* accent color */
+  
+  /* Accent Colors - Semantic */
+  --color-accent-primary: var(--color-accent-500);
+  --color-accent-secondary: var(--color-accent-400);
+  --color-accent-hover: var(--color-accent-600);
+  
+  /* Section Backgrounds */
+  --color-background-section-1: var(--color-grey-0); /* White */
+  --color-background-section-2: var(--color-grey-50); /* Very light cool gray */
+  --color-background-section-3: var(--color-accent-50); /* Very light accent tint */
+  --color-background-section-alt: var(--color-grey-100); /* Alternate light background */
+  --color-background-section-subtle: var(--color-grey-50); /* Very subtle background */
+
+  /* Semantic Spacing */
+  --spacing-xs: var(--spacing-2);
+  --spacing-sm: var(--spacing-4);
+  --spacing-md: var(--spacing-8);
+  --spacing-lg: var(--spacing-12);
+  --spacing-xl: var(--spacing-16);
+  --spacing-2xl: var(--spacing-24);
+
+  /* Semantic Typography */
+  --font-body: var(--font-family-body);
+  --font-heading: var(--font-family-heading);
+  
+  /* Line Heights */
+  --line-height-tight: 1.2;      /* Large display headings */
+  --line-height-snug: 1.3;      /* Section headings */
+  --line-height-normal: 1.5;      /* UI elements, small text */
+  --line-height-relaxed: 1.65;     /* Body paragraphs */
+  --line-height-loose: 1.8;      /* Long-form content */
+  
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;   /* Large headings */
+  --letter-spacing-normal: 0;        /* Default */
+  --letter-spacing-wide: 0.015em;     /* Body text */
+  --letter-spacing-wider: 0.03em;   /* Small text, UI */
+}
+
+/* ============================================
+   Component Tokens
+   ============================================ */
+:root {
+  /* Button */
+  --button-padding-y: var(--spacing-md);
+  --button-padding-x: var(--spacing-xl);
+  --button-border-radius: var(--spacing-xl);
+  --button-gap: var(--spacing-md);
+  
+  /* Button States */
+  --button-hover-opacity: 0.9;
+  --button-active-opacity: 0.8;
+  --button-disabled-opacity: 0.5;
+  --button-transition-duration: 0.2s;
+  --button-transition-timing: ease;
+  
+  /* Button Tertiary */
+  --button-tertiary-color: var(--color-text-secondary);
+  --button-tertiary-hover-color: var(--color-text-primary);
+  
+  /* Button Icons */
+  --button-icon-gap: var(--spacing-md);
+  --button-icon-size: 16px;
+
+  /* Card */
+  --card-border-radius: var(--spacing-xl);
+  --card-gap: var(--spacing-xl);
+
+  /* Project Card */
+  --project-card-gap: var(--spacing-2xl);
+  --project-card-image-border-radius: var(--card-border-radius);
+  --project-card-hover-opacity: 0.8;
+  --project-card-transition-duration: 0.2s;
+  --project-card-transition-timing: ease;
+  
+  /* Case Study Card */
+  --case-study-card-padding: var(--spacing-2xl);
+  --case-study-card-background: var(--color-background-primary);
+  --case-study-card-hover-scale: 1.02;
+  --case-study-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.06);
+  --case-study-card-transition-duration: 0.3s;
+  --case-study-card-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --case-study-image-hover-scale: 1.05;
+
+  /* Side Quests Section */
+  --side-quests-section-gap: var(--spacing-2xl);
+
+  /* Navigation */
+  --nav-link-padding-y: var(--spacing-md);
+  --nav-link-padding-x: var(--spacing-xl);
+  --nav-link-gap: var(--spacing-md);
+  
+  /* Navigation Submenu/Dropdown */
+  --nav-submenu-border-radius: var(--spacing-xl);
+  --nav-submenu-item-border-radius: var(--spacing-md);
+  --nav-submenu-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+  --nav-submenu-padding: var(--spacing-md);
+  --nav-submenu-gap: var(--spacing-xs);
+}
