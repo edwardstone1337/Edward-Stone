@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Kaomoji strip (dev-projects)**: Featured strip for Kaomoji.click above Fair Share — flipped layout (content left, media right), dark monochrome theme `.dp-strip--kaomoji`; live iframe preview with postMessage theme sync. Strip-featured projects (Kaomoji, Fair Share) excluded from card grid to avoid duplication.
-- **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn’t cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html and dev-projects.html.
+- **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn’t cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html.
 - **Product strip (dev-projects)**: Full-width Fair Share banner between hero and project grid — dark teal strip in both themes, orb gradient (teal + orange), device frame + content + CTA. `product-strip.js` renders strip from config; `strip-effects.js` (desktop only, hover-capable) adds cursor-reactive orbs with ambient Lissajous drift, opacity pulse (8s / 12s), and ±50px cursor nudge; mobile and prefers-reduced-motion keep CSS keyframe drift only. Strip tokens and `.dp-btn` / `.dp-btn-primary` in dev-tokens + dev-styles.
 - **Avatar high-speed reveal (dev-projects)**: When spin reaches angular velocity ≥35 deg/frame, avatar swaps to `profile-spun.jpg` once per session and confetti bursts; confetti no longer on every spin. Asset `assets/images/profile-spun.jpg`.
 - **Fair Share preview widget** (`assets/previews/fair-share/index.html`): Self-contained iframe preview for dev-projects — blurred orb gradient, theme-aware (light/dark), income/slider UI; listens for `theme-change` postMessage.
@@ -48,11 +48,13 @@ All notable changes to this project will be documented in this file.
 - **Case Studies Folder**: Added `case-studies/` directory with README for planned pages
 
 ### Changed
+- **Homepage (index.html)**: Meta description and og:description updated to "A collection of tools and apps designed and built by Edward Stone...". Two featured strips inlined above projects grid: Kaomoji.click (flipped, dark strip with live iframe preview; postMessage forces dark theme on iframe load) and Fair Share (static strip with skeleton placeholder, cursor orbs). Strip effects loaded via ES module (`strip-effects.js`); projects grid via ES module (`projects-grid.js` imports project-card). Removed standalone `utils.js` and separate project-card script (grid module handles load order).
+- **dev/old-index.html**: Asset paths (CSS, JS, images, data) use `../` so page resolves correctly when opened from `dev/` folder.
 - **Section rhythm (dev-projects)**: New token `--dp-section-gap` (24px desktop, 12px tablet, 8px mobile) — hero padding-bottom, strip margin-top, grid padding now use it instead of hardcoded spacing.
 - **Hero typography (dev-projects)**: Heading font-weight bold (was extrabold), letter-spacing normal (was tight).
 - **Strip variants (dev-projects)**: `.dp-strip--flipped` for content-left/media-right layout; `.dp-strip--kaomoji` dark theme (no orbs, monochrome). Both responsive (flipped collapses on mobile).
 - **Kaomoji preview** (`assets/previews/kaomoji/index.html`): 4th row, vmin-based layout with `.km-wrap` centering; 10 more kaomoji; bg #141414; clamp() font sizes; small-screen padding bump.
-- **Fair Share strip (dev-projects)**: Overline under title (e.g. fairsharecalculator.com), same typography as hero overline (xs, semibold, uppercase). Strip is static HTML in dev-projects.html (after projects-container) so it always shows; `initStripEffects('.dp-strip')` still runs for cursor orbs. `.dp-strip-overline` in dev-styles.css. `product-strip.js` supports optional `overline` config when rendering strips programmatically.
+- **Fair Share strip (dev-projects)**: Overline under title (e.g. fairsharecalculator.com), same typography as hero overline (xs, semibold, uppercase). Strip is static HTML in index.html (above projects-container) so it always shows; `initStripEffects('.dp-strip')` still runs for cursor orbs. `.dp-strip-overline` in dev-styles.css. `product-strip.js` supports optional `overline` config when rendering strips programmatically.
 - **Product strip (dev-projects) — responsive & a11y**: Mobile order copy → device → CTA (grid placement reset). Device frame fixed ratio (9:16, max-width 280px / 240px), no collapse. Strip spacing on 8px grid (tokens: `--dp-strip-padding` / `--dp-strip-gap` from `--dp-space-*`); content/actions gaps and breakpoint padding use tokens. Buttons: `--dp-btn-min-height` 48px (a11y touch); strip actions on mobile full-width stacked, 16px gap. DOM: actions sibling of content/media; noscript fallback aligned.
 - **theme-toggle.js (dev-projects)**: Broadcasts theme to `.dp-card-media-iframe` via postMessage; iframes receive theme on load so preview widgets (Kaomoji, Fair Share, Lost Cities) stay in sync.
 - **Light theme (dev-tokens.css)**: Updated light theme colors for better visual consistency.
@@ -94,6 +96,7 @@ All notable changes to this project will be documented in this file.
 - **Document command** (`.cursor/commands/document.md`): Added Component Preview update steps — when to add new section, variant demos, and script loading for new components
 
 ### Removed
+- **dev-projects.html**: Standalone dev-projects page removed; all content (hero, strips, grid, toggles) now lives on index.html only.
 - **Deprecated section tokens**: Removed `--color-background-section-*` tokens (use `--color-background-surface*`).
 - **Old dev-projects rules from style.css**: dev-projects now uses its own dev-styles.css; main site style.css no longer contains dev-projects-specific rules.
 - **Completed plan docs**: Deleted `docs/plan-unify-case-study-design-system.md` and `docs/plan-case-study-links-alignment.md` — both 100% complete; CHANGELOG records the changes.
