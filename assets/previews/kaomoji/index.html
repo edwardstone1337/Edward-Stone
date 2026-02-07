@@ -7,7 +7,7 @@
   <style>
     :root,
     [data-theme="dark"] {
-      --km-bg: #0f0f0f;
+      --km-bg: #141414;
       --km-text: #f0f0f0;
       --km-border: #5a5a5a;
       --km-border-hover: #808080;
@@ -30,10 +30,20 @@
     html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
       height: 100%;
       overflow: hidden;
       background: var(--km-bg);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .km-wrap {
+      width: 100vmin;
+      height: 100vmin;
+      position: relative;
+      overflow: hidden;
     }
     .km-container {
       position: relative;
@@ -42,7 +52,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 1.5vmin;
     }
     .km-row {
       flex: 1;
@@ -55,13 +65,14 @@
       display: inline-flex;
       flex-wrap: nowrap;
       align-items: center;
-      gap: 16px;
+      gap: 2vmin;
       animation: km-scroll 180s linear infinite;
       animation-play-state: paused;
     }
     .km-row-1 .km-row-inner { animation-duration: 180s; animation-direction: normal; animation-delay: -135s; }
     .km-row-2 .km-row-inner { animation-duration: 220s; animation-direction: reverse; animation-delay: -27s; }
     .km-row-3 .km-row-inner { animation-duration: 160s; animation-direction: normal; animation-delay: -80s; }
+    .km-row-4 .km-row-inner { animation-duration: 200s; animation-direction: reverse; animation-delay: -52s; }
     .km-container:hover .km-row-inner { animation-play-state: running; }
     .km-row:focus-within .km-row-inner { animation-play-state: paused; }
     @keyframes km-scroll {
@@ -73,13 +84,13 @@
       align-items: center;
       justify-content: center;
       white-space: nowrap;
-      padding: 12px 24px;
-      font-size: 1rem;
+      padding: 2vmin 4vmin;
+      font-size: clamp(0.7rem, 2.8vmin, 1rem);
       background: transparent;
-      border: none;
+      border: 1px solid var(--km-border);
       color: var(--km-text);
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 1vmin;
       flex-shrink: 0;
       font-family: inherit;
       transition: background 0.2s ease, transform 0.2s ease;
@@ -141,15 +152,15 @@
     }
     .km-snackbar {
       position: absolute;
-      bottom: 16px;
+      bottom: 3vmin;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      gap: 1.5vmin;
+      padding: 1.5vmin 2.5vmin;
+      border-radius: 1.5vmin;
+      font-size: clamp(0.7rem, 2.2vmin, 0.9rem);
       font-weight: 500;
       letter-spacing: 0.01em;
       pointer-events: none;
@@ -185,6 +196,12 @@
       transform: translateX(-50%) translateY(-4px);
       transition: opacity 0.15s ease, transform 0.15s ease;
     }
+    @media (max-width: 400px) {
+      .km-item {
+        padding: 3vmin 5vmin;
+        font-size: clamp(0.85rem, 4vmin, 1.1rem);
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       .km-row-inner {
         animation: none;
@@ -206,6 +223,7 @@
   </style>
 </head>
 <body>
+  <div class="km-wrap">
   <div class="km-container" id="km-container">
     <div class="km-snackbar" id="km-snackbar" aria-hidden="true">
       <svg class="km-snackbar-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -213,6 +231,7 @@
       </svg>
       <span class="km-snackbar-text">Copied to clipboard</span>
     </div>
+  </div>
   </div>
   <div class="km-tooltip" id="km-tooltip" aria-hidden="true">Click to copy</div>
   <div class="km-status" id="km-status" aria-live="polite" aria-atomic="true"></div>
@@ -229,7 +248,9 @@
         '(╯°□°)╯︵ ┻━┻', '(づ￣ ³￣)づ', '¯\\_(ツ)_/¯', '(^_^)', '(T_T)',
         'ʕ•ᴥ•ʔ', '(ಥ﹏ಥ)', '(¬_¬)', '(o_O)', '(x_x)',
         '(♥ω♥*)', 'ヽ(・∀・)ﾉ', 'm(_ _)m', '(=^･ω･^=)', '(-.-)Zzz...',
-        'ヾ(＾-＾)ノ', '(⁄ ⁄•⁄ω⁄•⁄ ⁄)', '(╬ಠ益ಠ)', 'ε=ε=ε=┌(;￣▽￣)┘'
+        'ヾ(＾-＾)ノ', '(⁄ ⁄•⁄ω⁄•⁄ ⁄)', '(╬ಠ益ಠ)', 'ε=ε=ε=┌(;￣▽￣)┘',
+        '( ͡° ͜ʖ ͡°)', '(☞ﾟヮﾟ)☞', '(｡◕‿◕｡)', '(◕‿◕✿)', '(•̀ᴗ•́)و',
+        '٩(˘◡˘)۶', 'ヾ(⌐■_■)ノ♪', 'ヽ(≧Д≦)ノ', '(´・ω・`)', '(´ ▽ ` )ﾉ'
       ];
 
       var tooltip = document.getElementById('km-tooltip');
@@ -259,7 +280,10 @@
       var snackbarShowTimeout;
       var snackbarExitTimeout;
 
-      function showSnackbar() {
+      var snackbarTextEl = snackbarEl.querySelector('.km-snackbar-text');
+
+      function showSnackbar(message) {
+        snackbarTextEl.textContent = message || 'Copied to clipboard';
         hideTooltip();
         clearTimeout(snackbarShowTimeout);
         clearTimeout(snackbarExitTimeout);
@@ -282,6 +306,10 @@
           navigator.clipboard.writeText(text).then(function () {
             announceCopy(text);
             showSnackbar();
+          }).catch(function (err) {
+            if (typeof console !== 'undefined' && console.error) console.error('Clipboard copy failed:', err);
+            statusEl.textContent = 'Copy failed';
+            showSnackbar('Copy failed');
           });
         } else {
           announceCopy(text);
@@ -318,7 +346,7 @@
       }
 
       var container = document.getElementById('km-container');
-      for (var r = 1; r <= 3; r++) {
+      for (var r = 1; r <= 4; r++) {
         container.appendChild(createRow(r));
       }
 

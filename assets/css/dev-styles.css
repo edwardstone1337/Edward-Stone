@@ -343,7 +343,6 @@ img { display: block; max-width: 100%; }
   padding: 0 var(--dp-space-6);
 }
 
-/* Placeholder section spacing — will be refined in Phase 2 */
 .dp-hero {
   display: flex;
   flex-direction: column;
@@ -351,7 +350,7 @@ img { display: block; max-width: 100%; }
   text-align: center;
   gap: var(--dp-space-6);
   padding-top: var(--dp-space-40);
-  padding-bottom: var(--dp-space-20);
+  padding-bottom: var(--dp-section-gap);
 }
 
 .dp-hero-avatar {
@@ -400,9 +399,9 @@ img { display: block; max-width: 100%; }
 .dp-hero-heading {
   font-family: var(--dp-font-display);
   font-size: var(--dp-text-4xl);
-  font-weight: var(--dp-weight-extrabold);
+  font-weight: var(--dp-weight-bold);
   line-height: var(--dp-leading-tight);
-  letter-spacing: var(--dp-tracking-tight);
+  letter-spacing: var(--dp-tracking-normal);
 }
 
 .dp-hero-body {
@@ -543,7 +542,7 @@ img { display: block; max-width: 100%; }
   position: relative;
   overflow: hidden;
   border-radius: var(--dp-radius-xl);
-  margin-top: var(--dp-space-8);
+  margin-top: var(--dp-section-gap);
   padding: var(--dp-strip-padding);
   background: var(--dp-strip-bg);
 }
@@ -745,10 +744,54 @@ img { display: block; max-width: 100%; }
   margin-top: var(--dp-space-2);
 }
 
+/* Strip layout — flipped (content left, media right) */
+.dp-strip--flipped .dp-strip-media {
+  grid-column: 2;
+  grid-row: 1 / -1;
+}
+.dp-strip--flipped .dp-strip-content {
+  grid-column: 1;
+}
+.dp-strip--flipped .dp-strip-actions {
+  grid-column: 1;
+}
+
+/* Strip theme — Kaomoji (dark monochrome) */
+.dp-strip--kaomoji {
+  --dp-strip-bg: #141414;
+  --dp-strip-orb-1: #3a3a3a;
+  --dp-strip-orb-2: #2a2a2a;
+  --dp-strip-orb-dark: rgba(0, 0, 0, 0.12);
+  --dp-strip-orb-opacity: 0.3;
+  --dp-strip-title-color: #f0f0f0;
+  --dp-strip-text-color: rgba(240, 240, 240, 0.8);
+  --dp-strip-badge-bg: rgba(255, 255, 255, 0.1);
+  --dp-strip-badge-text: rgba(240, 240, 240, 0.9);
+  --dp-device-border: 1px solid rgba(255, 255, 255, 0.08);
+  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+.dp-strip--kaomoji::before,
+.dp-strip--kaomoji::after {
+  display: none;
+}
+.dp-strip--kaomoji .dp-strip-emoji {
+  color: var(--dp-strip-title-color);
+}
+.dp-strip--kaomoji .dp-strip-media {
+  align-self: stretch;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 400px;
+  background: #141414;
+  border: 1px solid #5a5a5a;
+  box-shadow: none;
+}
+
 /* --------------------------------------------
    ORGANISMS — Card grid
    -------------------------------------------- */
 .dp-grid-section {
+  padding-top: var(--dp-section-gap);
   padding-bottom: var(--dp-space-30);
 }
 
@@ -991,20 +1034,27 @@ img { display: block; max-width: 100%; }
    RESPONSIVE — Foundation breakpoints
    -------------------------------------------- */
 @media (max-width: 768px) {
+  :root { --dp-section-gap: var(--dp-space-12); }
   .dp-hero {
     padding-top: var(--dp-space-24);
-    padding-bottom: var(--dp-space-16);
+    padding-bottom: var(--dp-section-gap);
   }
   .dp-hero-heading {
     font-size: var(--dp-text-3xl);
   }
   .dp-strip {
-    margin-top: var(--dp-space-6);
+    margin-top: var(--dp-section-gap);
     padding: var(--dp-space-10) var(--dp-space-5);
   }
   .dp-strip-inner {
     grid-template-columns: 1fr;
     gap: var(--dp-space-6);
+  }
+  .dp-strip--flipped .dp-strip-media,
+  .dp-strip--flipped .dp-strip-content,
+  .dp-strip--flipped .dp-strip-actions {
+    grid-column: auto;
+    grid-row: auto;
   }
   /* Strip mobile pattern: copy first (introduce then show), then device; both centered */
   .dp-strip-content {
@@ -1036,6 +1086,15 @@ img { display: block; max-width: 100%; }
     min-height: 320px;
     justify-self: center;
   }
+  .dp-strip--kaomoji .dp-strip-media {
+    align-self: center;
+    width: 280px;
+    height: 280px;
+    max-width: 280px;
+    max-height: 280px;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
+  }
   .dp-card-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--dp-space-5);
@@ -1046,9 +1105,10 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 480px) {
+  :root { --dp-section-gap: var(--dp-space-8); }
   .dp-hero {
     padding-top: var(--dp-space-16);
-    padding-bottom: var(--dp-space-12);
+    padding-bottom: var(--dp-section-gap);
     gap: var(--dp-space-4);
   }
   .dp-hero-heading {
@@ -1058,12 +1118,19 @@ img { display: block; max-width: 100%; }
     font-size: var(--dp-text-base);
   }
   .dp-strip {
-    margin-top: var(--dp-space-5);
+    margin-top: var(--dp-section-gap);
     padding: var(--dp-space-8) var(--dp-space-4);
   }
   .dp-strip-media {
     max-width: 240px;
     min-height: 280px;
+  }
+  .dp-strip--kaomoji .dp-strip-media {
+    width: 240px;
+    height: 240px;
+    max-width: 240px;
+    max-height: 240px;
+    min-height: 0;
   }
   .dp-strip-title {
     font-size: 1.5rem;

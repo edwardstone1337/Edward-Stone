@@ -56,3 +56,5 @@ function generateCard(project) {
   window.DPProjectCard = {
     generate: generateCard
   };
+
+  export { generateCard };

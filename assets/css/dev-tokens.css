@@ -93,6 +93,9 @@
   --dp-strip-padding: var(--dp-space-16) var(--dp-space-8);
   --dp-strip-gap: var(--dp-space-8);
   --dp-device-radius: 1.5rem;
+
+  /* --- Page section rhythm (airy gap between hero, strips, grid) --- */
+  --dp-section-gap: var(--dp-space-24);
 }
 
 /* --------------------------------------------

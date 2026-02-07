@@ -110,7 +110,12 @@ export function renderProductStrip(config, containerSelector, options) {
     content.appendChild(badgesEl);
   }
 
-  content.appendChild(descEl);
+  if (config.description != null) {
+    var descEl = document.createElement('p');
+    descEl.className = 'dp-strip-description';
+    descEl.textContent = String(config.description);
+    content.appendChild(descEl);
+  }
 
   var actionsEl = document.createElement('div');
   actionsEl.className = 'dp-strip-actions';

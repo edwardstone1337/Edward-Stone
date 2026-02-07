@@ -53,7 +53,33 @@
         <p class="dp-hero-body dp-reveal" data-reveal-delay="200">A collection of tools and apps I've designed and built. Each one a little more ambitious and a little more sophisticated than the last.</p>
       </section>
 
-      <div id="projects-container" role="region" aria-label="Development projects"></div>
+      <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click — featured project">
+        <div class="dp-strip-inner">
+          <div class="dp-strip-content">
+            <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+            <h2 class="dp-strip-title">Kaomoji.click</h2>
+            <span class="dp-strip-overline">kaomoji.click</span>
+            <div class="dp-strip-badges">
+              <span class="dp-strip-badge">Tool</span>
+              <span class="dp-strip-badge">Emoticons</span>
+            </div>
+            <p class="dp-strip-description">A simple tool for discovering and copying Japanese kaomoji. One click to copy — designed to work across devices and languages.</p>
+          </div>
+          <div class="dp-strip-media">
+            <iframe
+              src="assets/previews/kaomoji/index.html"
+              title="Kaomoji.click preview"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin"
+              style="width: 100%; height: 100%; aspect-ratio: 1 / 1; border: none; border-radius: inherit; display: block;"
+            ></iframe>
+          </div>
+          <div class="dp-strip-actions">
+            <a href="#" class="dp-btn dp-btn-primary-on-dark">Learn more</a>
+            <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-secondary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+          </div>
+        </div>
+      </section>
 
       <section class="dp-strip" aria-label="Fair Share — featured project">
         <div class="dp-strip-orbs">
@@ -87,6 +113,8 @@
         </div>
       </section>
 
+      <div id="projects-container" role="region" aria-label="Development projects"></div>
+
       <footer class="dp-footer">
         <p class="dp-footer-text">© 2025 Edward Stone</p>
       </footer>
@@ -110,9 +138,8 @@
       }
     </script>
 
-    <!-- Project components (project-card is module; projects-grid uses window.DPProjectCard) -->
-    <script type="module" src="assets/js/dev-projects/project-card.js"></script>
-    <script src="assets/js/dev-projects/projects-grid.js"></script>
+    <!-- Project components (projects-grid imports project-card so load order is guaranteed) -->
+    <script type="module" src="assets/js/dev-projects/projects-grid.js"></script>
     <script src="assets/js/dev-projects/magnetic-tilt.js"></script>
     <script src="assets/js/dev-projects/avatar-easter-egg.js"></script>
     <script src="assets/js/dev-projects/effects.js"></script>
@@ -121,6 +148,18 @@
     <!-- Initialize -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+        // Force dark theme on Kaomoji strip iframe
+        var kmIframe = document.querySelector('.dp-strip--kaomoji iframe');
+        if (kmIframe) {
+          function sendKmTheme() {
+            kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*');
+          }
+          kmIframe.addEventListener('load', sendKmTheme);
+          if (kmIframe.contentDocument && kmIframe.contentDocument.readyState === 'complete') {
+            sendKmTheme();
+          }
+        }
+
         if (window.DPProjectsGrid) {
           window.DPProjectsGrid.init('projects-container');
 

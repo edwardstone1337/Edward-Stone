@@ -2,8 +2,10 @@
  * Projects Grid — Dev Projects Page
  *
  * Fetches projects from JSON and renders cards into a grid.
- * Depends on: DPProjectCard (project-card.js must load first)
+ * Imports generateCard from project-card.js so module load order is guaranteed.
  */
+import { generateCard } from './project-card.js';
+
 (function () {
   'use strict';
 
@@ -30,7 +32,10 @@
           return;
         }
         var projects = data.projects || [];
-        if (projects.length === 0) {
+        // Hide cards for projects that have a featured strip (banner) above the grid
+        var stripTitles = { 'Kaomoji.click': true, 'Fair Share Calculator': true };
+        var cardProjects = projects.filter(function (p) { return !stripTitles[p.title]; });
+        if (cardProjects.length === 0) {
           container.innerHTML = '<p class="dp-empty">No projects yet.</p>';
           return;
         }
@@ -38,8 +43,8 @@
         var html =
           '<section class="dp-grid-section">' +
             '<div class="dp-card-grid">' +
-              projects.map(function (project) {
-                return window.DPProjectCard.generate(project);
+              cardProjects.map(function (project) {
+                return generateCard(project);
               }).join('') +
             '</div>' +
           '</section>';
