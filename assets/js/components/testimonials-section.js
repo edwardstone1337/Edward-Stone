@@ -10,6 +10,13 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('TestimonialsSection requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
+
   // ============================================
   // Configuration
   // ============================================
@@ -23,9 +30,6 @@
   // Helper Functions
   // ============================================
   
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
-
   // ============================================
   // Core Functionality
   // ============================================
@@ -45,7 +49,7 @@
     const role = escapeHTML(testimonial.role || '');
     const company = escapeHTML(testimonial.company || '');
     const text = escapeHTML(testimonial.text || '');
-    const photo = testimonial.photo || ''; // URL - escape separately for href/src attributes
+    const photo = testimonial.photo ? escapeHTML(sanitizeUrl(testimonial.photo)) : '';
 
     // Build role/company string
     let roleCompany = role;
@@ -61,7 +65,7 @@
           <p>${text}</p>
         </blockquote>
         <div class="testimonial-author">
-          ${photo ? `<img src="${escapeHTML(photo)}" alt="${name}" class="testimonial-photo" />` : ''}
+          ${photo ? `<img src="${photo}" alt="${name}" class="testimonial-photo" />` : ''}
           <div class="testimonial-author-info">
             <div class="testimonial-name">${name}</div>
             ${roleCompany ? `<div class="testimonial-role">${roleCompany}</div>` : ''}

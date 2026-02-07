@@ -6,6 +6,15 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('Navigation requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
+
+  let _dropdownInitialized = false;
+
   // Navigation configuration
   const navConfig = {
     logo: 'Edward Stone',
@@ -16,16 +25,11 @@
         text: 'Case Studies', 
         href: '#',
         submenu: [
-          { text: 'Increasing conversion rates', href: 'case-studies/increasing-conversion-rates.html' },
-          { text: 'How I design features users come back for', href: 'case-studies/features-users-return.html' },
-          { text: 'How I reduced support enquiries', href: 'case-studies/reduced-support-enquiries.html' }
+          { text: 'How I design features people come back for', href: 'case-studies/features-users-return.html' }
         ]
       }
     ]
   };
-
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
 
   /**
    * Get the current page path from the URL
@@ -49,6 +53,20 @@
     }
     
     return relativePath;
+  }
+
+  /**
+   * Resolve nav link href for current page location (so links work from subfolders e.g. case-studies/)
+   * @param {string} href - Link href from config
+   * @param {string} currentPage - Current page path from getCurrentPage()
+   * @returns {string} Resolved href for use in anchor
+   */
+  function getResolvedHref(href, currentPage) {
+    const inSubfolder = currentPage.includes('/');
+    if (!inSubfolder) return href;
+    if (href === 'index.html' || href === '') return '../index.html';
+    if (href.startsWith('case-studies/')) return href.replace('case-studies/', '');
+    return '../' + href;
   }
 
   /**
@@ -105,9 +123,10 @@
     const submenuItems = submenu.map(item => {
       const isActive = isActiveLink(item.href, currentPage);
       const activeClass = isActive ? 'active' : '';
+      const resolvedHref = getResolvedHref(item.href, currentPage);
       return `
         <li>
-          <a href="${escapeHTML(item.href)}" class="${activeClass}">${escapeHTML(item.text)}</a>
+          <a href="${escapeHTML(sanitizeUrl(resolvedHref))}" class="${activeClass}">${escapeHTML(item.text)}</a>
         </li>
       `;
     }).join('');
@@ -120,21 +139,12 @@
   }
 
   /**
-   * Generate navigation HTML
-   * @returns {string} Navigation HTML string
+   * Generate desktop navigation links HTML (with dropdown submenus)
+   * @param {string} currentPage - Current page filename
+   * @returns {string} Desktop navigation HTML string
    */
-  function generateNavigationHTML() {
-    const currentPage = getCurrentPage();
-    
-    // Generate logo
-    const logoHTML = `
-      <div class="logo">
-        <a href="${escapeHTML(navConfig.logoHref)}">${escapeHTML(navConfig.logo)}</a>
-      </div>
-    `;
-    
-    // Generate navigation links
-    const linksHTML = navConfig.links.map((link, index) => {
+  function generateDesktopLinksHTML(currentPage) {
+    return navConfig.links.map((link, index) => {
       const hasSubmenuItems = hasSubmenu(link);
       const isActive = isActiveLink(link.href, currentPage);
       const isSubmenuItemActive = hasSubmenuItems ? isSubmenuActive(link.submenu, currentPage) : false;
@@ -144,7 +154,7 @@
       if (hasSubmenuItems) {
         const submenuHTML = generateSubmenuHTML(link.submenu, parentId, currentPage);
         const escapedText = escapeHTML(link.text);
-        const escapedHref = escapeHTML(link.href);
+        const escapedHref = escapeHTML(sanitizeUrl(getResolvedHref(link.href, currentPage)));
         return `
           <li class="nav-item-has-submenu">
             <a href="${escapedHref}" 
@@ -161,7 +171,7 @@
         `;
       } else {
         const escapedText = escapeHTML(link.text);
-        const escapedHref = escapeHTML(link.href);
+        const escapedHref = escapeHTML(sanitizeUrl(getResolvedHref(link.href, currentPage)));
         return `
           <li>
             <a href="${escapedHref}" class="${activeClass}">${escapedText}</a>
@@ -169,81 +179,121 @@
         `;
       }
     }).join('');
+  }
+
+  /**
+   * Generate mobile navigation links HTML (flattened - no accordion needed)
+   * Exposes all links including case studies immediately to reduce interaction cost
+   * @param {string} currentPage - Current page filename
+   * @returns {string} Mobile navigation HTML string
+   */
+  function generateMobileLinksHTML(currentPage) {
+    const links = [];
     
-    // Generate hamburger button for mobile
-    const hamburgerHTML = `
-      <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
+    navConfig.links.forEach(link => {
+      const hasSubmenuItems = hasSubmenu(link);
+      
+      if (hasSubmenuItems) {
+        // Add section label for grouped items (e.g., "Case Studies")
+        links.push(`
+          <li class="nav-mobile-section-label" aria-hidden="true">
+            <span>${escapeHTML(link.text)}</span>
+          </li>
+        `);
+        
+        // Flatten submenu items directly into the nav
+        link.submenu.forEach(subItem => {
+          const isActive = isActiveLink(subItem.href, currentPage);
+          const activeClass = isActive ? 'active' : '';
+          const resolvedHref = getResolvedHref(subItem.href, currentPage);
+          links.push(`
+            <li class="nav-mobile-submenu-item">
+              <a href="${escapeHTML(sanitizeUrl(resolvedHref))}" class="${activeClass}">${escapeHTML(subItem.text)}</a>
+            </li>
+          `);
+        });
+      } else {
+        const isActive = isActiveLink(link.href, currentPage);
+        const activeClass = isActive ? 'active' : '';
+        const resolvedHref = getResolvedHref(link.href, currentPage);
+        links.push(`
+          <li>
+            <a href="${escapeHTML(sanitizeUrl(resolvedHref))}" class="${activeClass}">${escapeHTML(link.text)}</a>
+          </li>
+        `);
+      }
+    });
+    
+    return links.join('');
+  }
+
+  /**
+   * Generate navigation HTML
+   * @returns {string} Navigation HTML string
+   */
+  function generateNavigationHTML() {
+    const currentPage = getCurrentPage();
+    const logoHref = getResolvedHref(navConfig.logoHref, currentPage);
+    
+    // Generate logo
+    const logoHTML = `
+      <div class="logo">
+        <a href="${escapeHTML(sanitizeUrl(logoHref))}">${escapeHTML(navConfig.logo)}</a>
+      </div>
     `;
     
-    // Complete navigation structure
+    // Generate desktop navigation links (with dropdown submenus)
+    const desktopLinksHTML = generateDesktopLinksHTML(currentPage);
+    
+    // Generate mobile navigation links (flattened for better UX)
+    const mobileLinksHTML = generateMobileLinksHTML(currentPage);
+    
+    // Generate "Menu" button for mobile using secondary button styling for consistency
+    // Text-based button is more discoverable than hamburger icon for non-tech-savvy users
+    const menuButtonHTML = `
+      <button class="nav-toggle btn btn-secondary" aria-label="Toggle navigation menu" aria-expanded="false" data-text-open="Menu" data-text-close="Close">Menu</button>
+    `;
+    
+    // Navigation structure following standard practice:
+    // - header contains only logo and menu button (elements in normal document flow)
+    // - nav-overlay and nav are siblings to header (fixed/absolute positioned elements outside header)
+    // This ensures header height is determined by its content, preventing clipping issues
     return `
       <header>
         ${logoHTML}
-        ${hamburgerHTML}
-        <div class="nav-overlay"></div>
-        <nav>
-          <ul>
-            ${linksHTML}
-          </ul>
-        </nav>
+        ${menuButtonHTML}
       </header>
+      <div class="nav-overlay"></div>
+      <nav>
+        <ul class="nav-desktop">
+          ${desktopLinksHTML}
+        </ul>
+        <ul class="nav-mobile">
+          ${mobileLinksHTML}
+        </ul>
+      </nav>
     `;
   }
 
   /**
    * Initialize mobile submenu functionality
+   * Note: Mobile nav is now flattened (no accordion), so this only handles
+   * edge cases where desktop nav elements might receive mobile-width clicks
+   * (e.g., during resize). The main mobile nav uses .nav-mobile which has
+   * no nested submenus.
    */
   function initMobileSubmenu() {
-    const submenuParents = document.querySelectorAll('.nav-item-has-submenu > a');
-    
-    submenuParents.forEach(parent => {
-      parent.addEventListener('click', function(e) {
-        // Only prevent default if we're on mobile/tablet
-        if (window.innerWidth <= 768) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const parentLi = parent.closest('.nav-item-has-submenu');
-          const submenu = parentLi.querySelector('.nav-submenu');
-          const isExpanded = parent.getAttribute('aria-expanded') === 'true';
-          
-          // Close all other submenus
-          submenuParents.forEach(otherParent => {
-            if (otherParent !== parent) {
-              otherParent.setAttribute('aria-expanded', 'false');
-              const otherLi = otherParent.closest('.nav-item-has-submenu');
-              const otherSubmenu = otherLi.querySelector('.nav-submenu');
-              if (otherSubmenu) {
-                otherSubmenu.classList.remove('nav-submenu-open');
-              }
-            }
-          });
-          
-          // Toggle current submenu
-          if (isExpanded) {
-            parent.setAttribute('aria-expanded', 'false');
-            if (submenu) {
-              submenu.classList.remove('nav-submenu-open');
-            }
-          } else {
-            parent.setAttribute('aria-expanded', 'true');
-            if (submenu) {
-              submenu.classList.add('nav-submenu-open');
-            }
-          }
-        }
-      });
-    });
+    // Mobile navigation is now flattened - no accordion behavior needed
+    // Desktop submenu elements (.nav-item-has-submenu) are hidden on mobile
+    // This function is kept for backwards compatibility but is effectively a no-op
   }
 
   /**
    * Initialize desktop dropdown functionality
    */
   function initDropdownMenu() {
+    if (_dropdownInitialized) return;
+
     const submenuParents = document.querySelectorAll('.nav-item-has-submenu > a');
     
     submenuParents.forEach(parent => {
@@ -320,6 +370,7 @@
         }
       }
     });
+    _dropdownInitialized = true;
   }
 
   /**
@@ -427,6 +478,7 @@
 
   /**
    * Initialize mobile menu functionality
+   * Uses secondary button styling with "Menu"/"Close" text for consistency
    */
   function initMobileMenu() {
     const toggle = document.querySelector('.nav-toggle');
@@ -436,13 +488,22 @@
     
     if (!toggle || !nav) return;
     
+    /**
+     * Update the toggle button text based on menu state
+     * @param {boolean} isOpen - Whether the menu is open
+     */
+    function updateToggleText(isOpen) {
+      toggle.textContent = isOpen ? toggle.dataset.textClose : toggle.dataset.textOpen;
+    }
+    
     function closeMenu() {
       toggle.setAttribute('aria-expanded', 'false');
       nav.classList.remove('nav-open');
       if (overlay) overlay.classList.remove('active');
       body.classList.remove('nav-menu-open');
+      updateToggleText(false);
       
-      // Close all submenus when main menu closes
+      // Close all submenus when main menu closes (for desktop dropdown cleanup)
       const submenuParents = document.querySelectorAll('.nav-item-has-submenu > a');
       submenuParents.forEach(parent => {
         parent.setAttribute('aria-expanded', 'false');
@@ -459,6 +520,7 @@
       nav.classList.add('nav-open');
       if (overlay) overlay.classList.add('active');
       body.classList.add('nav-menu-open');
+      updateToggleText(true);
     }
     
     toggle.addEventListener('click', function(e) {
@@ -477,15 +539,14 @@
       overlay.addEventListener('click', closeMenu);
     }
     
-    // Close menu when clicking on a link (but not submenu parent links on mobile)
+    // Close menu when clicking on any nav link (mobile nav is now flat, no accordion)
     const navLinks = nav.querySelectorAll('a');
     navLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        // Don't close if it's a submenu parent on mobile
-        if (window.innerWidth <= 768 && link.closest('.nav-item-has-submenu')) {
-          return;
+      link.addEventListener('click', function() {
+        // Close menu on any link click on mobile
+        if (window.innerWidth <= 768) {
+          closeMenu();
         }
-        closeMenu();
       });
     });
     

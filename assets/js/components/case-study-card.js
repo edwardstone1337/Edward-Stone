@@ -10,6 +10,13 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('CaseStudyCard requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
+
   // ============================================
   // Configuration
   // ============================================
@@ -23,9 +30,6 @@
   // Helper Functions
   // ============================================
   
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
-
   // ============================================
   // Core Functionality
   // ============================================
@@ -47,8 +51,8 @@
     
     const title = escapeHTML(caseStudy.title || '');
     const description = escapeHTML(caseStudy.description || '');
-    const imagePath = caseStudy.imagePath || '';
-    const href = escapeHTML(caseStudy.href || '#');
+    const imagePath = caseStudy.imagePath ? escapeHTML(sanitizeUrl(caseStudy.imagePath)) : '';
+    const href = escapeHTML(sanitizeUrl(caseStudy.href || '#'));
     const metrics = escapeHTML(caseStudy.metrics || '');
     const imageAlt = escapeHTML(caseStudy.imageAlt || title);
 
@@ -56,7 +60,7 @@
       <a href="${href}" class="case-study-card">
         ${imagePath ? `
           <div class="case-study-image">
-            <img src="${escapeHTML(imagePath)}" alt="${imageAlt}" />
+            <img src="${imagePath}" alt="${imageAlt}" />
           </div>
         ` : ''}
         <div class="case-study-content">

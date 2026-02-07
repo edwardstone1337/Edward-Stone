@@ -21,6 +21,11 @@ For each changed file:
   - Use categories: Added, Changed, Fixed, Security, Removed
   - Be concise, user-facing language
 
+- **Component Preview** (`dev/component-preview.html`): If a new component was added:
+  - Add a new section with id, title, and description
+  - Include variant demos showing different states/configurations
+  - Load the component script in the scripts section
+
 ## 4. Documentation Style Rules
 
 ✅ **Concise** - Sacrifice grammar for brevity

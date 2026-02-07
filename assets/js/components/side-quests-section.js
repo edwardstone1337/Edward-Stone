@@ -11,6 +11,12 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('SideQuestsSection requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+
   // ============================================
   // Configuration
   // ============================================
@@ -24,9 +30,6 @@
   // Helper Functions
   // ============================================
   
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
-
   // ============================================
   // Core Functionality
   // ============================================

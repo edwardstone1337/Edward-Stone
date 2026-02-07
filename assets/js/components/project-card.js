@@ -10,12 +10,12 @@
 (function() {
   'use strict';
 
-  // ============================================
-  // Helper Functions
-  // ============================================
-  
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('ProjectCard requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
   const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
 
   // ============================================
   // Core Functionality
@@ -40,8 +40,8 @@
 
     const title = escapeHTML(project.title);
     const description = escapeHTML(project.description || '');
-    const url = escapeHTML(project.url);
-    const imagePath = project.imagePath ? escapeHTML(project.imagePath) : '';
+    const url = escapeHTML(sanitizeUrl(project.url));
+    const imagePath = project.imagePath ? escapeHTML(sanitizeUrl(project.imagePath)) : '';
     const imageAlt = escapeHTML(project.imageAlt || project.title);
 
     return `

@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover enables safe-area-inset-* CSS env variables for notched devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Edward Stone - UX Designer</title>
     <link
       rel="stylesheet"
@@ -35,9 +36,7 @@
           <div class="hero-right">
             <h3 class="hero-links-heading">Read how I make an impact</h3>
             <ul class="hero-links">
-              <li><a href="case-studies/increasing-conversion-rates.html"><span class="hero-link-icon">↑</span> Increasing conversion rates</a></li>
-              <li><a href="case-studies/features-users-return.html"><span class="hero-link-icon">♥</span> How I design features users come back for</a></li>
-              <li><a href="case-studies/reduced-support-enquiries.html"><span class="hero-link-icon">⏱</span> How I reduced support enquiries</a></li>
+              <li><a href="case-studies/features-users-return.html"><span class="hero-link-icon">♥</span> How I design features people come back for</a></li>
             </ul>
           </div>
         </section>
@@ -52,12 +51,7 @@
 
         <div id="contact-container"></div>
 
-        <section class="reading-section">
-          <h2 class="section-heading">I read these so you don't have to</h2>
-          <div class="reading-image">
-            <!-- Image placeholder - add actual book covers image here -->
-          </div>
-        </section>
+        <div id="reading-container"></div>
       </main>
     </div>
     <!-- Shared utilities must load before components -->
@@ -69,6 +63,7 @@
     <script src="assets/js/components/skills-section.js"></script>
     <script src="assets/js/components/side-quests-section.js"></script>
     <script src="assets/js/components/contact-section.js"></script>
+    <script src="assets/js/components/reading-section.js"></script>
     <script>
       // Initialize all sections with data
       document.addEventListener('DOMContentLoaded', function() {
@@ -105,25 +100,11 @@
             subheading: 'A selection of projects showcasing my approach to design and problem-solving.',
             caseStudies: [
               {
-                title: 'Increasing conversion rates',
-                description: 'How I improved user experience and drove measurable business results through data-driven design decisions.',
-                href: 'case-studies/increasing-conversion-rates.html',
-                imagePath: '',
-                imageAlt: 'Increasing conversion rates case study'
-              },
-              {
-                title: 'How I design features users come back for',
+                title: 'How I design features people come back for',
                 description: 'Exploring the design process behind creating engaging features that drive user retention and satisfaction.',
                 href: 'case-studies/features-users-return.html',
                 imagePath: '',
-                imageAlt: 'Features users come back for case study'
-              },
-              {
-                title: 'How I reduced support enquiries',
-                description: 'Using UX research and design thinking to simplify complex workflows and reduce user confusion.',
-                href: 'case-studies/reduced-support-enquiries.html',
-                imagePath: '',
-                imageAlt: 'Reduced support enquiries case study'
+                imageAlt: 'Features people come back for case study'
               }
             ]
           });
@@ -157,37 +138,28 @@
           });
         }
 
-        // Side Quests
+        // Side Quests (fetched from shared JSON)
         if (window.SideQuestsSection) {
-          const projects = [
-            {
-              title: 'Kaomoji.click',
-              description: 'A clean, language-light tool for discovering and copying Japanese kaomojis (emoticons). With just one click, anyone can copy cute and expressive text faces—designed to work seamlessly across devices and be usable by a global audience.',
-              url: 'https://www.kaomoji.click/',
-              imagePath: 'assets/images/kaomoji-click.jpg',
-              imageAlt: 'Kaomoji.click'
-            },
-            {
-              title: 'Fair Share Calculator',
-              description: 'A tool for couples to fairly split shared expenses based on income. Just enter each partner\'s after-tax salary and shared costs, and it works out a proportional split—making money conversations more objective, equitable, and stress-free.',
-              url: 'https://www.fairsharecalculator.com/',
-              imagePath: 'assets/images/fair-share-calculator.jpg',
-              imageAlt: 'Fair Share Calculator'
-            },
-            {
-              title: 'Lost Cities Score Calculator',
-              description: 'A scoring tool for the board game Lost Cities, designed to match the look and feel of the game itself. Its skeuomorphic interface mimics gameplay visuals and helps players easily tally scores without needing pen, paper, or mental maths.',
-              url: 'https://lostcitiesscorecalculator.com/',
-              imagePath: 'assets/images/lost-cities-score-calculator.jpg',
-              imageAlt: 'Lost Cities Score Calculator'
-            }
-          ];
+          const heading = 'Development Side Quests';
+          const subheading = 'What good is designing something if you can\'t build it? Here are some simple web apps I\'ve made to learn, experiment, and explore.';
 
-          window.SideQuestsSection.init('side-quests-container', {
-            heading: 'Development Side Quests',
-            subheading: 'What good is designing something if you can\'t build it? Here are some simple web apps I\'ve made to learn, experiment, and explore.',
-            projects: projects
-          });
+          fetch('assets/data/projects.json')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              window.SideQuestsSection.init('side-quests-container', {
+                heading: heading,
+                subheading: subheading,
+                projects: data.projects || []
+              });
+            })
+            .catch(function(err) {
+              console.error('Failed to load projects:', err);
+              window.SideQuestsSection.init('side-quests-container', {
+                heading: heading,
+                subheading: subheading,
+                projects: []
+              });
+            });
         }
 
         // Contact
@@ -199,6 +171,15 @@
             phone: '0401 068 837',
             linkedInUrl: 'https://www.linkedin.com/in/edwardstone1337/',
             location: 'Leichardt, Sydney, NSW'
+          });
+        }
+
+        // Reading (Book Covers)
+        if (window.ReadingSection) {
+          window.ReadingSection.init('reading-container', {
+            heading: 'I read these so you don\'t have to',
+            imagePath: 'assets/images/books.png',
+            imageAlt: 'Book covers of product and UX books I\'ve read'
           });
         }
       });

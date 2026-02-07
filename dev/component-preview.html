@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component Preview</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"/>
+    <link rel="stylesheet" href="../assets/css/tokens.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+      /* Preview page styles */
+      .preview-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing-2xl);
+      }
+      .preview-header {
+        margin-bottom: var(--spacing-3xl);
+        padding-bottom: var(--spacing-2xl);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .preview-header h1 {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-md);
+      }
+      .preview-header p {
+        color: var(--color-text-secondary);
+      }
+      .preview-toc {
+        margin-top: var(--spacing-xl);
+      }
+      .preview-toc a {
+        color: var(--color-cta);
+        margin-right: var(--spacing-xl);
+      }
+      .component-section {
+        margin-bottom: var(--spacing-4xl);
+        padding-bottom: var(--spacing-3xl);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .component-section:last-child {
+        border-bottom: none;
+      }
+      .component-title {
+        font-family: var(--font-heading);
+        font-size: var(--font-size-1-5xl);
+        margin-bottom: var(--spacing-md);
+        color: var(--color-text-primary);
+      }
+      .component-description {
+        color: var(--color-text-secondary);
+        margin-bottom: var(--spacing-2xl);
+        font-size: var(--font-size-md);
+      }
+      .variant-group {
+        margin-bottom: var(--spacing-2xl);
+      }
+      .variant-label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: var(--letter-spacing-wider);
+        margin-bottom: var(--spacing-lg);
+      }
+      .variant-demo {
+        padding: var(--spacing-2xl);
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-lg);
+      }
+      .button-row {
+        display: flex;
+        gap: var(--spacing-lg);
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      /* ============================================
+         Viewport Toolbar
+         ============================================ */
+      .viewport-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--color-background-primary);
+        border-bottom: 1px solid var(--color-border);
+        padding: var(--spacing-md) var(--spacing-xl);
+        margin: calc(var(--spacing-2xl) * -1);
+        margin-bottom: var(--spacing-2xl);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xl);
+      }
+      .viewport-toolbar-label {
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: var(--letter-spacing-wider);
+      }
+      .viewport-buttons {
+        display: flex;
+        gap: var(--spacing-sm);
+      }
+      .viewport-btn {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border: 1px solid var(--color-border);
+        background: var(--color-background-primary);
+        border-radius: var(--border-radius-default);
+        font-family: var(--font-body);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--easing-default);
+      }
+      .viewport-btn:hover {
+        border-color: var(--color-text-tertiary);
+        color: var(--color-text-primary);
+      }
+      .viewport-btn.active {
+        background: var(--color-accent-primary);
+        border-color: var(--color-accent-primary);
+        color: var(--color-grey-0);
+      }
+      .viewport-width-indicator {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-tertiary);
+        margin-left: auto;
+      }
+
+      /* ============================================
+         Viewport-Constrained Preview Container
+         ============================================ */
+      .preview-content {
+        transition: max-width var(--duration-normal) var(--easing-default);
+        margin: 0 auto;
+      }
+      .preview-content[data-viewport="desktop"] {
+        max-width: 1200px;
+      }
+      .preview-content[data-viewport="tablet"] {
+        max-width: 768px;
+      }
+      .preview-content[data-viewport="mobile"] {
+        max-width: 375px;
+      }
+
+      /* ============================================
+         Mobile Navigation Demo Container
+         Simulates mobile viewport within desktop preview.
+         Note: nav and nav-overlay are now siblings to header (not children).
+         ============================================ */
+      .mobile-nav-container {
+        max-width: 375px;
+        margin: 0 auto;
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        position: relative;
+      }
+      .mobile-nav-container .variant-demo {
+        border-radius: 0;
+      }
+      /* Force mobile header styles within container */
+      .mobile-nav-container header {
+        flex-wrap: nowrap;
+        min-height: var(--size-header-min);
+      }
+      /* Logo uses flex: 1 from main CSS, just ensure position: static */
+      .mobile-nav-container .logo {
+        position: static;
+        flex: 1;
+      }
+      /* Force nav-toggle to display in preview - overrides base display: none */
+      .mobile-nav-container .nav-toggle {
+        display: inline-flex !important;
+        position: static;
+      }
+      /* Hide desktop nav, show mobile nav */
+      .mobile-nav-container .nav-desktop {
+        display: none !important;
+      }
+      .mobile-nav-container .nav-mobile {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-xs);
+      }
+      /* Nav drawer - position absolute within container (not fixed like real mobile) */
+      .mobile-nav-container nav {
+        position: absolute;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 350px;
+        background-color: var(--color-background-primary);
+        box-shadow: var(--shadow-drawer);
+        z-index: 1000;
+        padding: calc(var(--spacing-2xl) * 2) var(--spacing-xl) var(--spacing-xl);
+        transition: right var(--duration-normal) var(--easing-default);
+        overflow-y: auto;
+      }
+      .mobile-nav-container nav.nav-open {
+        right: 0;
+      }
+      .mobile-nav-container nav ul {
+        flex-direction: column;
+        width: 100%;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+      }
+      .mobile-nav-container nav ul li {
+        margin: 0;
+        width: 100%;
+      }
+      .mobile-nav-container nav ul li a {
+        padding: var(--spacing-md) var(--spacing-lg);
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      /* Section labels styling */
+      .mobile-nav-container .nav-mobile-section-label {
+        padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-sm);
+        margin-top: var(--spacing-md);
+      }
+      .mobile-nav-container .nav-mobile-section-label span {
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: var(--letter-spacing-uppercase);
+      }
+      .mobile-nav-container .nav-mobile-submenu-item {
+        padding-left: var(--spacing-md);
+      }
+      /* Overlay - position absolute within container */
+      .mobile-nav-container .nav-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-overlay);
+        z-index: 999;
+      }
+      .mobile-nav-container .nav-overlay.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="preview-page">
+      <!-- Viewport Width Toolbar -->
+      <div class="viewport-toolbar">
+        <span class="viewport-toolbar-label">Preview Width</span>
+        <div class="viewport-buttons">
+          <button class="viewport-btn active" data-width="desktop">Desktop</button>
+          <button class="viewport-btn" data-width="tablet">Tablet</button>
+          <button class="viewport-btn" data-width="mobile">Mobile</button>
+        </div>
+        <span class="viewport-width-indicator">1200px</span>
+      </div>
+
+      <div class="preview-content" data-viewport="desktop">
+      <header class="preview-header">
+        <h1>Component Preview</h1>
+        <p>Isolated preview of all components. Use this to test components in different states without navigating the full site.</p>
+        <nav class="preview-toc">
+          <a href="#navigation">Navigation</a>
+          <a href="#buttons">Buttons</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#case-studies">Case Studies</a>
+          <a href="#skills">Skills</a>
+          <a href="#side-quests">Side Quests</a>
+          <a href="#contact">Contact</a>
+          <a href="#reading">Reading</a>
+        </nav>
+      </header>
+
+      <!-- Navigation Component -->
+      <section class="component-section" id="navigation">
+        <h2 class="component-title">Navigation</h2>
+        <p class="component-description">Main site navigation with text-based "Menu" button on mobile, desktop dropdowns, and flattened mobile nav for reduced interaction cost.</p>
+        <div class="variant-group">
+          <div class="variant-label">Desktop</div>
+          <div class="variant-demo">
+            <div id="nav-preview"></div>
+          </div>
+        </div>
+        <div class="variant-group">
+          <div class="variant-label">Mobile (375px)</div>
+          <div class="mobile-nav-container">
+            <div class="variant-demo">
+              <div id="nav-mobile-preview"></div>
+            </div>
+          </div>
+          <p style="font-size: var(--font-size-xs); color: var(--color-text-tertiary); margin-top: var(--spacing-md);">
+            Click "Menu" to open the mobile nav. Uses secondary button styling for consistency. Case study links are immediately visible (no accordion).
+          </p>
+        </div>
+      </section>
+
+      <!-- Button Component -->
+      <section class="component-section" id="buttons">
+        <h2 class="component-title">Button</h2>
+        <p class="component-description">Buttons with variant system, loading states, and icon support.</p>
+        
+        <div class="variant-group">
+          <div class="variant-label">Variants</div>
+          <div class="variant-demo">
+            <div class="button-row">
+              <div id="btn-primary"></div>
+              <div id="btn-secondary"></div>
+              <div id="btn-tertiary"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="variant-group">
+          <div class="variant-label">States</div>
+          <div class="variant-demo">
+            <div class="button-row">
+              <div id="btn-loading"></div>
+              <div id="btn-disabled"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="variant-group">
+          <div class="variant-label">As Links</div>
+          <div class="variant-demo">
+            <div class="button-row">
+              <div id="btn-link"></div>
+              <div id="btn-link-external"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section Component -->
+      <section class="component-section" id="testimonials">
+        <h2 class="component-title">Testimonials Section</h2>
+        <p class="component-description">Grid layout for testimonial cards with optional photos.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="testimonials-preview"></div>
+        </div>
+      </section>
+
+      <!-- Case Studies Section Component -->
+      <section class="component-section" id="case-studies">
+        <h2 class="component-title">Case Studies Section</h2>
+        <p class="component-description">Card grid for case study previews with optional metrics.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="case-studies-preview"></div>
+        </div>
+      </section>
+
+      <!-- Skills Section Component -->
+      <section class="component-section" id="skills">
+        <h2 class="component-title">Skills Section</h2>
+        <p class="component-description">Three-category skills display with card-based design.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="skills-preview"></div>
+        </div>
+      </section>
+
+      <!-- Side Quests Section Component -->
+      <section class="component-section" id="side-quests">
+        <h2 class="component-title">Side Quests Section</h2>
+        <p class="component-description">Project cards grid using the ProjectCard component internally.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="side-quests-preview"></div>
+        </div>
+      </section>
+
+      <!-- Contact Section Component -->
+      <section class="component-section" id="contact">
+        <h2 class="component-title">Contact Section</h2>
+        <p class="component-description">Contact information with clickable links and optional availability status.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="contact-preview"></div>
+        </div>
+        <div class="variant-group">
+          <div class="variant-label">With Availability</div>
+          <div id="contact-availability-preview"></div>
+        </div>
+      </section>
+
+      <!-- Reading Section Component -->
+      <section class="component-section" id="reading">
+        <h2 class="component-title">Reading Section</h2>
+        <p class="component-description">Simple image section for displaying book covers with a heading.</p>
+        <div class="variant-group">
+          <div class="variant-label">Default</div>
+          <div id="reading-preview"></div>
+        </div>
+      </section>
+      </div><!-- /.preview-content -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/components/button.js"></script>
+    <script src="../assets/js/components/navigation.js"></script>
+    <script src="../assets/js/components/project-card.js"></script>
+    <script src="../assets/js/components/testimonials-section.js"></script>
+    <script src="../assets/js/components/case-study-card.js"></script>
+    <script src="../assets/js/components/skills-section.js"></script>
+    <script src="../assets/js/components/side-quests-section.js"></script>
+    <script src="../assets/js/components/contact-section.js"></script>
+    <script src="../assets/js/components/reading-section.js"></script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // ============================================
+        // Viewport Width Switching
+        // ============================================
+        const viewportWidths = {
+          desktop: 1200,
+          tablet: 768,
+          mobile: 375
+        };
+
+        const viewportButtons = document.querySelectorAll('.viewport-btn');
+        const previewContent = document.querySelector('.preview-content');
+        const widthIndicator = document.querySelector('.viewport-width-indicator');
+
+        viewportButtons.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const width = this.dataset.width;
+            
+            // Update active button
+            viewportButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update preview container
+            previewContent.dataset.viewport = width;
+            
+            // Update width indicator
+            widthIndicator.textContent = viewportWidths[width] + 'px';
+          });
+        });
+
+        // ============================================
+        // Navigation - Desktop
+        // ============================================
+        if (window.Navigation) {
+          Navigation.init('nav-preview');
+        }
+
+        // ============================================
+        // Navigation - Mobile (separate instance)
+        // ============================================
+        if (window.Navigation) {
+          Navigation.init('nav-mobile-preview');
+        }
+        
+        // Buttons
+        if (window.Button) {
+          Button.create({ text: 'Primary Button', variant: 'primary' }, 'btn-primary');
+          Button.create({ text: 'Secondary Button', variant: 'secondary' }, 'btn-secondary');
+          Button.create({ text: 'Tertiary Button', variant: 'tertiary' }, 'btn-tertiary');
+          Button.create({ text: 'Loading...', variant: 'primary', loading: true }, 'btn-loading');
+          Button.create({ text: 'Disabled', variant: 'primary', disabled: true }, 'btn-disabled');
+          Button.create({ text: 'Link Button', variant: 'primary', href: '#' }, 'btn-link');
+          Button.create({ text: 'External Link', variant: 'secondary', href: 'https://example.com', target: '_blank' }, 'btn-link-external');
+        }
+
+        // Testimonials
+        if (window.TestimonialsSection) {
+          TestimonialsSection.init('testimonials-preview', {
+            heading: 'What People Say',
+            testimonials: [
+              {
+                name: 'Jane Smith',
+                role: 'Product Manager',
+                company: 'Acme Corp',
+                text: 'Working with this designer was an absolute pleasure. They delivered exceptional work that exceeded our expectations.'
+              },
+              {
+                name: 'John Doe',
+                role: 'Engineering Lead',
+                text: 'Great attention to detail and always open to feedback. Highly recommended!'
+              }
+            ]
+          });
+        }
+
+        // Case Studies
+        if (window.CaseStudiesSection) {
+          CaseStudiesSection.init('case-studies-preview', {
+            heading: 'Featured Work',
+            subheading: 'A selection of recent projects.',
+            caseStudies: [
+              {
+                title: 'Sample Case Study',
+                description: 'A brief description of the project and its impact.',
+                href: '#',
+                metrics: '+40% conversion'
+              },
+              {
+                title: 'Another Project',
+                description: 'Description of another successful project.',
+                href: '#'
+              }
+            ]
+          });
+        }
+
+        // Skills
+        if (window.SkillsSection) {
+          SkillsSection.init('skills-preview', {
+            heading: 'Skills & Expertise',
+            tools: ['Figma', 'Framer', 'Sketch', 'Product Design'],
+            principles: ['8pt grid system', 'Atomic design', 'Jobs to be Done'],
+            personality: ['Enjoys copywriting', 'Design systems enthusiast']
+          });
+        }
+
+        // Side Quests
+        if (window.SideQuestsSection) {
+          SideQuestsSection.init('side-quests-preview', {
+            heading: 'Side Projects',
+            subheading: 'Personal projects and experiments.',
+            projects: [
+              {
+                title: 'Sample Project',
+                description: 'A description of this side project and what it does.',
+                url: '#',
+                imagePath: '../assets/images/kaomoji-click.jpg',
+                imageAlt: 'Sample project'
+              },
+              {
+                title: 'Another Project',
+                description: 'Another project description.',
+                url: '#'
+              }
+            ]
+          });
+        }
+
+        // Contact - Default
+        if (window.ContactSection) {
+          ContactSection.init('contact-preview', {
+            heading: 'Get In Touch',
+            subheading: 'Always open to new opportunities.',
+            email: 'example@email.com',
+            phone: '0400 123 456',
+            location: 'Sydney, Australia'
+          });
+
+          // Contact - With Availability
+          ContactSection.init('contact-availability-preview', {
+            heading: 'Get In Touch',
+            subheading: 'Always open to new opportunities.',
+            email: 'example@email.com',
+            linkedInUrl: 'https://linkedin.com/in/example',
+            availability: 'Available for freelance work'
+          });
+        }
+
+        // Reading
+        if (window.ReadingSection) {
+          ReadingSection.init('reading-preview', {
+            heading: 'I read these so you don\'t have to',
+            imagePath: '../assets/images/books.png',
+            imageAlt: 'Book covers of product and UX books'
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

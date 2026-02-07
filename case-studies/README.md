@@ -1,9 +1,9 @@
-# Case Studies (Coming Soon)
+# Case Studies
 
-This folder will contain detailed case study pages:
+This folder contains detailed case study pages:
 
-- **Increasing conversion rates** - `increasing-conversion-rates.html`
-- **How I design features users come back for** - `features-users-return.html`
-- **How I reduced support enquiries** - `reduced-support-enquiries.html`
+- **How I design features people come back for** - `features-users-return.html` (retention/Planner case study)
 
-Each case study will showcase the design process, problem-solving approach, and measurable outcomes.
+Each case study showcases the design process, problem-solving approach, and measurable outcomes.
+
+**Assets for features-users-return.html:** Hero and callout screenshots use `assets/images/planner.png`.

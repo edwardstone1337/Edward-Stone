@@ -139,7 +139,7 @@ assets/
 - Consider viewport and safe areas
 
 ### 5. **CSS Integration**
-- Use CSS custom properties (variables) from `style.css`
+- Use CSS custom properties (variables) from `tokens.css`
 - Follow the existing design token system
 - Keep component styles scoped when possible
 - Use BEM-like naming for component-specific classes
@@ -184,9 +184,7 @@ const navConfig = {
       text: 'Case Studies', 
       href: '#',
       submenu: [
-        { text: 'Increasing conversion rates', href: 'case-studies/increasing-conversion-rates.html' },
-        { text: 'How I design features users come back for', href: 'case-studies/features-users-return.html' },
-        { text: 'How I reduced support enquiries', href: 'case-studies/reduced-support-enquiries.html' }
+        { text: 'How I design features people come back for', href: 'case-studies/features-users-return.html' }
       ]
     }
   ]
@@ -596,7 +594,7 @@ When creating a new component, ensure:
 - [ ] Smooth animations/transitions
 - [ ] Error handling and edge cases
 - [ ] Clean, semantic HTML
-- [ ] Uses design tokens from `style.css`
+- [ ] Uses design tokens from `tokens.css`
 - [ ] Documented with usage examples
 - [ ] **Security: All user-provided data escaped with `escapeHTML()`**
 - [ ] **Security: Input validation for required fields**
@@ -663,7 +661,7 @@ Components to implement following this methodology:
 
 ## Design Token Usage
 
-All components should use the design tokens defined in `style.css`:
+All components should use the design tokens defined in `tokens.css`:
 
 ```css
 /* Spacing */

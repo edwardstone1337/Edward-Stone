@@ -1,0 +1,696 @@
+/* ============================================
+   DEV PROJECTS — Styles
+   Atoms → Molecules → Page layout
+   ============================================ */
+
+/* --------------------------------------------
+   RESET (scoped to this page)
+   -------------------------------------------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  position: relative;
+  font-family: var(--dp-font-body);
+  font-weight: var(--dp-weight-normal);
+  font-size: var(--dp-text-base);
+  line-height: var(--dp-leading-normal);
+  color: var(--dp-text-primary);
+  background-color: var(--dp-bg-base);
+  transition: background-color var(--dp-duration-slow) var(--dp-ease-out),
+              color var(--dp-duration-slow) var(--dp-ease-out);
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* --------------------------------------------
+   ATOMS — Utility classes
+   -------------------------------------------- */
+
+/* Gradient text */
+.dp-gradient-text {
+  background: linear-gradient(180deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hero heading — each line has its own on-theme gradient (darker top, lighter bottom) */
+.dp-hero-heading .dp-hero-line {
+  display: block;
+  background: linear-gradient(180deg, var(--dp-hero-line-from) 0%, var(--dp-hero-line-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dp-hero-heading .dp-hero-line.dp-hero-accent {
+  background: linear-gradient(180deg, var(--dp-hero-accent-from) 0%, var(--dp-hero-accent-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Overline label */
+.dp-overline {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-semibold);
+  line-height: var(--dp-leading-snug);
+  letter-spacing: var(--dp-tracking-wider);
+  text-transform: uppercase;
+  color: var(--dp-text-secondary);
+}
+
+/* --------------------------------------------
+   MOLECULES — Theme toggle
+   -------------------------------------------- */
+.dp-theme-toggle {
+  position: fixed;
+  top: var(--dp-space-6);
+  right: var(--dp-space-6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dp-radius-full);
+  border: 1px solid var(--dp-border-default);
+  background: var(--dp-toggle-bg);
+  cursor: pointer;
+  transition: background var(--dp-duration-base) var(--dp-ease-out),
+              border-color var(--dp-duration-base) var(--dp-ease-out);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dp-theme-toggle:hover {
+  background: var(--dp-toggle-bg-hover);
+  border-color: var(--dp-border-hover);
+}
+
+.dp-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  color: var(--dp-toggle-icon);
+  transition: color var(--dp-duration-base) var(--dp-ease-out),
+              fill var(--dp-duration-base) var(--dp-ease-out),
+              stroke var(--dp-duration-base) var(--dp-ease-out);
+}
+
+/* Show/hide icons based on theme */
+[data-theme="dark"] .dp-toggle-sun { display: block; }
+[data-theme="dark"] .dp-toggle-moon { display: none; }
+[data-theme="light"] .dp-toggle-sun { display: none; }
+[data-theme="light"] .dp-toggle-moon { display: block; }
+
+/* Theme toggle — sun hover (darker sky, filled sun for contrast) */
+[data-theme="dark"] .dp-theme-toggle:hover {
+  background: var(--dp-theme-sun-bg-hover);
+  border-color: rgba(7, 89, 133, 0.6);
+}
+[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun {
+  color: var(--dp-theme-sun-icon-hover);
+  stroke: var(--dp-theme-sun-icon-hover);
+}
+.dp-theme-toggle .dp-toggle-sun circle {
+  transition: fill var(--dp-duration-base) var(--dp-ease-out);
+}
+[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun circle {
+  fill: var(--dp-theme-sun-icon-hover);
+}
+
+/* Theme toggle — moon hover (night: dark bg, moon fills with glow) */
+[data-theme="light"] .dp-theme-toggle:hover {
+  background: var(--dp-theme-moon-bg-hover);
+  border-color: rgba(30, 41, 59, 0.8);
+}
+[data-theme="light"] .dp-theme-toggle:hover .dp-toggle-moon {
+  color: var(--dp-theme-moon-icon-hover);
+  fill: var(--dp-theme-moon-icon-hover);
+  stroke: var(--dp-theme-moon-icon-hover);
+}
+
+/* --------------------------------------------
+   MOLECULES — Snake game toggle
+   -------------------------------------------- */
+.dp-snake-toggle {
+  position: fixed;
+  top: var(--dp-space-6);
+  left: var(--dp-space-6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dp-radius-full);
+  border: 1px solid var(--dp-border-default);
+  background: var(--dp-toggle-bg);
+  cursor: pointer;
+  transition: background var(--dp-duration-fast) var(--dp-ease-out),
+              border-color var(--dp-duration-fast) var(--dp-ease-out);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dp-snake-toggle:hover {
+  background: var(--dp-toggle-bg-hover);
+  border-color: var(--dp-border-hover);
+}
+
+.dp-snake-toggle svg {
+  width: 18px;
+  height: 18px;
+  color: var(--dp-toggle-icon);
+  transition: color var(--dp-duration-fast) var(--dp-ease-out),
+              filter var(--dp-duration-fast) var(--dp-ease-out);
+}
+
+.dp-snake-toggle .dp-snake-icon {
+  width: auto;
+  height: 18px;
+}
+
+.dp-snake-toggle:hover .dp-snake-icon {
+  color: var(--dp-snake-icon-hover);
+  filter: drop-shadow(0 0 6px var(--dp-snake-icon-glow));
+}
+
+/* Snake overlay */
+.dp-snake-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: var(--dp-bg-overlay);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dp-snake-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dp-snake-toggle--in-overlay {
+  bottom: auto;
+  top: var(--dp-space-6);
+  left: var(--dp-space-6);
+  z-index: 10002;
+}
+
+/* --------------------------------------------
+   PAGE LAYOUT — Foundation
+   -------------------------------------------- */
+.dp-page {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--dp-space-6);
+}
+
+/* Placeholder section spacing — will be refined in Phase 2 */
+.dp-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--dp-space-6);
+  padding-top: var(--dp-space-40);
+  padding-bottom: var(--dp-space-20);
+}
+
+.dp-hero-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--dp-radius-full);
+  object-fit: cover;
+  display: block;
+}
+
+/* Magnetic tilt wrapper — tilt on wrapper so child can have reveal/easter-egg transforms */
+.dp-magnetic-tilt {
+  display: inline-block;
+  transform: perspective(600px) rotateY(0deg) rotateX(0deg);
+}
+
+/* Avatar wrapper specifics */
+.dp-avatar-wrap {
+  position: relative;
+  border-radius: var(--dp-radius-full);
+  cursor: pointer;
+  overflow: visible;
+}
+
+/* Avatar easter egg animations */
+@keyframes dp-avatar-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-5deg); }
+  50%      { transform: rotate(5deg); }
+  75%      { transform: rotate(-3deg); }
+}
+
+.dp-avatar-wiggle {
+  animation: dp-avatar-wiggle 300ms var(--dp-ease-in-out) forwards;
+}
+
+.dp-avatar-wrap canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dp-hero-heading {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-4xl);
+  font-weight: var(--dp-weight-extrabold);
+  line-height: var(--dp-leading-tight);
+  letter-spacing: var(--dp-tracking-tight);
+}
+
+.dp-hero-body {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-lg);
+  font-weight: var(--dp-weight-normal);
+  line-height: var(--dp-leading-relaxed);
+  color: var(--dp-text-secondary);
+  max-width: 640px;
+}
+
+/* --------------------------------------------
+   MOLECULES — Project card (glass treatment)
+   -------------------------------------------- */
+.dp-card {
+  position: relative;
+  display: block;
+  border-radius: var(--dp-radius-lg);
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+  padding: 1px;
+  background: var(--dp-border-default);
+  transform: translateY(0);
+  opacity: 0;
+  transition: background var(--dp-duration-base) var(--dp-ease-out),
+              transform var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-card.dp-revealed {
+  opacity: 1;
+}
+
+.dp-card:hover {
+  background: var(--dp-border-hover);
+  transform: translateY(-2px);
+}
+
+.dp-card:focus-visible {
+  background: var(--dp-border-hover);
+}
+
+.dp-card-inner {
+  position: relative;
+  z-index: 2;
+  background: var(--dp-bg-card);
+  border-radius: calc(var(--dp-radius-lg) - 1px);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-card:hover .dp-card-inner,
+.dp-card:focus-visible .dp-card-inner {
+  background: var(--dp-bg-card-hover);
+}
+
+/* Card media (1:1 slot — image or placeholder) */
+.dp-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.dp-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.dp-card-media-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--dp-bg-card-hover);
+}
+
+.dp-card-media-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  pointer-events: auto;
+}
+
+/* Fade edge — image fades into card background */
+.dp-card-media-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to top, var(--dp-bg-card) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Card content */
+.dp-card-content {
+  padding: var(--dp-space-6) var(--dp-space-6) var(--dp-space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-3);
+  flex: 1;
+}
+
+.dp-card-title {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-lg);
+  font-weight: var(--dp-weight-semibold);
+  line-height: var(--dp-leading-snug);
+  letter-spacing: var(--dp-tracking-tight);
+  color: var(--dp-card-text-primary);
+  transition: color var(--dp-duration-fast) var(--dp-ease-out);
+}
+
+.dp-card-description {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-base);
+  font-weight: var(--dp-weight-medium);
+  line-height: var(--dp-leading-relaxed);
+  color: var(--dp-card-text-secondary);
+}
+
+/* --------------------------------------------
+   ORGANISMS — Card grid
+   -------------------------------------------- */
+.dp-grid-section {
+  padding-bottom: var(--dp-space-30);
+}
+
+/* --------------------------------------------
+   FOOTER
+   -------------------------------------------- */
+.dp-footer {
+  margin-top: var(--dp-space-20);
+  padding-bottom: var(--dp-space-20);
+  text-align: center;
+}
+
+.dp-footer-text {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: var(--dp-weight-normal);
+  line-height: var(--dp-leading-normal);
+  color: var(--dp-text-secondary);
+}
+
+.dp-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--dp-space-6);
+  width: 100%;
+}
+
+/* Empty state */
+.dp-empty {
+  text-align: center;
+  color: var(--dp-text-tertiary);
+  font-size: var(--dp-text-sm);
+  padding: var(--dp-space-20) 0;
+}
+
+/* --------------------------------------------
+   EFFECTS — Noise overlay
+   -------------------------------------------- */
+.dp-noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--dp-noise-opacity);
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* --------------------------------------------
+   EFFECTS — Cursor-tracking card glow
+   -------------------------------------------- */
+.dp-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--dp-accent-glow),
+    transparent 40%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dp-card:hover::before {
+  opacity: 1;
+}
+
+/* --------------------------------------------
+   EFFECTS — Shimmer border
+   -------------------------------------------- */
+@keyframes dp-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.dp-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 40%,
+    var(--dp-border-active) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: dp-shimmer 4s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity var(--dp-duration-slow) var(--dp-ease-out);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dp-card:hover::after {
+  opacity: 1;
+}
+
+/* --------------------------------------------
+   EFFECTS — Scroll reveal
+   -------------------------------------------- */
+.dp-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--dp-duration-entrance) var(--dp-ease-out),
+              transform var(--dp-duration-entrance) var(--dp-ease-out);
+}
+
+.dp-reveal.dp-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------
+   EFFECTS — Hero ambient glow
+   -------------------------------------------- */
+.dp-hero {
+  position: relative;
+  overflow: visible;
+}
+
+.dp-hero::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  border-radius: 50%;
+  background: var(--dp-accent-glow);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --------------------------------------------
+   ACCESSIBILITY
+   -------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  /* Remove all transforms and animations */
+  .dp-reveal {
+    opacity: 0;
+    transform: none;
+    transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+  }
+
+  .dp-reveal.dp-revealed {
+    transform: none;
+  }
+
+  .dp-card {
+    transition: background var(--dp-duration-base) var(--dp-ease-out);
+  }
+
+  .dp-card:hover {
+    transform: none;
+  }
+
+  .dp-card::after {
+    animation: none;
+  }
+
+  body {
+    transition: none;
+  }
+
+  .dp-hero::before {
+    filter: blur(120px);
+    /* Keep the glow but don't animate it */
+  }
+
+  .dp-magnetic-tilt {
+    transform: none !important;
+  }
+
+  .dp-avatar-wiggle {
+    animation: none;
+  }
+
+  .dp-avatar-wrap:hover > * {
+    opacity: 0.85;
+    transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+  }
+}
+
+/* Focus visible — high contrast ring for keyboard users */
+.dp-card:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: 2px;
+}
+
+/* Skip to content (hidden until focused) */
+.dp-skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--dp-space-4);
+  padding: var(--dp-space-3) var(--dp-space-5);
+  background: var(--dp-accent);
+  color: var(--dp-raw-white);
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: var(--dp-weight-medium);
+  border-radius: var(--dp-radius-sm);
+  z-index: 10000;
+  text-decoration: none;
+}
+
+.dp-skip-link:focus {
+  top: var(--dp-space-4);
+}
+
+/* --------------------------------------------
+   RESPONSIVE — Foundation breakpoints
+   -------------------------------------------- */
+@media (max-width: 768px) {
+  .dp-hero {
+    padding-top: var(--dp-space-24);
+    padding-bottom: var(--dp-space-16);
+  }
+  .dp-hero-heading {
+    font-size: var(--dp-text-3xl);
+  }
+  .dp-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--dp-space-5);
+  }
+  .dp-snake-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .dp-hero {
+    padding-top: var(--dp-space-16);
+    padding-bottom: var(--dp-space-12);
+    gap: var(--dp-space-4);
+  }
+  .dp-hero-heading {
+    font-size: var(--dp-text-2xl);
+  }
+  .dp-hero-body {
+    font-size: var(--dp-text-base);
+  }
+  .dp-theme-toggle {
+    top: var(--dp-space-4);
+    right: var(--dp-space-4);
+  }
+  .dp-snake-toggle {
+    top: var(--dp-space-4);
+    left: var(--dp-space-4);
+  }
+  .dp-card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--dp-space-5);
+  }
+  .dp-card-content {
+    padding: var(--dp-space-5) var(--dp-space-5) var(--dp-space-6);
+  }
+}

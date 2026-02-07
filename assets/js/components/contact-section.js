@@ -10,6 +10,13 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('ContactSection requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
+
   // ============================================
   // Configuration
   // ============================================
@@ -27,9 +34,6 @@
   // Helper Functions
   // ============================================
   
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
-
   // ============================================
   // Core Functionality
   // ============================================
@@ -59,10 +63,10 @@
     let contactMethodsHTML = '';
 
     if (email) {
-      // Escape email for both href and display
       const escapedEmail = escapeHTML(email);
+      const safeMailto = escapeHTML(sanitizeUrl('mailto:' + email));
       contactMethodsHTML += `
-        <a href="mailto:${escapedEmail}" class="contact-method">
+        <a href="${safeMailto}" class="contact-method">
           <span class="contact-label">Email</span>
           <span class="contact-value">${escapedEmail}</span>
         </a>
@@ -70,11 +74,11 @@
     }
 
     if (phone) {
-      // Escape phone for display, use cleaned version for tel: link
       const escapedPhone = escapeHTML(phone);
       const cleanPhone = phone.replace(/\s/g, '');
+      const safeTel = escapeHTML(sanitizeUrl('tel:' + cleanPhone));
       contactMethodsHTML += `
-        <a href="tel:${escapeHTML(cleanPhone)}" class="contact-method">
+        <a href="${safeTel}" class="contact-method">
           <span class="contact-label">Phone</span>
           <span class="contact-value">${escapedPhone}</span>
         </a>
@@ -82,10 +86,9 @@
     }
 
     if (linkedInUrl) {
-      // Escape LinkedIn URL for href attribute
-      const escapedLinkedInUrl = escapeHTML(linkedInUrl);
+      const safeLinkedInHref = escapeHTML(sanitizeUrl(linkedInUrl));
       contactMethodsHTML += `
-        <a href="${escapedLinkedInUrl}" class="contact-method" target="_blank" rel="noopener noreferrer">
+        <a href="${safeLinkedInHref}" class="contact-method" target="_blank" rel="noopener noreferrer">
           <span class="contact-label">LinkedIn</span>
           <span class="contact-value">Connect with me</span>
         </a>

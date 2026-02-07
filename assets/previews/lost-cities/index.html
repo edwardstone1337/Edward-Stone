@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost Cities Score Calculator - Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --card-height: 44px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #1a1612 url('images/background-optimised.jpg') no-repeat center / cover;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+    .preview-container {
+      display: flex;
+      gap: 1px;
+      justify-content: center;
+      padding: 4px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+    .expedition {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+    }
+    .expedition-icon {
+      height: 40px;
+      width: 52px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .expedition-purple .expedition-icon { background-image: url('images/purple-expedition.png'); }
+    .expedition-red .expedition-icon { background-image: url('images/red-expedition.png'); }
+    .expedition-green .expedition-icon { background-image: url('images/green-expedition.png'); }
+    .expedition-blue .expedition-icon { background-image: url('images/blue-expedition.png'); }
+    .expedition-grey .expedition-icon { background-image: url('images/grey-expedition.png'); }
+    .expedition-gold .expedition-icon { background-image: url('images/gold-expedition.png'); }
+    .cards {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card {
+      height: var(--card-height);
+      width: 34px;
+      padding: 2px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: #1d1d1d;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+    .card:not(:first-child) {
+      margin-top: -14px;
+    }
+    .card.active {
+      transform: rotateY(180deg);
+      background: #000;
+    }
+    .card:hover:not(.active) {
+      transform: translateY(-6px);
+      z-index: 2;
+      background: #000;
+    }
+    .card:hover:not(.active) .card-image {
+      opacity: 0.5;
+      filter: none;
+    }
+    .card.active:hover {
+      transform: translateY(-6px) rotateY(180deg);
+    }
+    .expedition-purple .card:hover:not(.active) { border-color: rgba(213, 139, 186, 0.5); }
+    .expedition-purple .card:hover:not(.active) .card-image { border: 0.5px solid rgb(213, 139, 186); }
+    .expedition-red .card:hover:not(.active) { border-color: rgba(239, 134, 0, 0.5); }
+    .expedition-red .card:hover:not(.active) .card-image { border: 0.5px solid rgb(239, 134, 0); }
+    .expedition-green .card:hover:not(.active) { border-color: rgba(143, 213, 154, 0.5); }
+    .expedition-green .card:hover:not(.active) .card-image { border: 0.5px solid rgb(143, 213, 154); }
+    .expedition-blue .card:hover:not(.active) { border-color: rgba(13, 182, 239, 0.5); }
+    .expedition-blue .card:hover:not(.active) .card-image { border: 0.5px solid rgb(13, 182, 239); }
+    .expedition-grey .card:hover:not(.active) { border-color: rgba(255, 255, 255, 0.5); }
+    .expedition-grey .card:hover:not(.active) .card-image { border: 0.5px solid rgb(255, 255, 255); }
+    .expedition-gold .card:hover:not(.active) { border-color: rgba(248, 182, 2, 0.5); }
+    .expedition-gold .card:hover:not(.active) .card-image { border: 0.5px solid rgb(248, 182, 2); }
+    @media (prefers-reduced-motion: reduce) {
+      .card,
+      .card .text,
+      .card .card-image {
+        transition: none !important;
+        transform: none !important;
+      }
+      .card:hover:not(.active),
+      .card.active,
+      .card.active:hover {
+        transform: none !important;
+      }
+      .card.active .text {
+        transform: none !important;
+      }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .card { transition: transform 0.3s ease, border-color 0.2s ease, background 0.2s ease; }
+      .card .text { transition: transform 0.3s ease; }
+      .card .card-image { transition: opacity 0.3s ease, filter 0.3s ease, border-color 0.2s ease; }
+    }
+    .card-image {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.25;
+      filter: grayscale(100%);
+    }
+    .card.active .card-image {
+      opacity: 1;
+      filter: none;
+    }
+    .expedition-grey .card:not(.active) .card-image { opacity: 0.15; }
+    .expedition-purple .card .card-image { background-image: url('images/purple-card.png'); }
+    .expedition-red .card .card-image { background-image: url('images/red-card.png'); }
+    .expedition-green .card .card-image { background-image: url('images/green-card.png'); }
+    .expedition-blue .card .card-image { background-image: url('images/blue-card.png'); }
+    .expedition-grey .card .card-image { background-image: url('images/grey-card.png'); }
+    .expedition-gold .card .card-image { background-image: url('images/gold-card.png'); }
+    .expedition-purple .card.active { border-color: rgb(213, 139, 186); }
+    .expedition-purple .card.active .card-image { border: 1px solid rgb(213, 139, 186); }
+    .expedition-red .card.active { border-color: rgb(239, 134, 0); }
+    .expedition-red .card.active .card-image { border: 1px solid rgb(239, 134, 0); }
+    .expedition-green .card.active { border-color: rgb(143, 213, 154); }
+    .expedition-green .card.active .card-image { border: 1px solid rgb(143, 213, 154); }
+    .expedition-blue .card.active { border-color: rgb(13, 182, 239); }
+    .expedition-blue .card.active .card-image { border: 1px solid rgb(13, 182, 239); }
+    .expedition-grey .card.active { border-color: rgb(255, 255, 255); }
+    .expedition-grey .card.active .card-image { border: 1px solid rgb(255, 255, 255); }
+    .expedition-gold .card.active { border-color: rgb(248, 182, 2); }
+    .expedition-gold .card.active .card-image { border: 1px solid rgb(248, 182, 2); }
+    .text {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      transform-style: preserve-3d;
+    }
+    .card.active .text {
+      transform: rotateY(180deg);
+      color: inherit;
+    }
+    .expedition-purple .card.active .text { color: rgb(213, 139, 186); }
+    .expedition-red .card.active .text { color: rgb(239, 134, 0); }
+    .expedition-green .card.active .text { color: rgb(143, 213, 154); }
+    .expedition-blue .card.active .text { color: rgb(13, 182, 239); }
+    .expedition-grey .card.active .text { color: rgb(255, 255, 255); }
+    .expedition-gold .card.active .text { color: rgb(248, 182, 2); }
+    .preview-score {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 2px 0;
+      width: 100%;
+    }
+    .preview-score-label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(250, 241, 171, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .preview-score-value {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: rgb(246, 218, 75);
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-wrapper">
+  <div class="preview-container" id="card-container">
+    <div class="expedition expedition-purple">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+    <div class="expedition expedition-red">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+    <div class="expedition expedition-green">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+    <div class="expedition expedition-blue">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+    <div class="expedition expedition-grey">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+    <div class="expedition expedition-gold">
+      <div class="expedition-icon" aria-hidden="true"></div>
+      <div class="cards">
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="wager"><div class="card-image"></div><span class="text">🫱🏻‍🫲🏾</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="2"><div class="card-image"></div><span class="text">2</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="3"><div class="card-image"></div><span class="text">3</span></div>
+        <div class="card" role="button" aria-pressed="false" tabindex="0" data-value="4"><div class="card-image"></div><span class="text">4</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="preview-score">
+    <span class="preview-score-label">Score</span>
+    <span class="preview-score-value">0</span>
+  </div>
+  </div>
+
+  <script>
+    (function () {
+      function updateScore() {
+        var total = 0;
+        var expeditions = document.querySelectorAll('.expedition');
+        expeditions.forEach(function (exp) {
+          var cards = exp.querySelectorAll('.cards .card.active');
+          var activeCount = cards.length;
+          if (activeCount === 0) return;
+          var sum = 0;
+          cards.forEach(function (c) {
+            var val = c.getAttribute('data-value');
+            if (val !== 'wager') {
+              sum += parseInt(val, 10);
+            }
+          });
+          if (activeCount >= 8) sum += 20;
+          total += sum;
+        });
+        document.querySelector('.preview-score-value').textContent = total;
+      }
+
+      function handleFlip(card) {
+        card.classList.toggle('active');
+        card.setAttribute('aria-pressed', card.classList.contains('active') ? 'true' : 'false');
+        updateScore();
+      }
+
+      document.getElementById('card-container').addEventListener('click', function (e) {
+        var card = e.target.closest('.card');
+        if (!card) return;
+        handleFlip(card);
+      });
+
+      document.getElementById('card-container').addEventListener('keydown', function (e) {
+        if (e.key !== ' ' && e.key !== 'Enter') return;
+        var card = e.target.closest('.card');
+        if (!card) return;
+        e.preventDefault();
+        handleFlip(card);
+      });
+    })();
+  </script>
+</body>
+</html>

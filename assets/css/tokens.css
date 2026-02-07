@@ -1,13 +1,13 @@
 /**
  * Design Tokens
- * 
+ *
  * Single source of truth for all design decisions.
  * This file must be loaded before style.css.
- * 
- * Structure:
- * 1. Primitive Tokens - Raw values (colors, spacing, typography)
- * 2. Semantic Tokens - Contextual aliases (text-primary, background-secondary)
- * 3. Component Tokens - Component-specific variables (button, card, nav)
+ *
+ * Structure (Primitive → Semantic → Component):
+ * 1. Primitive - Irreducible values, no meaning (color, size, radius, opacity, duration)
+ * 2. Semantic - Purpose-based aliases (text-primary, border-radius-default, focus-ring)
+ * 3. Component - UI-scoped, reference semantic only (button, card, nav)
  */
 
 /* ============================================
@@ -21,8 +21,12 @@
   --spacing-12: 12px;
   --spacing-16: 16px;
   --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
 
   /* Type Scale - Major Third (1.25 ratio) */
+  --font-size-2xs: 10px;     /* Icon/UI micro text */
+  --font-size-3xs: 12px;     /* Nav arrow mobile */
   --font-size-xs: 13px;      /* 0.800 × base */
   --font-size-sm: 14px;      /* Slight adjustment for small UI text */
   --font-size-base: 16px;    /* Base size */
@@ -68,6 +72,42 @@
   --color-accent-700: #3a5f70;
   --color-accent-800: #2a4551;
   --color-accent-900: #1a2b32;
+
+  /* Radius (separate from spacing) */
+  --radius-1: 4px;
+  --radius-2: 8px;
+  --radius-3: 16px;
+
+  /* Size (non-spacing dimensions) */
+  --size-1: 2px;
+  --size-icon-sm: 16px;
+  --size-touch-min: 44px;
+  --size-header-min: 48px;
+  --size-avatar-sm: 48px;
+  --size-avatar-md: 64px;
+  --size-avatar-lg: 80px;
+
+  /* Opacity (state primitives) */
+  --opacity-hover: 0.9;
+  --opacity-active: 0.8;
+  --opacity-disabled: 0.5;
+  --opacity-link-hover: 0.7;
+
+  /* Animation */
+  --duration-fast: 0.2s;
+  --duration-normal: 0.3s;
+  --easing-default: ease;
+  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Overlay / Shadow */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --shadow-blur-light: 0 4px 16px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.06);
+  --shadow-blur-medium: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-blur-subtle: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-blur-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+  --shadow-blur-card-hover: 0 4px 16px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+  --shadow-accent-soft: 0 2px 8px rgba(91, 143, 168, 0.1);  /* accent-500 */
+  --shadow-drawer: -2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================
@@ -88,12 +128,23 @@
   --color-accent-secondary: var(--color-accent-400);
   --color-accent-hover: var(--color-accent-600);
   
-  /* Section Backgrounds */
-  --color-background-section-1: var(--color-grey-0); /* White */
-  --color-background-section-2: var(--color-grey-50); /* Very light cool gray */
-  --color-background-section-3: var(--color-accent-50); /* Very light accent tint */
-  --color-background-section-alt: var(--color-grey-100); /* Alternate light background */
-  --color-background-section-subtle: var(--color-grey-50); /* Very subtle background */
+  /* Section Backgrounds (purpose-based) */
+  --color-background-surface: var(--color-grey-0);
+  --color-background-surface-alt: var(--color-grey-50);
+  --color-background-surface-subtle: var(--color-grey-100);
+  --color-background-surface-accent-tint: var(--color-accent-50);
+
+  /* Border Radius (semantic) */
+  --border-radius-sm: var(--radius-1);
+  --border-radius-default: var(--radius-2);
+  --border-radius-lg: var(--radius-3);
+
+  /* Focus Ring */
+  --focus-ring-width: var(--size-1);
+  --focus-ring-offset: var(--size-1);
+
+  /* Size (semantic) */
+  --size-touch-target-min: var(--size-touch-min);
 
   /* Semantic Spacing */
   --spacing-xs: var(--spacing-2);
@@ -102,6 +153,8 @@
   --spacing-lg: var(--spacing-12);
   --spacing-xl: var(--spacing-16);
   --spacing-2xl: var(--spacing-24);
+  --spacing-3xl: var(--spacing-32);
+  --spacing-4xl: var(--spacing-40);
 
   /* Semantic Typography */
   --font-body: var(--font-family-body);
@@ -112,13 +165,17 @@
   --line-height-snug: 1.3;      /* Section headings */
   --line-height-normal: 1.5;      /* UI elements, small text */
   --line-height-relaxed: 1.65;     /* Body paragraphs */
+  --line-height-body: 1.7;       /* Body text, hero paragraphs */
   --line-height-loose: 1.8;      /* Long-form content */
   
   /* Letter Spacing */
-  --letter-spacing-tight: -0.02em;   /* Large headings */
-  --letter-spacing-normal: 0;        /* Default */
+  --letter-spacing-tighter: -0.03em;  /* Skills headings */
+  --letter-spacing-tight: -0.02em;    /* Large headings */
+  --letter-spacing-snug: -0.01em;     /* Card titles */
+  --letter-spacing-normal: 0;         /* Default */
   --letter-spacing-wide: 0.015em;     /* Body text */
-  --letter-spacing-wider: 0.03em;   /* Small text, UI */
+  --letter-spacing-wider: 0.03em;     /* Small text, UI */
+  --letter-spacing-uppercase: 0.1em;  /* Section labels */
 }
 
 /* ============================================
@@ -128,15 +185,15 @@
   /* Button */
   --button-padding-y: var(--spacing-md);
   --button-padding-x: var(--spacing-xl);
-  --button-border-radius: var(--spacing-xl);
+  --button-border-radius: var(--border-radius-lg);
   --button-gap: var(--spacing-md);
   
   /* Button States */
-  --button-hover-opacity: 0.9;
-  --button-active-opacity: 0.8;
-  --button-disabled-opacity: 0.5;
-  --button-transition-duration: 0.2s;
-  --button-transition-timing: ease;
+  --button-hover-opacity: var(--opacity-hover);
+  --button-active-opacity: var(--opacity-active);
+  --button-disabled-opacity: var(--opacity-disabled);
+  --button-transition-duration: var(--duration-fast);
+  --button-transition-timing: var(--easing-default);
   
   /* Button Tertiary */
   --button-tertiary-color: var(--color-text-secondary);
@@ -144,26 +201,26 @@
   
   /* Button Icons */
   --button-icon-gap: var(--spacing-md);
-  --button-icon-size: 16px;
+  --button-icon-size: var(--size-icon-sm);
 
   /* Card */
-  --card-border-radius: var(--spacing-xl);
+  --card-border-radius: var(--border-radius-lg);
   --card-gap: var(--spacing-xl);
 
   /* Project Card */
   --project-card-gap: var(--spacing-2xl);
   --project-card-image-border-radius: var(--card-border-radius);
-  --project-card-hover-opacity: 0.8;
-  --project-card-transition-duration: 0.2s;
-  --project-card-transition-timing: ease;
+  --project-card-hover-opacity: var(--opacity-active);
+  --project-card-transition-duration: var(--duration-fast);
+  --project-card-transition-timing: var(--easing-default);
   
   /* Case Study Card */
   --case-study-card-padding: var(--spacing-2xl);
   --case-study-card-background: var(--color-background-primary);
   --case-study-card-hover-scale: 1.02;
-  --case-study-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 8px 32px rgba(0, 0, 0, 0.06);
-  --case-study-card-transition-duration: 0.3s;
-  --case-study-card-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --case-study-card-hover-shadow: var(--shadow-blur-light);
+  --case-study-card-transition-duration: var(--duration-normal);
+  --case-study-card-transition-timing: var(--easing-smooth);
   --case-study-image-hover-scale: 1.05;
 
   /* Side Quests Section */
@@ -175,9 +232,9 @@
   --nav-link-gap: var(--spacing-md);
   
   /* Navigation Submenu/Dropdown */
-  --nav-submenu-border-radius: var(--spacing-xl);
-  --nav-submenu-item-border-radius: var(--spacing-md);
-  --nav-submenu-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+  --nav-submenu-border-radius: var(--border-radius-lg);
+  --nav-submenu-item-border-radius: var(--border-radius-default);
+  --nav-submenu-shadow: var(--shadow-blur-medium);
   --nav-submenu-padding: var(--spacing-md);
   --nav-submenu-gap: var(--spacing-xs);
 }

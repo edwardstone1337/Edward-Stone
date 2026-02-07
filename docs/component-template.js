@@ -10,6 +10,12 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('Component requires utils.js (Utils.escapeHTML). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+
   // ============================================
   // Configuration
   // ============================================
@@ -21,18 +27,6 @@
   // ============================================
   // Helper Functions
   // ============================================
-  
-  /**
-   * Escape HTML special characters to prevent XSS attacks
-   * @param {string} str - String to escape
-   * @returns {string} Escaped string
-   */
-  function escapeHTML(str) {
-    if (str == null) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
   
   /**
    * Helper function example

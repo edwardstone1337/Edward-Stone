@@ -18,6 +18,13 @@
 (function() {
   'use strict';
 
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.escapeHTML !== 'function' || typeof window.Utils.sanitizeUrl !== 'function') {
+    throw new Error('Button component requires utils.js (Utils.escapeHTML, Utils.sanitizeUrl). Load utils.js before this script.');
+  }
+
+  const escapeHTML = Utils.escapeHTML;
+  const sanitizeUrl = Utils.sanitizeUrl;
+
   // ============================================
   // Configuration
   // ============================================
@@ -29,9 +36,6 @@
   // ============================================
   // Helper Functions
   // ============================================
-
-  // Use shared Utils.escapeHTML (requires utils.js to be loaded first)
-  const escapeHTML = Utils.escapeHTML;
 
   /**
    * Get CSS classes for button based on configuration
@@ -84,13 +88,14 @@
     // Link attributes
     if (elementType === 'a') {
       if (config.href) {
-        attrs.push(`href="${config.href}"`);
+        const safeHref = escapeHTML(sanitizeUrl(config.href)) || '#';
+        attrs.push(`href="${safeHref}"`);
       } else {
         attrs.push('href="#"');
       }
       
       if (config.target) {
-        attrs.push(`target="${config.target}"`);
+        attrs.push(`target="${escapeHTML(config.target)}"`);
       }
       
       if (config.download !== undefined) {
@@ -98,14 +103,15 @@
       }
       
       if (config.rel) {
-        attrs.push(`rel="${config.rel}"`);
+        attrs.push(`rel="${escapeHTML(config.rel)}"`);
       }
     }
     
-    // Button type
+    // Button type (whitelist: only button, submit, reset)
     if (elementType === 'button') {
-      const type = config.type || 'button';
-      attrs.push(`type="${type}"`);
+      const allowedTypes = ['button', 'submit', 'reset'];
+      const type = allowedTypes.includes(config.type) ? config.type : 'button';
+      attrs.push(`type="${escapeHTML(type)}"`);
     }
     
     // ARIA label for icon-only buttons
@@ -121,7 +127,7 @@
     // Custom data attributes
     if (config.dataAttributes) {
       Object.keys(config.dataAttributes).forEach(key => {
-        attrs.push(`data-${key}="${config.dataAttributes[key]}"`);
+        attrs.push(`data-${escapeHTML(key)}="${escapeHTML(String(config.dataAttributes[key]))}"`);
       });
     }
     

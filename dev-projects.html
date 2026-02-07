@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Edward Stone — Designer & Builder</title>
+    <meta name="description" content="A collection of tools and apps designed and built by Edward Stone. Each one a little more ambitious and a little more sophisticated than the last.">
+    <meta property="og:title" content="Edward Stone — Designer & Builder">
+    <meta property="og:description" content="A collection of tools and apps designed and built by Edward Stone. Each one a little more ambitious and a little more sophisticated than the last.">
+    <meta property="og:type" content="website">
+    <!-- Future: og:image for social preview card before launch -->
+
+    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    />
+
+    <!-- Design system (independent from main site) -->
+    <link rel="stylesheet" href="assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="assets/css/dev-styles.css">
+
+    <noscript>
+      <style>
+        .dp-card { opacity: 1 !important; }
+        .dp-reveal { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+
+    <!-- Prevent flash of unstyled theme -->
+    <script>
+      (function() {
+        var theme;
+        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+        if (!theme) {
+          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#projects-container" class="dp-skip-link">Skip to projects</a>
+    <main class="dp-page">
+      <section class="dp-hero">
+        <div class="dp-magnetic-tilt dp-avatar-wrap" data-tilt-intensity="12">
+          <img src="assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar dp-reveal" data-reveal-delay="0" width="96" height="96" />
+        </div>
+        <span class="dp-overline dp-reveal" data-reveal-delay="0">Learning by doing</span>
+        <h1 class="dp-hero-heading dp-reveal" data-reveal-delay="100"><span class="dp-hero-line">Hey, I'm Edward.</span><span class="dp-hero-line dp-hero-accent">I design user experiences.</span><span class="dp-hero-line">Now I'm building them too.</span></h1>
+        <p class="dp-hero-body dp-reveal" data-reveal-delay="200">A collection of tools and apps I've designed and built. Each one a little more ambitious and a little more sophisticated than the last.</p>
+      </section>
+
+      <div id="projects-container" role="region" aria-label="Development projects"></div>
+
+      <footer class="dp-footer">
+        <p class="dp-footer-text">© 2025 Edward Stone</p>
+      </footer>
+    </main>
+
+    <!-- Theme toggle -->
+    <script src="assets/js/dev-projects/theme-toggle.js"></script>
+
+    <!-- Utils (required by project-card) -->
+    <script src="assets/js/utils.js"></script>
+
+    <!-- Project components -->
+    <script src="assets/js/dev-projects/project-card.js"></script>
+    <script src="assets/js/dev-projects/projects-grid.js"></script>
+    <script src="assets/js/dev-projects/magnetic-tilt.js"></script>
+    <script src="assets/js/dev-projects/avatar-easter-egg.js"></script>
+    <script src="assets/js/dev-projects/effects.js"></script>
+    <script src="assets/js/dev-projects/snake-game.js"></script>
+
+    <!-- Initialize -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.DPProjectsGrid) {
+          window.DPProjectsGrid.init('projects-container');
+
+          // Add reveal classes to cards when grid renders (async fetch)
+          var container = document.getElementById('projects-container');
+          if (container && window.MutationObserver) {
+            var mo = new MutationObserver(function () {
+              var cards = document.querySelectorAll('.dp-card');
+              for (var i = 0; i < cards.length; i++) {
+                if (!cards[i].classList.contains('dp-reveal')) {
+                  cards[i].classList.add('dp-reveal');
+                  cards[i].setAttribute('data-reveal-delay', String(300 + (i * 100)));
+                }
+              }
+              if (window.DPEffectsObserveReveals) window.DPEffectsObserveReveals();
+            });
+            mo.observe(container, { childList: true, subtree: true });
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
