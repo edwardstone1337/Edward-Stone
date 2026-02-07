@@ -1,8 +1,9 @@
 /**
  * Avatar Easter Egg — Dev Projects
  *
- * Click .dp-avatar-wrap: physics-based spin on img, confetti burst.
- * Cooldown 1500ms; clicks during cooldown trigger wiggle only.
+ * Click .dp-avatar-wrap: physics-based spin on img. At high angular velocity, confetti bursts
+ * and avatar swaps to profile-spun.jpg once per session (no revert).
+ * Cooldown 1500ms; clicks during cooldown trigger wiggle or velocity boost if already spinning.
  * Respects prefers-reduced-motion (no listener when reduced).
  * Exposes window.DPAvatarEasterEgg.
  */
@@ -10,17 +11,19 @@
   'use strict';
 
   var COOLDOWN_MS = 1500;
-  var SPIN_VELOCITY_BOOST = 720;
-  var SPIN_MAX_VELOCITY = 2880;
-  var SPIN_FRICTION = 0.97;
-  var SPIN_STOP_THRESHOLD = 5;
+  var CLICK_BOOST = 12;
+  var MAX_VELOCITY = 50;
+  var FRICTION = 0.98;
+  var STOP_THRESHOLD = 0.1;
+  var HIGH_SPEED_THRESHOLD = 35;
+  var SPUN_IMAGE_PATH = 'assets/images/profile-spun.jpg';
   var PARTICLE_COUNT = 35;
   var PARTICLE_VEL_MIN = 2;
   var PARTICLE_VEL_MAX = 6;
   var PARTICLE_SIZE_MIN = 3;
   var PARTICLE_SIZE_MAX = 6;
   var GRAVITY = 0.12;
-  var FRICTION = 0.98;
+  var PARTICLE_FRICTION = 0.98;
   var PARTICLE_LIFETIME_FRAMES = 60;
   var COLOR_PALETTE = ['#5B8DEF', '#7DD3C0', '#F7B955', '#EF6B6B', '#C084FC'];
 
@@ -32,7 +35,7 @@
   var currentAngle = 0;
   var angularVelocity = 0;
   var animFrameId = null;
-  var lastTimestamp = null;
+  var spunImageShown = false;
 
   function getImg(wrapper) {
     if (!wrapper) return null;
@@ -84,8 +87,8 @@
         p.x += p.vx;
         p.y += p.vy;
         p.vy += GRAVITY;
-        p.vx *= FRICTION;
-        p.vy *= FRICTION;
+        p.vx *= PARTICLE_FRICTION;
+        p.vy *= PARTICLE_FRICTION;
         p.life -= 1;
         var opacity = Math.max(0, p.life / p.maxLife);
         ctx.globalAlpha = opacity;
@@ -105,24 +108,25 @@
     rafId = requestAnimationFrame(tick);
   }
 
-  function spinLoop(timestamp) {
+  function spinLoop() {
     if (!wrap || !img || !wrap._dpAvatarEasterEggAttached) {
       animFrameId = null;
-      lastTimestamp = null;
       return;
     }
-    var deltaTime = lastTimestamp !== null ? (timestamp - lastTimestamp) / 1000 : 0;
-    if (deltaTime > 0.1) deltaTime = 0.1;
-    currentAngle += angularVelocity * deltaTime;
-    angularVelocity *= Math.pow(SPIN_FRICTION, deltaTime * 60);
+    currentAngle += angularVelocity;
+    angularVelocity *= FRICTION;
     img.style.transform = 'rotate(' + currentAngle + 'deg)';
-    if (angularVelocity < SPIN_STOP_THRESHOLD) {
+    if (!spunImageShown && angularVelocity >= HIGH_SPEED_THRESHOLD) {
+      img.src = SPUN_IMAGE_PATH;
+      spunImageShown = true;
+      runConfetti(wrap);
+    }
+    if (angularVelocity < STOP_THRESHOLD) {
       angularVelocity = 0;
+      setTimeout(function() { img.style.willChange = ''; img.style.transition = ''; }, 200);
       animFrameId = null;
-      lastTimestamp = null;
       return;
     }
-    lastTimestamp = timestamp;
     animFrameId = requestAnimationFrame(spinLoop);
   }
 
@@ -135,16 +139,24 @@
   }
 
   function fireSpin() {
-    angularVelocity = Math.min(angularVelocity + SPIN_VELOCITY_BOOST, SPIN_MAX_VELOCITY);
-    runConfetti(wrap);
+    img.style.transition = 'none';
+    img.style.willChange = 'transform';
+    angularVelocity = Math.min(angularVelocity + CLICK_BOOST, MAX_VELOCITY);
     cooldownUntil = Date.now() + COOLDOWN_MS;
     if (animFrameId === null) {
-      lastTimestamp = null;
       animFrameId = requestAnimationFrame(spinLoop);
     }
   }
 
   function fireWiggle() {
+    if (angularVelocity > 0) {
+      img.style.transition = 'none';
+      angularVelocity = Math.min(angularVelocity + CLICK_BOOST, MAX_VELOCITY);
+      if (animFrameId === null) {
+        animFrameId = requestAnimationFrame(spinLoop);
+      }
+      return;
+    }
     img.classList.add('dp-avatar-wiggle');
     img.addEventListener('animationend', onWiggleEnd);
   }

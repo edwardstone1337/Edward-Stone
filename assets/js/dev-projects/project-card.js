@@ -10,25 +10,20 @@
 (function () {
   'use strict';
 
-  if (typeof window.Utils === 'undefined' || typeof window.Utils.sanitizeUrl !== 'function') {
-    throw new Error('project-card.js requires utils.js (Utils.sanitizeUrl). Load utils.js before this script.');
-  }
-
-  function escapeHTML(str) {
-    var div = document.createElement('div');
-    div.appendChild(document.createTextNode(str || ''));
-    return div.innerHTML;
+  if (typeof window.Utils === 'undefined' || typeof window.Utils.sanitizeUrl !== 'function' || typeof window.Utils.escapeHTML !== 'function') {
+    throw new Error('project-card.js requires utils.js (Utils.sanitizeUrl, Utils.escapeHTML). Load utils.js before this script.');
   }
 
   function generateCard(project) {
-    var title = escapeHTML(project.title);
-    var description = escapeHTML(project.description);
-    var url = escapeHTML(Utils.sanitizeUrl(project.url) || '#');
-    var imagePath = escapeHTML(project.imagePath || '');
-    var imageAlt = escapeHTML(project.imageAlt || project.title || '');
+    var title = Utils.escapeHTML(project.title);
+    var description = Utils.escapeHTML(project.description);
+    var url = Utils.escapeHTML(Utils.sanitizeUrl(project.url) || '#');
+    var rawImagePath = Utils.sanitizeUrl(project.imagePath || '');
+    var imagePath = (rawImagePath && rawImagePath !== '#') ? Utils.escapeHTML(rawImagePath) : '';
+    var imageAlt = Utils.escapeHTML(project.imageAlt || project.title || '');
 
     var preview = project.preview;
-    var previewSrc = preview && preview.src ? escapeHTML(Utils.sanitizeUrl(preview.src)) : '';
+    var previewSrc = preview && preview.src ? Utils.escapeHTML(Utils.sanitizeUrl(preview.src)) : '';
 
     var mediaBlock;
     if (previewSrc) {

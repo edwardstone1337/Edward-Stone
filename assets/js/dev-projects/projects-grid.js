@@ -20,7 +20,10 @@
     window.DPProjectsGrid._abortController = controller;
 
     fetch(DATA_PATH, { signal: controller.signal })
-      .then(function (res) { return res.json(); })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
       .then(function (data) {
         if (!container.isConnected) {
           console.warn('Projects grid: container no longer in DOM, skipping render.');

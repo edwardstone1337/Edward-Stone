@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover enables safe-area-inset-* CSS env variables for notched devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Edward Stone - UX Designer</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"/>
+    <!-- Design tokens must load before main styles -->
+    <link rel="stylesheet" href="assets/css/tokens.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="nav-container"></div>
+      <main>
+        <section class="hero-section">
+          <div class="hero-left">
+            <img src="assets/images/profile.png" alt="Edward Stone" class="profile-img" />
+            <div class="intro-text">
+              <h1>Nice to meet you.<br />I'm <span>Edward</span>,</h1>
+              <h2>a <span>UX Designer</span></h2>
+            </div>
+            <p>
+              Over a decade of experience in UI/UX, visual and digital design. I excel in creating user-centric designs,
+              leading product design initiatives, and employing data-driven
+              strategies to enhance user experience.
+            </p>
+            <div class="buttons">
+                <a href="files/resume.pdf" download class="btn btn-primary">Download Resume</a>
+                <a href="https://www.linkedin.com/in/edwardstone1337/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </div>
+          </div>
+          <div class="hero-right">
+            <h3 class="hero-links-heading">Read how I make an impact</h3>
+            <ul class="hero-links">
+              <li><a href="case-studies/features-users-return.html"><span class="hero-link-icon">♥</span> How I design features people come back for</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <div id="testimonials-container"></div>
+
+        <div id="case-studies-container"></div>
+
+        <div id="skills-container"></div>
+
+        <div id="side-quests-container"></div>
+
+        <div id="contact-container"></div>
+
+        <div id="reading-container"></div>
+      </main>
+    </div>
+    <!-- Shared utilities must load before components -->
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/components/navigation.js"></script>
+    <script src="assets/js/components/project-card.js"></script>
+    <script src="assets/js/components/testimonials-section.js"></script>
+    <script src="assets/js/components/case-study-card.js"></script>
+    <script src="assets/js/components/skills-section.js"></script>
+    <script src="assets/js/components/side-quests-section.js"></script>
+    <script src="assets/js/components/contact-section.js"></script>
+    <script src="assets/js/components/reading-section.js"></script>
+    <script>
+      // Initialize all sections with data
+      document.addEventListener('DOMContentLoaded', function() {
+        // Testimonials
+        if (window.TestimonialsSection) {
+          window.TestimonialsSection.init('testimonials-container', {
+            heading: 'Here are some nice things people have said about working with me.',
+            subheading: 'aren\'t they sweet?',
+            testimonials: [
+              {
+                name: 'Jason Allen',
+                role: 'Product Marketing Manager',
+                text: 'Ed is a rare talent. He is a world class designer, with a great business mind that understands UX deeply. He is hard working, trustworthy and gets along with everyone. If I was starting a new company he would be one of the first people I would hire.'
+              },
+              {
+                name: 'Chris George',
+                role: 'Product Manager',
+                text: 'Ed has an exceptional eye for UI and Visual Design. His approach is founded on sound design principles and he always brings new learnings to the table. His work is progressive, relatable, inspiring and always empathetic to the end user\'s visual experience.'
+              },
+              {
+                name: 'Bella Jagger',
+                role: 'Client Partner',
+                company: 'Reddit',
+                text: 'Ed is an incredibly talented designer that I have had the pleasure of working with. He thinks laterally across creative and strategic direction, and brings unique initiatives to the team. He delivers work efficiently to a high standard, and is an effective listener and question asker. I would love to work with Ed again!'
+              }
+            ]
+          });
+        }
+
+        // Case Studies
+        if (window.CaseStudiesSection) {
+          window.CaseStudiesSection.init('case-studies-container', {
+            heading: 'Featured Case Studies',
+            subheading: 'A selection of projects showcasing my approach to design and problem-solving.',
+            caseStudies: [
+              {
+                title: 'How I design features people come back for',
+                description: 'Exploring the design process behind creating engaging features that drive user retention and satisfaction.',
+                href: 'case-studies/features-users-return.html',
+                imagePath: '',
+                imageAlt: 'Features people come back for case study'
+              }
+            ]
+          });
+        }
+
+        // Skills
+        if (window.SkillsSection) {
+          window.SkillsSection.init('skills-container', {
+            heading: 'Skills & Expertise',
+            tools: [
+              'Figma',
+              'Framer',
+              'Sketch',
+              'Product Design',
+              'AI-Powered Prototyping',
+              'Information Architecture Design',
+              'Wireframing'
+            ],
+            principles: [
+              'True believer in the 8pt grid',
+              'Atomic design system nerd',
+              'Double Diamond Design Process',
+              'Objectives and Key Results (OKRs)',
+              'Jobs to be Done'
+            ],
+            personality: [
+              'I secretly really enjoy copywriting',
+              'Figma fanatic. Sketch hater. Framer flirter',
+              'Vibe coding P plater'
+            ]
+          });
+        }
+
+        // Side Quests (fetched from shared JSON)
+        if (window.SideQuestsSection) {
+          const heading = 'Development Side Quests';
+          const subheading = 'What good is designing something if you can\'t build it? Here are some simple web apps I\'ve made to learn, experiment, and explore.';
+
+          fetch('assets/data/projects.json')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+              window.SideQuestsSection.init('side-quests-container', {
+                heading: heading,
+                subheading: subheading,
+                projects: data.projects || []
+              });
+            })
+            .catch(function(err) {
+              console.error('Failed to load projects:', err);
+              window.SideQuestsSection.init('side-quests-container', {
+                heading: heading,
+                subheading: subheading,
+                projects: []
+              });
+            });
+        }
+
+        // Contact
+        if (window.ContactSection) {
+          window.ContactSection.init('contact-container', {
+            heading: 'Let\'s Work Together',
+            subheading: 'I\'m always open to discussing new opportunities and interesting projects.',
+            email: 'edwardstone1337@gmail.com',
+            phone: '0401 068 837',
+            linkedInUrl: 'https://www.linkedin.com/in/edwardstone1337/',
+            location: 'Leichardt, Sydney, NSW'
+          });
+        }
+
+        // Reading (Book Covers)
+        if (window.ReadingSection) {
+          window.ReadingSection.init('reading-container', {
+            heading: 'I read these so you don\'t have to',
+            imagePath: 'assets/images/books.png',
+            imageAlt: 'Book covers of product and UX books I\'ve read'
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

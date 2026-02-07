@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Avatar high-speed reveal (dev-projects)**: When spin reaches angular velocity ≥35 deg/frame, avatar swaps to `profile-spun.jpg` once per session and confetti bursts; confetti no longer on every spin. Asset `assets/images/profile-spun.jpg`.
+
+### Fixed
+- **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.
+
 - **Side Quests data source**: Projects loaded from `assets/data/projects.json` (shared with dev-projects); graceful fallback to empty array on fetch error.
 - **Snake button asset**: `assets/images/snake.svg` — inlined in snake-game.js with `currentColor` for theme-aware icon; used for Play Snake toggle.
 - **Lost Cities preview widget** (`assets/previews/lost-cities/index.html`): Self-contained iframe preview for dev-projects 1:1 square slots
@@ -37,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - **Case Studies Folder**: Added `case-studies/` directory with README for planned pages
 
 ### Changed
+- **Homepage (index.html)**: Replaced with dev-projects-style landing (dp-hero, projects grid, theme toggle, magnetic tilt, avatar easter egg, effects); previous portfolio sections (nav, testimonials, case studies, skills, contact, reading) removed. Original saved as dev/old-index.html.
 - **Component template**: Uses shared Utils.escapeHTML guard instead of local escapeHTML; aligns new components with utils.js dependency.
 - **Meta viewport**: Added `viewport-fit=cover` for safe-area-inset-* support on notched devices (iPhone X+).
 - **Dev-projects toggles (snake, theme)**: Snake button uses `snake.svg` with theme-aware colour; hover = luminous green + drop-shadow (tokens: `--dp-snake-icon-hover`, `--dp-snake-icon-glow`). Theme toggle: sun hover = darker sky gradient + filled sun centre; moon hover = dark bg + filled moon glow. Toggle transitions use `--dp-duration-base` (200ms).
