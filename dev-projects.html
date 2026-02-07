@@ -55,6 +55,38 @@
 
       <div id="projects-container" role="region" aria-label="Development projects"></div>
 
+      <section class="dp-strip" aria-label="Fair Share — featured project">
+        <div class="dp-strip-orbs">
+          <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
+          <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
+        </div>
+        <div class="dp-strip-inner">
+          <div class="dp-strip-content">
+            <span class="dp-strip-emoji" aria-hidden="true">🪷</span>
+            <h2 class="dp-strip-title">Fair Share</h2>
+            <span class="dp-strip-overline">fairsharecalculator.com</span>
+            <div class="dp-strip-badges">
+              <span class="dp-strip-badge">Calculator</span>
+              <span class="dp-strip-badge">For couples</span>
+            </div>
+            <p class="dp-strip-description">A tool for couples to fairly split shared expenses based on income. Just enter each partner's after-tax salary and shared costs, and it works out a proportional split.</p>
+          </div>
+          <div class="dp-strip-media">
+            <div class="dp-strip-skeleton" aria-hidden="true">
+              <div class="dp-strip-skeleton__title"></div>
+              <div class="dp-strip-skeleton__row"></div>
+              <div class="dp-strip-skeleton__row"></div>
+              <div class="dp-strip-skeleton__row dp-strip-skeleton__row--short"></div>
+              <div class="dp-strip-skeleton__btn"></div>
+            </div>
+          </div>
+          <div class="dp-strip-actions">
+            <a href="#" class="dp-btn dp-btn-primary-on-dark">Learn more</a>
+            <a href="https://www.fairsharecalculator.com/" class="dp-btn dp-btn-secondary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Fair Share (opens in new tab)">Go to Fair Share <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+          </div>
+        </div>
+      </section>
+
       <footer class="dp-footer">
         <p class="dp-footer-text">© 2025 Edward Stone</p>
       </footer>
@@ -62,12 +94,24 @@
 
     <!-- Theme toggle -->
     <script src="assets/js/dev-projects/theme-toggle.js"></script>
+    <!-- Back to top (logo button, left of snake) -->
+    <script src="assets/js/dev-projects/back-to-top.js"></script>
 
-    <!-- Utils (required by project-card) -->
-    <script src="assets/js/utils.js"></script>
+    <!-- Strip effects (cursor-reactive orbs) on static Fair Share strip -->
+    <script type="module">
+      import { initStripEffects } from './assets/js/dev-projects/strip-effects.js';
+      function initStrip() {
+        initStripEffects('.dp-strip');
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initStrip);
+      } else {
+        initStrip();
+      }
+    </script>
 
-    <!-- Project components -->
-    <script src="assets/js/dev-projects/project-card.js"></script>
+    <!-- Project components (project-card is module; projects-grid uses window.DPProjectCard) -->
+    <script type="module" src="assets/js/dev-projects/project-card.js"></script>
     <script src="assets/js/dev-projects/projects-grid.js"></script>
     <script src="assets/js/dev-projects/magnetic-tilt.js"></script>
     <script src="assets/js/dev-projects/avatar-easter-egg.js"></script>

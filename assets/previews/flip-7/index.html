@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip 7 — Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --f7-border-width: 2px;
+    }
+    :root,
+    [data-theme="dark"] {
+      --f7-bg: #0f0f0f;
+      --f7-text: #f0f0f0;
+      --f7-text-muted: #a0a0a0;
+      --f7-border: rgba(255, 255, 255, 0.08);
+      --f7-border-hover: rgba(255, 255, 255, 0.15);
+      --f7-glow: rgba(255, 255, 255, 0.06);
+      --f7-card-back: var(--f7-bg);
+      --f7-card-back-border: rgba(255, 255, 255, 0.22);
+      --f7-card-face: #1d9995;
+      --f7-card-face-text: #000000;
+      --f7-card-face-border: rgba(255, 255, 255, 0.22);
+      --f7-dot-empty-border: rgba(255, 255, 255, 0.22);
+      --f7-dot-filled-bg: rgba(255, 255, 255, 0.06);
+      --f7-dot-filled-border: rgba(255, 255, 255, 0.22);
+      --f7-dot-filled-text: rgba(255, 255, 255, 0.6);
+      --f7-accent-bust: rgba(229, 62, 62, 0.8);
+      --f7-accent-win: rgba(29, 153, 149, 0.8);
+      --f7-accent-focus: #1d9995;
+      --f7-restart-icon: rgba(255, 255, 255, 0.5);
+    }
+    [data-theme="light"] {
+      --f7-bg: #F5F7FF;
+      --f7-text: #111113;
+      --f7-text-muted: #5A6170;
+      --f7-border: rgba(0, 0, 0, 0.06);
+      --f7-border-hover: rgba(0, 0, 0, 0.12);
+      --f7-glow: rgba(0, 0, 0, 0.04);
+      --f7-card-back: transparent;
+      --f7-card-back-border: #2b3276;
+      --f7-card-face: #1d9995;
+      --f7-card-face-text: #000000;
+      --f7-card-face-border: rgba(0, 0, 0, 0.06);
+      --f7-dot-empty-border: #E2E4E9;
+      --f7-dot-filled-bg: rgba(0, 0, 0, 0.03);
+      --f7-dot-filled-border: #D0D3DB;
+      --f7-dot-filled-text: #5A6170;
+      --f7-accent-bust: rgba(229, 62, 62, 0.7);
+      --f7-accent-win: rgba(29, 153, 149, 0.7);
+      --f7-accent-focus: #1d9995;
+      --f7-restart-icon: #2b3276;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vmin;
+      overflow: hidden;
+      background: var(--f7-bg);
+      background-attachment: fixed;
+    }
+    [data-theme="light"] body {
+      background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(204, 251, 241, 0.6) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 60% at 100% 100%, rgba(224, 242, 254, 0.5) 0%, transparent 50%),
+        linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #cffaf6 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .f7-widget {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-width: 200px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .f7-composition {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: min(100%, 90vmin);
+      aspect-ratio: 1;
+    }
+
+    .f7-orbit {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 300ms ease-out;
+    }
+    .f7-orbit.f7-orbit--revealed {
+      opacity: 1;
+    }
+
+    .f7-orbit-dot {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 14vmin;
+      height: 14vmin;
+      min-width: 28px;
+      max-width: 56px;
+      min-height: 28px;
+      max-height: 56px;
+      margin-left: -7vmin;
+      margin-top: -7vmin;
+      border-radius: 50%;
+      border: var(--f7-border-width, 1px) solid var(--f7-dot-empty-border);
+      background: transparent;
+      opacity: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(24px, 7vmin, 36px);
+      letter-spacing: 0.02em;
+      color: var(--f7-dot-filled-text);
+      transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))) scale(0.85);
+      transition: opacity 200ms ease-out, transform 200ms ease-out, background 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+    }
+    .f7-orbit-dot.filled {
+      background: var(--f7-dot-filled-bg);
+      border-color: var(--f7-dot-filled-border);
+      transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1);
+    }
+    .f7-orbit-dot.bust-highlight {
+      border-color: var(--f7-accent-bust) !important;
+      color: var(--f7-accent-bust) !important;
+      background: rgba(229, 62, 62, 0.1) !important;
+      animation: f7-bust-pulse 600ms ease-out;
+    }
+    [data-theme="dark"] .f7-orbit-dot.f7-win-highlight {
+      background: #1d9995 !important;
+      border-color: #1d9995 !important;
+      color: #000000 !important;
+    }
+    @keyframes f7-bust-pulse {
+      0% { transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.2); }
+      100% { transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1); }
+    }
+
+    .f7-card-slot {
+      position: relative;
+      width: 26vmin;
+      aspect-ratio: 2 / 3;
+      min-width: 56px;
+      max-width: 110px;
+      flex-shrink: 0;
+      perspective: 800px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 560ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 560ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .f7-card-slot:hover {
+      transform: scale(1.06) translateY(-5px) rotateX(-4deg) rotateZ(var(--f7-hover-twist, 0deg));
+      box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.25), 0 8px 24px -8px rgba(0, 0, 0, 0.15);
+    }
+    .f7-card-slot:hover .f7-card-back,
+    .f7-card-slot:hover .f7-card-face {
+      border-color: var(--f7-accent-focus);
+      box-shadow: 0 0 20px rgba(29, 153, 149, 0.3);
+    }
+    .f7-card-slot:focus {
+      outline: none;
+    }
+    .f7-card-slot:focus-visible .f7-card-wrapper {
+      outline: 2px solid var(--f7-accent-focus);
+      outline-offset: 2px;
+    }
+
+    .f7-card-wrapper {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+    .f7-card-wrapper.flip {
+      animation: f7-flip 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .f7-card-wrapper.unflip {
+      animation: f7-unflip 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes f7-flip {
+      0%   { transform: translateZ(0) rotateY(0deg); }
+      50%  { transform: translateZ(30px) rotateY(90deg); }
+      100% { transform: translateZ(0) rotateY(180deg); }
+    }
+    @keyframes f7-unflip {
+      0%   { transform: translateZ(0) rotateY(180deg); }
+      50%  { transform: translateZ(20px) rotateY(90deg); }
+      100% { transform: translateZ(0) rotateY(0deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .f7-card-wrapper.flip {
+        animation: none;
+        transform: rotateY(180deg);
+      }
+      .f7-card-wrapper.unflip {
+        animation: none;
+        transform: rotateY(0deg);
+      }
+      .f7-orbit-dot {
+        transition: none;
+      }
+      .f7-card-back,
+      .f7-card-face {
+        transition: none;
+      }
+      .f7-orbit-dot.bust-highlight {
+        animation: none;
+      }
+      .f7-card-slot {
+        transition: none;
+      }
+      .f7-card-slot:hover {
+        transform: none;
+        box-shadow: none;
+      }
+      .f7-card-slot:hover .f7-card-back,
+      .f7-card-slot:hover .f7-card-face {
+        box-shadow: none;
+      }
+      .f7-orbit {
+        transition: none;
+      }
+    }
+
+    .f7-card-back,
+    .f7-card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .f7-card-back,
+    .f7-card-face {
+      transition: border-color 300ms ease-out, box-shadow 300ms ease-out;
+    }
+    .f7-card-back.flipping,
+    .f7-card-face.flipping {
+      border-color: #1d9995;
+    }
+    .f7-card-back {
+      background: var(--f7-card-back);
+      border: var(--f7-border-width, 1px) solid var(--f7-card-back-border);
+    }
+    .f7-card-back .f7-restart-icon {
+      font-size: 1.5rem;
+      color: var(--f7-restart-icon);
+      line-height: 1;
+    }
+
+    .f7-card-face {
+      background: var(--f7-card-face);
+      color: var(--f7-card-face-text);
+      border: var(--f7-border-width, 1px) solid var(--f7-card-face-border);
+      transform: rotateY(180deg);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 10vmin, 48px);
+      letter-spacing: 0.02em;
+    }
+
+    .f7-status {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--f7-text-muted);
+      min-height: 1.2em;
+      text-align: center;
+    }
+    .f7-status.bust { color: var(--f7-accent-bust); }
+    .f7-status.win { color: var(--f7-accent-win); }
+    .f7-hint { opacity: 0.6; }
+
+    .f7-snackbar {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 20;
+      white-space: nowrap;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+    [data-theme="light"] .f7-snackbar {
+      background: rgba(0, 0, 0, 0.06);
+      color: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    .f7-snackbar-icon {
+      flex-shrink: 0;
+      color: var(--f7-accent-focus);
+    }
+    .f7-snackbar.f7-snackbar-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .f7-snackbar.f7-snackbar-exit {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .f7-snackbar,
+      .f7-snackbar.f7-snackbar-visible,
+      .f7-snackbar.f7-snackbar-exit {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="f7-widget">
+    <div class="f7-composition">
+      <div class="f7-orbit" id="f7Orbit" aria-hidden="true">
+        <div class="f7-orbit-dot" id="orbit0" style="--angle: 0deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit1" style="--angle: 51.43deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit2" style="--angle: 102.86deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit3" style="--angle: 154.29deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit4" style="--angle: 205.71deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit5" style="--angle: 257.14deg; --radius: 38vmin;"></div>
+        <div class="f7-orbit-dot" id="orbit6" style="--angle: 308.57deg; --radius: 38vmin;"></div>
+      </div>
+      <div class="f7-card-slot" id="cardSlot" tabindex="0" role="button" aria-label="Draw card">
+        <div class="f7-card-wrapper" id="cardWrapper">
+          <div class="f7-card-back" id="cardBack" aria-hidden="true">
+            <span class="f7-restart-icon" id="restartIcon" aria-hidden="true" style="display: none;">↻</span>
+          </div>
+          <div class="f7-card-face" id="cardFace" aria-hidden="true">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="f7-status" id="status" aria-live="polite"></div>
+    <div class="f7-snackbar" id="f7Snackbar" aria-hidden="true">
+      <svg class="f7-snackbar-icon" width="20" height="20" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="f7-snackbar-text">FLIP 7</span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'theme-change') {
+          document.documentElement.setAttribute('data-theme', e.data.theme);
+        }
+      });
+
+      var RANKS = 13;
+      var EXTRA_CARDS = 7;
+      var TARGET = 7;
+      var FLIP_MS = 600;
+      var REVEAL_PAUSE_MS = 800;
+      var UNFLIP_MS = 400;
+      var REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function buildDeck() {
+        var deck = [];
+        for (var i = 0; i < RANKS; i++) deck.push(i);
+        for (var j = 0; j < EXTRA_CARDS; j++) {
+          deck.push(Math.floor(Math.random() * RANKS));
+        }
+        return deck;
+      }
+
+      function shuffle(arr) {
+        var i = arr.length;
+        while (i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+        return arr;
+      }
+
+      var state = {
+        deck: [],
+        drawn: [],
+        status: 'playing',
+        animating: false,
+        hintShown: false
+      };
+
+      var cardWrapper = document.getElementById('cardWrapper');
+      var cardFace = document.getElementById('cardFace');
+      var cardBack = document.getElementById('cardBack');
+      var restartIcon = document.getElementById('restartIcon');
+      var statusEl = document.getElementById('status');
+      var snackbarEl = document.getElementById('f7Snackbar');
+      var orbitEl = document.getElementById('f7Orbit');
+      var snackbarShowTimeout;
+      var snackbarExitTimeout;
+      var cardSlot = document.getElementById('cardSlot');
+
+      function reset() {
+        state.deck = shuffle(buildDeck());
+        state.drawn = [];
+        state.status = 'playing';
+        state.animating = false;
+        cardWrapper.classList.remove('flip', 'unflip');
+        cardWrapper.style.transform = '';
+        cardFace.textContent = '—';
+        cardFace.setAttribute('aria-hidden', 'true');
+        cardBack.setAttribute('aria-hidden', 'true');
+        restartIcon.style.display = 'none';
+        orbitEl.classList.remove('f7-orbit--revealed');
+        for (var i = 0; i < TARGET; i++) {
+          var dot = document.getElementById('orbit' + i);
+          if (dot) { dot.classList.remove('filled', 'bust-highlight', 'f7-win-highlight'); dot.textContent = ''; }
+        }
+        statusEl.textContent = '';
+        statusEl.className = 'f7-status';
+        clearTimeout(snackbarShowTimeout);
+        clearTimeout(snackbarExitTimeout);
+        snackbarEl.classList.remove('f7-snackbar-visible', 'f7-snackbar-exit');
+        snackbarEl.setAttribute('aria-hidden', 'true');
+      }
+
+      function fillOrbitAtIndex(index, rank) {
+        var dot = document.getElementById('orbit' + index);
+        if (dot) {
+          dot.textContent = rank;
+          dot.classList.add('filled');
+        }
+      }
+
+      function isBust(rank) {
+        return state.drawn.some(function (c) { return c.rank === rank; });
+      }
+
+      function doUnflip() {
+        cardWrapper.classList.remove('flip');
+        cardBack.classList.add('flipping');
+        cardFace.classList.add('flipping');
+        cardWrapper.classList.add('unflip');
+        var unflipDuration = REDUCED_MOTION ? 0 : UNFLIP_MS;
+        setTimeout(function () {
+          cardWrapper.classList.remove('unflip');
+          cardWrapper.style.transform = '';
+          cardFace.textContent = '—';
+          cardBack.classList.remove('flipping');
+          cardFace.classList.remove('flipping');
+          state.animating = false;
+        }, unflipDuration);
+      }
+
+      function handleDraw() {
+        if (state.animating) return;
+        if (state.status !== 'playing') {
+          reset();
+          return;
+        }
+        if (state.deck.length === 0) {
+          reset();
+          return;
+        }
+        state.animating = true;
+        statusEl.textContent = '';
+        statusEl.classList.remove('f7-hint');
+
+        var rank = state.deck.pop();
+        var bust = isBust(rank);
+
+        cardFace.textContent = rank;
+        cardWrapper.classList.remove('flip', 'unflip');
+        cardBack.classList.add('flipping');
+        cardFace.classList.add('flipping');
+        cardWrapper.offsetHeight;
+        cardWrapper.classList.add('flip');
+
+        state.drawn.push({ rank: rank });
+        var drawnIndex = state.drawn.length - 1;
+        if (drawnIndex === 0) orbitEl.classList.add('f7-orbit--revealed');
+
+        var flipDuration = REDUCED_MOTION ? 0 : FLIP_MS;
+        var revealPause = REDUCED_MOTION ? 400 : REVEAL_PAUSE_MS;
+
+        setTimeout(function () {
+          fillOrbitAtIndex(drawnIndex, rank);
+          cardBack.classList.remove('flipping');
+          cardFace.classList.remove('flipping');
+        }, flipDuration + 80);
+
+        if (bust) {
+          state.status = 'bust';
+          setTimeout(function () {
+            var duplicateRank = rank;
+            var earlierIndex = -1;
+            for (var i = 0; i < state.drawn.length - 1; i++) {
+              if (state.drawn[i].rank === duplicateRank) {
+                earlierIndex = i;
+                break;
+              }
+            }
+            var currentIndex = state.drawn.length - 1;
+            var earlierDot = document.getElementById('orbit' + earlierIndex);
+            var currentDot = document.getElementById('orbit' + currentIndex);
+            if (earlierDot) earlierDot.classList.add('bust-highlight');
+            if (currentDot) currentDot.classList.add('bust-highlight');
+            statusEl.textContent = '';
+            statusEl.className = 'f7-status';
+            restartIcon.style.display = '';
+            cardBack.setAttribute('aria-hidden', 'false');
+            cardSlot.setAttribute('aria-label', 'Play again');
+            doUnflip();
+          }, flipDuration + 200);
+          return;
+        }
+        if (state.drawn.length === TARGET) {
+          state.status = 'win';
+          setTimeout(function () {
+            for (var i = 0; i < TARGET; i++) {
+              var dot = document.getElementById('orbit' + i);
+              if (dot) dot.classList.add('f7-win-highlight');
+            }
+            statusEl.textContent = '';
+            statusEl.className = 'f7-status';
+            clearTimeout(snackbarShowTimeout);
+            clearTimeout(snackbarExitTimeout);
+            snackbarEl.classList.remove('f7-snackbar-visible', 'f7-snackbar-exit');
+            snackbarEl.offsetHeight;
+            snackbarEl.setAttribute('aria-hidden', 'false');
+            snackbarEl.classList.add('f7-snackbar-visible');
+            snackbarShowTimeout = setTimeout(function () {
+              snackbarEl.classList.remove('f7-snackbar-visible');
+              snackbarEl.classList.add('f7-snackbar-exit');
+              snackbarExitTimeout = setTimeout(function () {
+                snackbarEl.classList.remove('f7-snackbar-exit');
+                snackbarEl.setAttribute('aria-hidden', 'true');
+              }, 150);
+            }, 3000);
+            restartIcon.style.display = '';
+            cardBack.setAttribute('aria-hidden', 'false');
+            cardSlot.setAttribute('aria-label', 'Play again');
+            doUnflip();
+          }, flipDuration + 200);
+          return;
+        }
+
+        setTimeout(function () {
+          doUnflip();
+        }, flipDuration + revealPause);
+      }
+
+      cardSlot.addEventListener('mouseenter', function () {
+        var twist = (Math.random() * 8 - 4).toFixed(1);
+        cardSlot.style.setProperty('--f7-hover-twist', twist + 'deg');
+      });
+      cardSlot.addEventListener('mouseleave', function () {
+        cardSlot.style.removeProperty('--f7-hover-twist');
+      });
+      cardSlot.addEventListener('click', function (e) {
+        e.preventDefault();
+        handleDraw();
+      });
+      cardSlot.addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          handleDraw();
+        }
+      });
+
+      reset();
+    })();
+  </script>
+</body>
+</html>

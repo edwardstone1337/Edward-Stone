@@ -73,6 +73,76 @@ img { display: block; max-width: 100%; }
 }
 
 /* --------------------------------------------
+   MOLECULES — Button
+   -------------------------------------------- */
+.dp-btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  min-height: var(--dp-btn-min-height);
+  border-radius: var(--dp-btn-radius);
+  padding: var(--dp-btn-padding);
+  font-size: var(--dp-btn-font-size);
+  font-weight: var(--dp-btn-font-weight);
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dp-btn-primary {
+  background: var(--dp-btn-bg-primary);
+  color: var(--dp-btn-text-primary);
+}
+
+.dp-btn-primary:hover {
+  background: var(--dp-btn-hover-bg-primary);
+}
+
+.dp-btn-primary:focus-visible {
+  outline: 2px solid var(--dp-btn-focus-ring);
+  outline-offset: 2px;
+}
+
+.dp-btn-primary-on-dark {
+  background: var(--dp-btn-bg-primary-on-dark);
+  color: var(--dp-btn-text-primary-on-dark);
+}
+
+.dp-btn-primary-on-dark:hover {
+  background: var(--dp-btn-hover-bg-primary-on-dark);
+}
+
+.dp-btn-primary-on-dark:focus-visible {
+  outline: 2px solid var(--dp-btn-focus-ring-on-dark);
+  outline-offset: 2px;
+}
+
+.dp-btn-secondary-on-dark {
+  background: transparent;
+  color: var(--dp-btn-secondary-on-dark-text);
+  border: 1px solid var(--dp-btn-secondary-on-dark-border);
+}
+
+.dp-btn-secondary-on-dark:hover {
+  background: var(--dp-btn-secondary-on-dark-hover-bg);
+}
+
+.dp-btn-secondary-on-dark:focus-visible {
+  outline: 2px solid var(--dp-btn-secondary-on-dark-focus-ring);
+  outline-offset: 2px;
+}
+
+.dp-btn .dp-btn-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------
    MOLECULES — Theme toggle
    -------------------------------------------- */
 .dp-theme-toggle {
@@ -143,12 +213,60 @@ img { display: block; max-width: 100%; }
 }
 
 /* --------------------------------------------
+   MOLECULES — Back to top (logo)
+   -------------------------------------------- */
+.dp-back-to-top {
+  position: fixed;
+  top: var(--dp-space-6);
+  left: var(--dp-space-6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--dp-radius-full);
+  border: 1px solid var(--dp-border-default);
+  background: var(--dp-toggle-bg);
+  cursor: pointer;
+  transition: background var(--dp-duration-base) var(--dp-ease-out),
+              border-color var(--dp-duration-base) var(--dp-ease-out);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dp-back-to-top:hover {
+  background: var(--dp-toggle-bg-hover);
+  border-color: var(--dp-border-hover);
+}
+
+/* Size so logo circle = 18px (viewBox 48 units, logo 32 units → 18 * 48/32 = 27px). Matches snake icon. */
+.dp-back-to-top svg {
+  width: 27px;
+  height: 27px;
+  transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-back-to-top:hover svg {
+  opacity: 0.9;
+}
+
+/* Back-to-top logo: outer ring only (2px stroke outside logo). r=17.75 + stroke 3.5 → inner edge at 16 = logo edge. */
+[data-theme="dark"] .dp-back-to-top .dp-back-to-top-logo .dp-btt-stroke-ring {
+  stroke: white;
+}
+
+[data-theme="light"] .dp-back-to-top .dp-back-to-top-logo .dp-btt-stroke-ring {
+  stroke: white;
+}
+
+/* --------------------------------------------
    MOLECULES — Snake game toggle
    -------------------------------------------- */
 .dp-snake-toggle {
   position: fixed;
   top: var(--dp-space-6);
-  left: var(--dp-space-6);
+  left: calc(var(--dp-space-6) + 40px + var(--dp-space-2));
   z-index: 100;
   display: flex;
   align-items: center;
@@ -211,7 +329,7 @@ img { display: block; max-width: 100%; }
 .dp-snake-toggle--in-overlay {
   bottom: auto;
   top: var(--dp-space-6);
-  left: var(--dp-space-6);
+  left: calc(var(--dp-space-6) + 40px + var(--dp-space-2));
   z-index: 10002;
 }
 
@@ -414,6 +532,220 @@ img { display: block; max-width: 100%; }
 }
 
 /* --------------------------------------------
+   ORGANISMS — Product strip
+   -------------------------------------------- */
+@keyframes dp-orb-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(18%, -12%); }
+}
+
+.dp-strip {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--dp-radius-xl);
+  margin-top: var(--dp-space-8);
+  padding: var(--dp-strip-padding);
+  background: var(--dp-strip-bg);
+}
+
+.dp-strip::before,
+.dp-strip::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: var(--dp-strip-orb-opacity, 0.35);
+  pointer-events: none;
+  animation: dp-orb-drift 20s ease-in-out alternate infinite;
+}
+
+.dp-strip--interactive.dp-strip::before {
+  animation: none;
+  transform: translate(var(--dp-orb-x-1, 0), var(--dp-orb-y-1, 0));
+  opacity: var(--dp-orb-pulse-1, var(--dp-strip-orb-opacity, 0.35));
+}
+
+.dp-strip--interactive.dp-strip::after {
+  animation: none;
+  transform: translate(var(--dp-orb-x-2, 0), var(--dp-orb-y-2, 0));
+  opacity: var(--dp-orb-pulse-2, var(--dp-strip-orb-opacity, 0.35));
+}
+
+.dp-strip::before {
+  top: 10%;
+  left: 5%;
+  background: var(--dp-strip-orb-2);
+}
+
+.dp-strip::after {
+  bottom: 10%;
+  right: 5%;
+  background: var(--dp-strip-orb-1);
+  animation-delay: -10s;
+}
+
+.dp-strip-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.dp-strip-orb-dark {
+  position: absolute;
+  width: 45%;
+  height: 45%;
+  border-radius: 50%;
+  background: var(--dp-strip-orb-dark);
+  filter: blur(70px);
+}
+
+.dp-strip-orb-dark--1 {
+  top: 25%;
+  right: 15%;
+}
+
+.dp-strip-orb-dark--2 {
+  bottom: 20%;
+  left: 10%;
+}
+
+.dp-strip-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: var(--dp-strip-gap);
+  align-items: start;
+}
+
+.dp-strip-media {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: center;
+  aspect-ratio: 9 / 16;
+  max-height: 480px;
+  border-radius: var(--dp-device-radius);
+  border: var(--dp-device-border);
+  box-shadow: var(--dp-device-shadow);
+  overflow: hidden;
+  background: var(--dp-strip-bg);
+}
+
+.dp-strip-skeleton {
+  width: 100%;
+  height: 100%;
+  padding: var(--dp-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-3);
+  justify-content: center;
+}
+
+.dp-strip-skeleton__title {
+  height: 14px;
+  width: 70%;
+  max-width: 140px;
+  border-radius: var(--dp-radius-sm);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dp-strip-skeleton__row {
+  height: 32px;
+  width: 100%;
+  border-radius: var(--dp-radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dp-strip-skeleton__row--short {
+  width: 60%;
+}
+
+.dp-strip-skeleton__btn {
+  margin-top: var(--dp-space-2);
+  height: 40px;
+  width: 100%;
+  max-width: 120px;
+  border-radius: var(--dp-btn-radius);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dp-strip-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-4);
+}
+
+.dp-strip-overline {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-semibold);
+  line-height: var(--dp-leading-snug);
+  letter-spacing: var(--dp-tracking-wider);
+  text-transform: uppercase;
+  color: var(--dp-strip-text-color);
+  opacity: 0.9;
+}
+
+.dp-strip-emoji {
+  font-size: 36px;
+  line-height: 1;
+  display: block;
+  margin-bottom: var(--dp-space-2);
+}
+
+.dp-strip-title {
+  color: var(--dp-strip-title-color);
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: var(--dp-font-display);
+  line-height: var(--dp-leading-tight);
+  margin: 0;
+}
+
+.dp-strip-description {
+  color: var(--dp-strip-text-color);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-family: var(--dp-font-body);
+  margin: 0;
+}
+
+.dp-strip-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dp-space-2);
+}
+
+.dp-strip-badge {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-medium);
+  line-height: 1;
+  padding: var(--dp-space-1) var(--dp-space-3);
+  border-radius: var(--dp-radius-full);
+  background: var(--dp-strip-badge-bg);
+  color: var(--dp-strip-badge-text);
+}
+
+.dp-strip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dp-space-3);
+  align-items: center;
+}
+
+.dp-strip-inner > .dp-strip-actions {
+  margin-top: var(--dp-space-2);
+}
+
+/* --------------------------------------------
    ORGANISMS — Card grid
    -------------------------------------------- */
 .dp-grid-section {
@@ -575,6 +907,10 @@ img { display: block; max-width: 100%; }
    -------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   /* Remove all transforms and animations */
+  .dp-btn {
+    transition: none;
+  }
+
   .dp-reveal {
     opacity: 0;
     transform: none;
@@ -594,6 +930,11 @@ img { display: block; max-width: 100%; }
   }
 
   .dp-card::after {
+    animation: none;
+  }
+
+  .dp-strip::before,
+  .dp-strip::after {
     animation: none;
   }
 
@@ -657,6 +998,44 @@ img { display: block; max-width: 100%; }
   .dp-hero-heading {
     font-size: var(--dp-text-3xl);
   }
+  .dp-strip {
+    margin-top: var(--dp-space-6);
+    padding: var(--dp-space-10) var(--dp-space-5);
+  }
+  .dp-strip-inner {
+    grid-template-columns: 1fr;
+    gap: var(--dp-space-6);
+  }
+  /* Strip mobile pattern: copy first (introduce then show), then device; both centered */
+  .dp-strip-content {
+    order: -1;
+    text-align: center;
+    align-items: center;
+  }
+  .dp-strip-badges {
+    justify-content: center;
+  }
+  .dp-strip-actions {
+    order: 1;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--dp-space-4);
+    justify-content: center;
+  }
+  .dp-strip-actions .dp-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .dp-strip-media {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 9 / 16;
+    max-height: none;
+    min-height: 320px;
+    justify-self: center;
+  }
   .dp-card-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--dp-space-5);
@@ -677,6 +1056,17 @@ img { display: block; max-width: 100%; }
   }
   .dp-hero-body {
     font-size: var(--dp-text-base);
+  }
+  .dp-strip {
+    margin-top: var(--dp-space-5);
+    padding: var(--dp-space-8) var(--dp-space-4);
+  }
+  .dp-strip-media {
+    max-width: 240px;
+    min-height: 280px;
+  }
+  .dp-strip-title {
+    font-size: 1.5rem;
   }
   .dp-theme-toggle {
     top: var(--dp-space-4);

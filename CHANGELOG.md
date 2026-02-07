@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn’t cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html and dev-projects.html.
+- **Product strip (dev-projects)**: Full-width Fair Share banner between hero and project grid — dark teal strip in both themes, orb gradient (teal + orange), device frame + content + CTA. `product-strip.js` renders strip from config; `strip-effects.js` (desktop only, hover-capable) adds cursor-reactive orbs with ambient Lissajous drift, opacity pulse (8s / 12s), and ±50px cursor nudge; mobile and prefers-reduced-motion keep CSS keyframe drift only. Strip tokens and `.dp-btn` / `.dp-btn-primary` in dev-tokens + dev-styles.
 - **Avatar high-speed reveal (dev-projects)**: When spin reaches angular velocity ≥35 deg/frame, avatar swaps to `profile-spun.jpg` once per session and confetti bursts; confetti no longer on every spin. Asset `assets/images/profile-spun.jpg`.
+- **Fair Share preview widget** (`assets/previews/fair-share/index.html`): Self-contained iframe preview for dev-projects — blurred orb gradient, theme-aware (light/dark), income/slider UI; listens for `theme-change` postMessage.
+- **projects.json preview links**: Kaomoji.click and Fair Share Calculator now include `preview.src` for dev-projects product cards (Lost Cities already had one).
+- **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Fixed
 - **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.
@@ -42,6 +47,11 @@ All notable changes to this project will be documented in this file.
 - **Case Studies Folder**: Added `case-studies/` directory with README for planned pages
 
 ### Changed
+- **Fair Share strip (dev-projects)**: Overline under title (e.g. fairsharecalculator.com), same typography as hero overline (xs, semibold, uppercase). Strip is static HTML in dev-projects.html (after projects-container) so it always shows; `initStripEffects('.dp-strip')` still runs for cursor orbs. `.dp-strip-overline` in dev-styles.css. `product-strip.js` supports optional `overline` config when rendering strips programmatically.
+- **Product strip (dev-projects) — responsive & a11y**: Mobile order copy → device → CTA (grid placement reset). Device frame fixed ratio (9:16, max-width 280px / 240px), no collapse. Strip spacing on 8px grid (tokens: `--dp-strip-padding` / `--dp-strip-gap` from `--dp-space-*`); content/actions gaps and breakpoint padding use tokens. Buttons: `--dp-btn-min-height` 48px (a11y touch); strip actions on mobile full-width stacked, 16px gap. DOM: actions sibling of content/media; noscript fallback aligned.
+- **theme-toggle.js (dev-projects)**: Broadcasts theme to `.dp-card-media-iframe` via postMessage; iframes receive theme on load so preview widgets (Kaomoji, Fair Share, Lost Cities) stay in sync.
+- **Light theme (dev-tokens.css)**: Updated light theme colors for better visual consistency.
+- **Logo.svg**: Modified dimensions and design for improved aesthetics.
 - **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Replaced centered green toast with Linear-style snackbar — dark pill at bottom, blur, slide-up + fade-in (8px), 3s visible (UX snackbar duration), exit slides up 4px + fade (150ms); checkmark icon + "Copied to clipboard"; theme-aware (light/dark); reduced-motion instant show/hide; re-copy clears timeouts and re-triggers. Screen reader `.km-status` aria-live unchanged. "Click to copy" tooltip restyled to match snackbar (pill, blur, theme-aware).
 - **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Rows frozen by default (`animation-play-state: paused`); all rows drift on container hover (`.km-container:hover`). Row-level hover rule removed; focus-within still pauses for keyboard users. Reduced motion unchanged.
 - **Homepage (index.html)**: Replaced with dev-projects-style landing (dp-hero, projects grid, theme toggle, magnetic tilt, avatar easter egg, effects); previous portfolio sections (nav, testimonials, case studies, skills, contact, reading) removed. Original saved as dev/old-index.html.

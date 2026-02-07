@@ -7,23 +7,19 @@
  * - External link wrapper
  * - Gradient border glow on hover (CSS-driven)
  */
-(function () {
-  'use strict';
 
-  if (typeof window.Utils === 'undefined' || typeof window.Utils.sanitizeUrl !== 'function' || typeof window.Utils.escapeHTML !== 'function') {
-    throw new Error('project-card.js requires utils.js (Utils.sanitizeUrl, Utils.escapeHTML). Load utils.js before this script.');
-  }
+import { sanitizeUrl, escapeHTML } from './utils.js';
 
-  function generateCard(project) {
-    var title = Utils.escapeHTML(project.title);
-    var description = Utils.escapeHTML(project.description);
-    var url = Utils.escapeHTML(Utils.sanitizeUrl(project.url) || '#');
-    var rawImagePath = Utils.sanitizeUrl(project.imagePath || '');
-    var imagePath = (rawImagePath && rawImagePath !== '#') ? Utils.escapeHTML(rawImagePath) : '';
-    var imageAlt = Utils.escapeHTML(project.imageAlt || project.title || '');
+function generateCard(project) {
+  var title = escapeHTML(project.title);
+  var description = escapeHTML(project.description);
+  var url = escapeHTML(sanitizeUrl(project.url) || '#');
+  var rawImagePath = sanitizeUrl(project.imagePath || '');
+  var imagePath = (rawImagePath && rawImagePath !== '#') ? escapeHTML(rawImagePath) : '';
+  var imageAlt = escapeHTML(project.imageAlt || project.title || '');
 
-    var preview = project.preview;
-    var previewSrc = preview && preview.src ? Utils.escapeHTML(Utils.sanitizeUrl(preview.src)) : '';
+  var preview = project.preview;
+  var previewSrc = preview && preview.src ? escapeHTML(sanitizeUrl(preview.src)) : '';
 
     var mediaBlock;
     if (previewSrc) {
@@ -60,4 +56,3 @@
   window.DPProjectCard = {
     generate: generateCard
   };
-})();

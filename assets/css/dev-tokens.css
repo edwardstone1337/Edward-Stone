@@ -81,6 +81,18 @@
   --dp-raw-glow-teal: 16, 185, 129;
   --dp-raw-glow-amber: 245, 158, 11;
   --dp-raw-glow-green: 74, 222, 128;
+
+  /* --- Button (shared, 48px min height for a11y touch) --- */
+  --dp-btn-radius: 6px;
+  --dp-btn-padding: 0.625rem 1.25rem;
+  --dp-btn-min-height: var(--dp-space-12); /* 48px */
+  --dp-btn-font-size: 0.875rem;
+  --dp-btn-font-weight: 600;
+
+  /* --- Strip / device (shared, 8px grid) --- */
+  --dp-strip-padding: var(--dp-space-16) var(--dp-space-8);
+  --dp-strip-gap: var(--dp-space-8);
+  --dp-device-radius: 1.5rem;
 }
 
 /* --------------------------------------------
@@ -146,6 +158,37 @@
   /* Snake toggle — luminous hover */
   --dp-snake-icon-hover: #4ade80;
   --dp-snake-icon-glow: rgba(var(--dp-raw-glow-green), 0.5);
+
+  /* Button — primary (WCAG AAA 7:1: #FFF on #4A52B8 ≥7:1) */
+  --dp-btn-bg-primary: #4A52B8;
+  --dp-btn-text-primary: var(--dp-raw-white);
+  --dp-btn-hover-bg-primary: var(--dp-accent);
+  --dp-btn-focus-ring: var(--dp-accent);
+
+  /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
+  --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
+  --dp-btn-text-primary-on-dark: #0d3d3c;
+  --dp-btn-hover-bg-primary-on-dark: #e8f5f4;
+  --dp-btn-focus-ring-on-dark: #0d3d3c;
+
+  /* Button — secondary on dark (outline; for strip external link) */
+  --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
+  --dp-btn-secondary-on-dark-text: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
+  --dp-btn-secondary-on-dark-focus-ring: var(--dp-strip-title-color);
+
+  /* Strip — product strip (Fair Share); darkened for text contrast */
+  --dp-strip-bg: #0a2020;
+  --dp-strip-orb-1: #2e7d76;
+  --dp-strip-orb-2: #a66b18;
+  --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
+  --dp-strip-orb-opacity: 0.4;
+  --dp-strip-title-color: #eafcf8;
+  --dp-strip-text-color: rgba(234, 252, 248, 0.85);
+  --dp-strip-badge-bg: rgba(255, 255, 255, 0.15);
+  --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
+  --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
+  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 /* --------------------------------------------
@@ -211,4 +254,35 @@
   /* Snake toggle — luminous hover */
   --dp-snake-icon-hover: #22c55e;
   --dp-snake-icon-glow: rgba(var(--dp-raw-glow-green), 0.4);
+
+  /* Button — primary (WCAG AAA 7:1: #FFF on #4A52B8 ≥7:1) */
+  --dp-btn-bg-primary: #4A52B8;
+  --dp-btn-text-primary: var(--dp-raw-white);
+  --dp-btn-hover-bg-primary: var(--dp-accent);
+  --dp-btn-focus-ring: var(--dp-accent);
+
+  /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
+  --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
+  --dp-btn-text-primary-on-dark: #0d3d3c;
+  --dp-btn-hover-bg-primary-on-dark: #e8f5f4;
+  --dp-btn-focus-ring-on-dark: #0d3d3c;
+
+  /* Button — secondary on dark (outline; for strip external link) */
+  --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
+  --dp-btn-secondary-on-dark-text: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
+  --dp-btn-secondary-on-dark-focus-ring: var(--dp-strip-title-color);
+
+  /* Strip — same as dark theme (darkened for contrast) */
+  --dp-strip-bg: #0a2020;
+  --dp-strip-orb-1: #2e7d76;
+  --dp-strip-orb-2: #a66b18;
+  --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
+  --dp-strip-orb-opacity: 0.4;
+  --dp-strip-title-color: #eafcf8;
+  --dp-strip-text-color: rgba(234, 252, 248, 0.85);
+  --dp-strip-badge-bg: rgba(255, 255, 255, 0.15);
+  --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
+  --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
+  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
