@@ -43,10 +43,20 @@
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    broadcastThemeToIframes(theme);
   }
 
   function getCurrentTheme() {
     return document.documentElement.getAttribute('data-theme') || 'dark';
+  }
+
+  function broadcastThemeToIframes(theme) {
+    var iframes = document.querySelectorAll('.dp-card-media-iframe');
+    iframes.forEach(function (iframe) {
+      try {
+        iframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*');
+      } catch (e) { /* iframe not ready */ }
+    });
   }
 
   function toggleTheme() {
@@ -71,6 +81,12 @@
     var stored = getStoredTheme();
     var theme = stored || getSystemTheme();
     applyTheme(theme);
+
+    document.addEventListener('load', function (e) {
+      if (e.target.classList && e.target.classList.contains('dp-card-media-iframe')) {
+        broadcastThemeToIframes(getCurrentTheme());
+      }
+    }, true);
 
     // Render toggle button
     renderToggle();

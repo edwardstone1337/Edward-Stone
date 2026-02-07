@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fair Share - Blurred Orb Gradient</title>
+  <style>
+    :root,
+    [data-theme="dark"] {
+      --fs-bg: #112e2e;
+      --fs-text: #eafcf8;
+      --fs-accent-you: #5BBFB5;
+      --fs-accent-partner: #ffa726;
+      --fs-track-bg: #092929;
+      --fs-thumb-bg: #ffffff;
+      --fs-thumb-shadow: rgba(0, 0, 0, 0.4);
+      --fs-muted: rgba(234, 252, 248, 0.6);
+    }
+    [data-theme="light"] {
+      --fs-bg: #0e3d3d;
+      --fs-text: #eafcf8;
+      --fs-accent-you: #5BBFB5;
+      --fs-accent-partner: #ffa726;
+      --fs-track-bg: #092929;
+      --fs-thumb-bg: #ffffff;
+      --fs-thumb-shadow: rgba(0, 0, 0, 0.4);
+      --fs-muted: rgba(234, 252, 248, 0.6);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--fs-bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wrap {
+      width: 100vmin;
+      height: 100vmin;
+      position: relative;
+      overflow: hidden;
+    }
+    .orbs {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .orbs::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      filter: url(#grain);
+      opacity: 0.08;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+    [data-theme="light"] .orbs::after {
+      opacity: 0.08;
+    }
+    .orb {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      will-change: transform;
+    }
+    [data-theme="light"] .orb {
+      mix-blend-mode: screen;
+      opacity: 0.7;
+    }
+    .orb-a {
+      background: var(--fs-accent-you);
+    }
+    .orb-b {
+      background: var(--fs-accent-partner);
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </svg>
+  <div class="wrap" id="wrap">
+    <div class="orbs">
+      <div class="orb orb-a" id="orbA"></div>
+      <div class="orb orb-b" id="orbB"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'theme-change') {
+          document.documentElement.setAttribute('data-theme', e.data.theme);
+        }
+      });
+
+      var wrap = document.getElementById('wrap');
+      var orbA = document.getElementById('orbA');
+      var orbB = document.getElementById('orbB');
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var time = 0;
+      var cursorX = 0.5;
+      var cursorY = 0.5;
+      var inside = false;
+      var cursorFactor = 0;
+      var targetCursorFactor = 0;
+
+      var posA = { x: 0, y: 0 };
+      var posB = { x: 0, y: 0 };
+      var targetA = { x: 0, y: 0 };
+      var targetB = { x: 0, y: 0 };
+
+      var RAMP_UP_FRAMES = 30;
+      var RAMP_DOWN_FRAMES = 60;
+      var rampFramesLeft = 0;
+
+      var driftRange = 0.13;
+      var lerpFactor = 0.07;
+      var cursorPullFactor = 0.25;
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function tick() {
+        var rect = wrap.getBoundingClientRect();
+        var w = rect.width;
+        var h = rect.height;
+        var size = Math.min(w, h);
+
+        var dt = 1 / 60;
+        time += reducedMotion ? 0 : dt;
+
+        var driftPx = driftRange * size;
+
+        var centerAx = w * 0.28;
+        var centerAy = h * 0.32;
+        var centerBx = w * 0.72;
+        var centerBy = h * 0.68;
+
+        var idleAx = centerAx + Math.sin(time * 0.15) * driftPx;
+        var idleAy = centerAy + Math.cos(time * 0.2) * driftPx;
+        var idleBx = centerBx + Math.cos(time * 0.18) * driftPx;
+        var idleBy = centerBy + Math.sin(time * 0.12) * driftPx;
+
+        var curX = cursorX * w;
+        var curY = cursorY * h;
+
+        if (inside) {
+          targetCursorFactor = reducedMotion ? 0 : cursorPullFactor;
+        } else {
+          targetCursorFactor = 0;
+        }
+
+        if (rampFramesLeft !== 0) {
+          var step = rampFramesLeft > 0
+            ? cursorPullFactor / RAMP_UP_FRAMES
+            : -cursorPullFactor / RAMP_DOWN_FRAMES;
+          cursorFactor = Math.max(0, Math.min(cursorPullFactor, cursorFactor + step));
+          rampFramesLeft += rampFramesLeft > 0 ? -1 : 1;
+        } else {
+          cursorFactor = targetCursorFactor;
+        }
+
+        targetA.x = lerp(idleAx, curX, cursorFactor);
+        targetA.y = lerp(idleAy, curY, cursorFactor);
+        targetB.x = lerp(idleBx, curX, cursorFactor);
+        targetB.y = lerp(idleBy, curY, cursorFactor);
+
+        posA.x = lerp(posA.x, targetA.x, lerpFactor);
+        posA.y = lerp(posA.y, targetA.y, lerpFactor);
+        posB.x = lerp(posB.x, targetB.x, lerpFactor);
+        posB.y = lerp(posB.y, targetB.y, lerpFactor);
+
+        var halfSize = (0.6 * size) / 2;
+        orbA.style.transform = 'translate(' + (posA.x - halfSize) + 'px, ' + (posA.y - halfSize) + 'px)';
+        orbB.style.transform = 'translate(' + (posB.x - halfSize) + 'px, ' + (posB.y - halfSize) + 'px)';
+
+        requestAnimationFrame(tick);
+      }
+
+      function updateCursor(e) {
+        var rect = wrap.getBoundingClientRect();
+        var cx = e.clientX != null ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : rect.width / 2);
+        var cy = e.clientY != null ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : rect.height / 2);
+        cursorX = Math.max(0, Math.min(1, (cx - rect.left) / rect.width));
+        cursorY = Math.max(0, Math.min(1, (cy - rect.top) / rect.height));
+      }
+
+      function onPointerEnter(e) {
+        inside = true;
+        updateCursor(e);
+        rampFramesLeft = RAMP_UP_FRAMES;
+      }
+
+      function onPointerMove(e) {
+        if (inside) updateCursor(e);
+      }
+
+      function onPointerLeave(e) {
+        inside = false;
+        rampFramesLeft = -RAMP_DOWN_FRAMES;
+      }
+
+      wrap.addEventListener('pointerenter', onPointerEnter);
+      wrap.addEventListener('pointerdown', onPointerEnter);
+      wrap.addEventListener('pointermove', onPointerMove);
+      wrap.addEventListener('pointerleave', onPointerLeave);
+      wrap.addEventListener('pointerup', onPointerLeave);
+      wrap.addEventListener('pointercancel', onPointerLeave);
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

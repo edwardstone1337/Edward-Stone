@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaomoji - Preview</title>
+  <style>
+    :root,
+    [data-theme="dark"] {
+      --km-bg: #1a1a1a;
+      --km-text: #f0f0f0;
+      --km-border: #5a5a5a;
+      --km-border-hover: #808080;
+      --km-tooltip: #f0f0f0;
+      --km-hint: #a0a0a0;
+    }
+    [data-theme="light"] {
+      --km-bg: #ffffff;
+      --km-text: #000000;
+      --km-border: #d9d9d9;
+      --km-border-hover: #808080;
+      --km-tooltip: #333333;
+      --km-hint: #808080;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: var(--km-bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--km-tooltip);
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .tooltip.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .tooltip.fade-out {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-6px);
+    }
+    .btn-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .kaomoji-btn {
+      background: transparent;
+      border: 1px solid var(--km-border);
+      border-radius: 12px;
+      padding: 14px 24px;
+      color: var(--km-text);
+      font-size: 20px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .kaomoji-btn:hover {
+      border-color: var(--km-border-hover);
+    }
+    .kaomoji-btn:active {
+      transform: scale(0.96);
+    }
+    .kaomoji-btn:disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+    .hint {
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--km-hint);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tooltip,
+      .kaomoji-btn {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-wrapper">
+    <div class="btn-wrap">
+      <span class="tooltip" id="tooltip" aria-live="polite">Copied!</span>
+      <button type="button" class="kaomoji-btn" id="btn" aria-label="Copy kaomoji">(╯°□°)╯︵ ┻━┻</button>
+    </div>
+    <p class="hint">click to copy</p>
+  </div>
+
+  <script>
+    (function () {
+      window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'theme-change') {
+          document.documentElement.setAttribute('data-theme', e.data.theme);
+        }
+      });
+      var kaomoji = [
+        '(╯°□°)╯︵ ┻━┻',
+        '(づ￣ ³￣)づ',
+        '¯\\_(ツ)_/¯',
+        '(⌐■_■)',
+        '(ง •_•)ง',
+        '(◕‿◕✿)'
+      ];
+      var index = 0;
+      var tooltipVisible = false;
+      var TOOLTIP_DURATION = 1200;
+
+      var btn = document.getElementById('btn');
+      var tooltipEl = document.getElementById('tooltip');
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          return navigator.clipboard.writeText(text);
+        }
+        return Promise.resolve();
+      }
+
+      function showTooltip() {
+        if (tooltipVisible) return;
+        tooltipVisible = true;
+        btn.disabled = true;
+        tooltipEl.classList.remove('fade-out');
+        tooltipEl.classList.add('visible');
+        tooltipEl.textContent = 'Copied!';
+
+        setTimeout(function () {
+          tooltipEl.classList.add('fade-out');
+          setTimeout(function () {
+            tooltipEl.classList.remove('visible', 'fade-out');
+            index = (index + 1) % kaomoji.length;
+            btn.textContent = kaomoji[index];
+            btn.disabled = false;
+            tooltipVisible = false;
+          }, 200);
+        }, TOOLTIP_DURATION);
+      }
+
+      btn.addEventListener('click', function () {
+        var text = kaomoji[index];
+        copyToClipboard(text).then(function () {
+          showTooltip();
+        }).catch(function () {
+          showTooltip();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
