@@ -154,9 +154,9 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces */
-  --dp-bg-base: var(--dp-raw-white);
-  --dp-bg-raised: var(--dp-raw-grey-100);
+  /* Surfaces — soft blue hue to match dark theme energy */
+  --dp-bg-base: #F5F7FF;
+  --dp-bg-raised: #EEF2FA;
   --dp-bg-card: rgba(0, 0, 0, 0.02);
   --dp-bg-card-hover: rgba(0, 0, 0, 0.04);
   --dp-bg-overlay: rgba(255, 255, 255, 0.8);
@@ -189,7 +189,7 @@
   --dp-hero-line-from: rgba(0, 0, 0, 0.92);
   --dp-hero-line-to: rgba(0, 0, 0, 0.72);
   --dp-hero-accent-from: #6B76E0;
-  --dp-hero-accent-to: #252F8A;
+  --dp-hero-accent-to: #4A52B8;
 
   /* Glow colors (reduced for light) */
   --dp-glow-1: rgba(var(--dp-raw-glow-purple), 0.08);
