@@ -7,168 +7,328 @@
   <style>
     :root,
     [data-theme="dark"] {
-      --km-bg: #1a1a1a;
+      --km-bg: #0f0f0f;
       --km-text: #f0f0f0;
       --km-border: #5a5a5a;
       --km-border-hover: #808080;
       --km-tooltip: #f0f0f0;
       --km-hint: #a0a0a0;
+      --km-glow: rgba(255, 255, 255, 0.08);
+      --km-tooltip-bg: #2a2a2a;
     }
     [data-theme="light"] {
-      --km-bg: #ffffff;
-      --km-text: #000000;
+      --km-bg: #f5f5f5;
+      --km-text: #111111;
       --km-border: #d9d9d9;
       --km-border-hover: #808080;
       --km-tooltip: #333333;
-      --km-hint: #808080;
+      --km-hint: #666666;
+      --km-glow: rgba(0, 0, 0, 0.06);
+      --km-tooltip-bg: #e8e8e8;
     }
     * { box-sizing: border-box; }
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      min-height: 100dvh;
+      height: 100%;
       overflow: hidden;
       background: var(--km-bg);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .preview-wrapper {
+    .km-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      position: relative;
+      gap: 8px;
     }
-    .tooltip {
+    .km-row {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      overflow: visible;
+    }
+    .km-row-inner {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 16px;
+      animation: km-scroll 180s linear infinite;
+      animation-play-state: paused;
+    }
+    .km-row-1 .km-row-inner { animation-duration: 180s; animation-direction: normal; animation-delay: -135s; }
+    .km-row-2 .km-row-inner { animation-duration: 220s; animation-direction: reverse; animation-delay: -27s; }
+    .km-row-3 .km-row-inner { animation-duration: 160s; animation-direction: normal; animation-delay: -80s; }
+    .km-container:hover .km-row-inner { animation-play-state: running; }
+    .km-row:focus-within .km-row-inner { animation-play-state: paused; }
+    @keyframes km-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .km-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      padding: 12px 24px;
+      font-size: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--km-text);
+      cursor: pointer;
+      border-radius: 6px;
+      flex-shrink: 0;
+      font-family: inherit;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .km-item:hover,
+    .km-item:focus-visible {
+      background: var(--km-glow);
+      transform: scale(1.1);
+    }
+    .km-item:focus {
+      outline: none;
+    }
+    .km-item:focus-visible {
+      outline: 2px solid var(--km-border-hover);
+      outline-offset: 2px;
+    }
+    .km-tooltip {
+      position: fixed;
+      pointer-events: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 6px 12px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1000;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    [data-theme="light"] .km-tooltip {
+      background: rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .km-tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .km-status {
       position: absolute;
-      bottom: 100%;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .km-snackbar {
+      position: absolute;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
-      margin-bottom: 10px;
-      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
       font-weight: 500;
-      color: var(--km-tooltip);
-      opacity: 0;
+      letter-spacing: 0.01em;
       pointer-events: none;
+      opacity: 0;
+      z-index: 20;
       white-space: nowrap;
       transition: opacity 0.2s ease, transform 0.2s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
-    .tooltip.visible {
+    [data-theme="light"] .km-snackbar {
+      background: rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .km-snackbar-icon {
+      flex-shrink: 0;
+      color: #22c55e;
+    }
+    .km-snackbar.km-snackbar-visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-    .tooltip.fade-out {
+    .km-snackbar.km-snackbar-exit {
       opacity: 0;
-      transform: translateX(-50%) translateY(-6px);
-    }
-    .btn-wrap {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .kaomoji-btn {
-      background: transparent;
-      border: 1px solid var(--km-border);
-      border-radius: 12px;
-      padding: 14px 24px;
-      color: var(--km-text);
-      font-size: 20px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .kaomoji-btn:hover {
-      border-color: var(--km-border-hover);
-    }
-    .kaomoji-btn:active {
-      transform: scale(0.96);
-    }
-    .kaomoji-btn:disabled {
-      cursor: default;
-      pointer-events: none;
-    }
-    .hint {
-      margin-top: 12px;
-      font-size: 11px;
-      color: var(--km-hint);
+      transform: translateX(-50%) translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
     }
     @media (prefers-reduced-motion: reduce) {
-      .tooltip,
-      .kaomoji-btn {
+      .km-row-inner {
+        animation: none;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .km-duplicate {
+        display: none;
+      }
+      .km-tooltip {
+        transition: none;
+      }
+      .km-snackbar,
+      .km-snackbar.km-snackbar-visible,
+      .km-snackbar.km-snackbar-exit {
         transition: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="preview-wrapper">
-    <div class="btn-wrap">
-      <span class="tooltip" id="tooltip" aria-live="polite">Copied!</span>
-      <button type="button" class="kaomoji-btn" id="btn" aria-label="Copy kaomoji">(╯°□°)╯︵ ┻━┻</button>
+  <div class="km-container" id="km-container">
+    <div class="km-snackbar" id="km-snackbar" aria-hidden="true">
+      <svg class="km-snackbar-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="km-snackbar-text">Copied to clipboard</span>
     </div>
-    <p class="hint">click to copy</p>
   </div>
+  <div class="km-tooltip" id="km-tooltip" aria-hidden="true">Click to copy</div>
+  <div class="km-status" id="km-status" aria-live="polite" aria-atomic="true"></div>
 
   <script>
     (function () {
-      window.addEventListener('message', function(e) {
+      window.addEventListener('message', function (e) {
         if (e.data && e.data.type === 'theme-change') {
           document.documentElement.setAttribute('data-theme', e.data.theme);
         }
       });
+
       var kaomoji = [
-        '(╯°□°)╯︵ ┻━┻',
-        '(づ￣ ³￣)づ',
-        '¯\\_(ツ)_/¯',
-        '(⌐■_■)',
-        '(ง •_•)ง',
-        '(◕‿◕✿)'
+        '(╯°□°)╯︵ ┻━┻', '(づ￣ ³￣)づ', '¯\\_(ツ)_/¯', '(^_^)', '(T_T)',
+        'ʕ•ᴥ•ʔ', '(ಥ﹏ಥ)', '(¬_¬)', '(o_O)', '(x_x)',
+        '(♥ω♥*)', 'ヽ(・∀・)ﾉ', 'm(_ _)m', '(=^･ω･^=)', '(-.-)Zzz...',
+        'ヾ(＾-＾)ノ', '(⁄ ⁄•⁄ω⁄•⁄ ⁄)', '(╬ಠ益ಠ)', 'ε=ε=ε=┌(;￣▽￣)┘'
       ];
-      var index = 0;
-      var tooltipVisible = false;
-      var TOOLTIP_DURATION = 1200;
 
-      var btn = document.getElementById('btn');
-      var tooltipEl = document.getElementById('tooltip');
+      var tooltip = document.getElementById('km-tooltip');
+      var statusEl = document.getElementById('km-status');
 
-      function copyToClipboard(text) {
-        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-          return navigator.clipboard.writeText(text);
+      function showTooltip(btn) {
+        tooltip.textContent = 'Click to copy';
+        var tw = tooltip.offsetWidth;
+        var th = tooltip.offsetHeight;
+        var rect = btn.getBoundingClientRect();
+        var x = rect.left + rect.width / 2;
+        var y = rect.top;
+        tooltip.style.left = (x - tw / 2) + 'px';
+        tooltip.style.top = (y - th - 6) + 'px';
+        tooltip.classList.add('visible');
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove('visible');
+      }
+
+      function announceCopy(text) {
+        statusEl.textContent = text + ' copied to clipboard';
+      }
+
+      var snackbarEl = document.getElementById('km-snackbar');
+      var snackbarShowTimeout;
+      var snackbarExitTimeout;
+
+      function showSnackbar() {
+        hideTooltip();
+        clearTimeout(snackbarShowTimeout);
+        clearTimeout(snackbarExitTimeout);
+        snackbarEl.classList.remove('km-snackbar-visible', 'km-snackbar-exit');
+        snackbarEl.offsetHeight;
+        snackbarEl.setAttribute('aria-hidden', 'false');
+        snackbarEl.classList.add('km-snackbar-visible');
+        snackbarShowTimeout = setTimeout(function () {
+          snackbarEl.classList.remove('km-snackbar-visible');
+          snackbarEl.classList.add('km-snackbar-exit');
+          snackbarExitTimeout = setTimeout(function () {
+            snackbarEl.classList.remove('km-snackbar-exit');
+            snackbarEl.setAttribute('aria-hidden', 'true');
+          }, 150);
+        }, 3000);
+      }
+
+      function handleCopy(btn, text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            announceCopy(text);
+            showSnackbar();
+          });
+        } else {
+          announceCopy(text);
+          showSnackbar();
         }
-        return Promise.resolve();
       }
 
-      function showTooltip() {
-        if (tooltipVisible) return;
-        tooltipVisible = true;
-        btn.disabled = true;
-        tooltipEl.classList.remove('fade-out');
-        tooltipEl.classList.add('visible');
-        tooltipEl.textContent = 'Copied!';
-
-        setTimeout(function () {
-          tooltipEl.classList.add('fade-out');
-          setTimeout(function () {
-            tooltipEl.classList.remove('visible', 'fade-out');
-            index = (index + 1) % kaomoji.length;
-            btn.textContent = kaomoji[index];
-            btn.disabled = false;
-            tooltipVisible = false;
-          }, 200);
-        }, TOOLTIP_DURATION);
+      function createButton(text, isDuplicate) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'km-item' + (isDuplicate ? ' km-duplicate' : '');
+        btn.textContent = text;
+        btn.setAttribute('aria-label', 'Copy ' + text);
+        btn.dataset.kaomoji = text;
+        btn.addEventListener('mouseenter', showTooltip.bind(null, btn));
+        btn.addEventListener('mouseleave', hideTooltip);
+        btn.addEventListener('focus', showTooltip.bind(null, btn));
+        btn.addEventListener('blur', hideTooltip);
+        return btn;
       }
 
-      btn.addEventListener('click', function () {
-        var text = kaomoji[index];
-        copyToClipboard(text).then(function () {
-          showTooltip();
-        }).catch(function () {
-          showTooltip();
-        });
+      function createRow(rowIndex) {
+        var row = document.createElement('div');
+        row.className = 'km-row km-row-' + rowIndex;
+        var inner = document.createElement('div');
+        inner.className = 'km-row-inner';
+        for (var i = 0; i < 2; i++) {
+          for (var j = 0; j < kaomoji.length; j++) {
+            inner.appendChild(createButton(kaomoji[j], i === 1));
+          }
+        }
+        row.appendChild(inner);
+        return row;
+      }
+
+      var container = document.getElementById('km-container');
+      for (var r = 1; r <= 3; r++) {
+        container.appendChild(createRow(r));
+      }
+
+      container.addEventListener('click', function (e) {
+        var btn = e.target.closest('.km-item');
+        if (btn) {
+          e.preventDefault();
+          var text = btn.dataset.kaomoji || btn.textContent;
+          handleCopy(btn, text);
+        }
       });
     })();
   </script>

@@ -42,6 +42,8 @@ All notable changes to this project will be documented in this file.
 - **Case Studies Folder**: Added `case-studies/` directory with README for planned pages
 
 ### Changed
+- **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Replaced centered green toast with Linear-style snackbar — dark pill at bottom, blur, slide-up + fade-in (8px), 3s visible (UX snackbar duration), exit slides up 4px + fade (150ms); checkmark icon + "Copied to clipboard"; theme-aware (light/dark); reduced-motion instant show/hide; re-copy clears timeouts and re-triggers. Screen reader `.km-status` aria-live unchanged. "Click to copy" tooltip restyled to match snackbar (pill, blur, theme-aware).
+- **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Rows frozen by default (`animation-play-state: paused`); all rows drift on container hover (`.km-container:hover`). Row-level hover rule removed; focus-within still pauses for keyboard users. Reduced motion unchanged.
 - **Homepage (index.html)**: Replaced with dev-projects-style landing (dp-hero, projects grid, theme toggle, magnetic tilt, avatar easter egg, effects); previous portfolio sections (nav, testimonials, case studies, skills, contact, reading) removed. Original saved as dev/old-index.html.
 - **Component template**: Uses shared Utils.escapeHTML guard instead of local escapeHTML; aligns new components with utils.js dependency.
 - **Meta viewport**: Added `viewport-fit=cover` for safe-area-inset-* support on notched devices (iPhone X+).
