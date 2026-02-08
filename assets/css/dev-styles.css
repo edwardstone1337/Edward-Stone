@@ -482,8 +482,13 @@ img { display: block; max-width: 100%; }
 /* Section label (slim overline above a group of content) */
 .dp-section-label {
   text-align: center;
-  margin-top: var(--dp-space-16);
-  margin-bottom: var(--dp-space-8);
+  margin-top: var(--dp-space-10);
+  margin-bottom: var(--dp-space-6);
+}
+
+/* First strip after a section label — tighter gap (override default --dp-section-gap) */
+.dp-section-label + .dp-strip {
+  margin-top: var(--dp-space-6);
 }
 
 /* ============ ATOMS (reusable utilities) ============ */
@@ -974,6 +979,11 @@ img { display: block; max-width: 100%; }
   margin-top: 0;
 }
 
+/* Flipped split-row — testimonial on left, strip on right */
+.dp-split-row--flipped {
+  grid-template-columns: 1fr 2fr;
+}
+
 .dp-strip--compact .dp-strip-inner {
   grid-template-columns: 1fr;
   max-width: none;
@@ -1043,7 +1053,7 @@ img { display: block; max-width: 100%; }
 
 .dp-testimonial-quote {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: var(--dp-text-xl);
+  font-size: var(--dp-text-base);
   font-style: italic;
   font-weight: normal;
   line-height: var(--dp-leading-relaxed);
@@ -1283,6 +1293,21 @@ img { display: block; max-width: 100%; }
   opacity: 1;
 }
 
+/* Desktop: show Print to PDF, hide static PDF download */
+.dp-download-static-pdf {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  /* Mobile: hide Print to PDF, show static PDF download */
+  .dp-download-print-pdf {
+    display: none !important;
+  }
+  .dp-download-static-pdf {
+    display: flex !important;
+  }
+}
+
 .dp-resume-container {
   width: 100%;
   max-width: 210mm;
@@ -1504,9 +1529,10 @@ body.dp-overlay-active {
   inset: 0;
   z-index: 10000;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: var(--dp-space-8);
+  overflow-y: auto;
 }
 
 .dp-lightbox-backdrop {
@@ -1524,7 +1550,9 @@ body.dp-overlay-active {
   flex-direction: column;
   align-items: center;
   gap: var(--dp-space-6);
-  max-height: 90vh;
+  max-height: calc(100vh - 160px);
+  flex-shrink: 1;
+  min-height: 0;
   width: 100%;
   max-width: 210mm;
 }
@@ -1538,40 +1566,68 @@ body.dp-overlay-active {
   width: 100%;
   aspect-ratio: 210 / 297;
   overflow-y: auto;
-}
-
-.dp-lightbox-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--dp-space-4);
+  min-height: 0;
+  flex-shrink: 1;
 }
 
 .dp-lightbox-close {
-  background: none;
-  border: 1px solid var(--dp-border-default);
-  color: var(--dp-text-secondary);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--dp-radius-sm);
+  position: absolute;
+  top: var(--dp-space-3);
+  right: var(--dp-space-3);
+  z-index: 2;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--dp-radius-md, 8px);
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
-  font-size: var(--dp-text-base);
-  transition: background var(--dp-duration-fast) var(--dp-ease-out),
-              color var(--dp-duration-fast) var(--dp-ease-out),
-              border-color var(--dp-duration-fast) var(--dp-ease-out);
+  backdrop-filter: blur(8px);
+  transition: background 150ms ease-out;
 }
 
 .dp-lightbox-close:hover {
-  background: var(--dp-bg-card-hover);
-  color: var(--dp-text-primary);
-  border-color: var(--dp-border-hover);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .dp-lightbox-close:focus-visible {
   outline: 2px solid var(--dp-paper-accent);
   outline-offset: 2px;
+}
+
+.dp-lightbox-actions {
+  display: flex;
+  gap: var(--dp-space-3);
+  justify-content: center;
+  margin-top: var(--dp-space-4);
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.dp-lightbox-action-btn {
+  --_btn-bg: rgba(0, 0, 0, 0.5);
+  --_btn-color: rgba(255, 255, 255, 0.9);
+  --_btn-border: rgba(255, 255, 255, 0.15);
+  background: var(--_btn-bg);
+  color: var(--_btn-color);
+  border-color: var(--_btn-border);
+  backdrop-filter: blur(8px);
+}
+
+.dp-lightbox-action-btn:hover {
+  --_btn-bg: rgba(0, 0, 0, 0.65);
+  --_btn-border: rgba(255, 255, 255, 0.25);
+}
+
+/* Print-only lightbox: hidden on screen, visible when printing */
+.dp-lightbox--print-only {
+  position: fixed;
+  left: -9999px;
+  visibility: hidden;
 }
 
 /* --- Resume responsive --- */
@@ -1926,6 +1982,9 @@ body.dp-overlay-active {
   .dp-split-row {
     grid-template-columns: 1fr;
   }
+  .dp-split-row--flipped {
+    grid-template-columns: 1fr;
+  }
   .dp-testimonial {
     padding: var(--dp-space-6);
   }
@@ -2116,4 +2175,172 @@ body.dp-overlay-active {
   justify-content: center;
   gap: var(--dp-space-4);
   flex-wrap: wrap;
+}
+
+/* ============================================
+   PRINT — Resume lightbox to PDF
+   ============================================ */
+@media print {
+  /* Force light theme for print (values from dev-tokens.css [data-theme="light"] lines 250-263, 352-357) */
+  :root {
+    color-scheme: light !important;
+    --dp-paper-surface: #FFFFFF;
+    --dp-paper-text-primary: #111113;
+    --dp-paper-text-secondary: #5A6170;
+    --dp-paper-border: rgba(0, 0, 0, 0.06);
+    --dp-paper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --dp-paper-accent: #5E6AD2;
+    --dp-text-primary: #111113;
+    --dp-text-secondary: #4B5060;
+    --dp-border-default: rgba(0, 0, 0, 0.08);
+  }
+
+  /* Hide everything except resume content */
+  .dp-skip-link,
+  .dp-nav,
+  .dp-hero,
+  .dp-section-label,
+  .dp-strip,
+  .dp-resume-section,
+  .dp-footer,
+  .dp-split-row,
+  .dp-lightbox-backdrop,
+  .dp-lightbox-close,
+  .dp-lightbox-actions,
+  .dp-back-to-top {
+    display: none !important;
+  }
+
+  /* Reset lightbox to flat page */
+  .dp-lightbox {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+    padding: 0 !important;
+    background: none !important;
+  }
+
+  .dp-lightbox-content {
+    position: static !important;
+    max-height: none !important;
+    max-width: none !important;
+  }
+
+  .dp-lightbox-page {
+    overflow: visible !important;
+    aspect-ratio: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .dp-lightbox--print-only {
+    position: static !important;
+    left: auto !important;
+    visibility: visible !important;
+  }
+
+  /* Force two-column layout (counteract @media (max-width: 1080px) which stacks columns) */
+  .dp-resume-body {
+    display: grid !important;
+    grid-template-columns: 1fr 200px !important;
+    gap: var(--dp-space-8) !important;
+  }
+
+  .dp-resume-header {
+    flex-direction: row !important;
+  }
+
+  .dp-resume-sidebar {
+    padding-left: var(--dp-space-4) !important;
+    border-left: 1px solid var(--dp-paper-border) !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+
+  /* Print typography — tighten to fit A4 */
+  .dp-lightbox-page {
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+  }
+
+  .dp-resume-header {
+    padding-bottom: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .dp-resume-name {
+    font-size: 20px !important;
+  }
+
+  .dp-resume-tagline {
+    font-size: 12px !important;
+  }
+
+  .dp-resume-summary {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+  }
+
+  .dp-resume-section-title {
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .dp-resume-role-title {
+    font-size: 12px !important;
+  }
+
+  .dp-resume-role-meta {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .dp-resume-role-desc {
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .dp-resume-role-achievements {
+    font-size: 11px !important;
+  }
+
+  .dp-resume-role-achievements li {
+    margin-bottom: 1px !important;
+  }
+
+  .dp-resume-body {
+    gap: 8px !important;
+  }
+
+  .dp-resume-main > * + * {
+    margin-top: 6px !important;
+  }
+
+  .dp-resume-contact-item {
+    font-size: 10px !important;
+  }
+
+  .dp-resume-skill-list li {
+    font-size: 11px !important;
+  }
+
+  /* A4 page setup */
+  @page {
+    size: A4;
+    margin: 12mm 10mm;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.dp-overlay-active {
+    overflow: visible !important;
+  }
 }

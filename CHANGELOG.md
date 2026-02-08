@@ -7,13 +7,13 @@ All notable changes to this project will be documented in this file.
 ### Added
 - **Fixed nav bar**: `.dp-nav` — glass-style fixed bar with brand (logo + name) and `#dp-nav-actions` (theme toggle, snake toggle). Toggles inject into nav when present, else body.
 - **404 page** (`404.html`): Minimal page with nav, gradient 404, "Go home" / "Play Snake instead". `window.SnakeGame.open()` exposed for external pages. Inline theme init (no flash); favicon; meta robots noindex.
-- **Resume download widget**: Dropdown with PDF, DOCX, copy-to-clipboard. `resume-download.js`. Mobile duplicate below resume.
+- **Resume download widget**: Dropdown with PDF, copy-to-clipboard. `resume-download.js`. Mobile duplicate below resume.
 - **Resume lightbox**: Click resume → fullscreen lightbox (desktop ≥1080px) with download CTA. `resume-lightbox.js`; focus trap, Escape, backdrop click.
 - **SCP Reader strip**: Featured strip in split-row (2/3 + 1/3) — `.dp-strip--compact`, `.dp-strip--scp` theme. Excluded from projects grid. projects.json: URL scp-reader.co.
 - **Split row**: `.dp-split-row` for side-by-side layout. **Testimonial card** `.dp-testimonial` in 1/3 slot — Jason Allen quote, glass styling, gradient decorative mark.
 - **Secondary button**: `.dp-btn-secondary` — transparent, bordered.
 - **Resume/paper tokens**: `--dp-paper-*` (surface, text, border, shadow, accent) light + dark.
-- **Resume files**: `assets/files/Resume.pdf`, `assets/files/Resume.docx`.
+- **Resume files**: `assets/files/Resume.pdf`.
 - **Resume glow**: effects.js adds cursor-reactive glow to resume container (same pattern as cards).
 - **dev/design-system.html**: Design system living reference — tokens, swatches, utility demos (noise, glass, glow, shimmer, fade); uses dev-tokens + dev-styles.
 - **Kaomoji strip (dev-projects)**: Featured strip for Kaomoji.click above Fair Share — flipped layout (content left, media right), dark monochrome theme `.dp-strip--kaomoji`; live iframe preview with postMessage theme sync. Strip-featured projects (Kaomoji, Fair Share) excluded from card grid to avoid duplication.
@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Changed
+- **Side projects section order**: DOM order is now Hero → section label → Fair Share split-row → Kaomoji strip → SCP split-row → Resume → Footer. Skip link target `#projects` moved to Fair Share split-row wrapper. Full testimonial quotes (Bella Jagger, Jason Allen). SCP split-row uses `.dp-split-row--flipped` (testimonial left, strip right); at ≤768px both split-rows stack to single column. `.dp-testimonial-quote` font-size set to `var(--dp-text-base)` for longer quotes.
+- **Fair Share strip**: Compact split-row layout — added `dp-strip--compact`, removed `.dp-strip-media` (skeleton), removed hidden "Learn more" button; wrapped in `.dp-split-row` with Bella Jagger testimonial (1/3). Same pattern as SCP strip; single "Go to Fair Share" CTA with `dp-btn-primary-on-dark`.
 - **Testimonial card typography (Phase 2 patch)**: Decorative quote mark — absolute, large (8rem), Georgia, opacity 0.07 (flat colour, no gradient). Quote text — Georgia italic at `--dp-text-lg` (20px), `z-index: 1`. Attribution — `position: relative; z-index: 1` so both sit above the faint mark. Container `.dp-testimonial` already has `position: relative`.
 - **Resume component (Phase 9)**: Animated border now matches card technique — dual-layer with `.dp-resume-container` (1px padding, ::before radial glow at z-index 1) and `.dp-resume-page` as masking layer (z-index 2, solid `--dp-paper-surface`, inset border-radius). Glow uses `--dp-accent-glow`, opacity 1 on hover. Removed phone number from resume contact in index.html (email and location kept). At 1080px: intro download centered via `.dp-resume-intro .dp-resume-download { display: flex; justify-content: center }`, mobile download spacing set to `--dp-space-10`. Mobile (≤1080px) resume text sizes updated for WCAG AA: body/secondary ≥16px/14px (tagline, summary, role-title, role-desc, role-achievements → base; section-title, role-meta, skill-list li, contact-item → sm).
 - **Back-to-top**: Moved to bottom-right. Arrow icon (replaces logo). Visible only after 1 viewport scroll; prefers-reduced-motion respected.
@@ -32,11 +34,15 @@ All notable changes to this project will be documented in this file.
 - **Snake game**: Public `window.SnakeGame.open()` for 404.
 - **Theme init**: Removed `data-theme` from `<html>` in index.html and dev/design-system.html; theme is set by theme-toggle.js after load. Added surface fallbacks in dev-tokens.css (`:root`: --dp-bg-base, --dp-bg-raised, --dp-bg-card, --dp-bg-card-hover, --dp-bg-overlay, --dp-text-primary, --dp-text-secondary) so initial paint matches dark theme and avoids flash before JS runs. Added `.dp-no-transition` utility to suppress transitions on initial load; inline script applies it during theme set, double rAF at end of body removes it after first paint.
 
+### Removed
+- **Resume DOCX**: `assets/files/Resume.docx` deleted; download widget and docs now reference PDF only.
+
 ### Fixed
 - **Kaomoji strip**: `.dp-strip-media` now uses `justify-self: center` for centered layout.
 - **Snake game (dev-projects)**: Single Play button only — original button hidden when overlay opens, shown on teardown; close button no longer reskinned/appended to body (removed with overlay). State (cols, rows, offsetX, offsetY, colors) and overlayClosing reset in stopGame/teardown.
 - **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.
 
+### Added (continued)
 - **Side Quests data source**: Projects loaded from `assets/data/projects.json` (shared with dev-projects); graceful fallback to empty array on fetch error.
 - **Snake button asset**: `assets/images/snake.svg` — inlined in snake-game.js with `currentColor` for theme-aware icon; used for Play Snake toggle.
 - **Lost Cities preview widget** (`assets/previews/lost-cities/index.html`): Self-contained iframe preview for dev-projects 1:1 square slots

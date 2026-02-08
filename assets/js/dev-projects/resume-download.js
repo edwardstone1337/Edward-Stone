@@ -2,6 +2,8 @@
  * Resume download widget — dropdown button with format menu.
  * Handles: trigger toggle, outside click close, copy-to-clipboard.
  */
+import { printResume } from './resume-lightbox.js';
+
 export function initResumeDownload() {
   const controller = new AbortController();
   const { signal } = controller;
@@ -38,6 +40,14 @@ export function initResumeDownload() {
       }
       closeAllMenus();
     }, { signal });
+  });
+
+  // Print PDF (silent print flow)
+  document.querySelectorAll('[data-print-pdf]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      closeAllMenus();
+      printResume();
+    }, { signal: controller.signal });
   });
 
   // Close menus on outside click or Escape
