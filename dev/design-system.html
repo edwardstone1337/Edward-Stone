@@ -55,7 +55,9 @@
           <h1>Dev-Projects Design System</h1>
           <p class="ds-subtitle">Living reference — all components render from dev-tokens.css and dev-styles.css</p>
         </div>
-        <!-- Theme toggle (fixed position) added by theme-toggle.js -->
+        <div class="dp-nav-actions" id="dp-nav-actions">
+          <!-- Theme toggle injected by theme-toggle.js -->
+        </div>
       </header>
 
       <!-- 2. Primitives -->
@@ -207,6 +209,138 @@
             </div>
           </div>
         </div>
+
+        <!-- 2f. Font families -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2f. Font families</h3>
+          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-3);">
+            <div><span style="font-family: var(--dp-font-display); font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox — display</span><span class="ds-label" style="display: block;">--dp-font-display</span></div>
+            <div><span style="font-family: var(--dp-font-body); font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox — body</span><span class="ds-label" style="display: block;">--dp-font-body</span></div>
+          </div>
+        </div>
+
+        <!-- 2g. Line heights -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2g. Line heights</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Same font-size; 2–3 lines each</p>
+          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-4);">
+            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-none); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-none</span></div>
+            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-tight); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-tight</span></div>
+            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-snug); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-snug</span></div>
+            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-normal); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-normal</span></div>
+            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-relaxed); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-relaxed</span></div>
+          </div>
+        </div>
+
+        <!-- 2h. Letter spacing -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2h. Letter spacing</h3>
+          <div class="ds-token-row">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
+              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-tight); color: var(--dp-text-primary);">Tracking tight</span>
+              <span class="ds-label">--dp-tracking-tight</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
+              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-normal); color: var(--dp-text-primary);">Tracking normal</span>
+              <span class="ds-label">--dp-tracking-normal</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
+              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-wide); color: var(--dp-text-primary);">Tracking wide</span>
+              <span class="ds-label">--dp-tracking-wide</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
+              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-wider); color: var(--dp-text-primary);">Tracking wider</span>
+              <span class="ds-label">--dp-tracking-wider</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2i. Easing (additional) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2i. Easing (additional)</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hover to see translate animation</p>
+          <div class="ds-token-row">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-base) var(--dp-ease-in-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
+              <span class="ds-label">--dp-ease-in-out</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2j. Raw color palette -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2j. Raw color palette</h3>
+          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-white); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-white</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-black); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-black</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-50); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-50</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-100); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-100</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-200); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-200</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-400); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-400</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-500); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-500</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-800); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-800</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-900); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-900</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-950); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-grey-950</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-accent); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-accent</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-accent-light); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-accent-light</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-purple), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-glow-purple</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-blue), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-glow-blue</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-teal), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-glow-teal</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-amber), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-glow-amber</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-green), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
+              <span class="ds-label">--dp-raw-glow-green</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- 3. Semantic Tokens -->
@@ -304,6 +438,224 @@
             </div>
           </div>
         </div>
+
+        <!-- 3e. Glass -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3e. Glass</h3>
+          <div class="ds-demo" style="position: relative;">
+            <div class="ds-glass-demo-bg" style="position: absolute; inset: 0; min-height: 120px; background: linear-gradient(135deg, #2a2a4e 0%, #3d2a5c 50%, #4a2a5c 100%); border-radius: var(--dp-radius-md);"></div>
+            <div style="width: 200px; height: 100px; background: var(--dp-glass-bg); border-radius: var(--dp-radius-sm); position: relative; padding: var(--dp-space-4); display: flex; align-items: center; justify-content: center;">
+              <span style="color: var(--dp-text-primary); font-size: var(--dp-text-sm);">--dp-glass-bg</span>
+            </div>
+          </div>
+          <span class="ds-label">--dp-glass-bg (over gradient)</span>
+        </div>
+
+        <!-- 3f. On-dark layer -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3f. On-dark layer</h3>
+          <div style="background: var(--dp-raw-grey-900); padding: var(--dp-space-6); border-radius: var(--dp-radius-md);">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-start;">
+              <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
+                <span style="color: var(--dp-on-dark-text-primary); font-size: var(--dp-text-base);">Primary on dark</span>
+                <span class="ds-label" style="color: var(--dp-on-dark-text-secondary);">--dp-on-dark-text-primary</span>
+              </div>
+              <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
+                <span style="color: var(--dp-on-dark-text-secondary); font-size: var(--dp-text-base);">Secondary on dark</span>
+                <span class="ds-label" style="color: var(--dp-on-dark-text-secondary);">--dp-on-dark-text-secondary</span>
+              </div>
+            </div>
+            <div class="ds-token-row" style="margin-top: var(--dp-space-4);">
+              <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 100px; height: 60px; background: var(--dp-on-dark-surface); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-on-dark-text-secondary);">--dp-on-dark-surface</span>
+              </div>
+              <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 100px; height: 60px; background: var(--dp-on-dark-surface-hover); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-on-dark-text-secondary);">--dp-on-dark-surface-hover</span>
+              </div>
+              <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 100px; height: 60px; background: transparent; border: 2px solid var(--dp-on-dark-focus-ring); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-on-dark-text-secondary);">--dp-on-dark-focus-ring</span>
+              </div>
+            </div>
+          </div>
+          <span class="ds-label" style="margin-top: var(--dp-space-2);">Dark container: on-dark text, surface, focus-ring tokens</span>
+        </div>
+
+        <!-- 3g. Card text -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3g. Card text</h3>
+          <div class="ds-demo" style="background: var(--dp-bg-card); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-border-default); max-width: 320px;">
+            <div style="margin-bottom: var(--dp-space-2);"><span style="color: var(--dp-card-text-primary); font-size: var(--dp-text-base);">Card primary text</span><span class="ds-label" style="display: block;">--dp-card-text-primary</span></div>
+            <div><span style="color: var(--dp-card-text-secondary); font-size: var(--dp-text-sm);">Card secondary text</span><span class="ds-label" style="display: block;">--dp-card-text-secondary</span></div>
+          </div>
+        </div>
+
+        <!-- 3h. Gradient text tokens -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3h. Gradient text tokens</h3>
+          <div class="ds-demo" style="display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-end;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 80px; height: 48px; background: var(--dp-gradient-text-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-gradient-text-from</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 80px; height: 48px; background: var(--dp-gradient-text-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-gradient-text-to</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 120px;">
+              <div style="width: 100%; height: 32px; background: linear-gradient(90deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">from → to</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3i. Hero line gradients -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3i. Hero line gradients</h3>
+          <div class="ds-demo">
+            <div class="ds-token-row" style="margin-bottom: var(--dp-space-4);">
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 40px; background: var(--dp-hero-line-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">--dp-hero-line-from</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 40px; background: var(--dp-hero-line-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">--dp-hero-line-to</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 40px; background: var(--dp-hero-accent-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">--dp-hero-accent-from</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 40px; background: var(--dp-hero-accent-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">--dp-hero-accent-to</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
+              <div style="display: flex; flex-direction: column;">
+                <div style="width: 100%; height: 24px; background: linear-gradient(90deg, var(--dp-hero-line-from) 0%, var(--dp-hero-line-to) 100%); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">hero-line from → to</span>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <div style="width: 100%; height: 24px; background: linear-gradient(90deg, var(--dp-hero-accent-from) 0%, var(--dp-hero-accent-to) 100%); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label">hero-accent from → to</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3j. Noise opacity -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3j. Noise opacity</h3>
+          <div class="ds-demo">
+            <span style="font-size: var(--dp-text-sm); color: var(--dp-text-primary);">--dp-noise-opacity</span>
+            <span style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-left: var(--dp-space-2);">(value: <span id="ds-noise-opacity-value"></span>)</span>
+          </div>
+          <span class="ds-label">Reference value — used by .dp-noise overlay</span>
+          <script>
+            (function() {
+              function updateNoiseOpacity() {
+                var el = document.getElementById('ds-noise-opacity-value');
+                if (el) {
+                  var val = getComputedStyle(document.documentElement).getPropertyValue('--dp-noise-opacity').trim();
+                  el.textContent = val || '—';
+                }
+              }
+              updateNoiseOpacity();
+              function attach() {
+                document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() { setTimeout(updateNoiseOpacity, 50); });
+              }
+              if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
+              else attach();
+            })();
+          </script>
+        </div>
+
+        <!-- 3k. Paper / resume tokens -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3k. Paper / resume tokens</h3>
+          <div class="ds-demo" style="background: var(--dp-paper-surface); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-paper-border); max-width: 400px;">
+            <div class="ds-token-row" style="flex-wrap: wrap; margin-bottom: var(--dp-space-4);">
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; background: var(--dp-paper-surface); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-surface</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; background: transparent; padding: var(--dp-space-2);"><span style="color: var(--dp-paper-text-primary); font-size: var(--dp-text-xs);">Text</span></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-text-primary</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; background: transparent; padding: var(--dp-space-2);"><span style="color: var(--dp-paper-text-secondary); font-size: var(--dp-text-xs);">Text</span></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-text-secondary</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; border: 2px solid var(--dp-paper-border); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-border</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; background: var(--dp-paper-surface); border-radius: var(--dp-radius-sm); box-shadow: var(--dp-paper-shadow);"></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-shadow</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 64px; height: 48px; background: var(--dp-paper-accent); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-accent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3l. SCP strip tokens -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3l. SCP strip tokens</h3>
+          <div class="ds-demo" style="background: var(--dp-strip-scp-bg); padding: var(--dp-space-6); border-radius: var(--dp-radius-md);">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-start;">
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-bg); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-bg</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-1); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-1</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-2); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-2</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-dark); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-dark</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <span style="font-size: var(--dp-text-xs); color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-opacity</span>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">(opacity value)</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <span style="font-size: var(--dp-text-base); color: var(--dp-strip-scp-title-color);">Title</span>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-title-color</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                <span style="font-size: var(--dp-text-sm); color: var(--dp-strip-scp-text-color);">Body text</span>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-text-color</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="padding: var(--dp-space-1) var(--dp-space-2); background: var(--dp-strip-scp-badge-bg); border-radius: var(--dp-radius-sm);">
+                  <span style="font-size: var(--dp-text-xs); color: var(--dp-strip-scp-badge-text);">Badge</span>
+                </div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-badge-bg · --dp-strip-scp-badge-text</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 48px; background: transparent; border: var(--dp-strip-scp-device-border); border-radius: var(--dp-radius-sm);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-device-border</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 80px; height: 48px; background: var(--dp-strip-scp-bg); border-radius: var(--dp-radius-sm); box-shadow: var(--dp-strip-scp-device-shadow);"></div>
+                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-device-shadow</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- 4. Atoms -->
@@ -370,6 +722,17 @@
               </p>
             </div>
             <span class="ds-label">.dp-fade-edge</span>
+          </div>
+        </div>
+
+        <!-- 4g. .dp-section-label -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4g. .dp-section-label</h3>
+          <div class="ds-demo">
+            <div class="dp-section-label">
+              <span class="dp-overline">Side projects</span>
+            </div>
+            <span class="ds-label">.dp-section-label</span>
           </div>
         </div>
       </section>
@@ -496,6 +859,38 @@
           <div class="ds-demo">
             <span class="dp-overline">Section Label</span>
             <span class="ds-label">.dp-overline</span>
+          </div>
+        </div>
+
+        <!-- 5f. Button variants (secondary) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5f. Button variants (secondary)</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">On light-theme surface — for comparison with 5b</p>
+          <div class="ds-demo-row">
+            <div style="background: var(--dp-raw-grey-100); padding: var(--dp-space-4); border-radius: var(--dp-radius-md); display: flex; flex-direction: column; align-items: flex-start;">
+              <button type="button" class="dp-btn dp-btn-secondary">Secondary</button>
+              <span class="ds-label" style="margin-top: var(--dp-space-2); text-align: left;">.dp-btn.dp-btn-secondary</span>
+            </div>
+            <div style="background: var(--dp-raw-grey-100); padding: var(--dp-space-4); border-radius: var(--dp-radius-md); display: flex; flex-direction: column; align-items: flex-start;">
+              <button type="button" class="dp-btn dp-btn-secondary-on-light">Secondary on Light</button>
+              <span class="ds-label" style="margin-top: var(--dp-space-2); text-align: left;">.dp-btn.dp-btn-secondary-on-light</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5g. Testimonial -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5g. Testimonial</h3>
+          <div class="ds-demo" style="background: var(--dp-bg-card); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-border-default); max-width: 400px;">
+            <blockquote class="dp-testimonial" aria-label="Testimonial from Jane Smith">
+              <span class="dp-testimonial-mark" aria-hidden="true">"</span>
+              <p class="dp-testimonial-quote">This is a placeholder testimonial for design system QA.</p>
+              <footer class="dp-testimonial-attribution">
+                <cite class="dp-testimonial-name">Jane Smith</cite>
+                <span class="dp-testimonial-role">Product Manager at Acme</span>
+              </footer>
+            </blockquote>
+            <span class="ds-label">.dp-testimonial · .dp-testimonial-mark · .dp-testimonial-quote · .dp-testimonial-attribution · .dp-testimonial-name · .dp-testimonial-role</span>
           </div>
         </div>
       </section>
