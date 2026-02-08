@@ -39,6 +39,7 @@
           theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.add('dp-no-transition');
       })();
     </script>
   </head>
@@ -153,7 +154,7 @@
         var kmIframe = document.querySelector('.dp-strip--kaomoji iframe');
         if (kmIframe) {
           function sendKmTheme() {
-            kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*');
+            try { kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*'); } catch(e) {}
           }
           kmIframe.addEventListener('load', sendKmTheme);
           if (kmIframe.contentDocument && kmIframe.contentDocument.readyState === 'complete') {
@@ -180,6 +181,14 @@
             mo.observe(container, { childList: true, subtree: true });
           }
         }
+      });
+    </script>
+
+    <script>
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          document.documentElement.classList.remove('dp-no-transition');
+        });
       });
     </script>
   </body>

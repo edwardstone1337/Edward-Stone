@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Theme init**: Removed `data-theme` from `<html>` in index.html and dev/design-system.html; theme is set by theme-toggle.js after load. Added surface fallbacks in dev-tokens.css (`:root`: --dp-bg-base, --dp-bg-raised, --dp-bg-card, --dp-bg-card-hover, --dp-bg-overlay, --dp-text-primary, --dp-text-secondary) so initial paint matches dark theme and avoids flash before JS runs. Added `.dp-no-transition` utility to suppress transitions on initial load; inline script applies it during theme set, double rAF at end of body removes it after first paint.
+
 ### Added
 - **dev/design-system.html**: Design system living reference — tokens, swatches, utility demos (noise, glass, glow, shimmer, fade); uses dev-tokens + dev-styles.
 - **Kaomoji strip (dev-projects)**: Featured strip for Kaomoji.click above Fair Share — flipped layout (content left, media right), dark monochrome theme `.dp-strip--kaomoji`; live iframe preview with postMessage theme sync. Strip-featured projects (Kaomoji, Fair Share) excluded from card grid to avoid duplication.
@@ -15,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Fixed
+- **Kaomoji strip**: `.dp-strip-media` now uses `justify-self: center` for centered layout.
 - **Snake game (dev-projects)**: Single Play button only — original button hidden when overlay opens, shown on teardown; close button no longer reskinned/appended to body (removed with overlay). State (cols, rows, offsetX, offsetY, colors) and overlayClosing reset in stopGame/teardown.
 - **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.
 

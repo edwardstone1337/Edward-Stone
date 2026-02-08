@@ -17,6 +17,7 @@
           theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.add('dp-no-transition');
       })();
     </script>
     <style>
@@ -512,10 +513,25 @@
         iframe.addEventListener('load', sendDark);
         if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') sendDark();
         // Re-force after any theme toggle
-        document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() {
-          setTimeout(sendDark, 100);
-        });
+        function attachThemeToggleListener() {
+          document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() {
+            setTimeout(sendDark, 100);
+          });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', attachThemeToggleListener);
+        } else {
+          attachThemeToggleListener();
+        }
       })();
+    </script>
+
+    <script>
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          document.documentElement.classList.remove('dp-no-transition');
+        });
+      });
     </script>
   </body>
 </html>

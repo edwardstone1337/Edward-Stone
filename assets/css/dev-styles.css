@@ -1,3 +1,11 @@
+/* Suppress transitions on initial load to prevent flash */
+.dp-no-transition,
+.dp-no-transition *,
+.dp-no-transition *::before,
+.dp-no-transition *::after {
+  transition: none !important;
+}
+
 /* ============================================
    DEV PROJECTS — Styles
    Atoms → Molecules → Page layout
@@ -871,6 +879,7 @@ img { display: block; max-width: 100%; }
 }
 .dp-strip--kaomoji .dp-strip-media {
   align-self: stretch;
+  justify-self: center;
   max-width: 100%;
   aspect-ratio: 1 / 1;
   max-height: 400px;
