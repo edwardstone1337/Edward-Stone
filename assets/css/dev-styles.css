@@ -1351,6 +1351,21 @@ img { display: block; max-width: 100%; }
   flex-direction: column;
   overflow: hidden;
 }
+.dp-resume-page::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--dp-paper-surface));
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+.dp-lightbox-page .dp-resume-page::after {
+  display: none;
+}
 
 .dp-resume-header {
   display: flex;
@@ -2291,6 +2306,13 @@ body.dp-overlay-active {
     width: 100% !important;
     background: white !important;
     color: black !important;
+  }
+  .dp-resume-page::after {
+    display: none;
+  }
+
+  .dp-resume-role {
+    break-inside: avoid;
   }
 
   .dp-lightbox--print-only {
