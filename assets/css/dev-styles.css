@@ -424,6 +424,11 @@ img { display: block; max-width: 100%; }
   padding: 0 var(--dp-space-6);
 }
 
+/* h3 after paragraph — breathing room when h3 + p + h3 + p pattern */
+.dp-page section p + h3 {
+  margin-top: var(--dp-space-12);
+}
+
 .dp-hero {
   display: flex;
   flex-direction: column;
@@ -890,6 +895,18 @@ img { display: block; max-width: 100%; }
   line-height: 1;
   display: block;
   margin-bottom: var(--dp-space-2);
+}
+
+/* Strip logo (img) — same slot as emoji; SCP strip uses white filter on dark background */
+.dp-strip-logo {
+  display: block;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-bottom: var(--dp-space-2);
+}
+.dp-strip--scp .dp-strip-logo {
+  filter: brightness(0) invert(1);
 }
 
 .dp-strip-title {
@@ -1937,9 +1954,9 @@ body.dp-overlay-active {
   }
 
   .dp-reveal {
-    opacity: 0;
+    opacity: 1;
     transform: none;
-    transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+    transition: none;
   }
 
   .dp-reveal.dp-revealed {

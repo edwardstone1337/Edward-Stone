@@ -5,8 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Fair Share strip**: "Learn more" primary button (`.dp-btn-primary-on-dark`) linking to `projects/fair-share.html`; secondary "Go to Fair Share" for external link.
 - **Secondary-on-light button**: `.dp-btn-secondary-on-light` and tokens `--dp-btn-secondary-on-light-*` (text, border, hover-bg, focus-ring) for outline buttons on light overlays; light + dark theme in dev-tokens.
 - **Resume print tokens**: `--dp-print-name`, `--dp-print-tagline`, `--dp-print-body`, `--dp-print-role-title`, `--dp-print-meta`, `--dp-print-section-title`, `--dp-print-leading`, `--dp-print-leading-tight`, `--dp-print-section-gap`, `--dp-print-role-gap`, `--dp-print-column-gap`, `--dp-print-li-gap`, `--dp-print-page-v`, `--dp-print-page-h`; used in `@media print` for resume lightbox typography and spacing.
+- **Page section spacing**: `.dp-page section p + h3` — margin-top `var(--dp-space-12)` for breathing room when h3 follows paragraph (e.g. Product Decisions pattern).
+- **Strip logo**: `.dp-strip-logo` — img in emoji slot (36×36px); `.dp-strip--scp .dp-strip-logo` white filter on dark strip; SCP Reader strip uses `scp-logo.svg`.
+- **Project case study pages**: `projects/fair-share.html`, `projects/scp-reader.html` — full case studies linked from homepage strips; project-specific CSS (`project-fair-share.css`, `project-scp-reader.css`); `growth-chart.js` (Chart.js line chart) for Fair Share Origin/Growth section.
 
 ### Added (continued)
 - **Fixed nav bar**: `.dp-nav` — glass-style fixed bar with brand (logo + name) and `#dp-nav-actions` (theme toggle, snake toggle). Toggles inject into nav when present, else body.
@@ -29,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Changed
+- **Fair Share strip orb**: `--dp-strip-orb-2` updated from amber (#a66b18) to pinky peach (#E8919B) in dark and light theme (dev-tokens.css).
 - **Resume lightbox**: Backdrop `position: fixed`. Content wrapper and page container simplified (no max-height, aspect-ratio, overflow-y). Page padding `40px 56px`. Action buttons (Print/Copy) use secondary-on-light outline styling (light theme) and secondary-on-dark in dark theme; removed `dp-btn-secondary` from button markup.
 - **Resume (screen)**: Body gap `24px`; section title margin-top `20px` (first-child `10px`); `.dp-resume-role + .dp-resume-role` spacing `16px`.
 - **Resume (print)**: Typography and spacing refactored to print tokens; @page margin `15mm`; section/role gaps and first-child margin use tokens.
@@ -43,8 +48,11 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - **Resume DOCX**: `assets/files/Resume.docx` deleted; download widget and docs now reference PDF only.
+- **QA diagnostics**: Deleted `docs/qa/download-button-positions-1080px-2025-02-08.md`, `resume-animated-border-1280px-diagnostic-2025-02-08.md`, `resume-component-polish-discovery-2025-02-08.md`, `resume-border-diagnostic.html` — one-off findings, no longer needed.
 
 ### Fixed
+- **Reveal (prefers-reduced-motion)**: `.dp-reveal` under `prefers-reduced-motion: reduce` now uses `opacity: 1`, `transform: none`, `transition: none` — content visible immediately; previously used `opacity: 0` which hid content.
+- **Fair Share case study**: Removed `overflow: clip` from `.dp-glow-section` so glass cards (growth chart, CTA) and backdrop-filter render fully; Origin/Growth/What's Next no longer clip. Testimonial breakout at ≥768px unchanged; no horizontal overflow.
 - **Resume copy**: Log copy failures to console for debugging.
 - **Kaomoji strip**: `.dp-strip-media` now uses `justify-self: center` for centered layout.
 - **Snake game (dev-projects)**: Single Play button only — original button hidden when overlay opens, shown on teardown; close button no longer reskinned/appended to body (removed with overlay). State (cols, rows, offsetX, offsetY, colors) and overlayClosing reset in stopGame/teardown.

@@ -206,7 +206,7 @@
   /* Strip — product strip (Fair Share); darkened for text contrast */
   --dp-strip-bg: #0a2020;
   --dp-strip-orb-1: #2e7d76;
-  --dp-strip-orb-2: #a66b18;
+  --dp-strip-orb-2: #E8919B;
   --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
   --dp-strip-orb-opacity: 0.4;
   --dp-strip-title-color: #eafcf8;
@@ -337,7 +337,7 @@
   /* Strip — same as dark theme (darkened for contrast) */
   --dp-strip-bg: #0a2020;
   --dp-strip-orb-1: #2e7d76;
-  --dp-strip-orb-2: #a66b18;
+  --dp-strip-orb-2: #E8919B;
   --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
   --dp-strip-orb-opacity: 0.4;
   --dp-strip-title-color: #eafcf8;

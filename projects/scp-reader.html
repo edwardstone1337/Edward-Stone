@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-project="scp-reader">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SCP Reader — Edward Stone</title>
+    <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml" />
+
+    <!-- Fonts: Inter with optical sizing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    />
+
+    <!-- Design system + project theme -->
+    <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="../assets/css/dev-styles.css">
+    <link rel="stylesheet" href="../assets/css/project-scp-reader.css">
+
+    <noscript>
+      <style>
+        .dp-reveal { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+
+    <!-- Prevent flash of unstyled theme -->
+    <script>
+      (function() {
+        var theme;
+        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+        if (!theme) {
+          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.add('dp-no-transition');
+      })();
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="dp-skip-link">Skip to main content</a>
+    <nav class="dp-nav" aria-label="Site navigation">
+      <div class="dp-nav-inner">
+        <a href="../index.html" class="dp-nav-brand" aria-label="Back to Edward Stone — Home">
+          <svg class="dp-nav-back" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span class="dp-nav-name">Edward Stone</span>
+        </a>
+        <div class="dp-nav-actions" id="dp-nav-actions">
+          <!-- Theme toggle injected by theme-toggle.js -->
+        </div>
+      </div>
+    </nav>
+
+    <main id="main" class="dp-page">
+      <!-- 1. HERO -->
+      <section class="dp-hero dp-reveal" data-reveal-delay="0">
+        <img src="../assets/images/scp-logo.svg" alt="" aria-hidden="true" class="dp-hero-logo">
+        <span class="dp-overline">Side Project</span>
+        <h1 class="dp-hero-heading">
+          <span class="dp-hero-line">There are 9,800 monsters in an online archive.</span>
+          <span class="dp-hero-line">I built a way to track them all.</span>
+        </h1>
+        <p class="dp-hero-body">SCP Reader is a free reading companion for the SCP Foundation — a purpose-built tool for completionists who want to systematically work through one of the internet's largest collaborative fiction projects.</p>
+      </section>
+
+      <!-- Screenshot placeholder — desktop -->
+      <div class="dp-screenshot-placeholder dp-screenshot--desktop dp-reveal">
+        <div class="dp-screenshot-placeholder-inner">
+          <span class="dp-screenshot-placeholder-label">Screenshot</span>
+        </div>
+      </div>
+
+      <!-- 2. WHAT IT DOES -->
+      <section class="dp-reveal">
+        <span class="dp-overline">The Product</span>
+        <h2>Your progress, always visible</h2>
+        <p>SCP Reader lets you browse the full archive by series and range, read articles in a clean distraction-free reader, and track everything you've finished. Progress rings show completion at a glance — by series, by range, all the way down to individual entries. Bookmark articles to come back to, pick up where you left off with recently viewed, and discover something new every day with a shared daily featured SCP.</p>
+      </section>
+
+      <!-- 3. THE SOURCE MATERIAL -->
+      <section class="dp-reveal dp-glow-section" data-reveal-delay="0">
+        <span class="dp-overline">The World</span>
+        <h2>What is the SCP Foundation?</h2>
+        <p>In 2007, someone posted a short piece to 4chan's paranormal forum — a clinical report about a concrete sculpture that moves when you look away and kills when you don't. It sparked one of the largest collaborative fiction projects in history.</p>
+        <p>The SCP Foundation is a fictional secret organisation dedicated to securing, containing, and protecting anomalous objects and entities. Think: an unkillable reptile, an infinite IKEA, a sentient AI that loves humanity — all documented in dry, bureaucratic research files that make the impossible feel plausible.</p>
+        <p>As of late 2025, the archive contains over 9,800 entries spanning horror, science fiction, comedy, and existential philosophy. There is no single canon. The community embraces contradictions as part of the fiction. Some entries are a paragraph long. Others are novel-length.</p>
+      </section>
+
+      <!-- 4. THE PROBLEM -->
+      <section class="dp-reveal">
+        <span class="dp-overline">The Insight</span>
+        <h2>Nobody knows what they've read</h2>
+        <p>The SCP Wiki is built for contribution, not consumption. There's no reading list, no progress tracking, no 'where did I leave off?' For casual browsers, that's fine. But for completionists — people who want to systematically work through 9,800+ entries — you're left with spreadsheets, browser bookmarks, or your memory.</p>
+        <p>SCP Reader exists to solve that. Open the app, see exactly where you are, pick up where you left off, and watch your progress grow.</p>
+      </section>
+
+      <!-- Screenshot placeholder — desktop + mobile -->
+      <div class="dp-screenshot-placeholder dp-screenshot--pair dp-reveal">
+        <div class="dp-screenshot-placeholder-inner dp-screenshot--desktop">
+          <span class="dp-screenshot-placeholder-label">Desktop screenshot</span>
+        </div>
+        <div class="dp-screenshot-placeholder-inner dp-screenshot--mobile">
+          <span class="dp-screenshot-placeholder-label">Mobile screenshot</span>
+        </div>
+      </div>
+
+      <!-- 5. PRODUCT DECISIONS -->
+      <section class="dp-reveal">
+        <span class="dp-overline">The Thinking</span>
+        <h2>Decisions that shaped the product</h2>
+        <h3>Browse first, sign in later</h3>
+        <p>The original design required sign-in before users could see anything. I scrapped that. Users can browse every series, read any article, and explore the full archive without creating an account. Sign-in is only prompted when they try to save progress — helpful, not blocking. Time-to-value drops to zero.</p>
+        <h3>Daily featured, not random</h3>
+        <p>A random button gives every user a different experience in isolation. A daily featured SCP — deterministically selected from the date — gives every user the same one. It creates a shared moment, a reason to come back, and it's technically simpler. No database writes, no cron jobs. Just a hash of today's date.</p>
+        <h3>Themed UX that serves clarity</h3>
+        <p>Loading states say 'Decrypting file...' and 'Accessing archive...' The 404 page says 'DOCUMENT NOT FOUND.' The auth prompt says 'Sign in to track progress.' Every piece of themed copy still clearly communicates system state. Atmosphere never costs usability.</p>
+        <h3>Optimistic UI</h3>
+        <p>Every action — marking as read, bookmarking — updates the interface instantly before the server confirms. If something fails, the UI reverts gracefully. The app feels fast even on slow connections because it trusts the user's intent first.</p>
+      </section>
+
+      <!-- 6. WHAT'S NEXT -->
+      <section class="dp-reveal dp-glow-section" data-reveal-delay="0">
+        <span class="dp-overline">What's Next</span>
+        <h2>A living project</h2>
+        <div class="dp-cta-card">
+          <p>SCP Reader is actively maintained with a growing backlog — progress celebrations, reading settings, search, and more. It's one of the projects I'm most excited to keep building.</p>
+          <a href="https://scp-reader.co/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Visit SCP Reader (opens in new tab)">
+            Visit SCP Reader <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+          </a>
+        </div>
+      </section>
+
+      <!-- 7. FOOTER -->
+      <footer class="dp-footer dp-reveal" aria-label="Footer">
+        <div class="dp-footer-inner">
+          <p class="dp-footer-text">© 2026 Edward Stone</p>
+          <nav class="dp-footer-links" aria-label="Footer links">
+            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </nav>
+        </div>
+      </footer>
+    </main>
+
+    <script src="../assets/js/dev-projects/theme-toggle.js"></script>
+    <script src="../assets/js/dev-projects/back-to-top.js"></script>
+    <script src="../assets/js/dev-projects/effects.js"></script>
+
+    <script>
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          document.documentElement.classList.remove('dp-no-transition');
+        });
+      });
+    </script>
+  </body>
+</html>

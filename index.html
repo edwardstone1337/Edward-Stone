@@ -23,6 +23,17 @@
     <link rel="stylesheet" href="assets/css/dev-tokens.css">
     <link rel="stylesheet" href="assets/css/dev-styles.css">
 
+    <!-- Index-only: reduce hero-to-first-strip gap (hero bottom padding) -->
+    <style>
+      .dp-hero { padding-bottom: var(--dp-space-8); }
+      @media (max-width: 768px) {
+        .dp-hero { padding-bottom: var(--dp-space-4); }
+      }
+      @media (max-width: 480px) {
+        .dp-hero { padding-bottom: var(--dp-space-2); }
+      }
+    </style>
+
     <noscript>
       <style>
         .dp-card { opacity: 1 !important; }
@@ -66,10 +77,6 @@
         <p class="dp-hero-body dp-reveal" data-reveal-delay="200">A decade in product design and UX leadership across ed-tech, sport, and agencies — turning user research into products people rely on.</p>
       </section>
 
-      <div class="dp-section-label dp-reveal" data-reveal-delay="0">
-        <span class="dp-overline">Side projects</span>
-      </div>
-
       <div class="dp-split-row" id="projects">
         <section class="dp-strip dp-strip--compact" aria-label="Fair Share — featured project">
           <div class="dp-strip-orbs">
@@ -79,7 +86,7 @@
           <div class="dp-strip-inner">
             <div class="dp-strip-content">
               <span class="dp-strip-emoji" aria-hidden="true">🪷</span>
-              <h2 class="dp-strip-title">Fair Share</h2>
+              <h2 class="dp-strip-title">I built a tool that thousands of couples use — and therapists recommend</h2>
               <span class="dp-strip-overline">fairsharecalculator.com</span>
               <div class="dp-strip-badges">
                 <span class="dp-strip-badge">Calculator</span>
@@ -88,7 +95,8 @@
               <p class="dp-strip-description">A tool for couples to fairly split shared expenses based on income. Just enter each partner's after-tax salary and shared costs, and it works out a proportional split — making money conversations more objective, equitable, and stress-free.</p>
             </div>
             <div class="dp-strip-actions">
-              <a href="https://www.fairsharecalculator.com/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Fair Share (opens in new tab)">Go to Fair Share <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+              <a href="projects/fair-share.html" class="dp-btn dp-btn-primary-on-dark">Learn more</a>
+              <a href="https://www.fairsharecalculator.com/" class="dp-btn dp-btn-secondary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Fair Share (opens in new tab)">Go to Fair Share <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
             </div>
           </div>
         </section>
@@ -146,8 +154,8 @@
           </div>
           <div class="dp-strip-inner">
             <div class="dp-strip-content">
-              <span class="dp-strip-emoji" aria-hidden="true">📓</span>
-              <h2 class="dp-strip-title">SCP Reader</h2>
+              <img src="assets/images/scp-logo.svg" alt="" aria-hidden="true" class="dp-strip-logo">
+              <h2 class="dp-strip-title">There are 9,800 monsters in an online archive. I built a way to track them all.</h2>
               <span class="dp-strip-overline">scp-reader.co</span>
               <div class="dp-strip-badges">
                 <span class="dp-strip-badge">Reader</span>
@@ -156,7 +164,8 @@
               <p class="dp-strip-description">A clean, focused reading interface for SCP Foundation entries. Strips away wiki clutter and presents stories in a distraction-free format designed for long reading sessions.</p>
             </div>
             <div class="dp-strip-actions">
-              <a href="https://www.scp-reader.co/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to SCP Reader (opens in new tab)">Go to SCP Reader <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+              <a href="projects/scp-reader.html" class="dp-btn dp-btn-primary-on-dark">Learn more</a>
+              <a href="https://www.scp-reader.co/" class="dp-btn dp-btn-secondary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to SCP Reader (opens in new tab)">Go to SCP Reader <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
             </div>
           </div>
         </section>
@@ -167,7 +176,7 @@
           <!-- Left column: intro + download -->
           <div class="dp-resume-intro">
             <span class="dp-overline">Resume</span>
-            <h2 class="dp-resume-intro-heading">My career<br/>so far</h2>
+            <h2 class="dp-resume-intro-heading">My career so far</h2>
             <p class="dp-resume-intro-body">From digital agencies in London to ed-tech in Sydney.</p>
             <div class="dp-resume-download" data-download-widget>
               <button class="dp-btn dp-btn-primary dp-download-trigger" aria-haspopup="true" aria-expanded="false">
