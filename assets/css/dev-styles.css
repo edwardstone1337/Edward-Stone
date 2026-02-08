@@ -408,9 +408,9 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-snake-toggle--in-overlay {
-  bottom: auto;
+  position: absolute;
   top: var(--dp-space-6);
-  left: calc(var(--dp-space-6) + 40px + var(--dp-space-2));
+  right: var(--dp-space-6);
   z-index: 10002;
 }
 

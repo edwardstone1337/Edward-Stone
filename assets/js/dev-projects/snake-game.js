@@ -169,11 +169,8 @@
     var head = state.snake[state.snake.length - 1];
     var nx = head.x + state.dir.x;
     var ny = head.y + state.dir.y;
-
-    if (nx < 0 || nx >= state.cols || ny < 0 || ny >= state.rows) {
-      die();
-      return;
-    }
+    nx = (nx + state.cols) % state.cols;
+    ny = (ny + state.rows) % state.rows;
 
     for (var i = 0; i < state.snake.length; i++) {
       if (state.snake[i].x === nx && state.snake[i].y === ny) {
