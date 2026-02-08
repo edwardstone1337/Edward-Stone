@@ -32,25 +32,41 @@
     // Skip on touch-only devices
     if (!window.matchMedia('(hover: hover)').matches) return;
 
+    // Card grid — glow on each card
     var grid = document.querySelector('.dp-card-grid');
-    if (!grid) return;
+    if (grid) {
+      grid.addEventListener('mousemove', function (e) {
+        var cards = grid.querySelectorAll('.dp-card');
+        for (var i = 0; i < cards.length; i++) {
+          var rect = cards[i].getBoundingClientRect();
+          cards[i].style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          cards[i].style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        }
+      });
 
-    grid.addEventListener('mousemove', function (e) {
-      var cards = grid.querySelectorAll('.dp-card');
-      for (var i = 0; i < cards.length; i++) {
-        var rect = cards[i].getBoundingClientRect();
-        cards[i].style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-        cards[i].style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
-      }
-    });
+      grid.addEventListener('mouseleave', function () {
+        var cards = grid.querySelectorAll('.dp-card');
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].style.removeProperty('--mouse-x');
+          cards[i].style.removeProperty('--mouse-y');
+        }
+      });
+    }
 
-    grid.addEventListener('mouseleave', function () {
-      var cards = grid.querySelectorAll('.dp-card');
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].style.removeProperty('--mouse-x');
-        cards[i].style.removeProperty('--mouse-y');
-      }
-    });
+    // Resume container — same glow pattern (scoped to page wrapper, not lightbox)
+    var resumeContainer = document.querySelector('.dp-resume-page-wrapper .dp-resume-container');
+    if (resumeContainer) {
+      resumeContainer.addEventListener('mousemove', function (e) {
+        var rect = resumeContainer.getBoundingClientRect();
+        resumeContainer.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+        resumeContainer.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+      });
+
+      resumeContainer.addEventListener('mouseleave', function () {
+        resumeContainer.style.removeProperty('--mouse-x');
+        resumeContainer.style.removeProperty('--mouse-y');
+      });
+    }
   }
 
   // -----------------------------------------------

@@ -11,6 +11,9 @@
  *   Utils.sanitizeUrl(url) — use for config-derived href/src; blocks javascript:, vbscript:, data:
  */
 
+// Logging convention: this project uses console.warn / console.error directly.
+// No wrapper logger — acceptable at this project's scale.
+
 (function() {
   'use strict';
 

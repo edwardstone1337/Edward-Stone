@@ -498,7 +498,8 @@
     btn.innerHTML = snakeIcon;
     btn.addEventListener('click', openOverlay);
     playButton = btn;
-    document.body.appendChild(btn);
+    var container = document.getElementById('dp-nav-actions');
+    (container || document.body).appendChild(btn);
   }
 
   function init() {
@@ -510,4 +511,7 @@
   } else {
     init();
   }
+
+  // Public API — allows external pages (e.g. 404) to open the game
+  window.SnakeGame = { open: openOverlay };
 })();

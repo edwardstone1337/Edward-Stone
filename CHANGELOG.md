@@ -4,18 +4,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Changed
-- **Theme init**: Removed `data-theme` from `<html>` in index.html and dev/design-system.html; theme is set by theme-toggle.js after load. Added surface fallbacks in dev-tokens.css (`:root`: --dp-bg-base, --dp-bg-raised, --dp-bg-card, --dp-bg-card-hover, --dp-bg-overlay, --dp-text-primary, --dp-text-secondary) so initial paint matches dark theme and avoids flash before JS runs. Added `.dp-no-transition` utility to suppress transitions on initial load; inline script applies it during theme set, double rAF at end of body removes it after first paint.
-
 ### Added
+- **Fixed nav bar**: `.dp-nav` — glass-style fixed bar with brand (logo + name) and `#dp-nav-actions` (theme toggle, snake toggle). Toggles inject into nav when present, else body.
+- **404 page** (`404.html`): Minimal page with nav, gradient 404, "Go home" / "Play Snake instead". `window.SnakeGame.open()` exposed for external pages. Inline theme init (no flash); favicon; meta robots noindex.
+- **Resume download widget**: Dropdown with PDF, DOCX, copy-to-clipboard. `resume-download.js`. Mobile duplicate below resume.
+- **Resume lightbox**: Click resume → fullscreen lightbox (desktop ≥1080px) with download CTA. `resume-lightbox.js`; focus trap, Escape, backdrop click.
+- **SCP Reader strip**: Featured strip in split-row (2/3 + 1/3) — `.dp-strip--compact`, `.dp-strip--scp` theme. Excluded from projects grid. projects.json: URL scp-reader.co.
+- **Split row**: `.dp-split-row` for side-by-side layout. **Testimonial card** `.dp-testimonial` in 1/3 slot — Jason Allen quote, glass styling, gradient decorative mark.
+- **Secondary button**: `.dp-btn-secondary` — transparent, bordered.
+- **Resume/paper tokens**: `--dp-paper-*` (surface, text, border, shadow, accent) light + dark.
+- **Resume files**: `assets/files/Resume.pdf`, `assets/files/Resume.docx`.
+- **Resume glow**: effects.js adds cursor-reactive glow to resume container (same pattern as cards).
 - **dev/design-system.html**: Design system living reference — tokens, swatches, utility demos (noise, glass, glow, shimmer, fade); uses dev-tokens + dev-styles.
 - **Kaomoji strip (dev-projects)**: Featured strip for Kaomoji.click above Fair Share — flipped layout (content left, media right), dark monochrome theme `.dp-strip--kaomoji`; live iframe preview with postMessage theme sync. Strip-featured projects (Kaomoji, Fair Share) excluded from card grid to avoid duplication.
-- **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn’t cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html.
+- **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn't cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html. (See Changed: now bottom-right, arrow icon, scroll-threshold.)
 - **Product strip (dev-projects)**: Full-width Fair Share banner between hero and project grid — dark teal strip in both themes, orb gradient (teal + orange), device frame + content + CTA. `product-strip.js` renders strip from config; `strip-effects.js` (desktop only, hover-capable) adds cursor-reactive orbs with ambient Lissajous drift, opacity pulse (8s / 12s), and ±50px cursor nudge; mobile and prefers-reduced-motion keep CSS keyframe drift only. Strip tokens and `.dp-btn` / `.dp-btn-primary` in dev-tokens + dev-styles.
 - **Avatar high-speed reveal (dev-projects)**: When spin reaches angular velocity ≥35 deg/frame, avatar swaps to `profile-spun.jpg` once per session and confetti bursts; confetti no longer on every spin. Asset `assets/images/profile-spun.jpg`.
 - **Fair Share preview widget** (`assets/previews/fair-share/index.html`): Self-contained iframe preview for dev-projects — blurred orb gradient, theme-aware (light/dark), income/slider UI; listens for `theme-change` postMessage.
 - **projects.json preview links**: Kaomoji.click and Fair Share Calculator now include `preview.src` for dev-projects product cards (Lost Cities already had one).
 - **Favicon**: Added favicon link to index.html for improved branding.
+
+### Changed
+- **Testimonial card typography (Phase 2 patch)**: Decorative quote mark — absolute, large (8rem), Georgia, opacity 0.07 (flat colour, no gradient). Quote text — Georgia italic at `--dp-text-lg` (20px), `z-index: 1`. Attribution — `position: relative; z-index: 1` so both sit above the faint mark. Container `.dp-testimonial` already has `position: relative`.
+- **Resume component (Phase 9)**: Animated border now matches card technique — dual-layer with `.dp-resume-container` (1px padding, ::before radial glow at z-index 1) and `.dp-resume-page` as masking layer (z-index 2, solid `--dp-paper-surface`, inset border-radius). Glow uses `--dp-accent-glow`, opacity 1 on hover. Removed phone number from resume contact in index.html (email and location kept). At 1080px: intro download centered via `.dp-resume-intro .dp-resume-download { display: flex; justify-content: center }`, mobile download spacing set to `--dp-space-10`. Mobile (≤1080px) resume text sizes updated for WCAG AA: body/secondary ≥16px/14px (tagline, summary, role-title, role-desc, role-achievements → base; section-title, role-meta, skill-list li, contact-item → sm).
+- **Back-to-top**: Moved to bottom-right. Arrow icon (replaces logo). Visible only after 1 viewport scroll; prefers-reduced-motion respected.
+- **Theme toggle / snake toggle**: Inject into `#dp-nav-actions` when present.
+- **Snake game**: Public `window.SnakeGame.open()` for 404.
+- **Theme init**: Removed `data-theme` from `<html>` in index.html and dev/design-system.html; theme is set by theme-toggle.js after load. Added surface fallbacks in dev-tokens.css (`:root`: --dp-bg-base, --dp-bg-raised, --dp-bg-card, --dp-bg-card-hover, --dp-bg-overlay, --dp-text-primary, --dp-text-secondary) so initial paint matches dark theme and avoids flash before JS runs. Added `.dp-no-transition` utility to suppress transitions on initial load; inline script applies it during theme set, double rAF at end of body removes it after first paint.
 
 ### Fixed
 - **Kaomoji strip**: `.dp-strip-media` now uses `justify-self: center` for centered layout.

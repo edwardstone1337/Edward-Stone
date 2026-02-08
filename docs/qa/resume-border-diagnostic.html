@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume border diagnostic</title>
+  <link rel="stylesheet" href="../../assets/css/dev-tokens.css">
+  <link rel="stylesheet" href="../../assets/css/dev-styles.css">
+  <style>
+    #diag-output { font-family: monospace; white-space: pre-wrap; padding: 16px; background: #111; color: #0f0; margin: 16px; border-radius: 8px; font-size: 12px; }
+    .dp-resume-section { min-height: 400px; }
+  </style>
+</head>
+<body>
+  <h1 style="padding: 16px;">Resize to 1280px, scroll to resume, then check #diag-output</h1>
+  <section class="dp-resume-section dp-reveal dp-revealed" id="resume">
+    <div class="dp-resume-layout">
+      <div class="dp-resume-intro"><span class="dp-overline">Resume</span><h2>Test</h2></div>
+      <div class="dp-resume-page-wrapper">
+        <div class="dp-resume-container">
+          <div class="dp-resume-page">Resume content placeholder</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="diag-output">Running diagnostics...</div>
+  <script src="../../assets/js/dev-projects/effects.js"></script>
+  <script>
+    (function() {
+      var out = document.getElementById('diag-output');
+      function log(s) { out.textContent += s + '\n'; }
+      function clear() { out.textContent = ''; }
+
+      setTimeout(function() {
+        clear();
+        var rc = document.querySelector('.dp-resume-page-wrapper .dp-resume-container');
+        if (!rc) { log('ERROR: .dp-resume-container not found'); return; }
+
+        log('=== 1. .dp-resume-container computed (no hover) ===');
+        log('position: ' + getComputedStyle(rc).position);
+        log('overflow: ' + getComputedStyle(rc).overflow);
+        log('padding: ' + getComputedStyle(rc).padding);
+        log('background: ' + getComputedStyle(rc).background);
+        log('border-radius: ' + getComputedStyle(rc).borderRadius);
+        log('box-shadow: ' + getComputedStyle(rc).boxShadow);
+
+        log('\n=== 2. ::before (no hover) ===');
+        var before = getComputedStyle(rc, '::before');
+        log('opacity: ' + before.opacity);
+        log('position: ' + before.position);
+        log('inset: ' + (before.inset || before.top + ' ' + before.right + ' ' + before.bottom + ' ' + before.left));
+        log('background: ' + before.background.substring(0, 80) + '...');
+        log('z-index: ' + before.zIndex);
+        log('display: ' + before.display);
+        log('width: ' + before.width);
+        log('height: ' + before.height);
+
+        log('\n=== Inline style (--mouse-x, --mouse-y) ===');
+        log('--mouse-x: ' + (rc.style.getPropertyValue('--mouse-x') || '(not set)'));
+        log('--mouse-y: ' + (rc.style.getPropertyValue('--mouse-y') || '(not set)'));
+
+        var dpPage = document.querySelector('.dp-resume-page');
+        log('\n=== 3. .dp-resume-page ===');
+        log('z-index: ' + (dpPage ? getComputedStyle(dpPage).zIndex : 'N/A'));
+        log('background: ' + (dpPage ? getComputedStyle(dpPage).background.substring(0, 60) + '...' : 'N/A'));
+        log('position: ' + (dpPage ? getComputedStyle(dpPage).position : 'N/A'));
+        log('border-radius: ' + (dpPage ? getComputedStyle(dpPage).borderRadius : 'N/A'));
+
+        log('\n=== 4. Viewport width ===');
+        log('innerWidth: ' + window.innerWidth);
+
+        log('\n=== 5. prefers-reduced-motion ===');
+        log('prefers-reduced-motion: ' + (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce (GLOW DISABLED)' : 'no-preference'));
+
+        log('\n=== 6. Hover media ===');
+        log('(hover: hover): ' + window.matchMedia('(hover: hover)').matches);
+
+        rc.addEventListener('mousemove', function m() {
+          rc.removeEventListener('mousemove', m);
+          log('\n\n=== 7. AFTER HOVER (mousemove fired) ===');
+          log('--mouse-x: ' + rc.style.getPropertyValue('--mouse-x'));
+          log('--mouse-y: ' + rc.style.getPropertyValue('--mouse-y'));
+          var b2 = getComputedStyle(rc, '::before');
+          log('::before opacity on hover: ' + b2.opacity);
+          log('::before display on hover: ' + b2.display);
+        }, { once: true });
+      }, 500);
+    })();
+  </script>
+</body>
+</html>

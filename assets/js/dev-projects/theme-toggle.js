@@ -73,7 +73,8 @@
     btn.setAttribute('type', 'button');
     btn.innerHTML = sunIcon + moonIcon;
     btn.addEventListener('click', toggleTheme);
-    document.body.appendChild(btn);
+    var container = document.getElementById('dp-nav-actions');
+    (container || document.body).appendChild(btn);
   }
 
   function init() {

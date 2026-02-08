@@ -33,7 +33,7 @@ import { generateCard } from './project-card.js';
         }
         var projects = data.projects || [];
         // Hide cards for projects that have a featured strip (banner) above the grid
-        var stripTitles = { 'Kaomoji.click': true, 'Fair Share Calculator': true };
+        var stripTitles = { 'Kaomoji.click': true, 'Fair Share Calculator': true, 'SCP Reader': true };
         var cardProjects = projects.filter(function (p) { return !stripTitles[p.title]; });
         if (cardProjects.length === 0) {
           container.innerHTML = '<p class="dp-empty">No projects yet.</p>';
