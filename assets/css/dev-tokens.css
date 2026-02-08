@@ -197,6 +197,12 @@
   --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
   --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
 
+  /* Button — secondary on light (outline; for light overlay) */
+  --dp-btn-secondary-on-light-text: rgba(0, 0, 0, 0.85);
+  --dp-btn-secondary-on-light-border: rgba(0, 0, 0, 0.55);
+  --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
+  --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
+
   /* Strip — product strip (Fair Share); darkened for text contrast */
   --dp-strip-bg: #0a2020;
   --dp-strip-orb-1: #2e7d76;
@@ -321,6 +327,12 @@
   --dp-btn-secondary-on-dark-text: var(--dp-on-dark-text-primary);
   --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
   --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
+
+  /* Button — secondary on light (outline; for light overlay) */
+  --dp-btn-secondary-on-light-text: rgba(0, 0, 0, 0.85);
+  --dp-btn-secondary-on-light-border: rgba(0, 0, 0, 0.55);
+  --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
+  --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
 
   /* Strip — same as dark theme (darkened for contrast) */
   --dp-strip-bg: #0a2020;

@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Secondary-on-light button**: `.dp-btn-secondary-on-light` and tokens `--dp-btn-secondary-on-light-*` (text, border, hover-bg, focus-ring) for outline buttons on light overlays; light + dark theme in dev-tokens.
+- **Resume print tokens**: `--dp-print-name`, `--dp-print-tagline`, `--dp-print-body`, `--dp-print-role-title`, `--dp-print-meta`, `--dp-print-section-title`, `--dp-print-leading`, `--dp-print-leading-tight`, `--dp-print-section-gap`, `--dp-print-role-gap`, `--dp-print-column-gap`, `--dp-print-li-gap`, `--dp-print-page-v`, `--dp-print-page-h`; used in `@media print` for resume lightbox typography and spacing.
+
+### Added (continued)
 - **Fixed nav bar**: `.dp-nav` — glass-style fixed bar with brand (logo + name) and `#dp-nav-actions` (theme toggle, snake toggle). Toggles inject into nav when present, else body.
 - **404 page** (`404.html`): Minimal page with nav, gradient 404, "Go home" / "Play Snake instead". `window.SnakeGame.open()` exposed for external pages. Inline theme init (no flash); favicon; meta robots noindex.
 - **Resume download widget**: Dropdown with PDF, copy-to-clipboard. `resume-download.js`. Mobile duplicate below resume.
@@ -25,6 +29,9 @@ All notable changes to this project will be documented in this file.
 - **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Changed
+- **Resume lightbox**: Backdrop `position: fixed`. Content wrapper and page container simplified (no max-height, aspect-ratio, overflow-y). Page padding `40px 56px`. Action buttons (Print/Copy) use secondary-on-light outline styling (light theme) and secondary-on-dark in dark theme; removed `dp-btn-secondary` from button markup.
+- **Resume (screen)**: Body gap `24px`; section title margin-top `20px` (first-child `10px`); `.dp-resume-role + .dp-resume-role` spacing `16px`.
+- **Resume (print)**: Typography and spacing refactored to print tokens; @page margin `15mm`; section/role gaps and first-child margin use tokens.
 - **Side projects section order**: DOM order is now Hero → section label → Fair Share split-row → Kaomoji strip → SCP split-row → Resume → Footer. Skip link target `#projects` moved to Fair Share split-row wrapper. Full testimonial quotes (Bella Jagger, Jason Allen). SCP split-row uses `.dp-split-row--flipped` (testimonial left, strip right); at ≤768px both split-rows stack to single column. `.dp-testimonial-quote` font-size set to `var(--dp-text-base)` for longer quotes.
 - **Fair Share strip**: Compact split-row layout — added `dp-strip--compact`, removed `.dp-strip-media` (skeleton), removed hidden "Learn more" button; wrapped in `.dp-split-row` with Bella Jagger testimonial (1/3). Same pattern as SCP strip; single "Go to Fair Share" CTA with `dp-btn-primary-on-dark`.
 - **Testimonial card typography (Phase 2 patch)**: Decorative quote mark — absolute, large (8rem), Georgia, opacity 0.07 (flat colour, no gradient). Quote text — Georgia italic at `--dp-text-lg` (20px), `z-index: 1`. Attribution — `position: relative; z-index: 1` so both sit above the faint mark. Container `.dp-testimonial` already has `position: relative`.
@@ -38,6 +45,7 @@ All notable changes to this project will be documented in this file.
 - **Resume DOCX**: `assets/files/Resume.docx` deleted; download widget and docs now reference PDF only.
 
 ### Fixed
+- **Resume copy**: Log copy failures to console for debugging.
 - **Kaomoji strip**: `.dp-strip-media` now uses `justify-self: center` for centered layout.
 - **Snake game (dev-projects)**: Single Play button only — original button hidden when overlay opens, shown on teardown; close button no longer reskinned/appended to body (removed with overlay). State (cols, rows, offsetX, offsetY, colors) and overlayClosing reset in stopGame/teardown.
 - **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.

@@ -62,10 +62,10 @@ function buildLightboxHTML(resumeContent) {
       </button>
     </div>
     <div class="dp-lightbox-actions">
-      <button type="button" class="dp-btn dp-btn-secondary dp-lightbox-action-btn" data-lightbox-print>
+      <button type="button" class="dp-btn dp-lightbox-action-btn" data-lightbox-print>
         <span>Print to PDF</span>
       </button>
-      <button type="button" class="dp-btn dp-btn-secondary dp-lightbox-action-btn" data-lightbox-copy>
+      <button type="button" class="dp-btn dp-lightbox-action-btn" data-lightbox-copy>
         <span>Copy to clipboard</span>
       </button>
     </div>
@@ -138,7 +138,8 @@ function openLightbox() {
       await navigator.clipboard.writeText(text);
       btn.setAttribute('title', 'Copied!');
       setTimeout(() => { btn.setAttribute('title', originalTitle); }, 2000);
-    } catch {
+    } catch (err) {
+      console.error('Resume copy failed', err);
       btn.setAttribute('title', 'Copy failed');
       setTimeout(() => { btn.setAttribute('title', originalTitle); }, 2000);
     }

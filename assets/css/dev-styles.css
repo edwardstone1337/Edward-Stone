@@ -152,6 +152,21 @@ img { display: block; max-width: 100%; }
   outline-offset: 2px;
 }
 
+.dp-btn-secondary-on-light {
+  background: transparent;
+  color: var(--dp-btn-secondary-on-light-text);
+  border: 1px solid var(--dp-btn-secondary-on-light-border);
+}
+
+.dp-btn-secondary-on-light:hover {
+  background: var(--dp-btn-secondary-on-light-hover-bg);
+}
+
+.dp-btn-secondary-on-light:focus-visible {
+  outline: 2px solid var(--dp-btn-secondary-on-light-focus-ring);
+  outline-offset: 2px;
+}
+
 .dp-btn .dp-btn-icon {
   width: 1rem;
   height: 1rem;
@@ -1395,7 +1410,7 @@ a.dp-resume-contact-item:hover {
 .dp-resume-body {
   display: grid;
   grid-template-columns: 1fr 200px;
-  gap: var(--dp-space-6);
+  gap: 24px;
   flex: 1;
   min-height: 0;
 }
@@ -1418,10 +1433,18 @@ a.dp-resume-contact-item:hover {
   text-transform: uppercase;
   letter-spacing: var(--dp-tracking-wider);
   margin: 0 0 var(--dp-space-2);
+  margin-top: 20px;
+}
+.dp-resume-section-title:first-child {
+  margin-top: 10px;
 }
 
 .dp-resume-role {
   margin-bottom: var(--dp-space-3);
+}
+
+.dp-resume-role + .dp-resume-role {
+  margin-top: 16px;
 }
 
 .dp-resume-role:last-child {
@@ -1536,7 +1559,7 @@ body.dp-overlay-active {
 }
 
 .dp-lightbox-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: var(--dp-bg-overlay);
   backdrop-filter: blur(8px);
@@ -1550,9 +1573,6 @@ body.dp-overlay-active {
   flex-direction: column;
   align-items: center;
   gap: var(--dp-space-6);
-  max-height: calc(100vh - 160px);
-  flex-shrink: 1;
-  min-height: 0;
   width: 100%;
   max-width: 210mm;
 }
@@ -1562,12 +1582,8 @@ body.dp-overlay-active {
   border: 1px solid var(--dp-paper-border);
   border-radius: var(--dp-radius-sm);
   box-shadow: var(--dp-paper-shadow);
-  padding: 32px 36px 28px;
+  padding: 40px 56px;
   width: 100%;
-  aspect-ratio: 210 / 297;
-  overflow-y: auto;
-  min-height: 0;
-  flex-shrink: 1;
 }
 
 .dp-lightbox-close {
@@ -1581,7 +1597,7 @@ body.dp-overlay-active {
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--dp-radius-md, 8px);
+  border-radius: var(--dp-radius-md);
   background: rgba(0, 0, 0, 0.4);
   color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
@@ -1608,19 +1624,33 @@ body.dp-overlay-active {
   flex-shrink: 0;
 }
 
-.dp-lightbox-action-btn {
-  --_btn-bg: rgba(0, 0, 0, 0.5);
-  --_btn-color: rgba(255, 255, 255, 0.9);
-  --_btn-border: rgba(255, 255, 255, 0.15);
-  background: var(--_btn-bg);
-  color: var(--_btn-color);
-  border-color: var(--_btn-border);
+.dp-lightbox-actions .dp-lightbox-action-btn {
   backdrop-filter: blur(8px);
+  background: transparent;
+  color: var(--dp-btn-secondary-on-light-text);
+  border: 1px solid var(--dp-btn-secondary-on-light-border);
 }
 
-.dp-lightbox-action-btn:hover {
-  --_btn-bg: rgba(0, 0, 0, 0.65);
-  --_btn-border: rgba(255, 255, 255, 0.25);
+.dp-lightbox-actions .dp-lightbox-action-btn:hover {
+  background: var(--dp-btn-secondary-on-light-hover-bg);
+}
+
+.dp-lightbox-actions .dp-lightbox-action-btn:focus-visible {
+  outline: 2px solid var(--dp-btn-secondary-on-light-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn {
+  color: var(--dp-btn-secondary-on-dark-text);
+  border: 1px solid var(--dp-btn-secondary-on-dark-border);
+}
+
+[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn:hover {
+  background: var(--dp-btn-secondary-on-dark-hover-bg);
+}
+
+[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn:focus-visible {
+  outline: 2px solid var(--dp-btn-secondary-on-dark-focus-ring);
 }
 
 /* Print-only lightbox: hidden on screen, visible when printing */
@@ -2181,6 +2211,31 @@ body.dp-overlay-active {
    PRINT — Resume lightbox to PDF
    ============================================ */
 @media print {
+  :root {
+    /* Print type scale */
+    --dp-print-name: 22px;
+    --dp-print-tagline: 12px;
+    --dp-print-body: 11px;
+    --dp-print-body-sm: 11px;
+    --dp-print-role-title: 13px;
+    --dp-print-meta: 10px;
+    --dp-print-section-title: 11px;
+
+    /* Print rhythm */
+    --dp-print-leading: 1.35;
+    --dp-print-leading-tight: 1.2;
+
+    /* Print spacing */
+    --dp-print-section-gap: 16px;
+    --dp-print-role-gap: 12px;
+    --dp-print-column-gap: 16px;
+    --dp-print-li-gap: 2px;
+
+    /* Page margins (matched in web container) */
+    --dp-print-page-v: 15mm;
+    --dp-print-page-h: 15mm;
+  }
+
   /* Force light theme for print (values from dev-tokens.css [data-theme="light"] lines 250-263, 352-357) */
   :root {
     color-scheme: light !important;
@@ -2248,7 +2303,7 @@ body.dp-overlay-active {
   .dp-resume-body {
     display: grid !important;
     grid-template-columns: 1fr 200px !important;
-    gap: var(--dp-space-8) !important;
+    gap: var(--dp-print-column-gap) !important;
   }
 
   .dp-resume-header {
@@ -2264,8 +2319,8 @@ body.dp-overlay-active {
 
   /* Print typography — tighten to fit A4 */
   .dp-lightbox-page {
-    font-size: 11px !important;
-    line-height: 1.4 !important;
+    font-size: var(--dp-print-body) !important;
+    line-height: var(--dp-print-leading) !important;
   }
 
   .dp-resume-header {
@@ -2274,65 +2329,73 @@ body.dp-overlay-active {
   }
 
   .dp-resume-name {
-    font-size: 20px !important;
+    font-size: var(--dp-print-name) !important;
   }
 
   .dp-resume-tagline {
-    font-size: 12px !important;
+    font-size: var(--dp-print-tagline) !important;
   }
 
   .dp-resume-summary {
-    font-size: 11px !important;
+    font-size: var(--dp-print-body) !important;
     margin-top: 4px !important;
   }
 
   .dp-resume-section-title {
-    font-size: 11px !important;
+    font-size: var(--dp-print-section-title) !important;
+    margin-top: var(--dp-print-section-gap) !important;
     margin-bottom: 4px !important;
   }
 
+  .dp-resume-section-title:first-child {
+    margin-top: 8px !important;
+  }
+
+  .dp-resume-role + .dp-resume-role {
+    margin-top: var(--dp-print-role-gap) !important;
+  }
+
   .dp-resume-role-title {
-    font-size: 12px !important;
+    font-size: var(--dp-print-role-title) !important;
+    font-weight: 600 !important;
   }
 
   .dp-resume-role-meta {
-    font-size: 10px !important;
+    font-size: var(--dp-print-meta) !important;
     margin-bottom: 2px !important;
   }
 
   .dp-resume-role-desc {
-    font-size: 11px !important;
+    font-size: var(--dp-print-body) !important;
+    line-height: var(--dp-print-leading) !important;
     margin-bottom: 4px !important;
   }
 
   .dp-resume-role-achievements {
-    font-size: 11px !important;
+    font-size: var(--dp-print-body) !important;
+    line-height: var(--dp-print-leading) !important;
   }
 
   .dp-resume-role-achievements li {
-    margin-bottom: 1px !important;
+    margin-bottom: var(--dp-print-li-gap) !important;
   }
 
   .dp-resume-body {
-    gap: 8px !important;
-  }
-
-  .dp-resume-main > * + * {
-    margin-top: 6px !important;
+    gap: var(--dp-print-column-gap) !important;
   }
 
   .dp-resume-contact-item {
-    font-size: 10px !important;
+    font-size: var(--dp-print-meta) !important;
   }
 
   .dp-resume-skill-list li {
-    font-size: 11px !important;
+    font-size: var(--dp-print-body-sm) !important;
   }
 
-  /* A4 page setup */
+  /* A4 page setup — tokens --dp-print-page-v 15mm, --dp-print-page-h 15mm; @page does not resolve var() in most browsers */
   @page {
     size: A4;
-    margin: 12mm 10mm;
+    margin: 15mm 15mm; /* --dp-print-page-v, --dp-print-page-h */
   }
 
   body {
