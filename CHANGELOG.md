@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **dev/design-system.html**: Design system living reference — tokens, swatches, utility demos (noise, glass, glow, shimmer, fade); uses dev-tokens + dev-styles.
 - **Kaomoji strip (dev-projects)**: Featured strip for Kaomoji.click above Fair Share — flipped layout (content left, media right), dark monochrome theme `.dp-strip--kaomoji`; live iframe preview with postMessage theme sync. Strip-featured projects (Kaomoji, Fair Share) excluded from card grid to avoid duplication.
 - **Back-to-top button (dev-projects)**: Glassy circle with logo SVG, left of snake toggle; smooth scroll to top. Same 40px circle style as theme/snake; logo has 2px white outer stroke ring (both themes), stroke drawn via separate circle so logo isn’t cropped. `back-to-top.js`; styles in dev-styles.css. Included on index.html.
 - **Product strip (dev-projects)**: Full-width Fair Share banner between hero and project grid — dark teal strip in both themes, orb gradient (teal + orange), device frame + content + CTA. `product-strip.js` renders strip from config; `strip-effects.js` (desktop only, hover-capable) adds cursor-reactive orbs with ambient Lissajous drift, opacity pulse (8s / 12s), and ±50px cursor nudge; mobile and prefers-reduced-motion keep CSS keyframe drift only. Strip tokens and `.dp-btn` / `.dp-btn-primary` in dev-tokens + dev-styles.
@@ -14,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - **Favicon**: Added favicon link to index.html for improved branding.
 
 ### Fixed
+- **Snake game (dev-projects)**: Single Play button only — original button hidden when overlay opens, shown on teardown; close button no longer reskinned/appended to body (removed with overlay). State (cols, rows, offsetX, offsetY, colors) and overlayClosing reset in stopGame/teardown.
 - **Avatar spin (dev-projects)**: Removed spin jolt by simplifying to per-frame momentum (no deltaTime). Wiggle disabled while spin is active so CSS transform no longer overrides inline rotate; cooldown clicks during spin now add velocity instead of triggering wiggle.
 
 - **Side Quests data source**: Projects loaded from `assets/data/projects.json` (shared with dev-projects); graceful fallback to empty array on fetch error.
@@ -48,6 +50,8 @@ All notable changes to this project will be documented in this file.
 - **Case Studies Folder**: Added `case-studies/` directory with README for planned pages
 
 ### Changed
+- **dev-tokens.css**: Added semantic `--dp-on-dark-*` tokens (text-primary, text-secondary, surface, surface-hover, focus-ring) for inverse/on-dark contexts; button-primary/secondary-on-dark now reference these instead of hardcoded hex. Added `--dp-glass-bg`; light theme surfaces updated (--dp-bg-base, --dp-bg-raised, --dp-bg-card, --dp-glass-bg, --dp-bg-card-hover) for paper-on-desk hierarchy and opaque glass/cards.
+- **dev-styles.css (ATOMS)**: Gradient-text moved; noise moved from EFFECTS into new "ATOMS (reusable utilities)" block; added dp-glass, dp-glow, dp-shimmer, dp-fade-edge.
 - **Homepage (index.html)**: Meta description and og:description updated to "A collection of tools and apps designed and built by Edward Stone...". Two featured strips inlined above projects grid: Kaomoji.click (flipped, dark strip with live iframe preview; postMessage forces dark theme on iframe load) and Fair Share (static strip with skeleton placeholder, cursor orbs). Strip effects loaded via ES module (`strip-effects.js`); projects grid via ES module (`projects-grid.js` imports project-card). Removed standalone `utils.js` and separate project-card script (grid module handles load order).
 - **dev/old-index.html**: Asset paths (CSS, JS, images, data) use `../` so page resolves correctly when opened from `dev/` folder.
 - **Section rhythm (dev-projects)**: New token `--dp-section-gap` (24px desktop, 12px tablet, 8px mobile) — hero padding-bottom, strip margin-top, grid padding now use it instead of hardcoded spacing.

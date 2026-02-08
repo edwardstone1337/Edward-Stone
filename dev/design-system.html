@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Dev-Projects Design System — Living Reference</title>
+    <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" />
+    <link rel="stylesheet" href="../assets/css/dev-tokens.css" />
+    <link rel="stylesheet" href="../assets/css/dev-styles.css" />
+    <!-- Prevent flash of unstyled theme -->
+    <script>
+      (function() {
+        var theme;
+        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+        if (!theme) {
+          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+    <style>
+      /* Reference-page-only scaffolding (ds- prefix) */
+      .ds-page { max-width: 1200px; margin: 0 auto; padding: var(--dp-space-8) var(--dp-space-6); }
+      .ds-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--dp-space-4); margin-bottom: var(--dp-space-12); padding-bottom: var(--dp-space-8); border-bottom: 1px solid var(--dp-border-default); }
+      .ds-header-text { flex: 1; }
+      .ds-header h1 { font-family: var(--dp-font-display); font-size: var(--dp-text-2xl); font-weight: var(--dp-weight-bold); margin: 0 0 var(--dp-space-1) 0; }
+      .ds-header .ds-subtitle { font-size: var(--dp-text-sm); color: var(--dp-text-secondary); }
+      .ds-section { margin-bottom: var(--dp-space-16); }
+      .ds-section-title { font-family: var(--dp-font-display); font-size: var(--dp-text-lg); font-weight: var(--dp-weight-semibold); margin-bottom: var(--dp-space-4); color: var(--dp-text-primary); }
+      .ds-subsection { margin-bottom: var(--dp-space-8); }
+      .ds-subsection-title { font-size: var(--dp-text-sm); font-weight: var(--dp-weight-medium); margin-bottom: var(--dp-space-3); color: var(--dp-text-secondary); }
+      .ds-label { font-size: var(--dp-text-xs); font-weight: var(--dp-weight-medium); color: var(--dp-text-tertiary); margin-top: var(--dp-space-2); text-align: center; font-family: var(--dp-font-body); }
+      .ds-swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: var(--dp-space-4); }
+      .ds-token-row { display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-end; }
+      .ds-demo { margin-bottom: var(--dp-space-4); }
+      .ds-demo-row { display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: center; }
+      /* Noise demo: scope .dp-noise to container for reference display */
+      .ds-noise-demo { position: relative; overflow: hidden; width: 100%; height: 200px; background: linear-gradient(135deg, #1a1a2e 0%, #3a3a5c 50%, #1a1a2e 100%); }
+      .ds-noise-demo .dp-noise { position: absolute; inset: 0; z-index: 1; }
+      /* Card static: ensure visible without reveal JS */
+      .ds-card-demo .dp-card { opacity: 1; }
+      /* Glass demo: theme-aware gradient background */
+      [data-theme="light"] .ds-glass-demo-bg {
+        background: linear-gradient(135deg, #a8b8ff 0%, #c4a8ff 50%, #f0b8ff 100%) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="ds-page">
+      <!-- 1. Header -->
+      <header class="ds-header">
+        <div class="ds-header-text">
+          <h1>Dev-Projects Design System</h1>
+          <p class="ds-subtitle">Living reference — all components render from dev-tokens.css and dev-styles.css</p>
+        </div>
+        <!-- Theme toggle (fixed position) added by theme-toggle.js -->
+      </header>
+
+      <!-- 2. Primitives -->
+      <section class="ds-section">
+        <h2 class="ds-section-title">2. Primitives</h2>
+
+        <!-- 2a. Spacing scale -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2a. Spacing scale</h3>
+          <div class="ds-token-row" style="flex-wrap: wrap;">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-1); height: var(--dp-space-1); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-1 · 4px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-2); height: var(--dp-space-2); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-2 · 8px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-3); height: var(--dp-space-3); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-3 · 12px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-4); height: var(--dp-space-4); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-4 · 16px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-5); height: var(--dp-space-5); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-5 · 20px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-6); height: var(--dp-space-6); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-6 · 24px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-8); height: var(--dp-space-8); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-8 · 32px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-10); height: var(--dp-space-10); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-10 · 40px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-12); height: var(--dp-space-12); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-12 · 48px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-16); height: var(--dp-space-16); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-16 · 64px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-20); height: var(--dp-space-20); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-20 · 80px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-24); height: var(--dp-space-24); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-24 · 96px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-30); height: var(--dp-space-30); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-30 · 120px</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: var(--dp-space-40); height: var(--dp-space-40); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
+              <span class="ds-label">--dp-space-40 · 160px</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2b. Radii -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2b. Radii</h3>
+          <div class="ds-token-row">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-radius-sm</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-md);"></div>
+              <span class="ds-label">--dp-radius-md</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-lg);"></div>
+              <span class="ds-label">--dp-radius-lg</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-xl);"></div>
+              <span class="ds-label">--dp-radius-xl</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-full);"></div>
+              <span class="ds-label">--dp-radius-full</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2c. Typography scale -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2c. Typography scale</h3>
+          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-3);">
+            <div><span style="font-size: var(--dp-text-xs); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-xs</span></div>
+            <div><span style="font-size: var(--dp-text-sm); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-sm</span></div>
+            <div><span style="font-size: var(--dp-text-base); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-base</span></div>
+            <div><span style="font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-lg</span></div>
+            <div><span style="font-size: var(--dp-text-xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-xl</span></div>
+            <div><span style="font-size: var(--dp-text-2xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-2xl</span></div>
+            <div><span style="font-size: var(--dp-text-3xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-3xl</span></div>
+            <div><span style="font-size: var(--dp-text-4xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-4xl</span></div>
+          </div>
+        </div>
+
+        <!-- 2d. Font weights -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2d. Font weights</h3>
+          <p style="color: var(--dp-text-primary);">
+            <span style="font-weight: var(--dp-weight-normal);">Inter 400</span>
+            <span style="margin: 0 var(--dp-space-2);">·</span>
+            <span style="font-weight: var(--dp-weight-medium);">500</span>
+            <span style="margin: 0 var(--dp-space-2);">·</span>
+            <span style="font-weight: var(--dp-weight-semibold);">600</span>
+            <span style="margin: 0 var(--dp-space-2);">·</span>
+            <span style="font-weight: var(--dp-weight-bold);">700</span>
+            <span style="margin: 0 var(--dp-space-2);">·</span>
+            <span style="font-weight: var(--dp-weight-extrabold);">800</span>
+          </p>
+          <span class="ds-label">--dp-weight-normal · --dp-weight-medium · --dp-weight-semibold · --dp-weight-bold · --dp-weight-extrabold</span>
+        </div>
+
+        <!-- 2e. Duration & easing -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2e. Duration & easing</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hover each box to see translate animation</p>
+          <div class="ds-token-row" style="gap: var(--dp-space-8);">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-fast) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
+              <span class="ds-label">--dp-duration-fast · 150ms</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-base) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
+              <span class="ds-label">--dp-duration-base · 200ms</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-slow) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
+              <span class="ds-label">--dp-duration-slow · 400ms</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-entrance) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
+              <span class="ds-label">--dp-duration-entrance · 600ms</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Semantic Tokens -->
+      <section class="ds-section">
+        <h2 class="ds-section-title">3. Semantic Tokens</h2>
+
+        <!-- 3a. Surfaces -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3a. Surfaces</h3>
+          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-base); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-bg-base</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-bg-raised</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-card); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-bg-card</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-bg-card-hover</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-overlay); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-bg-overlay</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3b. Text hierarchy -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3b. Text hierarchy</h3>
+          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
+            <div><span style="color: var(--dp-text-primary);">Primary text — main content</span><span class="ds-label" style="display: block;">--dp-text-primary</span></div>
+            <div><span style="color: var(--dp-text-secondary);">Secondary text — supporting copy</span><span class="ds-label" style="display: block;">--dp-text-secondary</span></div>
+            <div><span style="color: var(--dp-text-tertiary);">Tertiary text — de-emphasised</span><span class="ds-label" style="display: block;">--dp-text-tertiary</span></div>
+            <div><span style="color: var(--dp-text-ghost);">Ghost text — placeholder / faint</span><span class="ds-label" style="display: block;">--dp-text-ghost</span></div>
+          </div>
+        </div>
+
+        <!-- 3c. Borders -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3c. Borders</h3>
+          <div class="ds-token-row">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-border-default</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-hover); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-border-hover</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-active); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-border-active</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-divider); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-border-divider</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3d. Accent & glow colors -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3d. Accent & glow colors</h3>
+          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-accent); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-accent</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-accent-hover); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-accent-hover</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-accent-glow); border-radius: var(--dp-radius-sm);"></div>
+              <span class="ds-label">--dp-accent-glow</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-glow-1); filter: blur(20px); border-radius: 50%;"></div>
+              <span class="ds-label">--dp-glow-1</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-glow-2); filter: blur(20px); border-radius: 50%;"></div>
+              <span class="ds-label">--dp-glow-2</span>
+            </div>
+            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 120px; height: 80px; background: var(--dp-glow-3); filter: blur(20px); border-radius: 50%;"></div>
+              <span class="ds-label">--dp-glow-3</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Atoms -->
+      <section class="ds-section">
+        <h2 class="ds-section-title">4. Atoms</h2>
+
+        <!-- 4a. .dp-gradient-text -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4a. .dp-gradient-text</h3>
+          <div class="ds-demo">
+            <h2 class="dp-gradient-text" style="font-size: var(--dp-text-2xl); font-weight: var(--dp-weight-bold);">Gradient Text</h2>
+            <span class="ds-label">.dp-gradient-text</span>
+          </div>
+        </div>
+
+        <!-- 4b. .dp-noise -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4b. .dp-noise</h3>
+          <div class="ds-demo ds-noise-demo">
+            <div class="dp-noise"></div>
+          </div>
+          <span class="ds-label">Noise overlay — subtle texture, zoom in to see. .dp-noise</span>
+        </div>
+
+        <!-- 4c. .dp-glass -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4c. .dp-glass</h3>
+          <div class="ds-demo" style="position: relative;">
+            <div class="ds-glass-demo-bg" style="position: absolute; inset: 0; background: linear-gradient(135deg, #2a2a4e 0%, #3d2a5c 50%, #4a2a5c 100%); border-radius: var(--dp-radius-md);"></div>
+            <div class="dp-glass" style="width: 300px; height: 150px; padding: var(--dp-space-6); position: relative;">
+              <p style="color: var(--dp-text-primary); font-size: var(--dp-text-base);">Sample text over colourful background — backdrop-filter blur visible.</p>
+            </div>
+          </div>
+          <span class="ds-label">.dp-glass</span>
+        </div>
+
+        <!-- 4d. .dp-glow -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4d. .dp-glow</h3>
+          <div class="ds-demo" style="overflow: visible;">
+            <div class="dp-glow is-visible" style="position: relative; z-index: 0; width: 100%; height: 300px; --dp-glow-color: var(--dp-glow-1); display: flex; align-items: center; justify-content: center;">
+              <p style="color: var(--dp-text-primary);">Glow visible (no scroll trigger)</p>
+            </div>
+          </div>
+          <span class="ds-label">.dp-glow.is-visible — --dp-glow-color: var(--dp-glow-1)</span>
+        </div>
+
+        <!-- 4e. .dp-shimmer -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4e. .dp-shimmer</h3>
+          <div class="ds-demo">
+            <div class="dp-shimmer" style="width: 300px; height: 100px; background: var(--dp-bg-card); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-md);"></div>
+            <span class="ds-label">.dp-shimmer — sweep animation</span>
+          </div>
+        </div>
+
+        <!-- 4f. .dp-fade-edge -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4f. .dp-fade-edge</h3>
+          <div class="ds-demo">
+            <div class="dp-fade-edge" style="width: 300px; height: 200px; overflow: hidden;">
+              <p style="color: var(--dp-text-primary); font-size: var(--dp-text-sm); line-height: 1.6;">
+                Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+              </p>
+            </div>
+            <span class="ds-label">.dp-fade-edge</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Molecules -->
+      <section class="ds-section">
+        <h2 class="ds-section-title">5. Molecules</h2>
+
+        <!-- 5a. Hero -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5a. Hero</h3>
+          <div class="ds-demo dp-hero" style="padding-top: var(--dp-space-8); padding-bottom: var(--dp-space-8);">
+            <span class="dp-overline">UX Designer × Developer</span>
+            <h1 class="dp-hero-heading">
+              <span class="dp-hero-line">Hey, I'm Edward.</span>
+              <span class="dp-hero-line">I design user experiences.</span>
+              <span class="dp-hero-line dp-hero-accent">Now I'm building them too.</span>
+            </h1>
+            <p class="dp-hero-body">A UX designer picking up code. Each project a little more ambitious than the last.</p>
+          </div>
+          <span class="ds-label">.dp-hero, .dp-overline, .dp-hero-heading, .dp-hero-line, .dp-hero-accent, .dp-hero-body</span>
+        </div>
+
+        <!-- 5b. Buttons -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5b. Buttons</h3>
+          <div class="ds-demo-row">
+            <button type="button" class="dp-btn dp-btn-primary">Primary</button>
+            <div style="background: var(--dp-strip-bg); padding: var(--dp-space-4); border-radius: var(--dp-radius-md);">
+              <button type="button" class="dp-btn dp-btn-primary-on-dark">Primary on Dark</button>
+            </div>
+            <div style="background: var(--dp-strip-bg); padding: var(--dp-space-4); border-radius: var(--dp-radius-md);">
+              <button type="button" class="dp-btn dp-btn-secondary-on-dark">Secondary on Dark</button>
+            </div>
+          </div>
+          <span class="ds-label">.dp-btn.dp-btn-primary · .dp-btn-primary-on-dark · .dp-btn-secondary-on-dark</span>
+        </div>
+
+        <!-- 5c. Card (static preview) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5c. Card (static preview)</h3>
+          <div class="ds-demo ds-card-demo" style="max-width: 320px;">
+            <a href="#" class="dp-card" style="display: block;">
+              <div class="dp-card-inner">
+                <div class="dp-card-media">
+                  <div class="dp-card-media-placeholder" style="background: linear-gradient(135deg, var(--dp-bg-card-hover) 0%, var(--dp-border-default) 100%);"></div>
+                </div>
+                <div class="dp-card-content">
+                  <h3 class="dp-card-title">Project Title</h3>
+                  <p class="dp-card-description">A brief description of the project goes here.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <span class="ds-label">.dp-card, .dp-card-inner, .dp-card-media, .dp-card-content</span>
+        </div>
+
+        <!-- 5d. Product strip (static preview) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5d. Product strip (static preview)</h3>
+          <div class="ds-demo">
+            <section class="dp-strip" aria-label="Design system reference — product strip">
+              <div class="dp-strip-orbs">
+                <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
+                <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
+              </div>
+              <div class="dp-strip-inner">
+                <div class="dp-strip-content">
+                  <span class="dp-strip-overline">example.com</span>
+                  <h2 class="dp-strip-title">Product Name</h2>
+                  <p class="dp-strip-description">A short description of the product or feature.</p>
+                  <div class="dp-strip-badges">
+                    <span class="dp-strip-badge">Badge</span>
+                  </div>
+                </div>
+                <div class="dp-strip-media">
+                  <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--dp-strip-orb-1) 20%, var(--dp-strip-orb-2) 80%); border-radius: inherit;"></div>
+                </div>
+                <div class="dp-strip-actions">
+                  <button type="button" class="dp-btn dp-btn-primary-on-dark">Learn more</button>
+                  <button type="button" class="dp-btn dp-btn-secondary-on-dark">Visit</button>
+                </div>
+              </div>
+            </section>
+          </div>
+          <span class="ds-label">.dp-strip, .dp-strip-inner, .dp-strip-orbs, .dp-strip-content, .dp-strip-media, .dp-strip-actions</span>
+        </div>
+
+        <!-- 5d-2. Product strip — Kaomoji variant -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5d. Product strip — Kaomoji variant</h3>
+          <p class="ds-label" style="margin-top: 0; text-align: left;">.dp-strip--kaomoji — component-level token overrides</p>
+          <div class="ds-demo">
+            <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click — side project">
+              <div class="dp-strip-orbs">
+                <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
+                <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
+              </div>
+              <div class="dp-strip-inner">
+                <div class="dp-strip-content">
+                  <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+                  <h2 class="dp-strip-title">Kaomoji.click</h2>
+                  <span class="dp-strip-overline">kaomoji.click</span>
+                  <div class="dp-strip-badges">
+                    <span class="dp-strip-badge">Vanilla JS</span>
+                  </div>
+                  <p class="dp-strip-description">A simple Japanese emoticon picker with a twist.</p>
+                </div>
+                <div class="dp-strip-media">
+                  <iframe src="../assets/previews/kaomoji/index.html" class="dp-card-media-iframe" loading="lazy" sandbox="allow-scripts allow-same-origin" style="width: 100%; height: 100%; border: none; border-radius: inherit; display: block;" title="Kaomoji.click preview"></iframe>
+                </div>
+                <div class="dp-strip-actions">
+                  <button type="button" class="dp-btn dp-btn-primary-on-dark">Visit Site</button>
+                </div>
+              </div>
+            </section>
+          </div>
+          <span class="ds-label">.dp-strip.dp-strip--kaomoji</span>
+        </div>
+
+        <!-- 5e. Overline -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">5e. Overline</h3>
+          <div class="ds-demo">
+            <span class="dp-overline">Section Label</span>
+            <span class="ds-label">.dp-overline</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../assets/js/dev-projects/theme-toggle.js"></script>
+    <script>
+      // Force Kaomoji strip iframe to dark theme (strip bg is always dark)
+      (function() {
+        var iframe = document.querySelector('.dp-strip--kaomoji .dp-card-media-iframe');
+        if (!iframe) return;
+        function sendDark() {
+          try { iframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*'); } catch(e) {}
+        }
+        iframe.addEventListener('load', sendDark);
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') sendDark();
+        // Re-force after any theme toggle
+        document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() {
+          setTimeout(sendDark, 100);
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -14,6 +14,7 @@
   var overlay = null;
   var closeButton = null;
   var canvas = null;
+  var playButton = null;
   var boundResizeHandler = null;
   var overlayClosing = false;
 
@@ -338,6 +339,11 @@
     document.removeEventListener('keydown', handleGameKey);
     state.snake = [];
     state.gameOver = true;
+    state.cols = 0;
+    state.rows = 0;
+    state.offsetX = 0;
+    state.offsetY = 0;
+    state.colors = {};
   }
 
   function handleGameKey(e) {
@@ -406,6 +412,7 @@
     document.body.appendChild(overlay);
 
     document.body.classList.add('dp-overlay-active');
+    if (playButton) playButton.hidden = true;
 
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
@@ -467,16 +474,13 @@
       overlay.removeEventListener('transitionend', teardown);
 
       document.body.classList.remove('dp-overlay-active');
-
-      closeButton.className = 'dp-snake-toggle';
-      closeButton.setAttribute('aria-label', 'Play Snake');
-      closeButton.innerHTML = snakeIcon;
-      document.body.appendChild(closeButton);
+      if (playButton) playButton.hidden = false;
 
       overlay.remove();
       overlay = null;
       closeButton = null;
       canvas = null;
+      overlayClosing = false;
     }
 
     if (prefersReducedMotion()) {
@@ -493,6 +497,7 @@
     btn.setAttribute('type', 'button');
     btn.innerHTML = snakeIcon;
     btn.addEventListener('click', openOverlay);
+    playButton = btn;
     document.body.appendChild(btn);
   }
 

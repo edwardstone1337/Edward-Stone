@@ -108,6 +108,7 @@
   --dp-bg-base: var(--dp-raw-grey-950);
   --dp-bg-raised: var(--dp-raw-grey-900);
   --dp-bg-card: rgba(255, 255, 255, 0.03);
+  --dp-glass-bg: rgba(255, 255, 255, 0.05);
   --dp-bg-card-hover: rgba(255, 255, 255, 0.06);
   --dp-bg-overlay: rgba(0, 0, 0, 0.7);
 
@@ -116,6 +117,13 @@
   --dp-text-secondary: var(--dp-raw-grey-400);
   --dp-text-tertiary: rgba(255, 255, 255, 0.64);
   --dp-text-ghost: rgba(255, 255, 255, 0.20);
+
+  /* Semantic: on-dark (inverse) context */
+  --dp-on-dark-text-primary: var(--dp-raw-white);
+  --dp-on-dark-text-secondary: rgba(255, 255, 255, 0.75);
+  --dp-on-dark-surface: var(--dp-raw-grey-900);
+  --dp-on-dark-surface-hover: var(--dp-raw-grey-50);
+  --dp-on-dark-focus-ring: var(--dp-raw-white);
 
   /* Borders — whispers, not lines */
   --dp-border-default: rgba(255, 255, 255, 0.06);
@@ -170,15 +178,15 @@
 
   /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
   --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
-  --dp-btn-text-primary-on-dark: #0d3d3c;
-  --dp-btn-hover-bg-primary-on-dark: #e8f5f4;
-  --dp-btn-focus-ring-on-dark: #0d3d3c;
+  --dp-btn-text-primary-on-dark: var(--dp-on-dark-surface);
+  --dp-btn-hover-bg-primary-on-dark: var(--dp-on-dark-surface-hover);
+  --dp-btn-focus-ring-on-dark: var(--dp-on-dark-surface);
 
   /* Button — secondary on dark (outline; for strip external link) */
   --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
-  --dp-btn-secondary-on-dark-text: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-text: var(--dp-on-dark-text-primary);
   --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
-  --dp-btn-secondary-on-dark-focus-ring: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
 
   /* Strip — product strip (Fair Share); darkened for text contrast */
   --dp-strip-bg: #0a2020;
@@ -200,11 +208,12 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Surfaces — soft blue hue to match dark theme energy */
-  --dp-bg-base: #F5F7FF;
-  --dp-bg-raised: #EEF2FA;
-  --dp-bg-card: rgba(0, 0, 0, 0.02);
-  --dp-bg-card-hover: rgba(0, 0, 0, 0.04);
+  /* Surfaces — "paper on desk" hierarchy */
+  --dp-bg-base: #EDF0F7;                   /* Softer grey — halfway between old #F5F7FF and #E8EAF2 */
+  --dp-bg-raised: #F0F2FA;                   /* Slightly lighter shelf */
+  --dp-bg-card: rgba(255, 255, 255, 0.75);  /* More opaque — less base bleed-through */
+  --dp-glass-bg: rgba(255, 255, 255, 0.65);
+  --dp-bg-card-hover: rgba(255, 255, 255, 0.8);  /* Brighter on hover */
   --dp-bg-overlay: rgba(255, 255, 255, 0.8);
 
   /* Text */
@@ -212,6 +221,13 @@
   --dp-text-secondary: #4B5060;
   --dp-text-tertiary: rgba(0, 0, 0, 0.75);
   --dp-text-ghost: rgba(0, 0, 0, 0.20);
+
+  /* Semantic: on-dark (inverse) context */
+  --dp-on-dark-text-primary: var(--dp-raw-white);
+  --dp-on-dark-text-secondary: rgba(255, 255, 255, 0.75);
+  --dp-on-dark-surface: var(--dp-raw-grey-900);
+  --dp-on-dark-surface-hover: var(--dp-raw-grey-50);
+  --dp-on-dark-focus-ring: var(--dp-raw-white);
 
   /* Borders */
   --dp-border-default: rgba(0, 0, 0, 0.08);
@@ -266,15 +282,15 @@
 
   /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
   --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
-  --dp-btn-text-primary-on-dark: #0d3d3c;
-  --dp-btn-hover-bg-primary-on-dark: #e8f5f4;
-  --dp-btn-focus-ring-on-dark: #0d3d3c;
+  --dp-btn-text-primary-on-dark: var(--dp-on-dark-surface);
+  --dp-btn-hover-bg-primary-on-dark: var(--dp-on-dark-surface-hover);
+  --dp-btn-focus-ring-on-dark: var(--dp-on-dark-surface);
 
   /* Button — secondary on dark (outline; for strip external link) */
   --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
-  --dp-btn-secondary-on-dark-text: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-text: var(--dp-on-dark-text-primary);
   --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
-  --dp-btn-secondary-on-dark-focus-ring: var(--dp-strip-title-color);
+  --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
 
   /* Strip — same as dark theme (darkened for contrast) */
   --dp-strip-bg: #0a2020;

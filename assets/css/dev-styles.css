@@ -38,14 +38,6 @@ img { display: block; max-width: 100%; }
    ATOMS — Utility classes
    -------------------------------------------- */
 
-/* Gradient text */
-.dp-gradient-text {
-  background: linear-gradient(180deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 /* Hero heading — each line has its own on-theme gradient (darker top, lighter bottom) */
 .dp-hero-heading .dp-hero-line {
   display: block;
@@ -411,6 +403,106 @@ img { display: block; max-width: 100%; }
   line-height: var(--dp-leading-relaxed);
   color: var(--dp-text-secondary);
   max-width: 640px;
+}
+
+/* ============ ATOMS (reusable utilities) ============ */
+
+/* Gradient text */
+.dp-gradient-text {
+  background: linear-gradient(180deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Noise overlay (fixed full-screen) */
+.dp-noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--dp-noise-opacity);
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Glass panel (blur + border) */
+.dp-glass {
+  background: var(--dp-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-md);
+}
+
+/* Aurora glow pseudo-element; customise via --dp-glow-color, --dp-glow-x, --dp-glow-y, --dp-glow-opacity */
+/* Note: default opacity 0.6 compensates for low-alpha glow tokens. Effective opacity ≈ token-alpha × 0.6 */
+.dp-glow {
+  position: relative;
+}
+.dp-glow::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0;
+  transition: opacity 1.2s var(--dp-ease-out);
+  pointer-events: none;
+  z-index: -1;
+  background: var(--dp-glow-color, var(--dp-accent-glow));
+  left: var(--dp-glow-x, 50%);
+  top: var(--dp-glow-y, 30%);
+  translate: -50% -50%;
+}
+.dp-glow.is-visible::before {
+  opacity: var(--dp-glow-opacity, 0.6);
+}
+
+/* Shimmer sweep on ::after; element needs position: relative; overflow: hidden */
+.dp-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.dp-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: dp-shimmer-sweep 3s var(--dp-ease-out) infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+@keyframes dp-shimmer-sweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Fade content into base background; height via --dp-fade-height */
+.dp-fade-edge {
+  position: relative;
+}
+.dp-fade-edge::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--dp-fade-height, 40%);
+  background: linear-gradient(to bottom, transparent, var(--dp-bg-base));
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 /* --------------------------------------------
@@ -825,21 +917,6 @@ img { display: block; max-width: 100%; }
   color: var(--dp-text-tertiary);
   font-size: var(--dp-text-sm);
   padding: var(--dp-space-20) 0;
-}
-
-/* --------------------------------------------
-   EFFECTS — Noise overlay
-   -------------------------------------------- */
-.dp-noise {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: var(--dp-noise-opacity);
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
 }
 
 /* --------------------------------------------
