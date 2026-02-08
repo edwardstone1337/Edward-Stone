@@ -2078,6 +2078,9 @@ body.dp-overlay-active {
     text-align: center;
     align-items: center;
   }
+  .dp-strip--compact .dp-strip-content {
+    text-align: center;
+  }
   .dp-strip-badges {
     justify-content: center;
   }
