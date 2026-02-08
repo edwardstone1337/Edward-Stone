@@ -96,6 +96,15 @@
 
   /* --- Page section rhythm (airy gap between hero, strips, grid) --- */
   --dp-section-gap: var(--dp-space-24);
+
+  /* Surface fallbacks — prevent flash before data-theme is set */
+  --dp-bg-base: #08090A;
+  --dp-bg-raised: #111113;
+  --dp-bg-card: rgba(255, 255, 255, 0.03);
+  --dp-bg-card-hover: rgba(255, 255, 255, 0.06);
+  --dp-bg-overlay: rgba(0, 0, 0, 0.7);
+  --dp-text-primary: #F7F8F8;
+  --dp-text-secondary: #8A94A6;
 }
 
 /* --------------------------------------------
