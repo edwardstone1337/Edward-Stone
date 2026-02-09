@@ -1924,8 +1924,7 @@ body.dp-overlay-active {
    -------------------------------------------- */
 .dp-hero {
   position: relative;
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: visible;
 }
 
 .dp-hero::before {
@@ -2061,6 +2060,8 @@ body.dp-overlay-active {
   .dp-hero {
     padding-top: var(--dp-space-24);
     padding-bottom: var(--dp-section-gap);
+    overflow-x: clip;
+    overflow-y: visible;
   }
   .dp-hero-heading {
     font-size: var(--dp-text-3xl);
