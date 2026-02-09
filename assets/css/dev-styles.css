@@ -222,6 +222,11 @@ img { display: block; max-width: 100%; }
   width: 32px;
   height: 32px;
   flex-shrink: 0;
+  border-radius: 50%;
+}
+
+[data-theme="dark"] .dp-nav-logo {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1);
 }
 
 .dp-nav-name {
