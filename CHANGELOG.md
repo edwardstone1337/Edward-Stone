@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
+- **Flip 7 strip (index)**: Title set to "I'm bad at maths, so I built an app"; description updated to mention scores, modifiers, running totals and focus on game vs arithmetic. Iframe preview uses `visibility: hidden`.
 - **Copy, typography**: Replaced em dashes (—) with comma, period, or colon across user-facing copy: page titles, meta og:title, aria-labels, hero and strip body text, resume role titles, project descriptions in projects.json, design system labels (dev/design-system.html), case study title, 404 and Flip 7 preview titles. Flip 7 card face placeholder changed from em dash to period. Details in docs/em-dash-replacement-report.md.
 - **CTA card (case studies)**: Fair Share and SCP Reader "What's Next" CTA card background changed from glass (backdrop-filter) to semi-opaque solid (rgba dark/light) for more reliable rendering; light theme uses rgba(255,255,255,0.92).
 
