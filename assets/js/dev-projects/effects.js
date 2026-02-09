@@ -91,30 +91,52 @@
       return;
     }
 
+    function applyReveal(entry, obs) {
+      if (entry.isIntersecting) {
+        var delay = entry.target.getAttribute('data-reveal-delay') || '0';
+        entry.target.style.transitionDelay = delay + 'ms';
+        entry.target.classList.add('dp-revealed');
+        obs.unobserve(entry.target);
+      }
+    }
+
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          // Apply stagger delay based on data attribute
-          var delay = entry.target.getAttribute('data-reveal-delay') || '0';
-          entry.target.style.transitionDelay = delay + 'ms';
-          entry.target.classList.add('dp-revealed');
-          observer.unobserve(entry.target);
-        }
+        applyReveal(entry, observer);
       });
     }, {
       threshold: 0.1,
       rootMargin: '0px 0px -40px 0px'
     });
 
+    var earlyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        applyReveal(entry, earlyObserver);
+      });
+    }, {
+      threshold: 0.05,
+      rootMargin: '0px 0px 200px 0px'
+    });
+
     var elements = document.querySelectorAll('.dp-reveal');
     for (var k = 0; k < elements.length; k++) {
-      observer.observe(elements[k]);
+      var el = elements[k];
+      if (el.classList.contains('dp-reveal--early')) {
+        earlyObserver.observe(el);
+      } else {
+        observer.observe(el);
+      }
     }
 
     window.DPEffectsObserveReveals = function () {
       var newEls = document.querySelectorAll('.dp-reveal:not(.dp-revealed)');
       for (var m = 0; m < newEls.length; m++) {
-        observer.observe(newEls[m]);
+        var newEl = newEls[m];
+        if (newEl.classList.contains('dp-reveal--early')) {
+          earlyObserver.observe(newEl);
+        } else {
+          observer.observe(newEl);
+        }
       }
     };
   }

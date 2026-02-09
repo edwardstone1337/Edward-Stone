@@ -51,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - **QA diagnostics**: Deleted `docs/qa/download-button-positions-1080px-2025-02-08.md`, `resume-animated-border-1280px-diagnostic-2025-02-08.md`, `resume-component-polish-discovery-2025-02-08.md`, `resume-border-diagnostic.html` — one-off findings, no longer needed.
 
 ### Fixed
+- **Resume section mobile scroll void**: Tall resume section (`.dp-reveal--early`) now uses a second IntersectionObserver (threshold 0.05, rootMargin 200px bottom) so it reveals as the content above leaves view — no empty scroll gap on narrow viewports. Other `.dp-reveal` elements unchanged.
 - **Reveal (prefers-reduced-motion)**: `.dp-reveal` under `prefers-reduced-motion: reduce` now uses `opacity: 1`, `transform: none`, `transition: none` — content visible immediately; previously used `opacity: 0` which hid content.
 - **Fair Share case study**: Removed `overflow: clip` from `.dp-glow-section` so glass cards (growth chart, CTA) and backdrop-filter render fully; Origin/Growth/What's Next no longer clip. Testimonial breakout at ≥768px unchanged; no horizontal overflow.
 - **Resume copy**: Log copy failures to console for debugging.
