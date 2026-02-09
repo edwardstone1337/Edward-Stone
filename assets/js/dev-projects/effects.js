@@ -128,6 +128,16 @@
       }
     }
 
+    // Immediately reveal any .dp-reveal elements already in the viewport on load
+    for (var n = 0; n < elements.length; n++) {
+      var el = elements[n];
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('dp-revealed');
+        el.style.transitionDelay = (el.getAttribute('data-reveal-delay') || '0') + 'ms';
+      }
+    }
+
     window.DPEffectsObserveReveals = function () {
       var newEls = document.querySelectorAll('.dp-reveal:not(.dp-revealed)');
       for (var m = 0; m < newEls.length; m++) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flip 7 — Preview</title>
+  <title>Flip 7, Preview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -373,7 +373,7 @@
           <div class="f7-card-back" id="cardBack" aria-hidden="true">
             <span class="f7-restart-icon" id="restartIcon" aria-hidden="true" style="display: none;">↻</span>
           </div>
-          <div class="f7-card-face" id="cardFace" aria-hidden="true">—</div>
+          <div class="f7-card-face" id="cardFace" aria-hidden="true">.</div>
         </div>
       </div>
     </div>
@@ -448,7 +448,7 @@
         state.animating = false;
         cardWrapper.classList.remove('flip', 'unflip');
         cardWrapper.style.transform = '';
-        cardFace.textContent = '—';
+        cardFace.textContent = '.';
         cardFace.setAttribute('aria-hidden', 'true');
         cardBack.setAttribute('aria-hidden', 'true');
         restartIcon.style.display = 'none';
@@ -486,7 +486,7 @@
         setTimeout(function () {
           cardWrapper.classList.remove('unflip');
           cardWrapper.style.transform = '';
-          cardFace.textContent = '—';
+          cardFace.textContent = '.';
           cardBack.classList.remove('flipping');
           cardFace.classList.remove('flipping');
           state.animating = false;

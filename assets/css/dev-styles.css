@@ -25,10 +25,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
 body {
   position: relative;
+  overflow-x: clip;
   font-family: var(--dp-font-body);
   font-weight: var(--dp-weight-normal);
   font-size: var(--dp-text-base);
@@ -49,6 +51,7 @@ img { display: block; max-width: 100%; }
 /* Hero heading — each line has its own on-theme gradient (darker top, lighter bottom) */
 .dp-hero-heading .dp-hero-line {
   display: block;
+  text-wrap: balance;
   background: linear-gradient(180deg, var(--dp-hero-line-from) 0%, var(--dp-hero-line-to) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -554,6 +557,11 @@ img { display: block; max-width: 100%; }
 .dp-glow {
   position: relative;
 }
+
+/* Section with blurred glow ::before */
+.dp-glow-section {
+  position: relative;
+}
 .dp-glow::before {
   content: '';
   position: absolute;
@@ -561,6 +569,7 @@ img { display: block; max-width: 100%; }
   height: 400px;
   border-radius: 50%;
   filter: blur(100px);
+  will-change: transform;
   opacity: 0;
   transition: opacity 1.2s var(--dp-ease-out);
   pointer-events: none;
@@ -2060,8 +2069,6 @@ body.dp-overlay-active {
   .dp-hero {
     padding-top: var(--dp-space-24);
     padding-bottom: var(--dp-section-gap);
-    overflow-x: clip;
-    overflow-y: visible;
   }
   .dp-hero-heading {
     font-size: var(--dp-text-3xl);
@@ -2143,6 +2150,8 @@ body.dp-overlay-active {
   }
   .dp-hero-heading {
     font-size: var(--dp-text-2xl);
+    max-width: 20ch;
+    margin-inline: auto;
   }
   .dp-hero-body {
     font-size: var(--dp-text-base);

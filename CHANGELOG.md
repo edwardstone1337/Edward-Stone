@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Copy, typography**: Replaced em dashes (—) with comma, period, or colon across user-facing copy: page titles, meta og:title, aria-labels, hero and strip body text, resume role titles, project descriptions in projects.json, design system labels (dev/design-system.html), case study title, 404 and Flip 7 preview titles. Flip 7 card face placeholder changed from em dash to period. Details in docs/em-dash-replacement-report.md.
+- **CTA card (case studies)**: Fair Share and SCP Reader "What's Next" CTA card background changed from glass (backdrop-filter) to semi-opaque solid (rgba dark/light) for more reliable rendering; light theme uses rgba(255,255,255,0.92).
+
+### Fixed
+- **Layout, overflow**: html and body set to overflow-x: clip to prevent horizontal scroll. Hero heading: text-wrap: balance on .dp-hero-line; smallest breakpoint uses max-width: 20ch and margin-inline: auto; removed overflow-x/y from .dp-hero in overlay-active breakpoint.
+- **Reveal on load**: .dp-reveal elements already in the viewport on load are revealed immediately (0ms transition delay) so hero and above-fold content show without waiting for scroll; effects.js.
+
 ### Added
+- **Glow section utility**: .dp-glow-section (position: relative) for sections with blurred glow ::before; will-change: transform on .dp-glow::before and project glow pseudo-elements (Fair Share, SCP Reader) for animation performance.
 - **Fair Share strip**: "Learn more" primary button (`.dp-btn-primary-on-dark`) linking to `projects/fair-share.html`; secondary "Go to Fair Share" for external link.
 - **Secondary-on-light button**: `.dp-btn-secondary-on-light` and tokens `--dp-btn-secondary-on-light-*` (text, border, hover-bg, focus-ring) for outline buttons on light overlays; light + dark theme in dev-tokens.
 - **Resume print tokens**: `--dp-print-name`, `--dp-print-tagline`, `--dp-print-body`, `--dp-print-role-title`, `--dp-print-meta`, `--dp-print-section-title`, `--dp-print-leading`, `--dp-print-leading-tight`, `--dp-print-section-gap`, `--dp-print-role-gap`, `--dp-print-column-gap`, `--dp-print-li-gap`, `--dp-print-page-v`, `--dp-print-page-h`; used in `@media print` for resume lightbox typography and spacing.

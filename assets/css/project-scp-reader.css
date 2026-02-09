@@ -190,6 +190,7 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: -1;
+  will-change: transform;
 }
 /* The Source Material (The World) — primary SCP red */
 [data-project="scp-reader"] .dp-page section.dp-glow-section:nth-of-type(3)::before {
@@ -209,9 +210,7 @@
 
 /* What's Next CTA card */
 [data-project="scp-reader"] .dp-cta-card {
-  background: var(--dp-glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(30, 30, 35, 0.92);
   border: 1px solid var(--dp-border-default);
   border-radius: var(--dp-radius-md);
   padding: var(--dp-space-8);
