@@ -1924,7 +1924,8 @@ body.dp-overlay-active {
    -------------------------------------------- */
 .dp-hero {
   position: relative;
-  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .dp-hero::before {
