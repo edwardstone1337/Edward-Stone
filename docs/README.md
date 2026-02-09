@@ -6,6 +6,7 @@ This folder contains documentation for the website's component system and develo
 
 - **[component-methodology.md](./component-methodology.md)** - Comprehensive guide to the component architecture, patterns, and best practices
 - **[component-template.js](./component-template.js)** - Template file for creating new components
+- **[analytics-tagging.md](./analytics-tagging.md)** - Canonical Google Analytics tagging pattern and required coverage rules for public pages
 
 ## Quick Start
 
