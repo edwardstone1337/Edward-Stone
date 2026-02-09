@@ -23,7 +23,7 @@
 
 ## Relevant Files
 
-- `dev-projects.html` — layout, nav placement, section headings
+- `index.html` — layout, nav placement, section headings
 - `assets/css/dev-styles.css` — nav and theme styles
 - Any shared nav component or partial
 

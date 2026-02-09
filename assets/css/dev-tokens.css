@@ -215,6 +215,9 @@
   --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
   --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
   --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --dp-strip-title-from: var(--dp-strip-title-color);
+  --dp-strip-title-to: var(--dp-strip-title-color);
+  --dp-strip-border: 1px solid transparent;
 
   /* Strip theme — SCP Reader */
   --dp-strip-scp-bg: #141414;
@@ -228,6 +231,24 @@
   --dp-strip-scp-badge-text: rgba(255, 255, 255, 0.9);
   --dp-strip-scp-device-border: 1px solid #303030;
   --dp-strip-scp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* Strip theme — Flip 7 (navy + teal, on-dark) */
+  --dp-strip-flip7-bg: lch(25 18 275);
+  /* Title gradient: warm cream to muted teal (title-to tuned for WCAG AAA 7:1 on strip bg) */
+  --dp-strip-flip7-title-from: lch(96 4 92);    /* cream-white, warm */
+  --dp-strip-flip7-title-to: lch(83 6 185);     /* teal tint, AAA 7:1 (walked back from L80) */
+  /* Strip border: teal-tinted whisper */
+  --dp-strip-flip7-border: 1px solid lch(55 12 185 / 0.15);
+  --dp-strip-flip7-orb-1: lch(55 12 185);       /* brand teal */
+  --dp-strip-flip7-orb-2: lch(78 16 75);        /* brand orange */
+  --dp-strip-flip7-orb-dark: rgba(0, 0, 0, 0.18);
+  --dp-strip-flip7-orb-opacity: 0.4;
+  --dp-strip-flip7-title-color: lch(96 4 92);
+  --dp-strip-flip7-text-color: lch(92 3.5 92 / 0.9);
+  --dp-strip-flip7-badge-bg: lch(35 10 185 / 0.55);
+  --dp-strip-flip7-badge-text: lch(96 3 92);
+  --dp-strip-flip7-device-border: 1px solid lch(38 8 265);
+  --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 
   /* Resume / paper */
   --dp-paper-surface: #18181B;
@@ -346,6 +367,9 @@
   --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
   --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
   --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --dp-strip-title-from: var(--dp-strip-title-color);
+  --dp-strip-title-to: var(--dp-strip-title-color);
+  --dp-strip-border: 1px solid transparent;
 
   /* Strip theme — SCP Reader */
   --dp-strip-scp-bg: #141414;
@@ -359,6 +383,23 @@
   --dp-strip-scp-badge-text: rgba(255, 255, 255, 0.9);
   --dp-strip-scp-device-border: 1px solid #303030;
   --dp-strip-scp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* Strip theme — Flip 7 (navy + teal; light theme: same brand tokens, higher orb visibility) */
+  --dp-strip-flip7-bg: lch(25 18 275);
+  /* Title gradient: warm cream to muted teal (title-to slightly lighter in light for AAA 7:1) */
+  --dp-strip-flip7-title-from: lch(96 4 92);   /* cream-white, warm */
+  --dp-strip-flip7-title-to: lch(84 5 185);    /* lighter teal for light mode, AAA 7:1 (walked back from L82) */
+  --dp-strip-flip7-border: 1px solid lch(55 12 185 / 0.15);
+  --dp-strip-flip7-orb-1: lch(55 12 185);
+  --dp-strip-flip7-orb-2: lch(78 16 75);
+  --dp-strip-flip7-orb-dark: rgba(0, 0, 0, 0.15);
+  --dp-strip-flip7-orb-opacity: 0.45;              /* bump for light — backgrounds absorb more glow */
+  --dp-strip-flip7-title-color: lch(98 2.5 92);
+  --dp-strip-flip7-text-color: lch(94 3 92 / 0.92);
+  --dp-strip-flip7-badge-bg: lch(35 10 185 / 0.55);
+  --dp-strip-flip7-badge-text: lch(98 2 92);
+  --dp-strip-flip7-device-border: 1px solid lch(40 8 265);
+  --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 
   /* Resume / paper */
   --dp-paper-surface: #FFFFFF;

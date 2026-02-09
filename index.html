@@ -41,17 +41,17 @@
       </style>
     </noscript>
 
-    <!-- Prevent flash of unstyled theme -->
+    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
     <script>
-      (function() {
-        var theme;
-        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-        if (!theme) {
-          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.classList.add('dp-no-transition');
-      })();
+(function() {
+  var theme;
+  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+  if (!theme) {
+    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.classList.add('dp-no-transition');
+})();
     </script>
   </head>
   <body>
@@ -110,30 +110,33 @@
         </blockquote>
       </div>
 
-      <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+      <section class="dp-strip dp-strip--flip7" aria-label="Flip 7 Scorecard, featured project">
+        <div class="dp-strip-orbs">
+          <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
+          <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
+        </div>
         <div class="dp-strip-inner">
           <div class="dp-strip-content">
-            <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-            <h2 class="dp-strip-title">Kaomoji.click</h2>
-            <span class="dp-strip-overline">kaomoji.click</span>
+            <span class="dp-strip-emoji" aria-hidden="true">🃏</span>
+            <h2 class="dp-strip-title">Bringing 'Don't Make Me Think' to game night</h2>
+            <span class="dp-strip-overline">flip7scorecard.com</span>
             <div class="dp-strip-badges">
-              <span class="dp-strip-badge">Tool</span>
-              <span class="dp-strip-badge">Emoticons</span>
+              <span class="dp-strip-badge">Scorecard</span>
+              <span class="dp-strip-badge">Card game</span>
             </div>
-            <p class="dp-strip-description">A simple tool for discovering and copying Japanese kaomoji. One click to copy, designed to work across devices and languages.</p>
+            <p class="dp-strip-description">A digital scorecard for the card game Flip 7. Track scores across rounds with running totals — no pen and paper needed. Built because I'm terrible at mental maths and it was nearly ending game night.</p>
           </div>
           <div class="dp-strip-media">
             <iframe
-              src="assets/previews/kaomoji/index.html"
-              title="Kaomoji.click preview"
+              src="assets/previews/flip-7/index.html"
+              title="Flip 7 Scorecard preview"
               loading="lazy"
               sandbox="allow-scripts allow-same-origin"
-              style="width: 100%; height: 100%; aspect-ratio: 1 / 1; border: none; border-radius: inherit; display: block;"
+              style="width: 100%; height: 100%; border: none; border-radius: inherit; display: block;"
             ></iframe>
           </div>
           <div class="dp-strip-actions">
-            <a href="#" class="dp-btn dp-btn-primary-on-dark" style="display:none">Learn more</a>
-            <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+            <a href="https://www.flip7scorecard.com/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Flip 7 Scorecard (opens in new tab)">Go to Flip 7 <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
           </div>
         </div>
       </section>
@@ -170,6 +173,34 @@
           </div>
         </section>
       </div>
+
+      <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+        <div class="dp-strip-inner">
+          <div class="dp-strip-content">
+            <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+            <h2 class="dp-strip-title">Kaomoji.click</h2>
+            <span class="dp-strip-overline">kaomoji.click</span>
+            <div class="dp-strip-badges">
+              <span class="dp-strip-badge">Tool</span>
+              <span class="dp-strip-badge">Emoticons</span>
+            </div>
+            <p class="dp-strip-description">A simple tool for discovering and copying Japanese kaomoji. One click to copy, designed to work across devices and languages.</p>
+          </div>
+          <div class="dp-strip-media">
+            <iframe
+              src="assets/previews/kaomoji/index.html"
+              title="Kaomoji.click preview"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin"
+              style="width: 100%; height: 100%; aspect-ratio: 1 / 1; border: none; border-radius: inherit; display: block;"
+            ></iframe>
+          </div>
+          <div class="dp-strip-actions">
+            <a href="#" class="dp-btn dp-btn-primary-on-dark" style="display:none">Learn more</a>
+            <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+          </div>
+        </div>
+      </section>
 
       <section class="dp-resume-section dp-reveal dp-reveal--early" id="resume" aria-label="Resume">
         <div class="dp-resume-layout">
@@ -439,15 +470,29 @@
     <!-- Initialize -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        // Force dark theme on Kaomoji strip iframe
+        // Send current page theme to Kaomoji strip iframe
         var kmIframe = document.querySelector('.dp-strip--kaomoji iframe');
         if (kmIframe) {
           function sendKmTheme() {
-            try { kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*'); } catch(e) {}
+            var theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            try { kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*'); } catch(e) {}
           }
           kmIframe.addEventListener('load', sendKmTheme);
           if (kmIframe.contentDocument && kmIframe.contentDocument.readyState === 'complete') {
             sendKmTheme();
+          }
+        }
+
+        // Send current page theme to Flip 7 strip iframe
+        var f7Iframe = document.querySelector('.dp-strip--flip7 iframe');
+        if (f7Iframe) {
+          function sendF7Theme() {
+            var theme = document.documentElement.getAttribute('data-theme') || '';
+            try { f7Iframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*'); } catch(e) {}
+          }
+          f7Iframe.addEventListener('load', sendF7Theme);
+          if (f7Iframe.contentDocument && f7Iframe.contentDocument.readyState === 'complete') {
+            sendF7Theme();
           }
         }
 
@@ -475,12 +520,13 @@
       });
     </script>
 
+    <!-- Remove no-transition class after paint -->
     <script>
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          document.documentElement.classList.remove('dp-no-transition');
-        });
-      });
+requestAnimationFrame(function() {
+  requestAnimationFrame(function() {
+    document.documentElement.classList.remove('dp-no-transition');
+  });
+});
     </script>
   </body>
 </html>

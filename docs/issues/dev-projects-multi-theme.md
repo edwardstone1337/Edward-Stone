@@ -8,7 +8,7 @@
 
 ## TL;DR
 
-Add a theme switcher to `dev-projects.html` so the page can toggle between a “Linear”-style default, Windows 95, and Geocities looks. Theming is done by overriding design tokens on a scoped container; no component rewrites.
+Add a theme switcher to the homepage (index.html) so the page can toggle between a “Linear”-style default, Windows 95, and Geocities looks. Theming is done by overriding design tokens on a scoped container; no component rewrites.
 
 ---
 
@@ -30,16 +30,16 @@ Add a theme switcher to `dev-projects.html` so the page can toggle between a “
 
 ## Relevant files
 
-- **`dev-projects.html`** — Add theme root (e.g. `data-theme="linear"` on `main.dev-projects-page`), theme switcher UI, and script to set attribute + optional persistence. Load themes CSS.
-- **`assets/css/themes.css`** (new) — Token overrides per theme: `main.dev-projects-page[data-theme="win95"] { ... }`, same for `geocities` and optionally `linear`. Plus any theme-only rules (e.g. Win95 3D borders, Geocities tiled background).
+- **`index.html`** — Add theme root (e.g. `data-theme="linear"` on `main.dp-page`), theme switcher UI, and script to set attribute + optional persistence. Load themes CSS.
+- **`assets/css/themes.css`** (new) — Token overrides per theme: `main.dp-page[data-theme="win95"] { ... }`, same for `geocities` and optionally `linear`. Plus any theme-only rules (e.g. Win95 3D borders, Geocities tiled background).
 - **`assets/css/tokens.css`** — No change; themes only override where used (under the theme scope).
 
 ---
 
 ## Implementation notes
 
-- **Scope:** Prefer `main.dev-projects-page` as theme root so nav stays default; use `body` only if nav should theme too.
-- **Fonts:** Win95/Geocities need webfonts (e.g. MS Sans Serif–style, Comic Sans–style); add `<link>`s on dev-projects or in theme CSS and set `--font-body` / `--font-heading` in each theme block.
+- **Scope:** Prefer `main.dp-page` as theme root so nav stays default; use `body` only if nav should theme too.
+- **Fonts:** Win95/Geocities need webfonts (e.g. MS Sans Serif–style, Comic Sans–style); add `<link>`s on index.html or in theme CSS and set `--font-body` / `--font-heading` in each theme block.
 - **Win95:** Besides tokens, add rules for chunky 3D inset/outset borders on cards/buttons.
 - **Geocities:** Optional tiled background, animated or “under construction” flair via extra rules in the Geocities block.
 

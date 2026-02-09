@@ -156,7 +156,7 @@
 
 ## Files not in scope / no em dashes
 
-- **dev-projects.html** — Not found in repo (only `dev/component-preview.html`, `dev/old-index.html` exist; neither had em dashes in the initial scan).
+- **index.html (dev-projects content)** — dev-projects.html was removed; content now lives on index.html.
 - **design-system.html** — Listed in scope; all copy replacements done; one code fallback and one comment left as-is.
 
 ---

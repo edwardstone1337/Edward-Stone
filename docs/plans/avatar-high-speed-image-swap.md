@@ -10,7 +10,7 @@ When the dev-projects profile spinner reaches a high angular velocity, swap the 
 
 - **High-speed = velocity threshold in spinLoop:** Use a constant (e.g. `HIGH_SPEED_THRESHOLD`) and swap the first time `angularVelocity >=` that value during a spin. Keeps logic in one place and avoids extra timers.
 - **One-way swap only:** No logic to revert to `profile.png` when velocity drops or on next page load; the spun image stays for the rest of the session.
-- **Image path:** Use a single constant path `assets/images/profile-spun.jpg` in the script, matching the existing avatar path convention in `dev-projects.html` (script is only used there).
+- **Image path:** Use a single constant path `assets/images/profile-spun.jpg` in the script, matching the existing avatar path convention in `index.html` (script is used on the homepage).
 
 ## Tasks
 

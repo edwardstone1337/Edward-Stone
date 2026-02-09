@@ -51,7 +51,7 @@
   }
 
   function broadcastThemeToIframes(theme) {
-    var iframes = document.querySelectorAll('.dp-card-media-iframe');
+    var iframes = document.querySelectorAll('.dp-card-media-iframe, .dp-strip .dp-strip-media iframe');
     iframes.forEach(function (iframe) {
       try {
         iframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*');

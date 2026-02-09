@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-project="fair-share">
+<html lang="en" data-project="fair-share">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -25,17 +25,17 @@
       </style>
     </noscript>
 
-    <!-- Prevent flash of unstyled theme -->
+    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
     <script>
-      (function() {
-        var theme;
-        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-        if (!theme) {
-          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.classList.add('dp-no-transition');
-      })();
+(function() {
+  var theme;
+  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+  if (!theme) {
+    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.classList.add('dp-no-transition');
+})();
     </script>
   </head>
   <body>
@@ -200,12 +200,13 @@
     <script src="../assets/js/dev-projects/back-to-top.js"></script>
     <script src="../assets/js/dev-projects/effects.js"></script>
 
+    <!-- Remove no-transition class after paint -->
     <script>
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          document.documentElement.classList.remove('dp-no-transition');
-        });
-      });
+requestAnimationFrame(function() {
+  requestAnimationFrame(function() {
+    document.documentElement.classList.remove('dp-no-transition');
+  });
+});
     </script>
   </body>
 </html>

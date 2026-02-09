@@ -26,7 +26,7 @@
 
 - New: widget entry point and game UI (e.g. modal or inline panel).
 - New: game logic module — deck representation, shuffle/draw, duplicate check, round state.
-- Possibly: `dev-projects.html` or main layout if widget lives there; any shared JS/CSS for modals or overlays.
+- Possibly: `index.html` or main layout if widget lives there; any shared JS/CSS for modals or overlays.
 
 ## Notes / Risks
 

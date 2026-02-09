@@ -8,17 +8,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" />
     <link rel="stylesheet" href="../assets/css/dev-tokens.css" />
     <link rel="stylesheet" href="../assets/css/dev-styles.css" />
-    <!-- Prevent flash of unstyled theme -->
+    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
     <script>
-      (function() {
-        var theme;
-        try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-        if (!theme) {
-          theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        }
-        document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.classList.add('dp-no-transition');
-      })();
+(function() {
+  var theme;
+  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+  if (!theme) {
+    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.classList.add('dp-no-transition');
+})();
     </script>
     <style>
       /* Reference-page-only scaffolding (ds- prefix) */
@@ -921,12 +921,13 @@
       })();
     </script>
 
+    <!-- Remove no-transition class after paint -->
     <script>
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          document.documentElement.classList.remove('dp-no-transition');
-        });
-      });
+requestAnimationFrame(function() {
+  requestAnimationFrame(function() {
+    document.documentElement.classList.remove('dp-no-transition');
+  });
+});
     </script>
   </body>
 </html>

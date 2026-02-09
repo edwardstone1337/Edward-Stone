@@ -33,7 +33,7 @@
 - `assets/js/dev-projects/projects-grid.js` — grid structure; inserts strip after container when configured
 - `assets/css/dev-tokens.css` — strip/button tokens (`--dp-strip-*`, `--dp-btn-min-height`, etc.)
 - `assets/css/dev-styles.css` — `.dp-strip`, `.dp-strip-inner`, media/content/actions, responsive
-- `dev-projects.html` — container, strip config, noscript fallback
+- `index.html` — container, strip config, noscript fallback
 
 ## Implemented: Responsive pattern (reuse for future strips)
 
