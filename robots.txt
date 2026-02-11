@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /projects/fair-share.html
+Disallow: /projects/scp-reader.html
 
 Sitemap: https://edwardstone.design/sitemap.xml
