@@ -10,6 +10,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 |------|---------|:------:|------------|
 | `index.html` | Homepage — hero, project strips, side quests, skills, contact | Yes | dev |
 | `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
+| `gallery.html` | Design gallery — masonry grid of UI/branding/illustration work | Yes | dev + `gallery.css` |
 | `404.html` | Custom error page | Yes | dev |
 | `projects/fair-share.html` | Fair Share case study | Yes | dev + `project-fair-share.css` |
 | `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
@@ -30,7 +31,7 @@ Two CSS systems that must not cross-contaminate. The **dev system** (`assets/css
 ### JavaScript
 
 Two JS directories with different patterns:
-- **`assets/js/dev-projects/`** — 16 files, mostly ES6 modules (`export function`). Active development. New work goes here.
+- **`assets/js/dev-projects/`** — 17 files, mostly ES6 modules (`export function`). Active development. New work goes here.
 - **`assets/js/components/`** — 8 legacy IIFEs. All require global `Utils` from `assets/js/utils.js` loaded first.
 
 ES6 modules import sanitisation from `assets/js/dev-projects/utils.js` when needed. Full inventory: `docs/architecture-js.md`.
@@ -47,7 +48,7 @@ Dark-only. `data-theme="dark"` is set on `<html>` via a single inline `setAttrib
 
 ### GA4 Analytics
 
-**Measurement ID: `G-6MPMYG36LE`** — required on all public pages (6/6 currently tagged). Not on `dev/*` or `assets/previews/*`. Check coverage: `./scripts/check-ga-coverage.sh`. CI enforced via `.github/workflows/ga-coverage.yml`. Canonical snippet: `docs/analytics-tagging.md`.
+**Measurement ID: `G-6MPMYG36LE`** — required on all public pages (7/7 currently tagged). Not on `dev/*` or `assets/previews/*`. Check coverage: `./scripts/check-ga-coverage.sh`. CI enforced via `.github/workflows/ga-coverage.yml`. Canonical snippet: `docs/analytics-tagging.md`.
 
 ### XSS Protection
 
@@ -75,6 +76,8 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - `docs/theme-init-pattern.md` — Theme pre-init script pattern
 - `docs/code-review.md` — Security review (XSS, architecture validation)
 - `docs/strip-branding-spec.md` — Product strip token contract
+- `docs/gallery-workflow.md` — Adding images to gallery (script usage, metadata format)
+- `docs/release-playbook.md` — Pre-release checklist
 
 ## Rules
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Gallery — Edward Stone</title>
+    <link rel="icon" href="assets/images/Logo.svg" type="image/svg+xml">
+    <meta name="description" content="A collection of things Edward Stone has designed and built — UI design, branding, and side projects.">
+    <meta property="og:title" content="Gallery — Edward Stone">
+    <meta property="og:description" content="A collection of things Edward Stone has designed and built — UI design, branding, and side projects.">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    />
+
+    <!-- Design system -->
+    <link rel="stylesheet" href="assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="assets/css/dev-styles.css">
+    <link rel="stylesheet" href="assets/css/gallery.css">
+
+    <noscript>
+      <style>
+        .dp-reveal { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+
+    <!-- Google tag (gtag.js): canonical pattern documented in docs/analytics-tagging.md -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MPMYG36LE"></script>
+    <script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-6MPMYG36LE');
+    </script>
+
+    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
+  </head>
+  <body>
+    <div id="nav-container"></div>
+    <script type="module">
+      import { initNav } from './assets/js/dev-projects/nav-component.js';
+      initNav();
+    </script>
+    <a href="#main" class="dp-skip-link">Skip to main content</a>
+    <main id="main" class="dp-page">
+      <section class="dp-gallery-section" aria-labelledby="gallery-heading">
+        <div class="dp-gallery-header">
+          <h1 id="gallery-heading" class="dp-gallery-title dp-gradient-text">Gallery</h1>
+          <p class="dp-gallery-subtitle">A collection of things I've designed and built.</p>
+        </div>
+        <div class="dp-gallery-grid" id="gallery-grid" role="list">
+          <!-- JS renders items here -->
+        </div>
+        <noscript>
+          <p class="dp-gallery-noscript">Enable JavaScript to view the gallery.</p>
+        </noscript>
+      </section>
+
+      <footer class="dp-footer">
+        <div class="dp-footer-inner">
+          <p class="dp-footer-text">&copy; 2026 Edward Stone</p>
+          <nav class="dp-footer-links" aria-label="Footer links">
+            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </nav>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Effects (noise overlay, scroll reveal) -->
+    <script src="assets/js/dev-projects/effects.js"></script>
+
+    <!-- Gallery grid (ES6 module) -->
+    <script type="module" src="assets/js/dev-projects/gallery.js"></script>
+
+    <!-- Analytics: custom GA4 event tracking (must load after all other scripts) -->
+    <script src="assets/js/analytics.js"></script>
+  </body>
+</html>

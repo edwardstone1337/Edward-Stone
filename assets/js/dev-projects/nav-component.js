@@ -13,13 +13,16 @@
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
-  /* PROD-HIDE: Project and Resume nav items
+  /* PROD-HIDE: Projects dropdown
   { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
-  { text: 'Resume', href: '/resume.html' }
   END PROD-HIDE */
+  /* PROD-HIDE: Resume nav link
+  { text: 'Resume', href: '/resume.html' },
+  END PROD-HIDE */
+  { text: 'Gallery', href: '/gallery.html' }
 ];
 
 /**
@@ -75,6 +78,7 @@ function generateLinksHTML() {
 function generateDrawerLinksHTML() {
   var html = '';
   var moreHeadingRendered = false;
+  var hasChildGroups = NAV_LINKS.some(function (link) { return !!link.children; });
   NAV_LINKS.forEach(function (link) {
     if (link.children) {
       html += '<span class="dp-nav-drawer-heading">' + link.text + '</span>';
@@ -83,7 +87,7 @@ function generateDrawerLinksHTML() {
         html += '<a href="' + child.href + '" class="dp-nav-drawer-link"' + ariaCurrent + '>' + child.text + '</a>';
       });
     } else {
-      if (!moreHeadingRendered) {
+      if (hasChildGroups && !moreHeadingRendered) {
         html += '<span class="dp-nav-drawer-heading">More</span>';
         moreHeadingRendered = true;
       }
@@ -235,6 +239,17 @@ function initDrawer(hamburger) {
 }
 
 /**
+ * Dynamically load the snake game script.
+ * Resolved relative to this module so every page gets the correct path
+ * without needing its own <script> tag.
+ */
+function loadSnakeGame() {
+  var script = document.createElement('script');
+  script.src = new URL('snake-game.js', import.meta.url).href;
+  document.head.appendChild(script);
+}
+
+/**
  * Inject the site navigation into #nav-container
  */
 export function initNav() {
@@ -286,4 +301,6 @@ export function initNav() {
 
   var hamburger = nav.querySelector('.dp-nav-hamburger');
   initDrawer(hamburger);
+
+  loadSnakeGame();
 }
