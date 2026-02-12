@@ -207,7 +207,7 @@ img { display: block; max-width: 100%; }
   align-items: center;
   gap: var(--dp-space-3);
   min-width: 0;
-  flex-shrink: 1;
+  flex: 1;
   text-decoration: none;
   color: var(--dp-text-primary);
   transition: opacity var(--dp-duration-base) var(--dp-ease-out);
@@ -242,7 +242,8 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   gap: var(--dp-space-4);
-  flex-shrink: 0;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 /* Toggles inside nav — reset fixed positioning */
