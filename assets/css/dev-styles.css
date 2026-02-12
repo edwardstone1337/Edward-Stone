@@ -200,7 +200,6 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
   padding: var(--dp-space-3) var(--dp-space-6);
   height: 64px;
-  overflow: hidden;
 }
 
 .dp-nav-brand {
@@ -242,7 +241,7 @@ img { display: block; max-width: 100%; }
 .dp-nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--dp-space-2);
+  gap: var(--dp-space-4);
   flex-shrink: 0;
 }
 
@@ -255,6 +254,259 @@ img { display: block; max-width: 100%; }
 
 .dp-nav-actions .dp-theme-toggle {
   order: 1;
+}
+
+.dp-nav-actions .dp-nav-hamburger {
+  order: 10;
+}
+
+/* Nav links (between brand and actions) */
+.dp-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-4);
+}
+
+.dp-nav-link {
+  display: flex;
+  align-items: center;
+  min-height: var(--dp-nav-action-height);
+  background: var(--dp-toggle-bg);
+  border-radius: var(--dp-btn-radius);
+  padding: var(--dp-space-2) var(--dp-space-4);
+  color: var(--dp-text-primary);
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.dp-nav-link:hover {
+  background: var(--dp-toggle-bg-hover);
+}
+
+.dp-nav-link:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: 2px;
+}
+
+.dp-nav-link[aria-current="page"] {
+  background: var(--dp-toggle-bg-hover);
+  font-weight: 600;
+}
+
+/* --- Shared dropdown menu --- */
+.dp-dropdown-menu {
+  position: absolute;
+  z-index: 200;
+  min-width: 180px;
+  background: var(--dp-glass-bg-elevated);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-sm);
+  padding: var(--dp-space-2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.dp-dropdown-menu[hidden] {
+  display: none;
+}
+
+.dp-dropdown-menu a,
+.dp-dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-3);
+  width: 100%;
+  padding: var(--dp-space-2) var(--dp-space-3);
+  color: var(--dp-text-primary);
+  text-decoration: none;
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--dp-btn-radius);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.dp-dropdown-menu a:hover,
+.dp-dropdown-menu button:hover {
+  background: var(--dp-toggle-bg-hover);
+}
+
+.dp-dropdown-menu a:focus-visible,
+.dp-dropdown-menu button:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: 2px;
+}
+
+/* Nav dropdown */
+.dp-nav-dropdown {
+  position: relative;
+}
+
+.dp-nav-dropdown-trigger {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-1);
+}
+
+.dp-nav-dropdown-trigger svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.dp-nav-dropdown-trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.dp-nav-dropdown-menu {
+  top: calc(100% + var(--dp-space-2));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dp-nav-dropdown-menu a[aria-current="page"] {
+  font-weight: 600;
+  background: var(--dp-toggle-bg);
+}
+
+/* Nav hamburger (hidden on desktop, shown at ≤768px) — inherits from .dp-nav-link */
+.dp-nav-hamburger {
+  display: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dp-nav-hamburger-label {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: 500;
+}
+
+/* Nav drawer (appended to body, right-side slide-in) */
+.dp-nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.dp-nav-drawer:not([hidden]) {
+  display: block;
+}
+
+.dp-nav-drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--dp-bg-overlay);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dp-nav-drawer--open .dp-nav-drawer-backdrop {
+  opacity: 1;
+}
+
+.dp-nav-drawer-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 85vw);
+  background: var(--dp-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-left: 1px solid var(--dp-border-default);
+  padding: var(--dp-space-6);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow-y: auto;
+}
+
+.dp-nav-drawer--open .dp-nav-drawer-panel {
+  transform: translateX(0);
+}
+
+.dp-nav-drawer-close {
+  position: absolute;
+  top: var(--dp-space-4);
+  right: var(--dp-space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dp-toggle-bg);
+  border: none;
+  border-radius: var(--dp-btn-radius);
+  padding: var(--dp-space-2);
+  color: var(--dp-text-primary);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dp-nav-drawer-close:hover {
+  background: var(--dp-toggle-bg-hover);
+}
+
+.dp-nav-drawer-close:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: 2px;
+}
+
+.dp-nav-drawer-links {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--dp-space-12);
+}
+
+.dp-nav-drawer-heading {
+  display: block;
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-xs);
+  font-weight: 600;
+  color: var(--dp-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--dp-space-2) var(--dp-space-3);
+  margin-top: var(--dp-space-4);
+}
+
+.dp-nav-drawer-heading:first-child {
+  margin-top: 0;
+}
+
+.dp-nav-drawer-link {
+  display: block;
+  padding: var(--dp-space-3) var(--dp-space-3);
+  color: var(--dp-text-primary);
+  text-decoration: none;
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-base);
+  border-radius: var(--dp-btn-radius);
+  transition: background 0.15s ease;
+}
+
+.dp-nav-drawer-link:hover {
+  background: var(--dp-toggle-bg-hover);
+}
+
+.dp-nav-drawer-link[aria-current="page"] {
+  font-weight: 600;
+  background: var(--dp-toggle-bg);
+}
+
+.dp-nav-drawer-link:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: -2px;
 }
 
 /* --------------------------------------------
@@ -284,7 +536,7 @@ img { display: block; max-width: 100%; }
 .dp-theme-toggle svg {
   width: 18px;
   height: 18px;
-  color: var(--dp-toggle-icon);
+  color: var(--dp-text-primary);
   transition: color var(--dp-duration-base) var(--dp-ease-out),
               fill var(--dp-duration-base) var(--dp-ease-out),
               stroke var(--dp-duration-base) var(--dp-ease-out);
@@ -386,7 +638,7 @@ img { display: block; max-width: 100%; }
 .dp-snake-toggle svg {
   width: 18px;
   height: 18px;
-  color: var(--dp-toggle-icon);
+  color: var(--dp-text-primary);
   transition: color var(--dp-duration-fast) var(--dp-ease-out),
               filter var(--dp-duration-fast) var(--dp-ease-out);
 }
@@ -436,6 +688,11 @@ img { display: block; max-width: 100%; }
   width: 100%;
   margin: 0 auto;
   padding: 0 var(--dp-space-6);
+}
+
+/* Content below fixed nav — accounts for nav height + breathing room */
+.dp-page-content {
+  padding-top: calc(64px + var(--dp-space-24));
 }
 
 /* h3 after paragraph — breathing room when h3 + p + h3 + p pattern */
@@ -1252,43 +1509,31 @@ img { display: block; max-width: 100%; }
 
 /* --- Resume layout --- */
 .dp-resume-layout {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: var(--dp-space-12);
-  align-items: start;
-  max-width: calc(280px + var(--dp-space-12) + 210mm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dp-space-8);
+  max-width: 210mm;
   margin: 0 auto;
 }
 
-.dp-resume-intro {
-  position: sticky;
-  top: var(--dp-space-8);
-  display: flex;
-  flex-direction: column;
-  gap: var(--dp-space-4);
-}
-
-.dp-resume-intro-heading {
+.dp-resume-heading {
   font-family: var(--dp-font-display);
   font-size: var(--dp-text-3xl);
-  font-weight: var(--dp-weight-bold);
+  font-weight: 700;
   color: var(--dp-text-primary);
-  line-height: var(--dp-leading-tight);
+  text-align: center;
   margin: 0;
 }
 
-.dp-resume-intro-body {
-  font-family: var(--dp-font-body);
-  font-size: var(--dp-text-base);
-  color: var(--dp-text-secondary);
-  line-height: var(--dp-leading-relaxed);
-  margin: 0;
+.dp-resume-download-row {
+  display: flex;
+  justify-content: center;
 }
 
 /* --- Download widget --- */
 .dp-resume-download {
   position: relative;
-  margin-top: var(--dp-space-4);
 }
 
 .dp-download-trigger {
@@ -1307,16 +1552,9 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-download-menu {
-  position: absolute;
   top: calc(100% + var(--dp-space-2));
   left: 0;
   min-width: 200px;
-  background: var(--dp-bg-raised);
-  border: 1px solid var(--dp-border-default);
-  border-radius: var(--dp-radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  padding: var(--dp-space-2);
-  z-index: 100;
   animation: dp-menu-enter var(--dp-duration-fast) var(--dp-ease-out);
 }
 
@@ -1329,39 +1567,6 @@ img { display: block; max-width: 100%; }
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.dp-download-menu[hidden] {
-  display: none;
-}
-
-.dp-download-menu-item {
-  display: flex;
-  align-items: center;
-  gap: var(--dp-space-3);
-  width: 100%;
-  padding: var(--dp-space-3) var(--dp-space-3);
-  font-family: var(--dp-font-body);
-  font-size: var(--dp-text-sm);
-  color: var(--dp-text-secondary);
-  background: none;
-  border: none;
-  border-radius: var(--dp-radius-sm);
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background var(--dp-duration-fast) var(--dp-ease-out),
-              color var(--dp-duration-fast) var(--dp-ease-out);
-}
-
-.dp-download-menu-item:hover {
-  background: var(--dp-bg-card-hover);
-  color: var(--dp-text-primary);
-}
-
-.dp-download-menu-item:focus-visible {
-  outline: 2px solid var(--dp-paper-accent);
-  outline-offset: -2px;
 }
 
 .dp-download-menu-item svg {
@@ -1596,6 +1801,10 @@ a.dp-resume-contact-item:hover {
   transition: box-shadow var(--dp-duration-base) var(--dp-ease-out);
 }
 
+.dp-resume-page-wrapper {
+  width: 100%;
+}
+
 /* Cursor-tracking border glow (matches .dp-card::before — glow behind inner so only edge visible) */
 .dp-resume-page-wrapper .dp-resume-container::before {
   content: '';
@@ -1617,10 +1826,6 @@ a.dp-resume-contact-item:hover {
   opacity: 1;
 }
 
-/* Hide mobile download on desktop — base state so mobile media override can show it */
-.dp-resume-mobile-download {
-  display: none;
-}
 
 /* --- Resume lightbox --- */
 body.dp-overlay-active {
@@ -1644,17 +1849,30 @@ body.dp-overlay-active {
   background: var(--dp-bg-overlay);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
 }
 
-.dp-lightbox-content {
+.dp-lightbox-body {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--dp-space-6);
   width: 100%;
+  max-width: calc(210mm + 200px + var(--dp-space-6));
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.dp-lightbox-content {
+  width: 100%;
   max-width: 210mm;
+}
+
+.dp-lightbox-sidebar {
+  position: sticky;
+  top: var(--dp-space-8);
+  flex-shrink: 0;
 }
 
 .dp-lightbox-page {
@@ -1667,10 +1885,10 @@ body.dp-overlay-active {
 }
 
 .dp-lightbox-close {
-  position: absolute;
+  position: fixed;
   top: var(--dp-space-3);
   right: var(--dp-space-3);
-  z-index: 2;
+  z-index: 10001;
   width: 32px;
   height: 32px;
   display: flex;
@@ -1683,6 +1901,7 @@ body.dp-overlay-active {
   cursor: pointer;
   backdrop-filter: blur(8px);
   transition: background 150ms ease-out;
+  pointer-events: auto;
 }
 
 .dp-lightbox-close:hover {
@@ -1694,45 +1913,6 @@ body.dp-overlay-active {
   outline-offset: 2px;
 }
 
-.dp-lightbox-actions {
-  display: flex;
-  gap: var(--dp-space-3);
-  justify-content: center;
-  margin-top: var(--dp-space-4);
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
-.dp-lightbox-actions .dp-lightbox-action-btn {
-  backdrop-filter: blur(8px);
-  background: transparent;
-  color: var(--dp-btn-secondary-on-light-text);
-  border: 1px solid var(--dp-btn-secondary-on-light-border);
-}
-
-.dp-lightbox-actions .dp-lightbox-action-btn:hover {
-  background: var(--dp-btn-secondary-on-light-hover-bg);
-}
-
-.dp-lightbox-actions .dp-lightbox-action-btn:focus-visible {
-  outline: 2px solid var(--dp-btn-secondary-on-light-focus-ring);
-  outline-offset: 2px;
-}
-
-[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn {
-  color: var(--dp-btn-secondary-on-dark-text);
-  border: 1px solid var(--dp-btn-secondary-on-dark-border);
-}
-
-[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn:hover {
-  background: var(--dp-btn-secondary-on-dark-hover-bg);
-}
-
-[data-theme="dark"] .dp-lightbox-actions .dp-lightbox-action-btn:focus-visible {
-  outline: 2px solid var(--dp-btn-secondary-on-dark-focus-ring);
-}
-
 /* Print-only lightbox: hidden on screen, visible when printing */
 .dp-lightbox--print-only {
   position: fixed;
@@ -1740,32 +1920,49 @@ body.dp-overlay-active {
   visibility: hidden;
 }
 
+/* --- Snackbar --- */
+.dp-snackbar {
+  position: fixed;
+  bottom: var(--dp-space-8);
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  opacity: 0;
+  z-index: 20000;
+  background: var(--dp-glass-bg-mid);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-sm);
+  padding: var(--dp-space-3) var(--dp-space-5);
+  color: var(--dp-text-primary);
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: 500;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dp-snackbar--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-snackbar {
+    transition: none;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 /* --- Resume responsive --- */
 @media (max-width: 1080px) {
+  .dp-page-content {
+    padding-top: calc(64px + var(--dp-space-12));
+  }
+
   /* Section wrapper — reduce padding */
   .dp-resume-section {
     padding: var(--dp-space-12) var(--dp-space-4);
-  }
-
-  .dp-resume-layout {
-    grid-template-columns: 1fr;
-    gap: var(--dp-space-8);
-    max-width: none;
-  }
-
-  .dp-resume-intro {
-    position: static;
-    text-align: center;
-    align-items: center;
-  }
-
-  .dp-resume-intro .dp-resume-download {
-    display: flex;
-    justify-content: center;
-  }
-
-  .dp-resume-intro-heading {
-    font-size: var(--dp-text-2xl);
   }
 
   /* Drop paper metaphor — no shadow, no border, no aspect-ratio, no bg */
@@ -1866,13 +2063,6 @@ body.dp-overlay-active {
   .dp-resume-skill-list li {
     color: var(--dp-text-primary);
     font-size: var(--dp-text-sm);
-  }
-
-  /* Add a download button below the resume on mobile (bookend: top + bottom) */
-  .dp-resume-mobile-download {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--dp-space-10);
   }
 
   /* Disable cursor-tracking glow on mobile — no hover, saves rendering */
@@ -1998,6 +2188,22 @@ body.dp-overlay-active {
   }
 
   .dp-download-chevron {
+    transition: none;
+  }
+
+  .dp-nav-dropdown-trigger svg {
+    transition: none;
+  }
+
+  .dp-nav-drawer-backdrop {
+    transition: none;
+  }
+
+  .dp-nav-drawer-panel {
+    transition: none;
+  }
+
+  .dp-nav-drawer-link {
     transition: none;
   }
 
@@ -2166,6 +2372,12 @@ body.dp-overlay-active {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--dp-space-5);
   }
+  .dp-nav-links {
+    display: none;
+  }
+  .dp-nav-hamburger {
+    display: flex;
+  }
   .dp-snake-toggle {
     display: none;
   }
@@ -2175,6 +2387,9 @@ body.dp-overlay-active {
 }
 
 @media (max-width: 480px) {
+  .dp-page-content {
+    padding-top: calc(56px + var(--dp-space-12));
+  }
   :root { --dp-section-gap: var(--dp-space-8); }
   .dp-hero {
     padding-top: var(--dp-space-16);
@@ -2346,7 +2561,7 @@ body.dp-overlay-active {
   .dp-split-row,
   .dp-lightbox-backdrop,
   .dp-lightbox-close,
-  .dp-lightbox-actions,
+  .dp-lightbox-sidebar,
   .dp-back-to-top {
     display: none !important;
   }
@@ -2497,5 +2712,9 @@ body.dp-overlay-active {
 
   body.dp-overlay-active {
     overflow: visible !important;
+  }
+
+  .dp-snackbar {
+    display: none !important;
   }
 }

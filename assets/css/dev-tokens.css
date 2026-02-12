@@ -82,6 +82,9 @@
   --dp-raw-glow-amber: 245, 158, 11;
   --dp-raw-glow-green: 74, 222, 128;
 
+  /* --- Nav action (shared height for links, toggles, hamburger) --- */
+  --dp-nav-action-height: 40px;
+
   /* --- Button (shared, 48px min height for a11y touch) --- */
   --dp-btn-radius: 6px;
   --dp-btn-padding: 0.625rem 1.25rem;
@@ -118,6 +121,8 @@
   --dp-bg-raised: var(--dp-raw-grey-900);
   --dp-bg-card: rgba(255, 255, 255, 0.03);
   --dp-glass-bg: rgba(255, 255, 255, 0.05);
+  --dp-glass-bg-mid: rgba(30, 30, 30, 0.55);
+  --dp-glass-bg-elevated: rgba(30, 30, 30, 0.85);
   --dp-bg-card-hover: rgba(255, 255, 255, 0.06);
   --dp-bg-overlay: rgba(0, 0, 0, 0.7);
 
@@ -270,6 +275,8 @@
   --dp-bg-raised: #F0F2FA;                   /* Slightly lighter shelf */
   --dp-bg-card: rgba(255, 255, 255, 0.75);  /* More opaque — less base bleed-through */
   --dp-glass-bg: rgba(255, 255, 255, 0.65);
+  --dp-glass-bg-mid: rgba(255, 255, 255, 0.75);
+  --dp-glass-bg-elevated: rgba(255, 255, 255, 0.85);
   --dp-bg-card-hover: rgba(255, 255, 255, 0.8);  /* Brighter on hover */
   --dp-bg-overlay: rgba(255, 255, 255, 0.8);
 

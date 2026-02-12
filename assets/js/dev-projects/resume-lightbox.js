@@ -3,6 +3,7 @@
  * Opens resume in a full-size lightbox with download button.
  * Uses dp-overlay-active on body; coordinates with snake-game (only remove if we added it).
  */
+import { showSnackbar } from './snackbar.js';
 
 /** @type {AbortController|null} */
 let controller = null;
@@ -15,6 +16,9 @@ let previousFocus = null;
 
 /** Whether this module added dp-overlay-active (snake game may have it already) */
 let weAddedOverlay = false;
+
+/** Whether this module locked scroll (don't restore if someone else locked it) */
+let weLockedScroll = false;
 
 function getFocusableElements(container) {
   return Array.from(container.querySelectorAll(
@@ -47,27 +51,52 @@ function handleEscape(e) {
 }
 
 /**
- * Build lightbox inner HTML (backdrop, content, .dp-lightbox-page, controls).
+ * Build lightbox inner HTML (backdrop, body with content + sidebar, close button).
  * Shared by openLightbox() and printResume() so the template is not duplicated.
  */
 function buildLightboxHTML(resumeContent) {
   return `
     <div class="dp-lightbox-backdrop"></div>
-    <div class="dp-lightbox-content">
-      <div class="dp-lightbox-page">${resumeContent}</div>
-      <button type="button" class="dp-lightbox-close" aria-label="Close" title="Close">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </div>
-    <div class="dp-lightbox-actions">
-      <button type="button" class="dp-btn dp-lightbox-action-btn" data-lightbox-print>
-        <span>Print to PDF</span>
-      </button>
-      <button type="button" class="dp-btn dp-lightbox-action-btn" data-lightbox-copy>
-        <span>Copy to clipboard</span>
-      </button>
+    <button type="button" class="dp-lightbox-close" aria-label="Close" title="Close">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="dp-lightbox-body">
+      <div class="dp-lightbox-content">
+        <div class="dp-lightbox-page">${resumeContent}</div>
+      </div>
+      <div class="dp-lightbox-sidebar">
+        <div class="dp-resume-download" data-download-widget>
+          <button class="dp-btn dp-btn-primary dp-download-trigger" aria-haspopup="true" aria-expanded="false">
+            <span>Download Resume</span>
+            <svg class="dp-download-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="dp-dropdown-menu dp-download-menu" role="menu" hidden>
+            <button role="menuitem" class="dp-download-menu-item dp-download-print-pdf" data-print-pdf>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Print to PDF</span>
+            </button>
+            <a href="/assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Download PDF</span>
+            </a>
+            <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M3 11V3.5A1.5 1.5 0 014.5 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span>Copy to clipboard</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -78,6 +107,12 @@ function closeLightbox() {
   if (weAddedOverlay) {
     document.body.classList.remove('dp-overlay-active');
     weAddedOverlay = false;
+  }
+
+  if (weLockedScroll) {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    weLockedScroll = false;
   }
 
   document.removeEventListener('keydown', handleEscape);
@@ -119,31 +154,70 @@ function openLightbox() {
 
   lightbox.innerHTML = buildLightboxHTML(innerHTML);
 
-  const backdrop = lightbox.querySelector('.dp-lightbox-backdrop');
   const closeBtn = lightbox.querySelector('.dp-lightbox-close');
 
-  backdrop.addEventListener('click', closeLightbox, { signal: controller.signal });
+  // Click directly on the lightbox container (empty space around content) closes it.
+  // Backdrop has pointer-events: none so scroll works everywhere on the overlay.
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  }, { signal: controller.signal });
   closeBtn.addEventListener('click', closeLightbox, { signal: controller.signal });
 
-  lightbox.querySelector('[data-lightbox-print]').addEventListener('click', () => {
-    window.print();
-  }, { signal: controller.signal });
+  // Wire up the lightbox download widget (created dynamically, not bound by initResumeDownload)
+  const lbWidget = lightbox.querySelector('[data-download-widget]');
+  if (lbWidget) {
+    const lbTrigger = lbWidget.querySelector('.dp-download-trigger');
+    const lbMenu = lbWidget.querySelector('.dp-download-menu');
 
-  lightbox.querySelector('[data-lightbox-copy]').addEventListener('click', async () => {
-    const page = lightbox.querySelector('.dp-lightbox-page');
-    const text = page ? page.innerText : '';
-    const btn = lightbox.querySelector('[data-lightbox-copy]');
-    const originalTitle = btn.getAttribute('title') || 'Copy to clipboard';
-    try {
-      await navigator.clipboard.writeText(text);
-      btn.setAttribute('title', 'Copied!');
-      setTimeout(() => { btn.setAttribute('title', originalTitle); }, 2000);
-    } catch (err) {
-      console.error('Resume copy failed', err);
-      btn.setAttribute('title', 'Copy failed');
-      setTimeout(() => { btn.setAttribute('title', originalTitle); }, 2000);
+    function closeLbMenu() {
+      lbMenu.hidden = true;
+      lbTrigger.setAttribute('aria-expanded', 'false');
     }
-  }, { signal: controller.signal });
+
+    lbTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = !lbMenu.hidden;
+      closeLbMenu();
+      if (!isOpen) {
+        lbMenu.hidden = false;
+        lbTrigger.setAttribute('aria-expanded', 'true');
+      }
+    }, { signal: controller.signal });
+
+    // Close menu on click outside the trigger
+    lightbox.addEventListener('click', closeLbMenu, { signal: controller.signal });
+
+    // Print to PDF — use window.print() directly (lightbox is already showing the resume)
+    const printBtn = lbWidget.querySelector('[data-print-pdf]');
+    if (printBtn) {
+      printBtn.addEventListener('click', () => {
+        closeLbMenu();
+        window.print();
+      }, { signal: controller.signal });
+    }
+
+    // Copy to clipboard — copy from the lightbox page content
+    const copyBtn = lbWidget.querySelector('[data-copy-resume]');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const page = lightbox.querySelector('.dp-lightbox-page');
+        const text = page ? page.innerText : '';
+        try {
+          await navigator.clipboard.writeText(text);
+          showSnackbar('Copied to clipboard');
+        } catch (err) {
+          console.error('Resume copy failed', err);
+          showSnackbar('Copy failed — try again');
+        }
+        closeLbMenu();
+      }, { signal: controller.signal });
+    }
+  }
+
+  // Lock scroll on both html and body to prevent bleed-through
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  weLockedScroll = true;
 
   document.addEventListener('keydown', handleEscape, { signal: controller.signal });
   document.addEventListener('keydown', trapFocus, { signal: controller.signal });

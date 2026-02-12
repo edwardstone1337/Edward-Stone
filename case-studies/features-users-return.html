@@ -7,6 +7,11 @@
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"/>
+
+    <!-- Design system (nav component requires dev-tokens + dev-styles) -->
+    <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="../assets/css/dev-styles.css">
+    <!-- Legacy case study styles -->
     <link rel="stylesheet" href="../assets/css/tokens.css">
     <link rel="stylesheet" href="../assets/css/style.css">
 
@@ -19,10 +24,27 @@ gtag('js', new Date());
 
 gtag('config', 'G-6MPMYG36LE');
     </script>
+
+    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
+    <script>
+(function() {
+  var theme;
+  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+  if (!theme) {
+    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.classList.add('dp-no-transition');
+})();
+    </script>
   </head>
   <body>
     <div class="container">
       <div id="nav-container"></div>
+      <script type="module">
+        import { initNav } from '../assets/js/dev-projects/nav-component.js';
+        initNav();
+      </script>
       <main class="case-study-page">
         <article class="case-study-article">
           <h1 class="case-study-intro">I significantly boosted user retention and saved teachers years of planning time. Here's how.</h1>
@@ -123,7 +145,16 @@ gtag('config', 'G-6MPMYG36LE');
         </article>
       </main>
     </div>
-    <script src="../assets/js/utils.js"></script>
-    <script src="../assets/js/components/navigation.js"></script>
+
+    <script src="../assets/js/dev-projects/theme-toggle.js"></script>
+
+    <!-- Remove no-transition class after paint -->
+    <script>
+requestAnimationFrame(function() {
+  requestAnimationFrame(function() {
+    document.documentElement.classList.remove('dp-no-transition');
+  });
+});
+    </script>
   </body>
 </html>

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Nav component** (`assets/js/dev-projects/nav-component.js`): Shared site navigation rendered via JS. Injects into `#nav-container`. Desktop: dropdown menus with Projects submenu (Fair Share, SCP Reader) and Resume link. Mobile (≤768px): hamburger opens right-side drawer with grouped links. Accessible: `aria-expanded`, `aria-haspopup`, focus trap, Escape close.
+- **Resume page** (`resume.html`): Standalone resume moved from index.html. Full A4 layout with download widget (Print to PDF, static PDF, copy to clipboard). Uses nav component.
+- **Snackbar component** (`assets/js/dev-projects/snackbar.js`): Reusable toast notification. `showSnackbar(message, duration?)` — appends to body, auto-dismisses (default 2s), replaces if called while visible (no stacking), `role="status"` + `aria-live="polite"`, respects `prefers-reduced-motion`. Styles in `dev-styles.css` (`.dp-snackbar`). z-index 20000 (above lightbox).
+
+### Changed
+- **Resume lightbox**: Redesigned layout — content area + sidebar with Download Resume dropdown (Print to PDF, Download PDF, Copy to clipboard). Close button moved outside content. Copy now uses `showSnackbar()` instead of title tooltip. Scroll lock on both `<html>` and `<body>`. Click on lightbox container (outside content) closes it; backdrop has `pointer-events: none` so scroll works everywhere.
+- **Navigation refactor**: All public pages (index.html, 404.html, fair-share.html, scp-reader.html, features-users-return.html) now use `<div id="nav-container"></div>` + `import { initNav }` pattern instead of inline nav HTML. Reduces duplication; single source for nav links.
+- **Nav styles** (`dev-styles.css`): Added `.dp-nav-links`, `.dp-nav-link`, `.dp-nav-dropdown`, `.dp-nav-dropdown-trigger`, `.dp-nav-dropdown-menu`, `.dp-nav-hamburger`, `.dp-nav-drawer`, `.dp-nav-drawer-*` classes. Dropdown menu uses glass bg + blur. Drawer slides in from right. Hamburger hidden on desktop, shown at ≤768px.
+- **Index.html**: Resume section removed (now at `/resume.html`). Skip link still targets `#projects`.
+
 ### Changed
 - **Flip 7 strip (index)**: Title set to "I'm bad at maths, so I built an app"; description updated to mention scores, modifiers, running totals and focus on game vs arithmetic. Iframe preview uses `visibility: hidden`.
 - **Copy, typography**: Replaced em dashes (—) with comma, period, or colon across user-facing copy: page titles, meta og:title, aria-labels, hero and strip body text, resume role titles, project descriptions in projects.json, design system labels (dev/design-system.html), case study title, 404 and Flip 7 preview titles. Flip 7 card face placeholder changed from em dash to period. Details in docs/em-dash-replacement-report.md.

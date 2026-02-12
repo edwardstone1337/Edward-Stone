@@ -3,6 +3,7 @@
  * Handles: trigger toggle, outside click close, copy-to-clipboard.
  */
 import { printResume } from './resume-lightbox.js';
+import { showSnackbar } from './snackbar.js';
 
 export function initResumeDownload() {
   const controller = new AbortController();
@@ -29,14 +30,11 @@ export function initResumeDownload() {
       const resumeEl = document.querySelector('.dp-resume-container');
       if (!resumeEl) return;
       const text = resumeEl.innerText;
-      const label = btn.querySelector('span') || btn;
       try {
         await navigator.clipboard.writeText(text);
-        label.textContent = 'Copied!';
-        setTimeout(() => { label.textContent = 'Copy to clipboard'; }, 2000);
+        showSnackbar('Copied to clipboard');
       } catch {
-        label.textContent = 'Copy failed';
-        setTimeout(() => { label.textContent = 'Copy to clipboard'; }, 2000);
+        showSnackbar('Copy failed — try again');
       }
       closeAllMenus();
     }, { signal });

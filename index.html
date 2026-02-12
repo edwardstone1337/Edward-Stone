@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- dev branch test -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -66,37 +65,11 @@ gtag('config', 'G-6MPMYG36LE');
     </script>
   </head>
   <body>
-    <nav class="dp-nav" aria-label="Site navigation">
-      <div class="dp-nav-inner">
-        <a href="/index.html" class="dp-nav-brand" aria-label="Edward Stone, Go to homepage">
-          <svg class="dp-nav-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect x="40" y="40" width="40" height="40" rx="20" transform="rotate(-180 40 40)" fill="black"/>
-          <g clip-path="url(#nav-clip)">
-            <path d="M17.5356 4.99999C27.6155 2.01097 38.8338 11.6176 33.7466 26.1765C35.0001 19.5588 25.0997 16.3646 16.4009 13.8235C11.1332 12.2847 7.45569 7.98901 17.5356 4.99999Z" fill="url(#nav-paint0)"/>
-            <path d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z" fill="url(#nav-paint1)" fill-opacity="0.5"/>
-            <path d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z" fill="white"/>
-          </g>
-          <defs>
-            <linearGradient id="nav-paint0" x1="11.5176" y1="9.51703" x2="36.2755" y2="24.2457" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#B8C2FF"/>
-              <stop offset="1" stop-color="#5E6AD2"/>
-            </linearGradient>
-            <linearGradient id="nav-paint1" x1="16.9063" y1="13.8235" x2="16.9063" y2="35.5455" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#B8C2FF"/>
-              <stop offset="1" stop-color="#5E6AD2"/>
-            </linearGradient>
-            <clipPath id="nav-clip">
-              <rect x="5" y="5" width="30" height="30" rx="15" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
-          <span class="dp-nav-name">Edward Stone</span>
-        </a>
-        <div class="dp-nav-actions" id="dp-nav-actions">
-          <!-- Theme toggle and snake toggle injected by JS -->
-        </div>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
+    <script type="module">
+      import { initNav } from './assets/js/dev-projects/nav-component.js';
+      initNav();
+    </script>
     <a href="#projects" class="dp-skip-link">Skip to projects</a>
     <main class="dp-page">
       <section class="dp-hero">
@@ -227,224 +200,7 @@ gtag('config', 'G-6MPMYG36LE');
             ></iframe>
           </div>
           <div class="dp-strip-actions">
-            <a href="#" class="dp-btn dp-btn-primary-on-dark" style="display:none">Learn more</a>
             <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
-          </div>
-        </div>
-      </section>
-
-      <section class="dp-resume-section dp-reveal dp-reveal--early" id="resume" aria-label="Resume">
-        <div class="dp-resume-layout">
-          <!-- Left column: intro + download -->
-          <div class="dp-resume-intro">
-            <span class="dp-overline">Resume</span>
-            <h2 class="dp-resume-intro-heading">My career so far</h2>
-            <p class="dp-resume-intro-body">From digital agencies in London to ed-tech in Sydney.</p>
-            <div class="dp-resume-download" data-download-widget>
-              <button class="dp-btn dp-btn-primary dp-download-trigger" aria-haspopup="true" aria-expanded="false">
-                <span>Download Resume</span>
-                <svg class="dp-download-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                  <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <div class="dp-download-menu" role="menu" hidden>
-                <button role="menuitem" class="dp-download-menu-item dp-download-print-pdf" data-print-pdf>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Print to PDF</span>
-                </button>
-                <a href="assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Download PDF</span>
-                </a>
-                <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M3 11V3.5A1.5 1.5 0 014.5 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                  <span>Copy to clipboard</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right column: A4 page -->
-          <div class="dp-resume-page-wrapper">
-            <div class="dp-resume-container">
-              <div class="dp-resume-page" aria-label="Resume page 1">
-              <header class="dp-resume-header">
-                <div class="dp-resume-header-main">
-                  <h2 class="dp-resume-name">Edward Stone</h2>
-                  <p class="dp-resume-tagline">Lead UX Designer</p>
-                  <p class="dp-resume-summary">Outcome-focused Lead UX Designer with 10+ years bridging user experience and product strategy across ed-tech and sports technology. Designed planning feature achieving 80% teacher adoption at Inquisitive and restructured information architecture reducing search time by 50%.</p>
-                </div>
-                <address class="dp-resume-contact">
-                  <span class="dp-resume-contact-item">Leichhardt, Sydney, NSW • 0401 068 837 • </span>
-                  <a href="mailto:edwardstone1337@gmail.com" class="dp-resume-contact-item">edwardstone1337@gmail.com</a>
-                  <span class="dp-resume-contact-item"> • edwardstone.design • </span>
-                  <a href="https://linkedin.com/in/edwardstone1337" class="dp-resume-contact-item" target="_blank" rel="noopener noreferrer">linkedin.com/in/edwardstone1337</a>
-                </address>
-              </header>
-
-              <div class="dp-resume-body">
-                <main class="dp-resume-main">
-                  <section class="dp-resume-section-group" aria-label="Experience">
-                    <h3 class="dp-resume-section-title">Experience</h3>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Head of User Experience, <em>Inquisitive</em></h4>
-                      <span class="dp-resume-role-meta">2020 – Present · Sydney, Australia</span>
-                      <p class="dp-resume-role-desc">Ed-tech startup producing curriculum-aligned lessons for 50,000+ primary school teachers across Australia and USA. Lead product design strategy, influence product roadmap, and collaborate with engineering, data, marketing, operations, and support teams.</p>
-                      <ul class="dp-resume-role-achievements">
-                        <li>Built and maintain variable-powered (design token) atomic design system in Figma with 120+ components, reducing design-to-development questions by 85% and ensuring WCAG AA accessibility compliance across web and mobile platforms</li>
-                        <li>Designed internal lesson builder enabling education team to create 100% of platform content digitally, eliminating $15,000+ monthly PDF design costs, reducing content creation time by 3 hours per lesson, and unlocking student-facing features that increased teacher adoption by 25% and retention by 18%</li>
-                        <li>Researched, designed, and iterated planning feature through 4 rounds of user testing with 25 teachers, achieving 60% adoption among active users and becoming key predictor of long-term retention, shown to increase retention likelihood by 30%</li>
-                        <li>Restructured lesson library information architecture through card sorting and usability testing with 28 teachers, reducing time to find critical resources by 50%, increasing resource usage by 35%, and improving lesson completion rates by 22%</li>
-                        <li>Lead quarterly product roadmap development using OKR framework, RICE prioritization, and Jobs-to-be-Done methodology. Delivered 5+ features per quarter that drove 28% increase in monthly active user engagement</li>
-                        <li>Facilitate design sprints and discovery workshops, write product discovery documents (JPDs), user stories, acceptance criteria, and business rules, reducing mid-sprint development questions by 45% through clearer requirements</li>
-                        <li>Conduct user research through interviews (Google Meet), behavioral analysis (GA4, Hotjar, CrazyEgg, Metabase), and usability testing (Useberry), uncovering 10+ critical pain points quarterly that informed product strategy and resulted in 23% improvement in user satisfaction scores</li>
-                      </ul>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Product Designer, <em>PlaySport</em></h4>
-                      <span class="dp-resume-role-meta">2018 – 2020 · Sydney, Australia</span>
-                      <p class="dp-resume-role-desc">Sports technology startup connecting organizations and participants. Led design and branding strategy.</p>
-                      <ul class="dp-resume-role-achievements">
-                        <li>Founded and maintained cross-platform atomic design system with 95+ components spanning web, iOS, and Android, reducing design inconsistencies by 78% and accelerating feature development by 2-3 weeks through reusable component library</li>
-                        <li>Designed brand identity and visual language from ground up, elevating perceived professionalism and enabling sales team to access 12 high-value enterprise clients worth $2.5M+ in potential contracts</li>
-                        <li>Wrote and designed investor pitch deck that helped secure multi-million dollar Series A funding, translating complex product vision into compelling visual narrative across 24 slides</li>
-                      </ul>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Graphic Designer, <em>Rocket Entertainment & The Office of Sir Elton John</em></h4>
-                      <span class="dp-resume-role-meta">2013 – 2016 · London, UK</span>
-                      <p class="dp-resume-role-desc">Graphic designer for Sir Elton John's private office, Rocket Sports (sports management), and Rocket Music (music management). Designed for Olympic-level athletes and entertainment industry clients.</p>
-                      <ul class="dp-resume-role-achievements">
-                        <li>Designed websites, pitch decks, and marketing materials for Olympic-level athletes and high-profile music clients, contributing to 8 successful talent acquisitions and endorsement deals across Rocket Sports and Rocket Music divisions</li>
-                        <li>Created social media content, photography, and animations across Rocket Entertainment's portfolio of clients, increasing social engagement by 45% and supporting $3.2M+ in sponsorship value</li>
-                        <li>Managed design projects across sports management, music management, and private office divisions, delivering 15-20 projects monthly while maintaining brand consistency across high-stakes client relationships</li>
-                      </ul>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Co-Owner & Designer, <em>Prang Out</em></h4>
-                      <span class="dp-resume-role-meta">2011 – 2016 · London, UK</span>
-                      <p class="dp-resume-role-desc">Co-founded and operated clothing startup, managing end-to-end product lifecycle from design to sales. Closed when relocating to Australia.</p>
-                      <ul class="dp-resume-role-achievements">
-                        <li>Designed, manufactured, and sold clothing line (t-shirts, hats, beanies, sweatshirts) and merchandise (posters, stickers), achieving retail distribution in 8 independent shops across London and generating £42,000+ in revenue over 5 years</li>
-                        <li>Managed full product development lifecycle: garment design, screen printing coordination, product photography, e-commerce website design and development, inventory management, and direct sales</li>
-                        <li>Built online audience of 3,200+ followers across social platforms, driving 65% of sales through digital channels and establishing brand presence in UK streetwear market</li>
-                      </ul>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Graphic Designer, <em>Insignia Worldwide</em></h4>
-                      <span class="dp-resume-role-meta">2017 – 2018</span>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Digital Designer, <em>john+john</em></h4>
-                      <span class="dp-resume-role-meta">2017</span>
-                    </article>
-
-                    <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Archivist, <em>The Office of Sir Elton John and David Furnish</em></h4>
-                      <span class="dp-resume-role-meta">2011 – 2013</span>
-                    </article>
-                  </section>
-                </main>
-
-                <aside class="dp-resume-sidebar">
-                  <section class="dp-resume-section-group" aria-label="UX/UI Design Skills">
-                    <h3 class="dp-resume-section-title">UX/UI Design Skills</h3>
-                    <ul class="dp-resume-skill-list">
-                      <li>Interaction Design</li>
-                      <li>Product Design</li>
-                      <li>Rapid Prototyping</li>
-                      <li>Information Architecture</li>
-                      <li>Figma</li>
-                      <li>Wireframing</li>
-                    </ul>
-                  </section>
-
-                  <section class="dp-resume-section-group" aria-label="Methodologies">
-                    <h3 class="dp-resume-section-title">Methodologies</h3>
-                    <ul class="dp-resume-skill-list">
-                      <li>Design Thinking</li>
-                      <li>Agile / Scrum</li>
-                      <li>Atomic Design Systems</li>
-                      <li>Jobs to be Done</li>
-                    </ul>
-                  </section>
-
-                  <section class="dp-resume-section-group" aria-label="Research & Analysis Skills">
-                    <h3 class="dp-resume-section-title">Research & Analysis</h3>
-                    <ul class="dp-resume-skill-list">
-                      <li>User Research</li>
-                      <li>Data Analysis</li>
-                      <li>Survey Design</li>
-                      <li>Usability Testing</li>
-                    </ul>
-                  </section>
-
-                  <section class="dp-resume-section-group" aria-label="Soft Skills">
-                    <h3 class="dp-resume-section-title">Soft Skills</h3>
-                    <ul class="dp-resume-skill-list">
-                      <li>Stakeholder Management</li>
-                      <li>Project Management</li>
-                      <li>Copywriting</li>
-                    </ul>
-                  </section>
-
-                  <section class="dp-resume-section-group" aria-label="Education">
-                    <h3 class="dp-resume-section-title">Education</h3>
-                    <ul class="dp-resume-skill-list">
-                      <li><strong>Ravensbourne University</strong><br/>Foundation Diploma in Graphic Design</li>
-                      <li><strong>Esher College (A Levels)</strong><br/>ICT · Media Studies · English Language</li>
-                    </ul>
-                  </section>
-                </aside>
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile download (hidden on desktop, shown ≤1080px) -->
-        <div class="dp-resume-mobile-download">
-          <div class="dp-resume-download" data-download-widget>
-            <button class="dp-btn dp-btn-primary dp-download-trigger" aria-haspopup="true" aria-expanded="false">
-              <span>Download Resume</span>
-              <svg class="dp-download-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dp-download-menu" role="menu" hidden>
-              <button role="menuitem" class="dp-download-menu-item dp-download-print-pdf" data-print-pdf>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Print to PDF</span>
-              </button>
-              <a href="assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>Download PDF</span>
-              </a>
-              <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M3 11V3.5A1.5 1.5 0 014.5 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                <span>Copy to clipboard</span>
-              </button>
-            </div>
           </div>
         </div>
       </section>
@@ -489,14 +245,6 @@ gtag('config', 'G-6MPMYG36LE');
     <script src="assets/js/dev-projects/avatar-easter-egg.js"></script>
     <script src="assets/js/dev-projects/effects.js"></script>
     <script src="assets/js/dev-projects/snake-game.js"></script>
-
-    <!-- Resume lightbox + download widget -->
-    <script type="module">
-      import { initResumeLightbox } from './assets/js/dev-projects/resume-lightbox.js';
-      import { initResumeDownload } from './assets/js/dev-projects/resume-download.js';
-      initResumeLightbox();
-      initResumeDownload();
-    </script>
 
     <!-- Initialize -->
     <script>
