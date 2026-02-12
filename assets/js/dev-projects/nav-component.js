@@ -2,7 +2,6 @@
  * Nav Component — Shared site navigation
  *
  * Generates <nav class="dp-nav"> and injects into #nav-container.
- * Theme toggle (theme-toggle.js) injects itself into #dp-nav-actions separately.
  * At ≤768px, desktop nav links hide and a hamburger opens a right-side drawer.
  *
  * Usage: Add <div id="nav-container"></div> to page, then:

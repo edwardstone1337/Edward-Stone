@@ -1,156 +1,86 @@
-# CLAUDE.md
+# Edward Stone — Portfolio Site
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
 
-## Project Overview
+Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, build tools, or npm. Vanilla code served via GitHub Pages at `edwardstone.design`. Accessibility target: **WCAG AAA**.
 
-This is a static portfolio website for Edward Stone (UX Designer) with a custom component-based design system. The site uses vanilla JavaScript (no build process), custom CSS design tokens, and follows strict patterns for theming, analytics, and XSS protection.
+## Page Inventory
 
-**Hosted via GitHub Pages** at edwardstone.design (CNAME configured).
+| Path | Purpose | Public | CSS System |
+|------|---------|:------:|------------|
+| `index.html` | Homepage — hero, project strips, side quests, skills, contact | Yes | dev |
+| `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
+| `404.html` | Custom error page | Yes | dev |
+| `projects/fair-share.html` | Fair Share case study | Yes | dev + `project-fair-share.css` |
+| `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
+| `case-studies/features-users-return.html` | Feature adoption case study | Yes | dev + legacy (mixed) |
+| `dev/design-system.html` | Living design system reference | No | dev |
+| `dev/component-preview.html` | Component preview tool (legacy) | No | legacy |
+| `dev/old-index.html` | Archived old homepage | No | legacy |
+| `assets/previews/*/index.html` | 4 iframe preview widgets | No | inline |
 
-**IMPORTANT: No frameworks, build tools, or npm dependencies. This is a static site served from GitHub Pages — vanilla HTML/CSS/JS only.**
-
-**Accessibility target: WCAG AAA** (skip links, aria-labels, prefers-reduced-motion, focus-visible rings, noscript fallbacks)
+**CSS systems**: "dev" = `dev-tokens.css` + `dev-styles.css` (`dp-` prefix, primary). "legacy" = `tokens.css` + `style.css` (no prefix, being phased out). Never mix them.
 
 ## Architecture
 
-### Design System
+### Design Systems
 
-- **Design tokens**: CSS custom properties in `assets/css/dev-tokens.css` (primary/evolved system) and `assets/css/tokens.css` (legacy subset being phased out)
-- **Two design systems** (must not cross-contaminate):
-  - `dev-tokens.css` + `dev-styles.css` (primary system with `dp-` prefix, used on index.html and project pages)
-  - `tokens.css` + `style.css` (legacy subset, no `dp-` prefix)
-  - **Critical**: `dp-` prefixed tokens belong to the dev system only — never mix systems
-- **Theme support**: Light/dark themes via `data-theme` attribute on `<html>`
-- **Load order matters**: Tokens must load before styles
+Two CSS systems that must not cross-contaminate. The **dev system** (`assets/css/dev-tokens.css` + `assets/css/dev-styles.css`) uses `dp-` prefixed tokens — used on all public pages and `dev/design-system.html`. The **legacy system** (`assets/css/tokens.css` + `assets/css/style.css`) is only used by `dev/old-index.html` and `dev/component-preview.html`. Token architecture: `docs/architecture-tokens.md`.
 
-### Component Architecture
+### JavaScript
 
-Components are vanilla JS IIFE modules in `assets/js/components/`:
-- Self-contained (manage own HTML structure and behavior)
-- Configuration-driven (accept config objects)
-- Auto-initialize or manual init via exported function
-- **Critical dependency**: All components require `assets/js/utils.js` to load FIRST
-- Follow the pattern in `docs/component-template.js`
-- See `docs/component-methodology.md` for complete patterns and best practices
+Two JS directories with different patterns:
+- **`assets/js/dev-projects/`** — 16 files, mostly ES6 modules (`export function`). Active development. New work goes here.
+- **`assets/js/components/`** — 8 legacy IIFEs. All require global `Utils` from `assets/js/utils.js` loaded first.
 
-## Critical Patterns
+ES6 modules import sanitisation from `assets/js/dev-projects/utils.js` when needed. Full inventory: `docs/architecture-js.md`.
 
-### 1. Theme Initialization (Prevents Flash)
+### Navigation
 
-All public pages must use the canonical theme pre-init pattern to prevent flash of unstyled content:
-- **Head**: Inline script sets `data-theme` attribute based on localStorage or `prefers-color-scheme`
-- **Body end**: Double rAF removes `dp-no-transition` class after first paint
+Shared nav component (`assets/js/dev-projects/nav-component.js`) injected via `<div id="nav-container">`. Desktop: brand left, dropdown links centre. Mobile (≤768px): hamburger opens right-side drawer with focus trap and scroll lock. Details: `docs/architecture-nav.md`.
 
-Pattern documented in `docs/theme-init-pattern.md`. Used by: `index.html`, `404.html`, project pages.
+### Theming
 
-**Exception**: Preview iframes (`assets/previews/*`) receive theme via postMessage instead.
+Dark-only. `data-theme="dark"` is set on `<html>` via a single inline `setAttribute` call in `<head>`. No theme toggle, no localStorage persistence, no `prefers-color-scheme` detection. Pattern: `docs/theme-init-pattern.md`. Preview iframes receive theme via `postMessage`.
 
-### 2. Google Analytics (Required on Public Pages)
+## Key Patterns
 
-**GA4 Measurement ID**: `G-6MPMYG36LE`
+### GA4 Analytics
 
-- Required on all public HTML pages (index, 404, projects/*, case-studies/*)
-- NOT on internal pages (dev/*, assets/previews/*)
-- Canonical snippet documented in `docs/analytics-tagging.md`
-- **CI enforced**: `.github/workflows/ga-coverage.yml` runs `./scripts/check-ga-coverage.sh` on all PRs and pushes to main
-- Check coverage locally: `./scripts/check-ga-coverage.sh`
+**Measurement ID: `G-6MPMYG36LE`** — required on all public pages (6/6 currently tagged). Not on `dev/*` or `assets/previews/*`. Check coverage: `./scripts/check-ga-coverage.sh`. CI enforced via `.github/workflows/ga-coverage.yml`. Canonical snippet: `docs/analytics-tagging.md`.
 
-### 3. XSS Protection (All Components)
+### XSS Protection
 
-All dynamic content must be sanitized before inserting into HTML:
-- Use `Utils.escapeHTML()` for text content
-- Use `Utils.sanitizeUrl()` for href/src attributes (strips `javascript:` URLs)
-- Pattern: `escapeHTML(sanitizeUrl(url))` for links/images from config
+All dynamic content must be sanitised. Legacy IIFE components use global `Utils.escapeHTML()` / `Utils.sanitizeUrl()`. ES6 modules import from `assets/js/dev-projects/utils.js`. Review: `docs/code-review.md`.
 
-Reviewed in `docs/code-review.md` - all components follow this pattern.
+### Accessibility
 
-### 4. Script Load Order
+WCAG AAA target. Skip links, `aria-labels`, `prefers-reduced-motion` respected in all animations, `focus-visible` rings on interactive elements, `noscript` fallbacks, `aria-current="page"` on nav links. All overlays (drawer, lightbox) implement focus trapping.
 
-**Critical**: The following load order must be maintained:
+## Development
 
-1. CSS design tokens (`dev-tokens.css` or `tokens.css`)
-2. CSS styles (`dev-styles.css` or `style.css`)
-3. `assets/js/utils.js` (provides `Utils.escapeHTML`, `Utils.sanitizeUrl`)
-4. Component scripts (depend on `Utils`)
+No build tools. Test locally: `python3 -m http.server 5500`. Changes committed directly. Run `./scripts/check-ga-coverage.sh` before pushing. Track changes in `CHANGELOG.md` (Keep a Changelog format).
 
-Components will throw errors if `Utils` is not available.
+For adding a new page, follow: `docs/new-page-checklist.md`.
 
-## Development Workflow
+## Reference Docs
 
-### No Build Process
+- `docs/architecture-js.md` — JS file inventory, IIFE vs ES6 conventions, load order
+- `docs/architecture-nav.md` — Nav component, drawer, dropdown, focus management
+- `docs/architecture-tokens.md` — Token layers, glass/nav/paper/strip tokens, shared CSS classes
+- `docs/new-page-checklist.md` — Step-by-step for adding a new public page
+- `docs/component-methodology.md` — Legacy IIFE component patterns and best practices
+- `docs/component-template.js` — Template for new legacy IIFE components
+- `docs/analytics-tagging.md` — GA4 canonical snippet and coverage rules
+- `docs/theme-init-pattern.md` — Theme pre-init script pattern
+- `docs/code-review.md` — Security review (XSS, architecture validation)
+- `docs/strip-branding-spec.md` — Product strip token contract
 
-This is a static site with no build step. Changes to HTML/CSS/JS are directly committed.
+## Rules
 
-### Testing Locally
-
-Open `index.html` directly in a browser, or use a local web server:
-```sh
-python3 -m http.server 5500
-```
-
-### Creating a New Component
-
-Follow `docs/component-methodology.md` and `docs/component-template.js`. Ensure `utils.js` loads first, use `Utils.escapeHTML()`/`sanitizeUrl()` for all dynamic content.
-
-### Creating a New Page
-
-When adding a new HTML page:
-
-1. **If public** (user-facing):
-   - Add GA4 snippet in `<head>` (see `docs/analytics-tagging.md`)
-   - Add theme pre-init script in `<head>` (see `docs/theme-init-pattern.md`)
-   - Add theme transition removal at end of `<body>`
-   - Verify with `./scripts/check-ga-coverage.sh`
-
-2. **If internal/dev** (dev tools, iframes):
-   - Omit GA snippet
-   - May omit theme init if iframe (receives theme via postMessage)
-
-## Common Commands
-
-### Check GA Coverage (before pushing)
-```sh
-./scripts/check-ga-coverage.sh
-```
-Expected: `GA coverage check passed.`
-
-CI runs on all PRs and pushes to main (GA coverage check).
-
-## Documentation
-
-Key documentation in `docs/`:
-- **`component-methodology.md`**: Complete component architecture guide
-- **`component-template.js`**: Template for new components
-- **`analytics-tagging.md`**: GA4 canonical pattern and coverage rules
-- **`theme-init-pattern.md`**: Theme initialization pattern
-- **`code-review.md`**: Security review (XSS, architecture validation)
-- **`strip-branding-spec.md`**: Spec for featured project strips
-
-## Project-Specific Notes
-
-### Changelog
-
-All changes are tracked in `CHANGELOG.md` following Keep a Changelog format. Update when making significant changes.
-
-### Case Studies vs Projects
-
-- **`projects/`**: Full case study pages (fair-share.html, scp-reader.html)
-- **`case-studies/`**: Additional case study content
-- Both are linked from homepage via project cards/strips
-
-### Dev Tools
-
-- **`dev/design-system.html`**: Living design system reference (tokens, components, utilities)
-- **`dev/component-preview.html`**: Component preview tool
-- **`assets/previews/`**: Self-contained iframe preview widgets for specific projects
-
-## Remember
-
-- **Always** use `Utils.escapeHTML()` and `Utils.sanitizeUrl()` for dynamic content
-- **Always** add GA4 to new public pages and verify with script
-- **Always** use theme pre-init pattern on new public pages
-- **Never** commit without testing GA coverage check passes
-- **Never** introduce frameworks, build tools, or npm dependencies
-- **Never** mix `dp-` prefixed tokens with legacy token system
-- **Load order**: tokens → styles → utils.js → components
+- No frameworks, no build tools, no npm
+- `dp-` prefix tokens belong to dev system only — never use in legacy pages
+- Sanitise all dynamic content (`escapeHTML` + `sanitizeUrl`)
+- Site is dark-only — no light theme
+- Run GA coverage check before pushing
+- Accessibility is not optional — WCAG AAA target

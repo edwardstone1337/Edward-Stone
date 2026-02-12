@@ -81,12 +81,6 @@ function buildLightboxHTML(resumeContent) {
               </svg>
               <span>Print to PDF</span>
             </button>
-            <a href="/assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Download PDF</span>
-            </a>
             <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>

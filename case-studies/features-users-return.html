@@ -25,18 +25,7 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
-    <script>
-(function() {
-  var theme;
-  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-  if (!theme) {
-    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.classList.add('dp-no-transition');
-})();
-    </script>
+    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
   </head>
   <body>
     <div class="container">
@@ -145,16 +134,5 @@ gtag('config', 'G-6MPMYG36LE');
         </article>
       </main>
     </div>
-
-    <script src="../assets/js/dev-projects/theme-toggle.js"></script>
-
-    <!-- Remove no-transition class after paint -->
-    <script>
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    document.documentElement.classList.remove('dp-no-transition');
-  });
-});
-    </script>
   </body>
 </html>

@@ -36,18 +36,7 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
-    <script>
-(function() {
-  var theme;
-  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-  if (!theme) {
-    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.classList.add('dp-no-transition');
-})();
-    </script>
+    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
   </head>
   <body>
     <div id="nav-container"></div>
@@ -78,12 +67,6 @@ gtag('config', 'G-6MPMYG36LE');
                   </svg>
                   <span>Print to PDF</span>
                 </button>
-                <a href="assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Download PDF</span>
-                </a>
                 <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
@@ -254,12 +237,6 @@ gtag('config', 'G-6MPMYG36LE');
                   </svg>
                   <span>Print to PDF</span>
                 </button>
-                <a href="assets/files/Resume.pdf" download role="menuitem" class="dp-download-menu-item dp-download-static-pdf">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span>Download PDF</span>
-                </a>
                 <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                     <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
@@ -284,8 +261,6 @@ gtag('config', 'G-6MPMYG36LE');
       </footer>
     </main>
 
-    <!-- Theme toggle -->
-    <script src="assets/js/dev-projects/theme-toggle.js"></script>
     <!-- Snake game -->
     <script src="assets/js/dev-projects/snake-game.js"></script>
     <!-- Back to top -->
@@ -297,15 +272,6 @@ gtag('config', 'G-6MPMYG36LE');
       import { initResumeDownload } from './assets/js/dev-projects/resume-download.js';
       initResumeLightbox();
       initResumeDownload();
-    </script>
-
-    <!-- Remove no-transition class after paint -->
-    <script>
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    document.documentElement.classList.remove('dp-no-transition');
-  });
-});
     </script>
 
     <!-- Analytics: custom GA4 event tracking (must load after all other scripts) -->

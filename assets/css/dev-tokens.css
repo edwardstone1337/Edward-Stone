@@ -100,20 +100,9 @@
   /* --- Page section rhythm (airy gap between hero, strips, grid) --- */
   --dp-section-gap: var(--dp-space-24);
 
-  /* Surface fallbacks — prevent flash before data-theme is set */
-  --dp-bg-base: #08090A;
-  --dp-bg-raised: #111113;
-  --dp-bg-card: rgba(255, 255, 255, 0.03);
-  --dp-bg-card-hover: rgba(255, 255, 255, 0.06);
-  --dp-bg-overlay: rgba(0, 0, 0, 0.7);
-  --dp-text-primary: #F7F8F8;
-  --dp-text-secondary: #8A94A6;
-}
-
-/* --------------------------------------------
-   SEMANTIC TOKENS — Dark theme (default)
-   -------------------------------------------- */
-[data-theme="dark"] {
+  /* --------------------------------------------
+     SEMANTIC TOKENS — Dark (only theme)
+     -------------------------------------------- */
   color-scheme: dark;
 
   /* Surfaces */
@@ -128,7 +117,7 @@
 
   /* Text */
   --dp-text-primary: var(--dp-raw-grey-50);
-  --dp-text-secondary: var(--dp-raw-grey-400);
+  --dp-text-secondary: #9BA8B9;
   --dp-text-tertiary: rgba(255, 255, 255, 0.64);
   --dp-text-ghost: rgba(255, 255, 255, 0.20);
 
@@ -145,7 +134,8 @@
   --dp-border-active: rgba(255, 255, 255, 0.20);
   --dp-border-divider: rgba(255, 255, 255, 0.04);
 
-  /* Accent */
+  /* Accent: AAA-compliant as button bg (white text) and for focus rings/glows.
+     Do NOT use as foreground text on dark surfaces — fails AAA at 4.24:1. */
   --dp-accent: var(--dp-raw-accent);
   --dp-accent-hover: var(--dp-raw-accent-light);
   --dp-accent-glow: rgba(94, 106, 210, 0.10);
@@ -155,7 +145,7 @@
 
   /* Gradient text */
   --dp-gradient-text-from: rgba(255, 255, 255, 0.95);
-  --dp-gradient-text-to: rgba(255, 255, 255, 0.55);
+  --dp-gradient-text-to: rgba(255, 255, 255, 0.60);
 
   /* Hero heading — per-line gradient (light from sky: lighter top → darker bottom) */
   --dp-hero-line-from: rgba(255, 255, 255, 1);
@@ -171,14 +161,10 @@
   /* Noise overlay */
   --dp-noise-opacity: 0.04;
 
-  /* Theme toggle */
+  /* Toggle (shared) */
   --dp-toggle-bg: rgba(255, 255, 255, 0.06);
   --dp-toggle-bg-hover: rgba(255, 255, 255, 0.10);
   --dp-toggle-icon: var(--dp-raw-grey-400);
-
-  /* Theme toggle — sun hover (sunny day: darker sky for sun contrast) */
-  --dp-theme-sun-icon-hover: #facc15;
-  --dp-theme-sun-bg-hover: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%);
 
   /* Snake toggle — luminous hover */
   --dp-snake-icon-hover: #4ade80;
@@ -258,161 +244,16 @@
   /* Resume / paper */
   --dp-paper-surface: #18181B;
   --dp-paper-text-primary: #F7F8F8;
-  --dp-paper-text-secondary: #95A2B3;
+  --dp-paper-text-secondary: #99A6B7;
   --dp-paper-border: rgba(255, 255, 255, 0.08);
   --dp-paper-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
   --dp-paper-accent: #5E6AD2;
-}
 
-/* --------------------------------------------
-   SEMANTIC TOKENS — Light theme
-   -------------------------------------------- */
-[data-theme="light"] {
-  color-scheme: light;
-
-  /* Surfaces — "paper on desk" hierarchy */
-  --dp-bg-base: #EDF0F7;                   /* Softer grey — halfway between old #F5F7FF and #E8EAF2 */
-  --dp-bg-raised: #F0F2FA;                   /* Slightly lighter shelf */
-  --dp-bg-card: rgba(255, 255, 255, 0.75);  /* More opaque — less base bleed-through */
-  --dp-glass-bg: rgba(255, 255, 255, 0.65);
-  --dp-glass-bg-mid: rgba(255, 255, 255, 0.75);
-  --dp-glass-bg-elevated: rgba(255, 255, 255, 0.85);
-  --dp-bg-card-hover: rgba(255, 255, 255, 0.8);  /* Brighter on hover */
-  --dp-bg-overlay: rgba(255, 255, 255, 0.8);
-
-  /* Text */
-  --dp-text-primary: var(--dp-raw-grey-900);
-  --dp-text-secondary: #4B5060;
-  --dp-text-tertiary: rgba(0, 0, 0, 0.75);
-  --dp-text-ghost: rgba(0, 0, 0, 0.20);
-
-  /* Semantic: on-dark (inverse) context */
-  --dp-on-dark-text-primary: var(--dp-raw-white);
-  --dp-on-dark-text-secondary: rgba(255, 255, 255, 0.75);
-  --dp-on-dark-surface: var(--dp-raw-grey-900);
-  --dp-on-dark-surface-hover: var(--dp-raw-grey-50);
-  --dp-on-dark-focus-ring: var(--dp-raw-white);
-
-  /* Borders */
-  --dp-border-default: rgba(0, 0, 0, 0.08);
-  --dp-border-hover: rgba(0, 0, 0, 0.12);
-  --dp-border-active: rgba(0, 0, 0, 0.20);
-  --dp-border-divider: rgba(0, 0, 0, 0.06);
-
-  /* Accent */
-  --dp-accent: var(--dp-raw-accent);
-  --dp-accent-hover: var(--dp-raw-accent-light);
-  --dp-accent-glow: rgba(94, 106, 210, 0.06);
-  /* Card-scoped text (accounts for composited glass backgrounds) */
-  --dp-card-text-primary: #111113;
-  --dp-card-text-secondary: #3B4049;
-
-  /* Gradient text */
-  --dp-gradient-text-from: rgba(0, 0, 0, 0.90);
-  --dp-gradient-text-to: rgba(0, 0, 0, 0.65);
-
-  /* Hero heading — per-line gradient (light from sky: lighter top → darker bottom) */
-  --dp-hero-line-from: rgba(0, 0, 0, 0.92);
-  --dp-hero-line-to: rgba(0, 0, 0, 0.72);
-  --dp-hero-accent-from: #6B76E0;
-  --dp-hero-accent-to: #4A52B8;
-
-  /* Glow colors (reduced for light) */
-  --dp-glow-1: rgba(var(--dp-raw-glow-purple), 0.08);
-  --dp-glow-2: rgba(var(--dp-raw-glow-blue), 0.08);
-  --dp-glow-3: rgba(var(--dp-raw-glow-teal), 0.08);
-
-  /* Noise overlay */
-  --dp-noise-opacity: 0.03;
-
-  /* Theme toggle */
-  --dp-toggle-bg: rgba(0, 0, 0, 0.04);
-  --dp-toggle-bg-hover: rgba(0, 0, 0, 0.08);
-  --dp-toggle-icon: var(--dp-raw-grey-500);
-
-  /* Theme toggle — moon hover (night) */
-  --dp-theme-moon-icon-hover: #fef9c3;
-  --dp-theme-moon-bg-hover: #1e293b;
-
-  /* Snake toggle — luminous hover */
-  --dp-snake-icon-hover: #22c55e;
-  --dp-snake-icon-glow: rgba(var(--dp-raw-glow-green), 0.4);
-
-  /* Button — primary (WCAG AAA 7:1: #FFF on #4A52B8 ≥7:1) */
-  --dp-btn-bg-primary: #4A52B8;
-  --dp-btn-text-primary: var(--dp-raw-white);
-  --dp-btn-hover-bg-primary: var(--dp-accent);
-  --dp-btn-focus-ring: var(--dp-accent);
-
-  /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
-  --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
-  --dp-btn-text-primary-on-dark: var(--dp-on-dark-surface);
-  --dp-btn-hover-bg-primary-on-dark: var(--dp-on-dark-surface-hover);
-  --dp-btn-focus-ring-on-dark: var(--dp-on-dark-surface);
-
-  /* Button — secondary on dark (outline; for strip external link) */
-  --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
-  --dp-btn-secondary-on-dark-text: var(--dp-on-dark-text-primary);
-  --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
-  --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
-
-  /* Button — secondary on light (outline; for light overlay) */
-  --dp-btn-secondary-on-light-text: rgba(0, 0, 0, 0.85);
-  --dp-btn-secondary-on-light-border: rgba(0, 0, 0, 0.55);
-  --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
-  --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
-
-  /* Strip — same as dark theme (darkened for contrast) */
-  --dp-strip-bg: #0a2020;
-  --dp-strip-orb-1: #2e7d76;
-  --dp-strip-orb-2: #E8919B;
-  --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
-  --dp-strip-orb-opacity: 0.4;
-  --dp-strip-title-color: #eafcf8;
-  --dp-strip-text-color: rgba(234, 252, 248, 0.85);
-  --dp-strip-badge-bg: rgba(255, 255, 255, 0.15);
-  --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
-  --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
-  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-  --dp-strip-title-from: var(--dp-strip-title-color);
-  --dp-strip-title-to: var(--dp-strip-title-color);
-  --dp-strip-border: 1px solid transparent;
-
-  /* Strip theme — SCP Reader */
-  --dp-strip-scp-bg: #141414;
-  --dp-strip-scp-orb-1: #791a1f;
-  --dp-strip-scp-orb-2: #431418;
-  --dp-strip-scp-orb-dark: rgba(0, 0, 0, 0.18);
-  --dp-strip-scp-orb-opacity: 0.3;
-  --dp-strip-scp-title-color: #ffffff;
-  --dp-strip-scp-text-color: rgba(255, 255, 255, 0.85);
-  --dp-strip-scp-badge-bg: rgba(255, 255, 255, 0.08);
-  --dp-strip-scp-badge-text: rgba(255, 255, 255, 0.9);
-  --dp-strip-scp-device-border: 1px solid #303030;
-  --dp-strip-scp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-
-  /* Strip theme — Flip 7 (navy + teal; light theme: same brand tokens, higher orb visibility) */
-  --dp-strip-flip7-bg: lch(25 18 275);
-  /* Title gradient: warm cream to muted teal (title-to slightly lighter in light for AAA 7:1) */
-  --dp-strip-flip7-title-from: lch(96 4 92);   /* cream-white, warm */
-  --dp-strip-flip7-title-to: lch(84 5 185);    /* lighter teal for light mode, AAA 7:1 (walked back from L82) */
-  --dp-strip-flip7-border: 1px solid lch(55 12 185 / 0.15);
-  --dp-strip-flip7-orb-1: lch(55 12 185);
-  --dp-strip-flip7-orb-2: lch(78 16 75);
-  --dp-strip-flip7-orb-dark: rgba(0, 0, 0, 0.15);
-  --dp-strip-flip7-orb-opacity: 0.45;              /* bump for light — backgrounds absorb more glow */
-  --dp-strip-flip7-title-color: lch(98 2.5 92);
-  --dp-strip-flip7-text-color: lch(94 3 92 / 0.92);
-  --dp-strip-flip7-badge-bg: lch(35 10 185 / 0.55);
-  --dp-strip-flip7-badge-text: lch(98 2 92);
-  --dp-strip-flip7-device-border: 1px solid lch(40 8 265);
-  --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-
-  /* Resume / paper */
-  --dp-paper-surface: #FFFFFF;
-  --dp-paper-text-primary: #111113;
-  --dp-paper-text-secondary: #5A6170;
-  --dp-paper-border: rgba(0, 0, 0, 0.06);
-  --dp-paper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --dp-paper-accent: #5E6AD2;
+  /* === Contextual light tokens (available in dark theme) === */
+  --dp-paper-surface-light: #FFFFFF;
+  --dp-paper-text-primary-light: #111113;
+  --dp-paper-text-secondary-light: #5A6170;
+  --dp-paper-border-light: rgba(0, 0, 0, 0.06);
+  --dp-paper-shadow-light: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --dp-paper-accent-light: #5E6AD2;
 }

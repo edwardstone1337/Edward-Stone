@@ -224,7 +224,7 @@ img { display: block; max-width: 100%; }
   border-radius: 50%;
 }
 
-[data-theme="dark"] .dp-nav-logo {
+.dp-nav-logo {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 1);
 }
 
@@ -542,37 +542,24 @@ img { display: block; max-width: 100%; }
               stroke var(--dp-duration-base) var(--dp-ease-out);
 }
 
-/* Show/hide icons based on theme */
-[data-theme="dark"] .dp-toggle-sun { display: block; }
-[data-theme="dark"] .dp-toggle-moon { display: none; }
-[data-theme="light"] .dp-toggle-sun { display: none; }
-[data-theme="light"] .dp-toggle-moon { display: block; }
+/* Show/hide icons (dark-only) */
+.dp-toggle-sun { display: block; }
+.dp-toggle-moon { display: none; }
 
 /* Theme toggle — sun hover (darker sky, filled sun for contrast) */
-[data-theme="dark"] .dp-theme-toggle:hover {
+.dp-theme-toggle:hover {
   background: var(--dp-theme-sun-bg-hover);
   border-color: rgba(7, 89, 133, 0.6);
 }
-[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun {
+.dp-theme-toggle:hover .dp-toggle-sun {
   color: var(--dp-theme-sun-icon-hover);
   stroke: var(--dp-theme-sun-icon-hover);
 }
 .dp-theme-toggle .dp-toggle-sun circle {
   transition: fill var(--dp-duration-base) var(--dp-ease-out);
 }
-[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun circle {
+.dp-theme-toggle:hover .dp-toggle-sun circle {
   fill: var(--dp-theme-sun-icon-hover);
-}
-
-/* Theme toggle — moon hover (night: dark bg, moon fills with glow) */
-[data-theme="light"] .dp-theme-toggle:hover {
-  background: var(--dp-theme-moon-bg-hover);
-  border-color: rgba(30, 41, 59, 0.8);
-}
-[data-theme="light"] .dp-theme-toggle:hover .dp-toggle-moon {
-  color: var(--dp-theme-moon-icon-hover);
-  fill: var(--dp-theme-moon-icon-hover);
-  stroke: var(--dp-theme-moon-icon-hover);
 }
 
 /* --------------------------------------------
@@ -1576,21 +1563,6 @@ img { display: block; max-width: 100%; }
 
 .dp-download-menu-item:hover svg {
   opacity: 1;
-}
-
-/* Desktop: show Print to PDF, hide static PDF download */
-.dp-download-static-pdf {
-  display: none;
-}
-
-@media (max-width: 1080px) {
-  /* Mobile: hide Print to PDF, show static PDF download */
-  .dp-download-print-pdf {
-    display: none !important;
-  }
-  .dp-download-static-pdf {
-    display: flex !important;
-  }
 }
 
 .dp-resume-container {

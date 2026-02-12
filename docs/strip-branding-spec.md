@@ -37,17 +37,14 @@ Step-by-step: add a new strip theme using only tokens and one modifier block.
 
 ### Step 1 — Define named tokens in `dev-tokens.css`
 
-Create `--dp-strip-[name]-*` tokens for your strip in **both** theme blocks:
-
-- **Dark theme:** `[data-theme="dark"] { ... }`
-- **Light theme:** `[data-theme="light"] { ... }`
+Create `--dp-strip-[name]-*` tokens for your strip in the `:root` block of `dev-tokens.css` (the site is dark-only — there is no light theme block).
 
 Define at least the required tokens (see Token checklist below). Add optional tokens (e.g. `title-from`, `title-to`, `border`, `device-border`, `device-shadow`) when the strip needs them.
 
 Example (excerpt for a strip named `myapp`):
 
 ```css
-/* In [data-theme="dark"] */
+/* In :root */
 --dp-strip-myapp-bg: #0f1419;
 --dp-strip-myapp-orb-1: #1d9bf0;
 --dp-strip-myapp-orb-2: #8b5cf6;
@@ -63,8 +60,6 @@ Example (excerpt for a strip named `myapp`):
 --dp-strip-myapp-border: 1px solid rgba(255, 255, 255, 0.08);
 --dp-strip-myapp-device-border: 1px solid rgba(255, 255, 255, 0.12);
 --dp-strip-myapp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-
-/* In [data-theme="light"] — repeat with light-appropriate values */
 ```
 
 ### Step 2 — Map tokens in `dev-styles.css`
@@ -150,7 +145,7 @@ If an optional token is omitted, the base strip token (or its default) is used.
 
 - **All text-on-background** (title, description, overline, badge text on badge background) must meet **7:1** contrast ratio against their backgrounds.
 - **Gradient title:** Check contrast at **both** gradient endpoints (title-from on strip bg, title-to on strip bg). Both must meet 7:1.
-- Validate in both **dark and light** themes if the strip is used in both.
+- The site is dark-only — validate against the single dark theme.
 
 ---
 

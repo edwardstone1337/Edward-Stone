@@ -10,7 +10,6 @@
  * - resume_lightbox: resume lightbox opened
  * - resume_download: resume download actions (pdf, print, clipboard)
  * - easter_egg: avatar easter egg triggered
- * - theme_toggle: theme switched (light/dark)
  */
 (function () {
   'use strict';
@@ -102,7 +101,7 @@
   /**
    * 4. resume_download
    * Listen for clicks on download widget buttons
-   * Methods: pdf, print, clipboard
+   * Methods: print, clipboard
    */
   function initResumeDownloadTracking() {
     document.addEventListener('click', function (e) {
@@ -111,8 +110,6 @@
       // Check which download method was clicked
       if (e.target.closest('[data-print-pdf]')) {
         method = 'print';
-      } else if (e.target.closest('.dp-download-static-pdf')) {
-        method = 'pdf';
       } else if (e.target.closest('[data-copy-resume]')) {
         method = 'clipboard';
       }
@@ -141,25 +138,6 @@
   }
 
   /**
-   * 6. theme_toggle
-   * Listen for click on .dp-theme-toggle and read resulting theme
-   */
-  function initThemeToggleTracking() {
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest('.dp-theme-toggle');
-      if (!btn) return;
-
-      // Wait for theme to be applied, then read the new value
-      setTimeout(function () {
-        var theme = document.documentElement.getAttribute('data-theme') || 'unknown';
-        track('theme_toggle', {
-          theme: theme
-        });
-      }, 0);
-    });
-  }
-
-  /**
    * Initialize all tracking
    */
   function init() {
@@ -168,7 +146,6 @@
     initResumeLightboxTracking();
     initResumeDownloadTracking();
     initEasterEggTracking();
-    initThemeToggleTracking();
   }
 
   // Initialize on DOMContentLoaded or immediately if DOM is ready

@@ -5,19 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fair Share - Blurred Orb Gradient</title>
   <style>
-    :root,
-    [data-theme="dark"] {
+    :root {
       --fs-bg: #112e2e;
-      --fs-text: #eafcf8;
-      --fs-accent-you: #5BBFB5;
-      --fs-accent-partner: #ffa726;
-      --fs-track-bg: #092929;
-      --fs-thumb-bg: #ffffff;
-      --fs-thumb-shadow: rgba(0, 0, 0, 0.4);
-      --fs-muted: rgba(234, 252, 248, 0.6);
-    }
-    [data-theme="light"] {
-      --fs-bg: #0e3d3d;
       --fs-text: #eafcf8;
       --fs-accent-you: #5BBFB5;
       --fs-accent-partner: #ffa726;
@@ -59,9 +48,6 @@
       mix-blend-mode: overlay;
       pointer-events: none;
     }
-    [data-theme="light"] .orbs::after {
-      opacity: 0.08;
-    }
     .orb {
       position: absolute;
       left: 0;
@@ -73,10 +59,6 @@
       opacity: 0.7;
       mix-blend-mode: screen;
       will-change: transform;
-    }
-    [data-theme="light"] .orb {
-      mix-blend-mode: screen;
-      opacity: 0.7;
     }
     .orb-a {
       background: var(--fs-accent-you);
@@ -102,11 +84,7 @@
 
   <script>
     (function () {
-      window.addEventListener('message', function(e) {
-        if (e.data && e.data.type === 'theme-change') {
-          document.documentElement.setAttribute('data-theme', e.data.theme);
-        }
-      });
+      document.documentElement.setAttribute('data-theme', 'dark');
 
       var wrap = document.getElementById('wrap');
       var orbA = document.getElementById('orbA');

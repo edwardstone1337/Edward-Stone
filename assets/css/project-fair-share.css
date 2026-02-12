@@ -2,8 +2,7 @@
    Load after dev-tokens.css and dev-styles.css.
    Only semantic token overrides under [data-project="fair-share"]. */
 
-/* --- Dark theme --- */
-[data-project="fair-share"][data-theme="dark"] {
+[data-project="fair-share"] {
   --dp-accent: #5BBFB5;
   --dp-accent-hover: #7dd0c8;
   --dp-accent-glow: rgba(91, 191, 181, 0.12);
@@ -16,33 +15,6 @@
   --dp-glow-3: rgba(91, 191, 181, 0.10);
 
   /* Strip (Fair Share palette) */
-  --dp-strip-bg: #0a2020;
-  --dp-strip-orb-1: #2e7d76;
-  --dp-strip-orb-2: #E8919B;
-  --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
-  --dp-strip-orb-opacity: 0.4;
-  --dp-strip-title-color: #eafcf8;
-  --dp-strip-text-color: rgba(234, 252, 248, 0.85);
-  --dp-strip-badge-bg: rgba(255, 255, 255, 0.15);
-  --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
-  --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
-  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-}
-
-/* --- Light theme --- */
-[data-project="fair-share"][data-theme="light"] {
-  --dp-accent: #2a9d94;
-  --dp-accent-hover: #5BBFB5;
-  --dp-accent-glow: rgba(42, 157, 148, 0.08);
-
-  --dp-bg-base: #e8f5f4;
-  --dp-bg-raised: #f0faf9;
-
-  --dp-glow-1: rgba(42, 157, 148, 0.08);
-  --dp-glow-2: rgba(232, 145, 155, 0.06);
-  --dp-glow-3: rgba(42, 157, 148, 0.06);
-
-  /* Strip stays dark for contrast on light page */
   --dp-strip-bg: #0a2020;
   --dp-strip-orb-1: #2e7d76;
   --dp-strip-orb-2: #E8919B;
@@ -272,28 +244,16 @@
   z-index: -1;
   will-change: transform;
 }
-[data-project="fair-share"][data-theme="dark"] .dp-page section.dp-glow-section:nth-of-type(4)::before {
+[data-project="fair-share"] .dp-page section.dp-glow-section:nth-of-type(4)::before {
   background: rgba(232, 145, 155, 0.18);
   filter: blur(100px);
 }
-[data-project="fair-share"][data-theme="dark"] .dp-page section.dp-glow-section:nth-of-type(7)::before {
+[data-project="fair-share"] .dp-page section.dp-glow-section:nth-of-type(7)::before {
   background: rgba(91, 191, 181, 0.15);
   filter: blur(120px);
 }
-[data-project="fair-share"][data-theme="dark"] .dp-page section.dp-glow-section:nth-of-type(8)::before {
+[data-project="fair-share"] .dp-page section.dp-glow-section:nth-of-type(8)::before {
   background: rgba(232, 145, 155, 0.14);
-  filter: blur(100px);
-}
-[data-project="fair-share"][data-theme="light"] .dp-page section.dp-glow-section:nth-of-type(4)::before {
-  background: rgba(232, 145, 155, 0.09);
-  filter: blur(100px);
-}
-[data-project="fair-share"][data-theme="light"] .dp-page section.dp-glow-section:nth-of-type(7)::before {
-  background: rgba(91, 191, 181, 0.075);
-  filter: blur(120px);
-}
-[data-project="fair-share"][data-theme="light"] .dp-page section.dp-glow-section:nth-of-type(8)::before {
-  background: rgba(232, 145, 155, 0.07);
   filter: blur(100px);
 }
 @media (max-width: 639px) {
@@ -314,9 +274,6 @@
   align-items: center;
   gap: var(--dp-space-6);
   margin-top: var(--dp-space-8);
-}
-[data-project="fair-share"][data-theme="light"] .dp-cta-card {
-  background: rgba(255, 255, 255, 0.92);
 }
 [data-project="fair-share"] .dp-cta-card p {
   color: var(--dp-text-secondary);

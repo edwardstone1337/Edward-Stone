@@ -12,9 +12,6 @@
 
     :root {
       --f7-border-width: 2px;
-    }
-    :root,
-    [data-theme="dark"] {
       --f7-bg: #0f0f0f;
       --f7-text: #f0f0f0;
       --f7-text-muted: #a0a0a0;
@@ -35,27 +32,6 @@
       --f7-accent-focus: #1d9995;
       --f7-restart-icon: rgba(255, 255, 255, 0.5);
     }
-    [data-theme="light"] {
-      --f7-bg: #F5F7FF;
-      --f7-text: #111113;
-      --f7-text-muted: #5A6170;
-      --f7-border: rgba(0, 0, 0, 0.06);
-      --f7-border-hover: rgba(0, 0, 0, 0.12);
-      --f7-glow: rgba(0, 0, 0, 0.04);
-      --f7-card-back: transparent;
-      --f7-card-back-border: #2b3276;
-      --f7-card-face: #1d9995;
-      --f7-card-face-text: #000000;
-      --f7-card-face-border: rgba(0, 0, 0, 0.06);
-      --f7-dot-empty-border: #E2E4E9;
-      --f7-dot-filled-bg: rgba(0, 0, 0, 0.03);
-      --f7-dot-filled-border: #D0D3DB;
-      --f7-dot-filled-text: #5A6170;
-      --f7-accent-bust: rgba(229, 62, 62, 0.7);
-      --f7-accent-win: rgba(29, 153, 149, 0.7);
-      --f7-accent-focus: #1d9995;
-      --f7-restart-icon: #2b3276;
-    }
 
     html, body {
       margin: 0;
@@ -67,16 +43,6 @@
       background: var(--f7-bg);
       background-attachment: fixed;
     }
-    [data-theme="light"] body {
-      background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(204, 251, 241, 0.6) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 60% at 100% 100%, rgba(224, 242, 254, 0.5) 0%, transparent 50%),
-        linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #cffaf6 100%);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .f7-widget {
       position: relative;
       width: 100%;
@@ -148,7 +114,7 @@
       background: rgba(229, 62, 62, 0.1) !important;
       animation: f7-bust-pulse 600ms ease-out;
     }
-    [data-theme="dark"] .f7-orbit-dot.f7-win-highlight {
+    .f7-orbit-dot.f7-win-highlight {
       background: #1d9995 !important;
       border-color: #1d9995 !important;
       color: #000000 !important;
@@ -328,12 +294,6 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     }
-    [data-theme="light"] .f7-snackbar {
-      background: rgba(0, 0, 0, 0.06);
-      color: rgba(0, 0, 0, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
     .f7-snackbar-icon {
       flex-shrink: 0;
       color: var(--f7-accent-focus);
@@ -388,11 +348,7 @@
 
   <script>
     (function () {
-      window.addEventListener('message', function (e) {
-        if (e.data && e.data.type === 'theme-change') {
-          document.documentElement.setAttribute('data-theme', e.data.theme);
-        }
-      });
+      document.documentElement.setAttribute('data-theme', 'dark');
 
       var RANKS = 13;
       var EXTRA_CARDS = 7;

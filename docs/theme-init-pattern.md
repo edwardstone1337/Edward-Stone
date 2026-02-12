@@ -1,49 +1,26 @@
 # Theme init pattern (canonical)
 
-Theme is set before first paint to avoid a flash of wrong theme. Inline scripts only; no external JS.
+> **Status:** Simplified. The site is dark-only — there is no theme toggle or light mode.
 
-## 1. Head: pre-init script
+The canonical pattern is a single `setAttribute` line in `<head>`, before first paint:
+
+## Head: set dark theme
 
 Place in `<head>`, after stylesheets, before `</head>`:
 
 ```html
-<!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
+<!-- Dark-only: set data-theme for CSS token resolution -->
 <script>
-(function() {
-  var theme;
-  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-  if (!theme) {
-    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.classList.add('dp-no-transition');
-})();
+document.documentElement.setAttribute('data-theme', 'dark');
 </script>
 ```
 
-- Reads `dp-theme` from localStorage, else `prefers-color-scheme: dark` → `'dark'` / `'light'`.
-- Sets `data-theme` on `<html>` and adds `dp-no-transition` so theme change doesn’t animate on load.
-
-## 2. Body end: no-transition removal
-
-Place just before `</body>`:
-
-```html
-<!-- Remove no-transition class after paint -->
-<script>
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    document.documentElement.classList.remove('dp-no-transition');
-  });
-});
-</script>
-```
-
-- Double rAF runs after first paint; removing the class re-enables transitions for later theme toggles.
+No localStorage, no `prefers-color-scheme` detection, no transition suppression needed.
 
 ## Files using this pattern
 
 - `index.html`
+- `resume.html`
 - `projects/scp-reader.html`
 - `projects/fair-share.html`
 - `dev/design-system.html`

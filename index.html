@@ -51,18 +51,7 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
-    <script>
-(function() {
-  var theme;
-  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-  if (!theme) {
-    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.classList.add('dp-no-transition');
-})();
-    </script>
+    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
   </head>
   <body>
     <div id="nav-container"></div>
@@ -220,8 +209,6 @@ gtag('config', 'G-6MPMYG36LE');
       </footer>
     </main>
 
-    <!-- Theme toggle -->
-    <script src="assets/js/dev-projects/theme-toggle.js"></script>
     <!-- Back to top (logo button, left of snake) -->
     <script src="assets/js/dev-projects/back-to-top.js"></script>
 
@@ -249,32 +236,6 @@ gtag('config', 'G-6MPMYG36LE');
     <!-- Initialize -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        // Send current page theme to Kaomoji strip iframe
-        var kmIframe = document.querySelector('.dp-strip--kaomoji iframe');
-        if (kmIframe) {
-          function sendKmTheme() {
-            var theme = document.documentElement.getAttribute('data-theme') || 'dark';
-            try { kmIframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*'); } catch(e) {}
-          }
-          kmIframe.addEventListener('load', sendKmTheme);
-          if (kmIframe.contentDocument && kmIframe.contentDocument.readyState === 'complete') {
-            sendKmTheme();
-          }
-        }
-
-        // Send current page theme to Flip 7 strip iframe
-        var f7Iframe = document.querySelector('.dp-strip--flip7 iframe');
-        if (f7Iframe) {
-          function sendF7Theme() {
-            var theme = document.documentElement.getAttribute('data-theme') || '';
-            try { f7Iframe.contentWindow.postMessage({ type: 'theme-change', theme: theme }, '*'); } catch(e) {}
-          }
-          f7Iframe.addEventListener('load', sendF7Theme);
-          if (f7Iframe.contentDocument && f7Iframe.contentDocument.readyState === 'complete') {
-            sendF7Theme();
-          }
-        }
-
         /* DPProjectsGrid init hidden for Phase 1 MVP
         if (window.DPProjectsGrid) {
           window.DPProjectsGrid.init('projects-container');
@@ -297,15 +258,6 @@ gtag('config', 'G-6MPMYG36LE');
         }
         */
       });
-    </script>
-
-    <!-- Remove no-transition class after paint -->
-    <script>
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    document.documentElement.classList.remove('dp-no-transition');
-  });
-});
     </script>
 
     <!-- Analytics: custom GA4 event tracking (must load after all other scripts) -->

@@ -8,18 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" />
     <link rel="stylesheet" href="../assets/css/dev-tokens.css" />
     <link rel="stylesheet" href="../assets/css/dev-styles.css" />
-    <!-- Theme pre-init: prevents flash. Canonical pattern documented in docs/theme-init-pattern.md -->
-    <script>
-(function() {
-  var theme;
-  try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-  if (!theme) {
-    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', theme);
-  document.documentElement.classList.add('dp-no-transition');
-})();
-    </script>
+    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
     <style>
       /* Reference-page-only scaffolding (ds- prefix) */
       .ds-page { max-width: 1200px; margin: 0 auto; padding: var(--dp-space-8) var(--dp-space-6); }
@@ -41,10 +30,6 @@
       .ds-noise-demo .dp-noise { position: absolute; inset: 0; z-index: 1; }
       /* Card static: ensure visible without reveal JS */
       .ds-card-demo .dp-card { opacity: 1; }
-      /* Glass demo: theme-aware gradient background */
-      [data-theme="light"] .ds-glass-demo-bg {
-        background: linear-gradient(135deg, #a8b8ff 0%, #c4a8ff 50%, #f0b8ff 100%) !important;
-      }
     </style>
   </head>
   <body>
@@ -55,9 +40,7 @@
           <h1>Dev-Projects Design System</h1>
           <p class="ds-subtitle">Living reference: all components render from dev-tokens.css and dev-styles.css</p>
         </div>
-        <div class="dp-nav-actions" id="dp-nav-actions">
-          <!-- Theme toggle injected by theme-toggle.js -->
-        </div>
+        <div class="dp-nav-actions" id="dp-nav-actions"></div>
       </header>
 
       <!-- 2. Primitives -->
@@ -556,19 +539,11 @@
           <span class="ds-label">Reference value, used by .dp-noise overlay</span>
           <script>
             (function() {
-              function updateNoiseOpacity() {
-                var el = document.getElementById('ds-noise-opacity-value');
-                if (el) {
-                  var val = getComputedStyle(document.documentElement).getPropertyValue('--dp-noise-opacity').trim();
-                  el.textContent = val || '—';
-                }
+              var el = document.getElementById('ds-noise-opacity-value');
+              if (el) {
+                var val = getComputedStyle(document.documentElement).getPropertyValue('--dp-noise-opacity').trim();
+                el.textContent = val || '—';
               }
-              updateNoiseOpacity();
-              function attach() {
-                document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() { setTimeout(updateNoiseOpacity, 50); });
-              }
-              if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
-              else attach();
             })();
           </script>
         </div>
@@ -896,38 +871,5 @@
       </section>
     </main>
 
-    <script src="../assets/js/dev-projects/theme-toggle.js"></script>
-    <script>
-      // Force Kaomoji strip iframe to dark theme (strip bg is always dark)
-      (function() {
-        var iframe = document.querySelector('.dp-strip--kaomoji .dp-card-media-iframe');
-        if (!iframe) return;
-        function sendDark() {
-          try { iframe.contentWindow.postMessage({ type: 'theme-change', theme: 'dark' }, '*'); } catch(e) {}
-        }
-        iframe.addEventListener('load', sendDark);
-        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') sendDark();
-        // Re-force after any theme toggle
-        function attachThemeToggleListener() {
-          document.querySelector('.dp-theme-toggle')?.addEventListener('click', function() {
-            setTimeout(sendDark, 100);
-          });
-        }
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', attachThemeToggleListener);
-        } else {
-          attachThemeToggleListener();
-        }
-      })();
-    </script>
-
-    <!-- Remove no-transition class after paint -->
-    <script>
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    document.documentElement.classList.remove('dp-no-transition');
-  });
-});
-    </script>
   </body>
 </html>
