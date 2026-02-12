@@ -13,11 +13,13 @@
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
+  /* PROD-HIDE: Project and Resume nav items
   { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
   { text: 'Resume', href: '/resume.html' }
+  END PROD-HIDE */
 ];
 
 /**
