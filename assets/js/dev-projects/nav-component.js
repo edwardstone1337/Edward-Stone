@@ -17,7 +17,8 @@ const NAV_LINKS = [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
-  { text: 'Resume', href: '/resume.html' }
+  { text: 'Resume', href: '/resume.html' },
+  { text: 'Gallery', href: '/gallery.html' }
 ];
 
 /**
@@ -233,6 +234,17 @@ function initDrawer(hamburger) {
 }
 
 /**
+ * Dynamically load the snake game script.
+ * Resolved relative to this module so every page gets the correct path
+ * without needing its own <script> tag.
+ */
+function loadSnakeGame() {
+  var script = document.createElement('script');
+  script.src = new URL('snake-game.js', import.meta.url).href;
+  document.head.appendChild(script);
+}
+
+/**
  * Inject the site navigation into #nav-container
  */
 export function initNav() {
@@ -284,4 +296,6 @@ export function initNav() {
 
   var hamburger = nav.querySelector('.dp-nav-hamburger');
   initDrawer(hamburger);
+
+  loadSnakeGame();
 }

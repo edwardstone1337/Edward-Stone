@@ -1,0 +1,143 @@
+/* ============================================
+   GALLERY — Masonry grid page
+   Uses --dp- tokens only. No hardcoded values.
+   ============================================ */
+
+/* --- Section layout --- */
+.dp-gallery-section {
+  padding-top: var(--dp-space-30);
+  padding-bottom: var(--dp-space-20);
+}
+
+/* --- Header --- */
+.dp-gallery-header {
+  text-align: center;
+  margin-bottom: var(--dp-space-16);
+}
+
+.dp-gallery-title {
+  font-size: var(--dp-text-4xl);
+  font-weight: var(--dp-weight-bold);
+  line-height: var(--dp-leading-tight);
+  margin: 0 0 var(--dp-space-4);
+}
+
+.dp-gallery-subtitle {
+  font-size: var(--dp-text-lg);
+  color: var(--dp-text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: var(--dp-leading-normal);
+}
+
+/* --- Masonry grid (CSS columns) --- */
+.dp-gallery-grid {
+  column-count: 3;
+  column-gap: var(--dp-space-3);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--dp-space-6);
+}
+
+/* --- Grid items --- */
+.dp-gallery-item {
+  break-inside: avoid;
+  margin-bottom: var(--dp-space-3);
+  border-radius: var(--dp-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--dp-border-default);
+  background: var(--dp-bg-card);
+  transition: border-color var(--dp-duration-base) var(--dp-ease-out),
+              transform var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-gallery-item:hover {
+  border-color: var(--dp-border-hover);
+  transform: translateY(-2px);
+}
+
+/* --- Image --- */
+.dp-gallery-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--aspect);
+}
+
+/* --- Image error / placeholder fallback --- */
+.dp-gallery-img--error {
+  display: none;
+}
+
+.dp-gallery-item:has(.dp-gallery-img--error) {
+  aspect-ratio: var(--aspect);
+  background: linear-gradient(135deg, var(--dp-bg-raised) 0%, var(--dp-bg-card) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dp-gallery-item:has(.dp-gallery-img--error)::after {
+  content: attr(data-alt);
+  color: var(--dp-text-tertiary);
+  font-size: var(--dp-text-sm);
+  padding: var(--dp-space-4);
+  text-align: center;
+}
+
+/* --- Noscript fallback --- */
+.dp-gallery-noscript {
+  text-align: center;
+  color: var(--dp-text-secondary);
+  padding: var(--dp-space-20) 0;
+  font-size: var(--dp-text-base);
+}
+
+/* --- Responsive breakpoints --- */
+@media (max-width: 1199px) {
+  .dp-gallery-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .dp-gallery-grid {
+    column-count: 2;
+  }
+
+  .dp-gallery-section {
+    padding-top: var(--dp-space-20);
+    padding-bottom: var(--dp-space-16);
+  }
+
+  .dp-gallery-title {
+    font-size: var(--dp-text-3xl);
+  }
+}
+
+@media (max-width: 479px) {
+  .dp-gallery-grid {
+    column-count: 1;
+    padding: 0 var(--dp-space-4);
+  }
+
+  .dp-gallery-section {
+    padding-top: var(--dp-space-16);
+    padding-bottom: var(--dp-space-12);
+  }
+
+  .dp-gallery-title {
+    font-size: var(--dp-text-2xl);
+  }
+}
+
+/* --- Accessibility: reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .dp-gallery-item {
+    transition: none;
+  }
+
+  .dp-gallery-item:hover {
+    transform: none;
+  }
+}

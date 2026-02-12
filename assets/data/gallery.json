@@ -1,0 +1,187 @@
+{
+  "images": [
+    {
+      "id": "playsport-logomark",
+      "src": "assets/images/gallery/playsport-logomark.webp",
+      "alt": "Playsport P lettermark in coral red gradient on white, a rounded pin-like form with circular counter",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "branding",
+        "logo",
+        "playsport"
+      ]
+    },
+    {
+      "id": "playsport-category-cards-dark",
+      "src": "assets/images/gallery/playsport-category-cards-dark.webp",
+      "alt": "Isometric grid of Playsport sport category cards with bold typography and photography — Fitness Fanatics, Just Run, Mind Games, Horse Play, and more",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "ui-design",
+        "playsport"
+      ],
+      "caption": "Sport category card system for Playsport — each card pairs bold type with action photography"
+    },
+    {
+      "id": "playsport-category-cards-light",
+      "src": "assets/images/gallery/playsport-category-cards-light.webp",
+      "alt": "Isometric grid of Playsport activity cards in lighter tones — Ballerinas, Table Tennis, Running, Wave Chasers, Hiking, Jazz Dance, and more",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "ui-design",
+        "playsport"
+      ],
+      "caption": "Extended category card system showing breadth of sport and activity coverage"
+    },
+    {
+      "id": "playsport-sport-detail-screens",
+      "src": "assets/images/gallery/playsport-sport-detail-screens.webp",
+      "alt": "Three Playsport mobile app screens showing Boxing, Yoga, and Crossfit sport detail pages with organisers, experiences, and near-me map tabs",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "ui-design",
+        "mobile",
+        "playsport"
+      ],
+      "caption": "Sport detail pages with tab navigation — each sport has its own colour theme"
+    },
+    {
+      "id": "playsport-home-booking-screens",
+      "src": "assets/images/gallery/playsport-home-booking-screens.webp",
+      "alt": "Two Playsport mobile screens — home feed with personalised sport recommendations and categories, and a venue booking page with quick book class schedule",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "ui-design",
+        "mobile",
+        "playsport"
+      ],
+      "caption": "Home feed with personalised recommendations and quick-book venue flow"
+    },
+    {
+      "id": "neumorphic-music-player",
+      "src": "assets/images/gallery/neumorphic-music-player.webp",
+      "alt": "Neumorphic music player UI concept in all-white with soft shadows, showing album art, progress bar, and playback controls",
+      "width": 800,
+      "height": 600,
+      "categories": [
+        "ui-design",
+        "concept"
+      ]
+    },
+    {
+      "id": "hive-for-figma",
+      "src": "assets/images/gallery/hive-for-figma.webp",
+      "alt": "Hive for Figma plugin promotional banner with colourful insect icons arranged in hexagonal cells on a cream background",
+      "width": 800,
+      "height": 400,
+      "categories": [
+        "branding",
+        "illustration"
+      ]
+    },
+    {
+      "id": "nes-controller",
+      "src": "assets/images/gallery/nes-controller.webp",
+      "alt": "Detailed vector illustration of a classic NES controller with d-pad, A and B buttons, and Select Start labels on a coral red background",
+      "width": 800,
+      "height": 421,
+      "categories": [
+        "illustration",
+        "concept"
+      ]
+    },
+    {
+      "id": "sugar-water-comic",
+      "src": "assets/images/gallery/sugar-water-comic.webp",
+      "alt": "Comic-style illustration of a green Zap-Em pest control van in a dark city street at night with high-contrast black and white buildings",
+      "width": 800,
+      "height": 1133,
+      "categories": [
+        "illustration",
+        "graphic-design"
+      ]
+    },
+    {
+      "id": "lucid-poster-credits",
+      "src": "assets/images/gallery/lucid-poster-credits.webp",
+      "alt": "Film poster for Lucid — Believing Is Dreaming — featuring a silhouetted figure wrapped in flowing golden fabric with full cast and production credits",
+      "width": 800,
+      "height": 1157,
+      "categories": [
+        "graphic-design",
+        "poster"
+      ]
+    },
+    {
+      "id": "bears-character-heads",
+      "src": "assets/images/gallery/bears-character-heads.webp",
+      "alt": "Four cartoon animal character heads — a wolf, olive green bear, pink pig, and blue bear — in a row against pink BEARS lettering on cream",
+      "width": 800,
+      "height": 400,
+      "categories": [
+        "illustration",
+        "branding"
+      ]
+    },
+    {
+      "id": "heisenberg-portrait",
+      "src": "assets/images/gallery/heisenberg-portrait.webp",
+      "alt": "Stylised teal-toned portrait illustration of Walter White from Breaking Bad with periodic table elements overlaid on a textured background",
+      "width": 800,
+      "height": 566,
+      "categories": [
+        "illustration"
+      ]
+    },
+    {
+      "id": "playsport-wordmark-full",
+      "src": "assets/images/gallery/playsport-wordmark-full.webp",
+      "alt": "Playsport lowercase wordmark in red gradient on white, centred composition with generous whitespace",
+      "width": 800,
+      "height": 441,
+      "categories": [
+        "branding",
+        "logo",
+        "playsport"
+      ]
+    },
+    {
+      "id": "quisi-ai-assistant",
+      "src": "assets/images/gallery/quisi-ai-assistant.webp",
+      "alt": "Quisi AI teaching assistant character — a friendly spherical robot with purple visor and glowing eyes floating on a soft grey background",
+      "width": 800,
+      "height": 1183,
+      "categories": [
+        "branding",
+        "illustration"
+      ]
+    },
+    {
+      "id": "elton-john-logo",
+      "src": "assets/images/gallery/elton-john-logo.webp",
+      "alt": "Geometric letter E built from white rectangular blocks with subtle shadow depth, centred on a black square background",
+      "width": 800,
+      "height": 865,
+      "categories": [
+        "branding",
+        "logo"
+      ]
+    },
+    {
+      "id": "skyview",
+      "src": "assets/images/gallery/skyview.webp",
+      "alt": "Skyview Castle Hill logo — geometric pentagonal icon with intersecting facets above spaced uppercase wordmark on a deep navy-to-indigo gradient",
+      "width": 800,
+      "height": 464,
+      "categories": [
+        "branding",
+        "logo"
+      ]
+    }
+  ]
+}

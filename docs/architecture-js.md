@@ -13,6 +13,7 @@ This project has two JS component directories with different conventions. **New 
 | `snackbar.js` | ES6 module | Toast notification — `showSnackbar(message, duration)`. Auto-dismiss, `role="status"` |
 | `resume-lightbox.js` | ES6 module | Full-size resume viewer — `initResumeLightbox()`. Focus trap, download menu, print mode |
 | `resume-download.js` | ES6 module | Download widget dropdown — PDF link, copy-to-clipboard |
+| `gallery.js` | ES6 module | Gallery page masonry grid — fetches `gallery.json`, renders items, integrates with effects.js scroll-reveal |
 | `product-strip.js` | ES6 module | Featured project strips with orb backgrounds and action buttons |
 | `project-card.js` | ES6 module | Glass-style project cards with image/iframe media |
 | `projects-grid.js` | ES6 module | Fetches `projects.json`, renders cards via `project-card.js` |

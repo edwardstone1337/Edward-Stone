@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Gallery page** (`gallery.html`): New public page showcasing design work — masonry grid layout (3/2/1 columns), data-driven via `assets/data/gallery.json`, scroll-reveal animations, GA4 tagged. Uses dev system tokens.
+- **Gallery JS** (`assets/js/dev-projects/gallery.js`): ES6 module fetches gallery.json, renders masonry grid with category metadata, handles image errors gracefully (shows alt text placeholder), integrates with effects.js reveal system. Sanitises all dynamic content.
+- **Gallery CSS** (`assets/css/gallery.css`): Masonry styles using CSS columns, responsive breakpoints (3→2→1 columns), hover lift, error state with alt text fallback, respects `prefers-reduced-motion`.
+- **Gallery data** (`assets/data/gallery.json`): 15 images (Playsport UI, logos, illustrations, posters) with alt text, dimensions, categories.
+- **Gallery workflow script** (`scripts/gallery-add.sh`): CLI tool to add images — resizes to 800px wide, converts to webp, appends entry to gallery.json. Requires cwebp and jq.
+- **Gallery docs** (`docs/gallery-workflow.md`): Workflow documentation for adding images.
+- **Release playbook** (`docs/release-playbook.md`): Checklist for preparing releases.
+
+### Changed
+- **Nav component**: Added "Gallery" link to main navigation. Snake game now loads dynamically via `loadSnakeGame()` instead of per-page `<script>` tags.
+- **Snake game loading**: Removed inline `<script src="snake-game.js">` from 404.html, index.html, resume.html — nav component now loads it once via ES module resolution.
+
+### Added
 - **Nav component** (`assets/js/dev-projects/nav-component.js`): Shared site navigation rendered via JS. Injects into `#nav-container`. Desktop: dropdown menus with Projects submenu (Fair Share, SCP Reader) and Resume link. Mobile (≤768px): hamburger opens right-side drawer with grouped links. Accessible: `aria-expanded`, `aria-haspopup`, focus trap, Escape close.
 - **Resume page** (`resume.html`): Standalone resume moved from index.html. Full A4 layout with download widget (Print to PDF, static PDF, copy to clipboard). Uses nav component.
 - **Snackbar component** (`assets/js/dev-projects/snackbar.js`): Reusable toast notification. `showSnackbar(message, duration?)` — appends to body, auto-dismisses (default 2s), replaces if called while visible (no stacking), `role="status"` + `aria-live="polite"`, respects `prefers-reduced-motion`. Styles in `dev-styles.css` (`.dp-snackbar`). z-index 20000 (above lightbox).
