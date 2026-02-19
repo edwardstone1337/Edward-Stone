@@ -2,7 +2,7 @@
  * Gallery Grid — Gallery Page
  *
  * Fetches image data from gallery.json and renders a masonry grid.
- * Integrates with effects.js scroll-reveal system (dp-reveal → dp-revealed).
+ * Grid fades in as a single unit after render (dp-gallery-grid--visible).
  * Sanitises all dynamic content via utils.js.
  */
 
@@ -25,6 +25,15 @@ function renderGallery() {
       if (!grid.isConnected) return;
 
       var images = data.images || [];
+
+      // Fisher-Yates shuffle — randomise order on each page load
+      for (var fi = images.length - 1; fi > 0; fi--) {
+        var ri = Math.floor(Math.random() * (fi + 1));
+        var tmp = images[fi];
+        images[fi] = images[ri];
+        images[ri] = tmp;
+      }
+
       if (images.length === 0) {
         grid.innerHTML = '<p class="dp-gallery-noscript">No images yet.</p>';
         return;
@@ -44,13 +53,10 @@ function renderGallery() {
           catAttr = ' data-categories=\'' + escapeHTML(JSON.stringify(safeCats)) + '\'';
         }
 
-        var delay = index * 80;
-
         return (
-          '<div class="dp-gallery-item dp-reveal" role="listitem"' +
+          '<div class="dp-gallery-item" role="listitem"' +
             catAttr +
             ' data-alt="' + alt + '"' +
-            ' data-reveal-delay="' + delay + '"' +
             ' style="--aspect: ' + aspect + '">' +
             '<img' +
               ' src="' + src + '"' +
@@ -76,10 +82,12 @@ function renderGallery() {
         };
       }
 
-      // Register new .dp-reveal elements with the existing effects.js observer
-      if (window.DPEffectsObserveReveals) {
-        window.DPEffectsObserveReveals();
-      }
+      // Fade in the whole grid after paint
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          grid.classList.add('dp-gallery-grid--visible');
+        });
+      });
     })
     .catch(function (err) {
       if (err.name === 'AbortError') return;

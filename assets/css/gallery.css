@@ -32,11 +32,18 @@
 
 /* --- Masonry grid (CSS columns) --- */
 .dp-gallery-grid {
-  column-count: 3;
+  column-count: 4;
   column-gap: var(--dp-space-3);
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 0 var(--dp-space-6);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.dp-gallery-grid--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--dp-duration-entrance) var(--dp-ease-out),
+              transform var(--dp-duration-entrance) var(--dp-ease-out);
 }
 
 /* --- Grid items --- */
@@ -94,6 +101,12 @@
 }
 
 /* --- Responsive breakpoints --- */
+@media (min-width: 1800px) {
+  .dp-gallery-grid {
+    column-count: 5;
+  }
+}
+
 @media (max-width: 1199px) {
   .dp-gallery-grid {
     column-count: 3;
@@ -133,6 +146,12 @@
 
 /* --- Accessibility: reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
+  .dp-gallery-grid {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .dp-gallery-item {
     transition: none;
   }
