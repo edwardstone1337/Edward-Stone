@@ -109,7 +109,7 @@
 | `<title>404 — Edward Stone</title>` | `<title>404, Edward Stone</title>` |
 | `aria-label="Edward Stone — Go to homepage"` | `aria-label="Edward Stone, Go to homepage"` |
 
-### case-studies/features-users-return.html (1 replaced)
+### case-studies/planner.html (1 replaced)
 
 | Original line | Updated line |
 |--------------|--------------|

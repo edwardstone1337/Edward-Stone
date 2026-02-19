@@ -14,7 +14,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 | `404.html` | Custom error page | Yes | dev |
 | `projects/fair-share.html` | Fair Share case study | Yes | dev + `project-fair-share.css` |
 | `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
-| `case-studies/features-users-return.html` | Feature adoption case study | Yes | dev + legacy (mixed) |
+| `case-studies/planner.html` | Planner case study | Yes | dev + `case-study-theme.css` |
 | `dev/design-system.html` | Living design system reference | No | dev |
 | `dev/component-preview.html` | Component preview tool (legacy) | No | legacy |
 | `dev/old-index.html` | Archived old homepage | No | legacy |

@@ -18,7 +18,8 @@ const NAV_LINKS = [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
   { text: 'Case Studies', children: [
-    { text: 'Design Systems', href: '/case-studies/design-systems.html' }
+    { text: 'Design Systems', href: '/case-studies/design-systems.html' },
+    { text: 'Planner', href: '/case-studies/planner.html' }
   ]},
   { text: 'Resume', href: '/resume.html' },
   { text: 'Gallery', href: '/gallery.html' }
