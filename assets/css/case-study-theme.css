@@ -1,0 +1,86 @@
+/* ============================================= */
+/*   CASE STUDY LIGHT THEME                       */
+/*   Loaded after dev-tokens.css + dev-styles.css  */
+/*   Activates via data-theme="light" on <html>   */
+/* ============================================= */
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* ── Backgrounds ── */
+  --dp-bg-base: var(--dp-raw-white);
+  --dp-bg-raised: var(--dp-raw-grey-50);
+  --dp-bg-card: rgba(0, 0, 0, 0.02);
+  --dp-bg-card-hover: rgba(0, 0, 0, 0.04);
+  --dp-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* ── Text ── */
+  --dp-text-primary: var(--dp-raw-grey-900);
+  --dp-text-secondary: #3E4450;
+  --dp-text-tertiary: rgba(0, 0, 0, 0.50);
+  --dp-text-ghost: rgba(0, 0, 0, 0.15);
+
+  /* ── Borders ── */
+  --dp-border-default: rgba(0, 0, 0, 0.08);
+  --dp-border-hover: rgba(0, 0, 0, 0.15);
+  --dp-border-active: rgba(0, 0, 0, 0.25);
+  --dp-border-divider: rgba(0, 0, 0, 0.06);
+
+  /* ── Glass surfaces ── */
+  --dp-glass-bg: rgba(0, 0, 0, 0.03);
+  --dp-glass-bg-mid: rgba(255, 255, 255, 0.70);
+  --dp-glass-bg-elevated: rgba(255, 255, 255, 0.90);
+
+  /* ── Accent (unchanged — purple works on light) ── */
+  --dp-accent-glow: rgba(94, 106, 210, 0.08);
+
+  /* ── Buttons ── */
+  --dp-btn-bg-primary: var(--dp-raw-accent);
+  --dp-btn-text-primary: var(--dp-raw-white);
+  --dp-btn-hover-bg-primary: var(--dp-raw-accent-light);
+  --dp-btn-focus-ring: var(--dp-raw-accent);
+
+  /* ── Toggle / nav-link backgrounds ──
+     Used by .dp-nav-link, .dp-nav-drawer-link, .dp-dropdown-menu items */
+  --dp-toggle-bg: rgba(0, 0, 0, 0.04);
+  --dp-toggle-bg-hover: rgba(0, 0, 0, 0.08);
+  --dp-toggle-icon: var(--dp-raw-grey-500);
+
+  /* ── Hero / gradient text (dark text on light bg) ── */
+  --dp-hero-accent-from: var(--dp-raw-accent);
+  --dp-hero-accent-to: var(--dp-raw-accent-light);
+  --dp-gradient-text-from: rgba(0, 0, 0, 0.90);
+  --dp-gradient-text-to: rgba(0, 0, 0, 0.55);
+
+  /* ── Card-scoped text ── */
+  --dp-card-text-primary: var(--dp-raw-grey-900);
+  --dp-card-text-secondary: #3E4450;
+}
+
+/* ── Component overrides (hard-coded values in dev-styles.css) ── */
+
+/* Nav: --dp-glass-bg at 0.03 opacity is too transparent for a sticky bar
+   on light; bump to opaque white glass so scrolled content stays readable */
+[data-theme="light"] .dp-nav {
+  background: rgba(255, 255, 255, 0.80);
+}
+
+/* Nav logo: ring is hard-coded rgba(255,255,255,1) in dev-styles.css:289
+   — invisible on white. Swap to subtle dark ring */
+[data-theme="light"] .dp-nav-logo {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+/* Hero heading: plain off-black text, no gradient treatment */
+[data-theme="light"] .dp-hero-line {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: var(--dp-raw-grey-900);
+  color: var(--dp-raw-grey-900);
+}
+
+/* Prose body: 18px minimum (WCAG AAA readability, between --dp-text-base 16px and --dp-text-lg 20px) */
+[data-theme="light"] .dp-prose p,
+[data-theme="light"] .dp-prose li {
+  font-size: 1.125rem;
+}
