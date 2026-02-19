@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Product Discovery case study** (`case-studies/product-discovery.html`): Public case study — customer voice infrastructure at Inquisitive, 95% actionable insights in one month. Dev system + `case-study-theme.css`, GA4 tagged.
+- **Hero card section** (index): Case study links moved into standalone `.dp-hero-card-section` below hero; `.dp-hero-card-section`, `.dp-hero-card-section .dp-hero-card` in dev-styles.css.
+- **Nav**: Case Studies dropdown uses full-sentence link labels; third item "Changing how an organisation decides what to build" → product-discovery. Opening one dropdown closes the others. Case Studies menu with 3 items gets `min-width: 400px`; dropdown background `rgba(30, 30, 30, 0.95)` for legibility.
+
+### Changed
+- **Index hero**: Removed `dp-hero--split`; hero card and CTA block moved out of hero into `dp-hero-card-section`. Removed hero card CTA (Get in touch button + "I could write one about your product too"). Hero/card section padding tuned per breakpoint.
+- **Banner ticker** (design-systems, planner): Text "This page is a work in progress" → "Currently open to new opportunities"; separator → ✦.
+
+### Added
 - **Gallery page** (`gallery.html`): New public page showcasing design work — masonry grid layout (3/2/1 columns), data-driven via `assets/data/gallery.json`, scroll-reveal animations, GA4 tagged. Uses dev system tokens.
 - **Gallery JS** (`assets/js/dev-projects/gallery.js`): ES6 module fetches gallery.json, renders masonry grid with category metadata, handles image errors gracefully (shows alt text placeholder), integrates with effects.js reveal system. Sanitises all dynamic content.
 - **Gallery CSS** (`assets/css/gallery.css`): Masonry styles using CSS columns, responsive breakpoints (3→2→1 columns), hover lift, error state with alt text fallback, respects `prefers-reduced-motion`.

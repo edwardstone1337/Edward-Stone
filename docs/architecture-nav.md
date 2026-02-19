@@ -25,7 +25,13 @@ Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`:
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
 ]},
-{ text: 'Resume', href: '/resume.html' }
+{ text: 'Case Studies', children: [
+    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
+    { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
+    { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' }
+]},
+{ text: 'Resume', href: '/resume.html' },
+{ text: 'Gallery', href: '/gallery.html' }
 ```
 
 - **Top-level items with `href`** render as direct links
@@ -52,10 +58,10 @@ Items with `children` in `NAV_LINKS` render as:
 - A `<div role="menu" hidden>` containing child links as `<a role="menuitem">`
 
 Behaviour:
-- **Click trigger** → toggle open/close
+- **Click trigger** → open; opening one dropdown closes any other open dropdown first
 - **Click outside** → close
 - **Escape key** → close and return focus to trigger
-- Glass elevated background (`--dp-glass-bg-elevated`) with backdrop blur
+- Elevated background (`rgba(30, 30, 30, 0.95)`) with backdrop blur for legibility. Case Studies menu (3 items) uses `min-width: 400px` for full-sentence labels.
 
 CSS: `.dp-nav-dropdown`, `.dp-nav-dropdown-trigger`, `.dp-nav-dropdown-menu`, `.dp-dropdown-menu`
 
@@ -117,7 +123,7 @@ The nav component renders an empty `<div id="dp-nav-actions">` container. The th
 | `.dp-nav-link:focus-visible` | Accent outline with 2px offset |
 | `.dp-nav-actions` | Right-side action container |
 | `.dp-nav-hamburger` | Mobile menu button (hidden at >768px) |
-| `.dp-dropdown-menu` | Shared dropdown glass panel |
+| `.dp-dropdown-menu`, `.dp-nav-dropdown-menu` | Dropdown panel; Case Studies (3 items) gets min-width 400px |
 | `.dp-nav-drawer` | Full-viewport overlay |
 | `.dp-nav-drawer-panel` | Right-side slide-in panel (max-width: 320px) |
 | `.dp-nav-drawer-backdrop` | Semi-transparent backdrop |

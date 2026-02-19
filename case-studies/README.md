@@ -2,7 +2,9 @@
 
 This folder contains detailed case study pages:
 
-- **Planner case study** - `planner.html` (retention/Planner case study)
+- **Design Systems** — `design-systems.html` (accelerating team velocity)
+- **Planner** — `planner.html` (retention / 25,000 teachers)
+- **Product Discovery** — `product-discovery.html` (customer voice infrastructure at Inquisitive)
 
 Each case study showcases the design process, problem-solving approach, and measurable outcomes.
 
