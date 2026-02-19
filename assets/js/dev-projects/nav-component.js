@@ -19,9 +19,7 @@ const NAV_LINKS = [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
   END PROD-HIDE */
-  /* PROD-HIDE: Resume nav link
   { text: 'Resume', href: '/resume.html' },
-  END PROD-HIDE */
   { text: 'Gallery', href: '/gallery.html' }
 ];
 
