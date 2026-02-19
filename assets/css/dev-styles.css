@@ -176,14 +176,75 @@ img { display: block; max-width: 100%; }
   flex-shrink: 0;
 }
 
+/* --------------------------------------------
+   ATOMS — Banner ticker
+   -------------------------------------------- */
+.dp-banner-ticker {
+  width: 100%;
+  height: var(--dp-space-10);
+  background: var(--dp-banner-bg);
+  overflow: hidden;
+  position: relative;
+  z-index: 101;
+}
+
+.dp-banner-ticker__track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  animation: dp-ticker-scroll var(--dp-banner-speed) linear infinite;
+}
+
+.dp-banner-ticker__content {
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-10);
+  white-space: nowrap;
+  padding-right: var(--dp-space-10);
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: var(--dp-weight-semibold);
+  color: var(--dp-banner-text);
+  letter-spacing: var(--dp-tracking-wide);
+  text-transform: uppercase;
+}
+
+.dp-banner-ticker__separator {
+  opacity: 0.5;
+}
+
+@keyframes dp-ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+  .dp-banner-ticker {
+    height: var(--dp-space-8);
+  }
+  .dp-banner-ticker__content {
+    font-size: var(--dp-text-xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-banner-ticker__track {
+    animation: none;
+    justify-content: center;
+  }
+  .dp-banner-ticker__content:not(:first-child) {
+    display: none;
+  }
+}
+
 /* ============================================
    Navigation Bar
    ============================================ */
 .dp-nav {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   z-index: 100;
   background: var(--dp-glass-bg);
   backdrop-filter: blur(16px);
@@ -678,9 +739,9 @@ img { display: block; max-width: 100%; }
   padding: 0 var(--dp-space-6);
 }
 
-/* Content below fixed nav — accounts for nav height + breathing room */
+/* Content below sticky nav — decorative breathing room only */
 .dp-page-content {
-  padding-top: calc(64px + var(--dp-space-24));
+  padding-top: var(--dp-space-24);
 }
 
 /* h3 after paragraph — breathing room when h3 + p + h3 + p pattern */
@@ -1930,7 +1991,7 @@ body.dp-overlay-active {
 /* --- Resume responsive --- */
 @media (max-width: 1080px) {
   .dp-page-content {
-    padding-top: calc(64px + var(--dp-space-12));
+    padding-top: var(--dp-space-12);
   }
 
   /* Section wrapper — reduce padding */
@@ -2361,7 +2422,7 @@ body.dp-overlay-active {
 
 @media (max-width: 480px) {
   .dp-page-content {
-    padding-top: calc(56px + var(--dp-space-12));
+    padding-top: var(--dp-space-12);
   }
   :root { --dp-section-gap: var(--dp-space-8); }
   .dp-hero {
@@ -2525,6 +2586,7 @@ body.dp-overlay-active {
 
   /* Hide everything except resume content */
   .dp-skip-link,
+  .dp-banner-ticker,
   .dp-nav,
   .dp-hero,
   .dp-section-label,
