@@ -256,4 +256,9 @@
   --dp-paper-border-light: rgba(0, 0, 0, 0.06);
   --dp-paper-shadow-light: 0 8px 32px rgba(0, 0, 0, 0.12);
   --dp-paper-accent-light: #5E6AD2;
+
+  /* --- Banner --- */
+  --dp-banner-bg: var(--dp-accent);
+  --dp-banner-text: var(--dp-raw-white);
+  --dp-banner-speed: 60s;
 }
