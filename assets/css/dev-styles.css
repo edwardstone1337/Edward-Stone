@@ -333,7 +333,6 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   min-height: var(--dp-nav-action-height);
-  background: var(--dp-toggle-bg);
   border-radius: var(--dp-btn-radius);
   padding: var(--dp-space-2) var(--dp-space-4);
   color: var(--dp-text-primary);
@@ -413,6 +412,7 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-nav-dropdown-trigger {
+  background: transparent;
   border: none;
   cursor: pointer;
   display: flex;
@@ -445,6 +445,7 @@ img { display: block; max-width: 100%; }
 /* Nav hamburger (hidden on desktop, shown at ≤768px) — inherits from .dp-nav-link */
 .dp-nav-hamburger {
   display: none;
+  background: transparent;
   border: none;
   cursor: pointer;
 }
