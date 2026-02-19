@@ -270,4 +270,23 @@
   --dp-prose-subheading-size: var(--dp-text-xl);
   --dp-prose-body-size: var(--dp-text-base);
   --dp-prose-body-leading: var(--dp-leading-relaxed);
+
+  /* ── Dropdown ── */
+  --dp-dropdown-bg: rgba(30, 30, 30, 0.95);
+  --dp-dropdown-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* ── Drawer ── */
+  --dp-drawer-bg: var(--dp-glass-bg);
+  --dp-drawer-overlay: var(--dp-bg-overlay);
+  --dp-drawer-border: var(--dp-border-default);
+
+  /* ── TLDR ── */
+  --dp-tldr-bg: var(--dp-bg-raised);
+  --dp-tldr-border: var(--dp-border-default);
+  --dp-tldr-radius: var(--dp-radius-lg);
+  --dp-tldr-padding: var(--dp-space-8);
+  --dp-tldr-gap: var(--dp-space-4);
+  --dp-tldr-heading-size: var(--dp-text-lg);
+  --dp-tldr-bullet-size: var(--dp-prose-body-size);
+  --dp-tldr-bullet-leading: var(--dp-prose-body-leading);
 }
