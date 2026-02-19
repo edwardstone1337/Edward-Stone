@@ -6,7 +6,7 @@
  * Sanitises all dynamic content via utils.js.
  */
 
-import { escapeHTML } from './utils.js';
+import { escapeHTML, sanitizeUrl } from './utils.js';
 
 var DATA_PATH = 'assets/data/gallery.json';
 
@@ -40,7 +40,7 @@ function renderGallery() {
       }
 
       var html = images.map(function (img, index) {
-        var src = escapeHTML(img.src || '');
+        var src = escapeHTML(sanitizeUrl(img.src || '') || '');
         var alt = escapeHTML(img.alt || '');
         var w = parseInt(img.width, 10) || 800;
         var h = parseInt(img.height, 10) || 600;
