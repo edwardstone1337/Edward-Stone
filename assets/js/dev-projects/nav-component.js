@@ -13,10 +13,14 @@
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
+  /* PROD-HIDE: Projects dropdown */
+  /*
   { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
+  */
+  /* END PROD-HIDE */
   { text: 'Case Studies', children: [
     { text: 'Design Systems', href: '/case-studies/design-systems.html' },
     { text: 'Planner', href: '/case-studies/planner.html' }
