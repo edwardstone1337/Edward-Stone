@@ -18,8 +18,9 @@ const NAV_LINKS = [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
   { text: 'Case Studies', children: [
-    { text: 'Design Systems', href: '/case-studies/design-systems.html' },
-    { text: 'Planner', href: '/case-studies/planner.html' }
+    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
+    { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
+    { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' }
   ]},
   { text: 'Resume', href: '/resume.html' },
   { text: 'Gallery', href: '/gallery.html' }
@@ -110,6 +111,15 @@ function initDropdowns(nav) {
     var menu = dropdown.querySelector('.dp-nav-dropdown-menu');
 
     function open() {
+      // Close all other dropdowns first
+      dropdowns.forEach(function (other) {
+        if (other !== dropdown) {
+          var otherTrigger = other.querySelector('.dp-nav-dropdown-trigger');
+          var otherMenu = other.querySelector('.dp-nav-dropdown-menu');
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+          if (otherMenu) otherMenu.setAttribute('hidden', '');
+        }
+      });
       trigger.setAttribute('aria-expanded', 'true');
       menu.removeAttribute('hidden');
     }

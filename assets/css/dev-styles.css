@@ -362,7 +362,8 @@ img { display: block; max-width: 100%; }
   position: absolute;
   z-index: 200;
   min-width: 180px;
-  background: var(--dp-glass-bg-elevated);
+  /* Elevated over token value for dropdown legibility */
+  background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--dp-border-default);
@@ -440,6 +441,11 @@ img { display: block; max-width: 100%; }
 .dp-nav-dropdown-menu a[aria-current="page"] {
   font-weight: 600;
   background: var(--dp-toggle-bg);
+}
+
+/* Wider dropdown for full-sentence case study titles */
+.dp-nav-dropdown-menu:has(.dp-nav-dropdown-item:nth-child(3)) {
+  min-width: 400px;
 }
 
 /* Nav hamburger (hidden on desktop, shown at ≤768px) — inherits from .dp-nav-link */
@@ -938,6 +944,19 @@ img { display: block; max-width: 100%; }
 
 .dp-hero-card__cta-btn {
   align-self: flex-start;
+}
+
+/* Hero card section — standalone card below hero (index) */
+.dp-hero-card-section {
+  max-width: var(--dp-prose-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--dp-space-6);
+}
+
+.dp-hero-card-section .dp-hero-card {
+  min-width: unset;
+  max-width: none;
 }
 
 /* Section label (slim overline above a group of content) */

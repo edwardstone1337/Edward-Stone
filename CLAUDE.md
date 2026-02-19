@@ -15,6 +15,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 | `projects/fair-share.html` | Fair Share case study | Yes | dev + `project-fair-share.css` |
 | `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
 | `case-studies/planner.html` | Planner case study | Yes | dev + `case-study-theme.css` |
+| `case-studies/product-discovery.html` | Product Discovery case study | Yes | dev + `case-study-theme.css` |
 | `dev/design-system.html` | Living design system reference | No | dev |
 | `dev/component-preview.html` | Component preview tool (legacy) | No | legacy |
 | `dev/old-index.html` | Archived old homepage | No | legacy |
@@ -48,7 +49,7 @@ Dark-only. `data-theme="dark"` is set on `<html>` via a single inline `setAttrib
 
 ### GA4 Analytics
 
-**Measurement ID: `G-6MPMYG36LE`** — required on all public pages (7/7 currently tagged). Not on `dev/*` or `assets/previews/*`. Check coverage: `./scripts/check-ga-coverage.sh`. CI enforced via `.github/workflows/ga-coverage.yml`. Canonical snippet: `docs/analytics-tagging.md`.
+**Measurement ID: `G-6MPMYG36LE`** — required on all public pages (9/9 currently tagged). Not on `dev/*` or `assets/previews/*`. Check coverage: `./scripts/check-ga-coverage.sh`. CI enforced via `.github/workflows/ga-coverage.yml`. Canonical snippet: `docs/analytics-tagging.md`.
 
 ### XSS Protection
 

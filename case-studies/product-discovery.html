@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Discovery — Edward Stone</title>
+  <meta name="description" content="How I designed and implemented a customer voice infrastructure at Inquisitive that captured 95% of actionable insights within one month.">
+  <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+  <link rel="stylesheet" href="../assets/css/dev-styles.css">
+  <link rel="stylesheet" href="../assets/css/case-study-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
+
+  <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+
+  <noscript>
+    <style>
+      .dp-reveal { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MPMYG36LE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6MPMYG36LE');
+  </script>
+</head>
+<body>
+  <a href="#main" class="dp-skip-link">Skip to content</a>
+  <div id="nav-container"></div>
+
+  <main id="main" class="dp-page">
+
+    <!-- Hero -->
+    <section class="dp-hero dp-reveal">
+      <span class="dp-overline">Case Study</span>
+      <h1 class="dp-hero-heading">
+        <span class="dp-hero-line">From anecdote to evidence:</span>
+        <span class="dp-hero-line">how I changed the way an</span>
+        <span class="dp-hero-line">organisation decides what to build.</span>
+      </h1>
+      <p class="dp-hero-body">How I designed and implemented a customer voice infrastructure at Inquisitive that captured 95% of actionable insights within one month, with over 300 ideas documented and driving the roadmap.</p>
+    </section>
+
+    <!-- Article -->
+    <article class="dp-prose">
+
+      <section class="dp-prose-section dp-reveal" id="the-problem">
+        <h2>A growing company with no shared way to compare priorities.</h2>
+        <p>Inquisitive is a curriculum-aligned teaching platform used by tens of thousands of primary school teachers across Australia and the United States. The product was growing, the team was scaling internationally, and the volume of feature requests was growing with it. That is a good problem to have. But there was no system for capturing, organising or comparing those requests.</p>
+        <p>Feature ideas lived in Slack threads, email inboxes, deprecated Trello boards, and the product team's Jira. Some were written down. Many existed only as conversations. There was no metadata, no tagging, no way to weigh one idea against another. When an idea gained traction, it was usually because someone had repeated it recently, not because the evidence behind it was strong.</p>
+        <p>As Inquisitive expanded into the US with a separate team sharing the same product, this gap widened. Two continents, more teams with legitimate needs, and no shared visibility into what users were actually asking for. Good ideas were surfacing across the organisation, but there was no way to see them all in one place, compare them on consistent criteria, or understand the real volume of demand behind any one of them.</p>
+        <p>The product and development teams shipped well once priorities were clear. The gap was in how we arrived at those priorities.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="the-approach">
+        <h2>I UX'd the UX process.</h2>
+        <p>As Head of User Experience Design, I wrote a formal proposal for a centralised product discovery process and presented it to leadership. The proposal was deliberately upfront about one thing: the value would come from the culture and process change, not the tool.</p>
+        <p>I chose Jira Product Discovery as the system, configured it myself, and migrated roughly 300 existing ideas into it. Every idea was tagged by customer segment, key result, product area, and stage in the teacher user journey. For the first time, the organisation had a single, searchable, comparable inventory of everything users had asked for and everything we thought they might need.</p>
+        <p>But a system nobody uses is just a database. The critical design challenge was adoption, and I approached it the same way I would approach any product problem: reduce friction and meet people where they already work.</p>
+
+        <h3>I brought the system to Slack, not the other way around.</h3>
+        <p>I started the rollout with the support team. They had their ears closest to the ground, fielding customer conversations in Intercom every day, and empowering them to elevate that voice was a natural first step. I installed the Jira Product Discovery Chrome Extension so they could highlight a customer quote from an Intercom conversation and attach it directly to an idea without leaving their browser. Once the support team had proven the value and the insight volume was visible, I expanded the extension across both the AU and US teams and trained every customer-facing team member. I set up Slack workflows so that any new feature request submitted through Slack fed directly into Discovery.</p>
+        <p>Capturing an insight went from something that required opening a separate tool to something that took seconds. People did not have to change their daily routine. They just had a faster, more visible way to do what they were already doing.</p>
+
+        <h3>I also embedded feedback capture directly into the product.</h3>
+        <p>I implemented "give us feedback" buttons throughout the Inquisitive experience at key touchpoints: after completing a unit, after using a new feature, at moments where teachers were most likely to have an opinion worth sharing. These buttons generate a daily stream of insights that flow directly into Discovery. They also create something equally valuable: a pipeline of real customers who have volunteered to talk. When I need to research a problem, I reach out to the teachers who already told us what they think, and I interview them directly.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="the-impact">
+        <h2>Within one month, 95% of actionable written feedback was being captured.</h2>
+        <p>The remaining 5% were ambiguous or hard to categorise until enough similar insights accumulated to form a clear pattern. That is the number. Here is what it made possible.</p>
+        <p>With hundreds of insights attached to over 300 ideas, the organisation could see a clear distribution of what users actually cared about, across both markets, at scale. High-impact, low-effort opportunities surfaced naturally, particularly around revenue, conversion and retention. Ideas that might have sat in someone's inbox or fizzled out after a single Slack conversation now had visible, measurable demand behind them.</p>
+        <p>The product team gained the ability to have evidence-based conversations about priority. When we believed an idea was important, we had the customer data to support it. When we were uncertain, the insight volume told us where to invest in research. Every prioritisation conversation became grounded in what teachers were actually telling us.</p>
+        <p>The broader shift was cultural. Teams across the organisation started collecting and attaching insights because they could see that it worked. If you believed in an idea, you built the case with data, and the system gave that case visibility. The teams that adopted it fastest were the ones who had already felt the pain of good ideas going unheard. Adoption was not difficult because the solution aligned with what people already knew was needed.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="example">
+        <h2>A concrete example: removing the friction that doubled student onboarding.</h2>
+        <p>Early in the platform's life, adding students to a class required an email address. For a product used by primary school teachers, this was a significant barrier. Many young students simply do not have email addresses.</p>
+        <p>The feedback came through Discovery. Teachers were asking if there was any other way to add students. I spoke to them directly and found two distinct groups: teachers who used Google Classroom and wanted to import students from there, and teachers whose students would never have emails and who needed a simpler alternative.</p>
+        <p>We built both. Name-based student addition, the simpler of the two, overtook both email and Google Classroom import almost immediately after launch. It became the primary method teachers use to add students. Within three months, the number of students added to the platform had doubled.</p>
+        <p>This mattered because one of Inquisitive's core company goals is getting as many teachers as possible using the platform online with their students. A single piece of friction, one that we only understood properly because teachers told us about it and we had a system to capture and act on that feedback, was the bottleneck. That full loop — feedback captured, customer interviewed, solution designed with evidence, feature released, follow-up with the people who asked for it — is the system working as designed. The <a href="/case-studies/planner.html">Planner case study</a> is another example of this process producing a feature that became central to the platform.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="beliefs">
+        <h2>What I believe about building products.</h2>
+        <p>Every idea deserves to be tested. An idea is never inherently bad or good. If you believe in it, go out, talk to people, and find out the truth. You will often discover something better, or something completely different that you would never have arrived at from inside a meeting room.</p>
+        <p>The hunt for those insights, the conversations with real users, the moment when the data confirms or redirects your instinct, that is where the value is. A discovery process makes that hunt structured and visible. It means that when we ship something, we can trace it back to a real person with a real problem, and when it launches, we can go back to that person and ask whether we got it right.</p>
+        <p>I built this system because the work we were doing deserved better inputs. Every team at Inquisitive was trying to build the right things. This gave us a shared way to figure out what those things were.</p>
+      </section>
+
+    </article>
+
+    <footer class="dp-footer dp-reveal" aria-label="Footer">
+      <div class="dp-footer-inner">
+        <p class="dp-footer-text">&copy; 2026 Edward Stone</p>
+        <nav class="dp-footer-links" aria-label="Footer links">
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="../assets/js/dev-projects/effects.js"></script>
+  <script type="module">
+    import { initNav } from '../assets/js/dev-projects/nav-component.js';
+    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
+    initNav();
+    initBannerTicker({ text: 'This page is a work in progress', separator: '\u2726' });
+  </script>
+</body>
+</html>
