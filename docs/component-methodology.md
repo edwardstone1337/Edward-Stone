@@ -184,7 +184,7 @@ const navConfig = {
       text: 'Case Studies', 
       href: '#',
       submenu: [
-        { text: 'How I design features people come back for', href: 'case-studies/features-users-return.html' }
+        { text: 'How I design features people come back for', href: 'case-studies/planner.html' }
       ]
     }
   ]

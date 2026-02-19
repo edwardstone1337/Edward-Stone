@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Resume lightbox**: Redesigned layout — content area + sidebar with Download Resume dropdown (Print to PDF, Download PDF, Copy to clipboard). Close button moved outside content. Copy now uses `showSnackbar()` instead of title tooltip. Scroll lock on both `<html>` and `<body>`. Click on lightbox container (outside content) closes it; backdrop has `pointer-events: none` so scroll works everywhere.
-- **Navigation refactor**: All public pages (index.html, 404.html, fair-share.html, scp-reader.html, features-users-return.html) now use `<div id="nav-container"></div>` + `import { initNav }` pattern instead of inline nav HTML. Reduces duplication; single source for nav links.
+- **Navigation refactor**: All public pages (index.html, 404.html, fair-share.html, scp-reader.html, planner.html) now use `<div id="nav-container"></div>` + `import { initNav }` pattern instead of inline nav HTML. Reduces duplication; single source for nav links.
 - **Nav styles** (`dev-styles.css`): Added `.dp-nav-links`, `.dp-nav-link`, `.dp-nav-dropdown`, `.dp-nav-dropdown-trigger`, `.dp-nav-dropdown-menu`, `.dp-nav-hamburger`, `.dp-nav-drawer`, `.dp-nav-drawer-*` classes. Dropdown menu uses glass bg + blur. Drawer slides in from right. Hamburger hidden on desktop, shown at ≤768px.
 - **Index.html**: Resume section removed (now at `/resume.html`). Skip link still targets `#projects`.
 
@@ -114,7 +114,7 @@ All notable changes to this project will be documented in this file.
   - Primitives: radius, size (avatar, touch target, icon), opacity, duration, easing, shadow, overlay
   - Semantic: border-radius, focus-ring, size-touch-target-min, line-height-body, letter-spacing variants
   - Purpose-based section backgrounds: surface, surface-alt, surface-subtle, surface-accent-tint
-- **Retention case study page**: `case-studies/features-users-return.html` — long-form case study (Planner, teachers, retention) with intro, hero screenshot, Problem/Goal/Process/Solution/Outcome/End Result sections and feedback callout. Styled via `.case-study-page` in `style.css` using design tokens.
+- **Planner case study page**: `case-studies/planner.html` — long-form case study (Planner, teachers, retention). Styled via dev system (`dev-tokens.css` + `dev-styles.css` + `case-study-theme.css`).
 - **Nav subfolder support**: Navigation component resolves logo and case study links correctly when viewed from `case-studies/` (e.g. logo → `../index.html`, sibling case studies → filename only).
 - **Design Tokens File**: Extracted design tokens to `assets/css/tokens.css` for single source of truth
   - Primitive tokens (spacing, colors, typography)
