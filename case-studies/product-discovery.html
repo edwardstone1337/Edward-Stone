@@ -47,11 +47,23 @@
       <p class="dp-hero-body">How I designed and implemented a customer voice infrastructure at Inquisitive that captured 95% of actionable insights within one month, with over 300 ideas documented and driving the roadmap.</p>
     </section>
 
-    <!-- Article -->
-    <article class="dp-prose">
+    <div class="dp-prose-layout">
 
-      <section class="dp-prose-section dp-reveal" id="the-problem">
-        <h2>A growing company with no shared way to compare priorities.</h2>
+      <aside class="dp-tldr dp-reveal" aria-label="Summary">
+        <h2 class="dp-tldr__heading">TL;DR</h2>
+        <ul class="dp-tldr__list">
+          <li class="dp-tldr__item">Feature requests were scattered across Slack, email, Trello and people's memories, with no shared way to compare priorities across AU and US teams</li>
+          <li class="dp-tldr__item">Designed and shipped a centralised discovery process: 300+ ideas migrated, tagged by segment, key result, product area and user journey stage</li>
+          <li class="dp-tldr__item">Reduced capture friction to seconds by embedding it into existing tools, including browser extensions for support, Slack workflows for the wider team and in-product feedback buttons for teachers</li>
+          <li class="dp-tldr__item">95% of actionable feedback captured within one month; first feature shipped from the system doubled student onboarding</li>
+        </ul>
+      </aside>
+
+      <!-- Article -->
+      <article class="dp-prose">
+
+        <section class="dp-prose-section dp-reveal" id="the-problem">
+          <h2>A growing company with no shared way to compare priorities.</h2>
         <p>Inquisitive is a curriculum-aligned teaching platform used by tens of thousands of primary school teachers across Australia and the United States. The product was growing, the team was scaling internationally, and the volume of feature requests was growing with it. That is a good problem to have. But there was no system for capturing, organising or comparing those requests.</p>
         <p>Feature ideas lived in Slack threads, email inboxes, deprecated Trello boards, and the product team's Jira. Some were written down. Many existed only as conversations. There was no metadata, no tagging, no way to weigh one idea against another. When an idea gained traction, it was usually because someone had repeated it recently, not because the evidence behind it was strong.</p>
         <p>As Inquisitive expanded into the US with a separate team sharing the same product, this gap widened. Two continents, more teams with legitimate needs, and no shared visibility into what users were actually asking for. Good ideas were surfacing across the organisation, but there was no way to see them all in one place, compare them on consistent criteria, or understand the real volume of demand behind any one of them.</p>
@@ -96,6 +108,8 @@
       </section>
 
     </article>
+    </div>
+    <!-- /dp-prose-layout -->
 
     <footer class="dp-footer dp-reveal" aria-label="Footer">
       <div class="dp-footer-inner">
@@ -109,7 +123,9 @@
 
   </main>
 
+  <!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->
   <script src="../assets/js/dev-projects/effects.js"></script>
+  <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
     import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';

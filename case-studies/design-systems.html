@@ -48,11 +48,22 @@
       <p class="dp-hero-body">From outsourced fragmentation to a token-driven component system that eliminated daily developer questions and unified the product experience.</p>
     </section>
 
-    <!-- Article -->
-    <article class="dp-prose">
+    <div class="dp-prose-layout">
 
-      <section class="dp-prose-section dp-reveal" id="the-problem">
-        <h2>The problem: five shades of the same grey</h2>
+      <aside class="dp-tldr dp-reveal" aria-label="Summary">
+        <h2 class="dp-tldr__heading">TL;DR</h2>
+        <ul class="dp-tldr__list">
+          <li class="dp-tldr__item">Inherited a product with no source of truth: five near-identical greys, inconsistent components and developers messaging designers daily for basic UI answers</li>
+          <li class="dp-tldr__item">Built a token-driven design system from scratch using atomic design: primitives to semantic tokens to components, with WCAG AAA as the baseline</li>
+          <li class="dp-tldr__item">Achieved 1:1 Figma-to-code parity; developer UI questions dropped to near-zero and new features shipped from existing components instead of from scratch</li>
+        </ul>
+      </aside>
+
+      <!-- Article -->
+      <article class="dp-prose">
+
+        <section class="dp-prose-section dp-reveal" id="the-problem">
+          <h2>The problem: five shades of the same grey</h2>
         <p>When I joined Inquisitive, design and development had been outsourced to separate companies overseas. The handoff between them had produced exactly what you'd expect: a collection of Sketch files, a few scattered Figma files, and no single source of truth.</p>
         <p>Across the product, the same button looked different in three places. Inputs had inconsistent styling depending on who'd built the page. There were five near-identical greys that nobody could explain the distinction between. Every time a developer started building a new feature, they'd message a designer to ask which shade, which spacing, which component variant to use, because there was no system to answer those questions for them.</p>
         <p>For a product used by teachers and primary school students, some of whom are pre-literate, this inconsistency wasn't just an aesthetic problem. It eroded trust. When a navigation pattern behaves differently on two pages, an adult notices. A six-year-old gets stuck.</p>
@@ -133,6 +144,8 @@
       </section>
 
     </article>
+    </div>
+    <!-- /dp-prose-layout -->
 
     <footer class="dp-footer dp-reveal" aria-label="Footer">
       <div class="dp-footer-inner">
@@ -146,7 +159,9 @@
 
   </main>
 
+  <!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->
   <script src="../assets/js/dev-projects/effects.js"></script>
+  <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
     import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';

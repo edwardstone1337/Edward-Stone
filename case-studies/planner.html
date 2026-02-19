@@ -47,11 +47,22 @@
       <p class="dp-hero-body">How I designed Inquisitive's Planner from scratch, turning a simple save-for-later into the platform's most-loved feature and a proven driver of conversion.</p>
     </section>
 
-    <!-- Article -->
-    <article class="dp-prose">
+    <div class="dp-prose-layout">
 
-      <section class="dp-prose-section dp-reveal" id="the-challenge">
-        <h2>Teachers were losing time before they even started teaching.</h2>
+      <aside class="dp-tldr dp-reveal" aria-label="Summary">
+        <h2 class="dp-tldr__heading">TL;DR</h2>
+        <ul class="dp-tldr__list">
+          <li class="dp-tldr__item">Teachers had no way to save, organise or sequence curriculum content, so every planning session started from scratch</li>
+          <li class="dp-tldr__item">Sole designer end-to-end: 20+ teacher interviews, usability testing, four phased releases built around one key insight, that teachers plan in units, not individual resources</li>
+          <li class="dp-tldr__item">25,000+ weekly users, 30% free-to-paid conversion lift, zero planning-related support tickets</li>
+        </ul>
+      </aside>
+
+      <!-- Article -->
+      <article class="dp-prose">
+
+        <section class="dp-prose-section dp-reveal" id="the-challenge">
+          <h2>Teachers were losing time before they even started teaching.</h2>
         <p>Inquisitive is a curriculum-aligned teaching platform used by tens of thousands of primary school teachers across Australia and the United States. The content library was growing quickly: hundreds of ready-to-teach units spanning multiple subjects and year levels. That growth was a strength, but it was also creating a problem.</p>
         <p>Teachers were spending significant time every week searching for content, losing track of what they had found, and navigating back and forth across the platform just to build a rough plan for the term ahead. There was no way to save, organise or sequence the units they wanted to teach. Every planning session started from scratch.</p>
         <p>They needed a planning tool that worked the way they actually planned: by term, by subject, by curriculum. Something that let them build a sequence once and return to it all year. Something simple enough that it did not add another task to an already overwhelming workload.</p>
@@ -110,6 +121,8 @@
       </section>
 
     </article>
+    </div>
+    <!-- /dp-prose-layout -->
 
     <footer class="dp-footer dp-reveal" aria-label="Footer">
       <div class="dp-footer-inner">
@@ -123,7 +136,9 @@
 
   </main>
 
+  <!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->
   <script src="../assets/js/dev-projects/effects.js"></script>
+  <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
     import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
