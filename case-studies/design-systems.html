@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Systems Case Study — Edward Stone</title>
+  <meta name="description" content="How I established a design system at Inquisitive and transformed their design and development velocity.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+  <link rel="stylesheet" href="../assets/css/dev-styles.css">
+  <link rel="stylesheet" href="../assets/css/case-study-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
+
+  <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+
+  <noscript>
+    <style>
+      .dp-reveal { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+</head>
+<body>
+  <a href="#main" class="dp-skip-link">Skip to content</a>
+  <div id="nav-container"></div>
+
+  <main id="main" class="dp-page">
+
+    <!-- Hero -->
+    <section class="dp-hero dp-reveal">
+      <span class="dp-overline">Case Study</span>
+      <h1 class="dp-hero-heading">
+        <span class="dp-hero-line">How I established a design system</span>
+        <span class="dp-hero-line">at Inquisitive and transformed</span>
+        <span class="dp-hero-line">their velocity</span>
+      </h1>
+      <p class="dp-hero-body">From outsourced fragmentation to a token-driven component system that eliminated daily developer questions and unified the product experience.</p>
+    </section>
+
+    <!-- Article -->
+    <article class="dp-prose">
+
+      <section class="dp-prose-section dp-reveal" id="the-problem">
+        <h2>The problem: five shades of the same grey</h2>
+        <p>When I joined Inquisitive, design and development had been outsourced to separate companies overseas. The handoff between them had produced exactly what you'd expect: a collection of Sketch files, a few scattered Figma files, and no single source of truth.</p>
+        <p>Across the product, the same button looked different in three places. Inputs had inconsistent styling depending on who'd built the page. There were five near-identical greys that nobody could explain the distinction between. Every time a developer started building a new feature, they'd message a designer to ask which shade, which spacing, which component variant to use, because there was no system to answer those questions for them.</p>
+        <p>For a product used by teachers and primary school students, some of whom are pre-literate, this inconsistency wasn't just an aesthetic problem. It eroded trust. When a navigation pattern behaves differently on two pages, an adult notices. A six-year-old gets stuck.</p>
+        <p>Inquisitive was bringing design and development in-house. My job was to build the foundation that would make that transition work.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="my-approach">
+        <h2>My approach: philosophy before pixels</h2>
+        <p>Before opening Figma, I needed a set of principles. Not a slide deck of values, but actual rules that would make thousands of small decisions for us down the line, so we wouldn't have to.</p>
+        <p><strong>Do it once, do it well.</strong> A design system is an investment. You spend more time upfront so that every future decision is faster, more consistent, and cheaper. The goal is to reach the point where designers and developers stop thinking about the system entirely and just build.</p>
+        <p><strong>Favour the familiar.</strong> Steve Krug's first rule of usability is "Don't make me think." Jakob's Law tells us that users spend most of their time on other sites, so they arrive with expectations about how things work. I believe in meeting people where they are. A checkbox should look and behave like a checkbox. A form should flow the way every other form on the internet flows. You can absolutely make something beautiful within those constraints, and the aesthetic-usability effect proves that people are more forgiving of usability issues when the interface looks good. But beauty shouldn't come at the cost of predictability, especially when your users include children who are still learning to read.</p>
+        <p><strong>Accessibility is not optional.</strong> I aim for WCAG AAA. Not as a stretch goal, but as the baseline. An 18-pixel minimum text size. Contrast ratios checked with Stark on every colour pairing. Clear focus states on every interactive element. Comprehensive ARIA labelling. The internet should be readable. People shouldn't have to struggle with your content because you wanted a lighter font weight.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="building-the-system">
+        <h2>Building the system: layer by layer</h2>
+        <p>I followed Brad Frost's atomic design methodology, adapted to what actually works at the pace a small team needs to move.</p>
+
+        <h3>Tokens first</h3>
+        <p>Everything starts with variables. Before designing a single component, I defined the foundational design tokens:</p>
+        <p><strong>Spacing</strong> is built on a 4-pixel grid: 4, 8, 12, 16, 24, 32, and up. Every margin, padding, and gap in the product references these values. No magic numbers.</p>
+        <p><strong>Typography</strong> follows a defined type scale with a clear hierarchy. Sizes, weights, and line heights are all tokenised, so "which font size should I use here?" is never a question.</p>
+        <p><strong>Colour</strong> is where the layered architecture matters most. I start with a small set of raw primitives, typically 10 to 12 base values: your greys, your brand colours, black, white. These primitives are never used directly in designs. Instead, they feed into semantic tokens: purpose-driven variables like "surface background", "text primary", "text secondary", "border default." The semantic layer is where light mode and dark mode diverge, and that's where the real power is. A component that references "text primary" doesn't need to know or care what colour that resolves to.</p>
+        <p>This three-tier architecture (primitives, semantics, component-level tokens) means that changing a brand colour or adjusting an entire theme is a single-variable update that cascades everywhere. No find-and-replace. No missed instances.</p>
+
+        <h3>Atoms</h3>
+        <p>With tokens defined, I moved into atoms: the smallest indivisible UI elements. Buttons came first. Every design system starts with buttons. I built out every variant (primary, secondary, tertiary, disabled) and every state (default, hover, active, focus, loading) as Figma variants. All powered by the token variables, all with auto layout, all responsive.</p>
+        <p>From there: inputs, checkboxes, radios, toggles, chips, pills, icons. Each one fully variablised. I built a dedicated icon library, also driven by the same variable system, so that icon colour adapts automatically to context.</p>
+        <p>I'll be honest: this phase is not glamorous work. It's meticulous. But it's the work that pays for itself a hundred times over.</p>
+
+        <h3>Molecules</h3>
+        <p>Once the atoms were solid, molecules came together quickly. An input atom plus a label atom plus an error message atom becomes a form field molecule. A chip atom inside a container becomes a filter group. The investment in getting atoms right meant that molecules mostly assembled themselves. The spacing, colour, and typography decisions were already made.</p>
+
+        <h3>Organisms and the deliberate decision to stop</h3>
+        <p>Atomic design describes five levels: atoms, molecules, organisms, templates, and pages. I build through organisms, the larger, distinct sections of a UI composed of molecules and atoms. Headers, card layouts, data tables, navigation bars.</p>
+        <p>But I deliberately stop there. I don't build templates or page-level compositions in the design system.</p>
+        <p>This is a pragmatic decision, not a shortcut. At the team sizes I've worked with, maintaining pixel-perfect template compositions in Figma alongside a rapidly evolving product is a time sink that doesn't return enough value. We treat production as the source of truth for page-level layout and use overlay prototyping (placing components over screenshots of the live product) to design new features quickly.</p>
+        <p>Some people would call that cutting corners. I'd call it knowing where the value is. When your atoms, molecules, and organisms are solid, any designer on the team can assemble a page that looks and feels right. The system constrains them just enough that they can't go far wrong, but gives them enough freedom to solve new problems without waiting for a template to be created.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="figma-structure">
+        <h2>The Figma structure: UX for designers</h2>
+        <p>The system lives across a small number of well-organised Figma files:</p>
+        <ul>
+          <li><strong>Styles:</strong> all primitives and semantic variables</li>
+          <li><strong>Icons:</strong> the full icon library, variable-powered</li>
+          <li><strong>Atoms:</strong> every atomic component with full variant sets</li>
+          <li><strong>Molecules:</strong> composed components</li>
+          <li><strong>Organisms:</strong> larger UI patterns</li>
+        </ul>
+        <p>Figma's variable scoping is critical here. Every variable is scoped to the properties it's relevant to. Spacing tokens only appear in padding/gap fields, colour tokens only in fill/stroke, and so on. This means that when another designer picks up the system, they're not scrolling through 200 variables to find the right one. The right options surface automatically based on what they're editing.</p>
+        <p>This is something I care about a lot: the UX of the design system itself. We're designers. If our own tools have poor usability, we've already failed. Every decision about file structure, variable scoping, and naming conventions is made with the goal of making the system intuitive for someone who didn't build it.</p>
+        <p>Changes cascade automatically. Update a primitive, and every semantic token that references it updates. Update an atom, and every molecule and organism that contains it updates. With auto layout and variables applied consistently, components even respond to variable mode changes. Switch from desktop to mobile mode and see how a component reflows without any manual adjustment.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="bridging-design-and-code">
+        <h2>Bridging design and code</h2>
+        <p>The design system isn't just a Figma file. It needs to translate to code with minimal friction.</p>
+        <p>I exported the full set of design tokens as a structured JSON file for the development team, giving them a machine-readable reference that maps directly to what's in Figma. The React component library mirrors the Figma component structure, and we achieved one-to-one parity between what a designer sees in Figma and what a developer renders in the browser.</p>
+        <p>This parity is what killed the daily UI questions. When a developer can look at a Figma component, see exactly which tokens it uses, and know that the same tokens exist in their codebase, there's nothing to ask. The system answers the question.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="what-changed">
+        <h2>What changed</h2>
+        <p>The shift was not instant, but it was definitive.</p>
+        <p><strong>Developer questions disappeared.</strong> When I joined, developers were messaging designers daily, sometimes multiple times a day, to ask about spacing, colour choices, and component behaviour. Within a few months of the design system being in place, UI-related queries dropped to near-zero. The only time design input was needed was when we introduced a genuinely new component, which was rare by design.</p>
+        <p><strong>Inconsistency was eliminated.</strong> The five shades of almost-the-same-grey became one governed scale. Buttons looked the same everywhere. Inputs behaved identically across every form. The product started to feel like one product, not a patchwork of decisions made by different people over different years.</p>
+        <p><strong>Design velocity increased.</strong> New features could be assembled from existing components rather than designed from scratch. Designers stopped spending time on decisions the system had already made and started spending it on the problems that actually mattered: user flows, information architecture, research.</p>
+        <p><strong>The product felt more trustworthy.</strong> Consistency isn't just an internal efficiency metric. For teachers evaluating whether to adopt a platform for their classroom, and for young students navigating it independently, a predictable and polished interface signals reliability. It says: someone cares about this.</p>
+      </section>
+
+      <section class="dp-prose-section dp-reveal" id="what-i-believe">
+        <h2>What I believe</h2>
+        <p>A design system is not a component library. It's a set of opinions about spacing, colour, hierarchy, accessibility, and what your product values, encoded into reusable decisions. The components are just the output.</p>
+        <p>The best design systems are the ones you stop noticing. When developers don't need to ask questions, when designers don't need to debate spacing, when new team members can ship consistent work within their first week, that's when the investment has paid off.</p>
+        <p>I've since built a second design system at PlaySport, adapting the same methodology to a different product, audience, and tech stack. The specifics change, but the principles don't: start with tokens, follow atomic design, favour the familiar, insist on accessibility, and know where to stop.</p>
+        <p>Do it once. Do it well. Then get back to the work that matters.</p>
+      </section>
+
+    </article>
+
+    <footer class="dp-footer dp-reveal" aria-label="Footer">
+      <div class="dp-footer-inner">
+        <p class="dp-footer-text">© 2026 Edward Stone</p>
+        <nav class="dp-footer-links" aria-label="Footer links">
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="../assets/js/dev-projects/effects.js"></script>
+  <script type="module">
+    import { initNav } from '../assets/js/dev-projects/nav-component.js';
+    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
+    initNav();
+    initBannerTicker({ text: 'This page is a work in progress', separator: '\u2726' });
+  </script>
+</body>
+</html>

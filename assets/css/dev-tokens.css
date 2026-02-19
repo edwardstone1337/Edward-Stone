@@ -261,4 +261,13 @@
   --dp-banner-bg: var(--dp-accent);
   --dp-banner-text: var(--dp-raw-white);
   --dp-banner-speed: 60s;
+
+  /* ── Prose ── */
+  --dp-prose-max-width: 760px;
+  --dp-prose-gap: var(--dp-space-6);
+  --dp-prose-section-gap: var(--dp-space-12);
+  --dp-prose-heading-size: var(--dp-text-2xl);
+  --dp-prose-subheading-size: var(--dp-text-xl);
+  --dp-prose-body-size: var(--dp-text-base);
+  --dp-prose-body-leading: var(--dp-leading-relaxed);
 }
