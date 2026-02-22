@@ -43,7 +43,9 @@ Shared nav component (`assets/js/dev-projects/nav-component.js`) injected via `<
 
 ### Theming
 
-Dark-only. `data-theme="dark"` is set on `<html>` via a single inline `setAttribute` call in `<head>`. No theme toggle, no localStorage persistence, no `prefers-color-scheme` detection. Pattern: `docs/theme-init-pattern.md`. Preview iframes receive theme via `postMessage`.
+Dual light/dark theme with toggle. A pre-init script in `<head>` reads `localStorage('dp-theme')` then falls back to `prefers-color-scheme`, sets `data-theme` on `<html>`, and adds `dp-no-transition` to suppress flash. The theme toggle (`assets/js/dev-projects/theme-toggle.js`) injects a sun/moon button into `#dp-nav-actions` and persists choice to `localStorage`. A double-`requestAnimationFrame` at end of `<body>` removes `dp-no-transition` to re-enable transitions. Pattern: `docs/theme-init-pattern.md`.
+
+**Case studies** (`case-studies/*.html`) are permanently light — they hardcode `data-theme="light"` in `<head>` and do not load the theme toggle or pre-init script. **Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
 
 ## Key Patterns
 
@@ -85,6 +87,6 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - No frameworks, no build tools, no npm
 - `dp-` prefix tokens belong to dev system only — never use in legacy pages
 - Sanitise all dynamic content (`escapeHTML` + `sanitizeUrl`)
-- Site is dark-only — no light theme
+- Dual theme (light/dark) with toggle on dev; case studies stay permanently light
 - Run GA coverage check before pushing
 - Accessibility is not optional — WCAG AAA target

@@ -9,7 +9,7 @@ This project has two JS component directories with different conventions. **New 
 | File | Type | Purpose |
 |------|------|---------|
 | `nav-component.js` | ES6 module | Shared site nav — brand, dropdown links, mobile drawer. See `docs/architecture-nav.md` |
-| `theme-toggle.js` | IIFE | Light/dark toggle button, injects into `#dp-nav-actions`, persists to `localStorage` |
+| `theme-toggle.js` | ES6 module | Light/dark toggle button — `initThemeToggle()`. Injects sun/moon into `#dp-nav-actions`, persists to `localStorage('dp-theme')`, broadcasts to iframes via `postMessage` |
 | `snackbar.js` | ES6 module | Toast notification — `showSnackbar(message, duration)`. Auto-dismiss, `role="status"` |
 | `resume-lightbox.js` | ES6 module | Full-size resume viewer — `initResumeLightbox()`. Focus trap, download menu, print mode |
 | `resume-download.js` | ES6 module | Download widget dropdown — PDF link, copy-to-clipboard |
@@ -19,7 +19,7 @@ This project has two JS component directories with different conventions. **New 
 | `projects-grid.js` | ES6 module | Fetches `projects.json`, renders cards via `project-card.js` |
 | `strip-effects.js` | ES6 module | Cursor-reactive orb drift on `.dp-strip` elements |
 | `effects.js` | IIFE | SVG noise overlay, cursor-tracking glow, scroll-reveal with IntersectionObserver |
-| `back-to-top.js` | IIFE | Floating button, appears after scrolling 1vh, smooth-scroll to top |
+| `back-to-top.js` | IIFE | Floating button, appears after scrolling 1vh, smooth-scroll to top. Used on index, resume, gallery, project pages, and all case study pages (`planner`, `design-systems`, `product-discovery`). Case studies use manifest comment `CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker)`. |
 | `magnetic-tilt.js` | IIFE | 3D tilt on hover for `.dp-magnetic-tilt` elements |
 | `avatar-easter-egg.js` | IIFE | Physics-based avatar spin with confetti burst |
 | `snake-game.js` | IIFE | Full-screen canvas snake game easter egg |
@@ -62,7 +62,7 @@ All 8 files follow the same pattern: IIFE wrapper, config object input, global `
 - Import with `<script type="module">` in HTML
 - Import sanitisation from `./utils.js` when handling user-provided or config-driven content
 - Modules are deferred by default — no load-order concerns with other modules
-- IIFEs in this directory (theme-toggle, effects, back-to-top, etc.) self-initialise on DOMContentLoaded
+- IIFEs in this directory (effects, back-to-top, etc.) self-initialise on DOMContentLoaded
 
 ### Legacy IIFEs (components)
 - Wrapped in `(function() { ... })();`

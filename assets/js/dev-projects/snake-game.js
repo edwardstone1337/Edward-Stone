@@ -60,6 +60,10 @@
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   }
 
+  function isDark() {
+    return (document.documentElement.getAttribute('data-theme') || 'dark') !== 'light';
+  }
+
   function readColors() {
     for (var i = 0; i < TOKEN_KEYS.length; i++) {
       state.colors[TOKEN_KEYS[i]] = getToken(TOKEN_KEYS[i]);
@@ -195,7 +199,7 @@
     var r = 8;
     var px = p.x + 1;
     var py = p.y + 1;
-    var color = state.colors['--dp-snake-icon-hover'] || '#4ade80';
+    var color = state.colors['--dp-snake-icon-hover'] || (isDark() ? '#4ade80' : '#22c55e');
     ctx.globalAlpha = isHead ? 1 : 0.7;
     ctx.fillStyle = color;
     if (ctx.roundRect) {
@@ -213,7 +217,7 @@
     var cx = p.x + CELL_SIZE / 2;
     var cy = p.y + CELL_SIZE / 2;
     var radius = CELL_SIZE * 0.35;
-    var color = state.colors['--dp-text-primary'] || '#E8E9ED';
+    var color = state.colors['--dp-text-primary'] || (isDark() ? '#E8E9ED' : '#1A1D23');
     ctx.fillStyle = color;
     if (!prefersReducedMotion()) {
       var pulse = 4 + 3 * Math.sin(now / 300);
@@ -228,7 +232,7 @@
   }
 
   function drawGrid(ctx) {
-    var div = state.colors['--dp-border-divider'] || 'rgba(255,255,255,0.04)';
+    var div = state.colors['--dp-border-divider'] || (isDark() ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)');
     ctx.strokeStyle = div;
     ctx.lineWidth = 1;
     for (var x = 0; x <= state.cols; x++) {
@@ -250,7 +254,7 @@
   function drawScore(ctx) {
     var space8 = state.colors['--dp-space-8'] || '32px';
     var top = parseInt(space8, 10) || 32;
-    var color = state.colors['--dp-text-secondary'] || '#95A2B3';
+    var color = state.colors['--dp-text-secondary'] || (isDark() ? '#95A2B3' : '#4B5060');
     ctx.font = '500 14px Inter, system-ui, sans-serif';
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
@@ -267,15 +271,15 @@
     ctx.textBaseline = 'middle';
 
     ctx.font = '600 24px Inter, system-ui, sans-serif';
-    ctx.fillStyle = state.colors['--dp-text-primary'] || '#F7F8F8';
+    ctx.fillStyle = state.colors['--dp-text-primary'] || (isDark() ? '#F7F8F8' : '#1A1D23');
     ctx.fillText('Game Over', w / 2, h / 2 - gap - 12);
 
     ctx.font = '400 16px Inter, system-ui, sans-serif';
-    ctx.fillStyle = state.colors['--dp-text-secondary'] || '#95A2B3';
+    ctx.fillStyle = state.colors['--dp-text-secondary'] || (isDark() ? '#95A2B3' : '#4B5060');
     ctx.fillText('Score: ' + state.score, w / 2, h / 2);
 
     ctx.font = '400 14px Inter, system-ui, sans-serif';
-    ctx.fillStyle = state.colors['--dp-text-tertiary'] || 'rgba(255,255,255,0.64)';
+    ctx.fillStyle = state.colors['--dp-text-tertiary'] || (isDark() ? 'rgba(255,255,255,0.64)' : 'rgba(0,0,0,0.75)');
     ctx.fillText('Space to restart', w / 2, h / 2 + 8 + gap + 7);
   }
 

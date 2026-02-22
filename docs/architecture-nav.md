@@ -109,7 +109,7 @@ Set automatically via `isCurrentPage(linkHref)` which normalises pathnames (stri
 
 ## Theme Toggle Integration
 
-The nav component renders an empty `<div id="dp-nav-actions">` container. The theme toggle script (`theme-toggle.js`, an IIFE) finds this container and injects its toggle button. The nav does not depend on the theme toggle — they are decoupled.
+The nav component renders an empty `<div id="dp-nav-actions">` container. The theme toggle module (`theme-toggle.js`, ES6 `export function initThemeToggle()`) finds this container and injects a sun/moon toggle button. Call `initThemeToggle()` after `initNav()` so the container exists. The nav does not depend on the theme toggle — they are decoupled. On click, the toggle flips `data-theme` on `<html>` and persists to `localStorage('dp-theme')`.
 
 ## CSS Selectors (in `dev-styles.css`)
 

@@ -32,7 +32,6 @@
   /* --- Font families --- */
   --dp-font-display: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --dp-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --dp-font-serif: Georgia, "Times New Roman", serif;
 
   /* --- Font weights --- */
   --dp-weight-normal: 400;
@@ -82,8 +81,6 @@
   --dp-raw-glow-teal: 16, 185, 129;
   --dp-raw-glow-amber: 245, 158, 11;
   --dp-raw-glow-green: 74, 222, 128;
-  --dp-raw-brand-on-dark: var(--dp-raw-grey-50);
-  --dp-raw-brand-on-light: var(--dp-raw-grey-900);
 
   /* --- Nav action (shared height for links, toggles, hamburger) --- */
   --dp-nav-action-height: 40px;
@@ -103,9 +100,20 @@
   /* --- Page section rhythm (airy gap between hero, strips, grid) --- */
   --dp-section-gap: var(--dp-space-24);
 
-  /* --------------------------------------------
-     SEMANTIC TOKENS — Dark theme (default)
-     -------------------------------------------- */
+  /* Surface fallbacks — prevent flash before data-theme is set */
+  --dp-bg-base: #08090A;
+  --dp-bg-raised: #111113;
+  --dp-bg-card: rgba(255, 255, 255, 0.03);
+  --dp-bg-card-hover: rgba(255, 255, 255, 0.06);
+  --dp-bg-overlay: rgba(0, 0, 0, 0.7);
+  --dp-text-primary: #F7F8F8;
+  --dp-text-secondary: #8A94A6;
+}
+
+/* --------------------------------------------
+   SEMANTIC TOKENS — Dark theme (default)
+   -------------------------------------------- */
+[data-theme="dark"] {
   color-scheme: dark;
 
   /* Surfaces */
@@ -120,10 +128,9 @@
 
   /* Text */
   --dp-text-primary: var(--dp-raw-grey-50);
-  --dp-text-secondary: #9BA8B9;
+  --dp-text-secondary: var(--dp-raw-grey-400);
   --dp-text-tertiary: rgba(255, 255, 255, 0.64);
   --dp-text-ghost: rgba(255, 255, 255, 0.20);
-  --dp-brand-text: var(--dp-raw-brand-on-dark);
 
   /* Semantic: on-dark (inverse) context */
   --dp-on-dark-text-primary: var(--dp-raw-white);
@@ -138,22 +145,19 @@
   --dp-border-active: rgba(255, 255, 255, 0.20);
   --dp-border-divider: rgba(255, 255, 255, 0.04);
 
-  /* Accent / brand — single source of truth for brand colour.
-     Greyscale interim; will become lime (#DBFC56) later. */
-  --dp-accent: var(--dp-raw-brand-on-dark);
-  --dp-accent-hover: var(--dp-raw-grey-200);
-  /* Hardcoded RGB of brand primitive — update when brand colour changes */
-  --dp-accent-glow: rgba(247, 248, 248, 0.10);
-  --dp-brand-on-brand: var(--dp-raw-brand-on-light);
+  /* Accent */
+  --dp-accent: var(--dp-raw-accent);
+  --dp-accent-hover: var(--dp-raw-accent-light);
+  --dp-accent-glow: rgba(94, 106, 210, 0.10);
   /* Card-scoped text (accounts for composited glass backgrounds) */
   --dp-card-text-primary: #FFFFFF;
   --dp-card-text-secondary: #B0BCCA;
 
-  /* DEPRECATED: gradient text removed — kept for reference */
+  /* Gradient text */
   --dp-gradient-text-from: rgba(255, 255, 255, 0.95);
-  --dp-gradient-text-to: rgba(255, 255, 255, 0.60);
+  --dp-gradient-text-to: rgba(255, 255, 255, 0.55);
 
-  /* DEPRECATED: gradient text removed — kept for reference */
+  /* Hero heading — per-line gradient (light from sky: lighter top → darker bottom) */
   --dp-hero-line-from: rgba(255, 255, 255, 1);
   --dp-hero-line-to: rgba(255, 255, 255, 0.55);
   --dp-hero-accent-from: #B8C2FF;
@@ -167,12 +171,12 @@
   /* Noise overlay */
   --dp-noise-opacity: 0.04;
 
-  /* Toggle (shared) */
+  /* Theme toggle */
   --dp-toggle-bg: rgba(255, 255, 255, 0.06);
   --dp-toggle-bg-hover: rgba(255, 255, 255, 0.10);
   --dp-toggle-icon: var(--dp-raw-grey-400);
 
-  /* Theme toggle — sun hover (switch to light) */
+  /* Theme toggle — sun hover (sunny day: darker sky for sun contrast) */
   --dp-theme-sun-icon-hover: #facc15;
   --dp-theme-sun-bg-hover: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%);
 
@@ -180,17 +184,10 @@
   --dp-snake-icon-hover: #4ade80;
   --dp-snake-icon-glow: rgba(var(--dp-raw-glow-green), 0.5);
 
-  /* Nav logo */
-  --dp-nav-logo-ring: rgba(255, 255, 255, 1);
-  --dp-nav-logo-bg: var(--dp-raw-black);
-  --dp-nav-logo-swirl: var(--dp-raw-white);
-  --dp-nav-logo-gradient-from: #B8C2FF;
-  --dp-nav-logo-gradient-to: #5E6AD2;
-
-  /* Button — primary (brand surface + contrasting text) */
-  --dp-btn-bg-primary: var(--dp-accent);
-  --dp-btn-text-primary: var(--dp-brand-on-brand);
-  --dp-btn-hover-bg-primary: var(--dp-accent-hover);
+  /* Button — primary (WCAG AAA 7:1: #FFF on #4A52B8 ≥7:1) */
+  --dp-btn-bg-primary: #4A52B8;
+  --dp-btn-text-primary: var(--dp-raw-white);
+  --dp-btn-hover-bg-primary: var(--dp-accent);
   --dp-btn-focus-ring: var(--dp-accent);
 
   /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
@@ -261,51 +258,10 @@
   /* Resume / paper */
   --dp-paper-surface: #18181B;
   --dp-paper-text-primary: #F7F8F8;
-  --dp-paper-text-secondary: #99A6B7;
+  --dp-paper-text-secondary: #95A2B3;
   --dp-paper-border: rgba(255, 255, 255, 0.08);
   --dp-paper-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-  --dp-paper-accent: var(--dp-raw-accent);
-
-  /* === Contextual light tokens (available in dark theme) === */
-  --dp-paper-surface-light: #FFFFFF;
-  --dp-paper-text-primary-light: #111113;
-  --dp-paper-text-secondary-light: #5A6170;
-  --dp-paper-border-light: rgba(0, 0, 0, 0.06);
-  --dp-paper-shadow-light: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --dp-paper-accent-light: var(--dp-raw-accent);
-
-  /* --- Banner --- */
-  --dp-banner-bg: var(--dp-accent);
-  --dp-banner-text: var(--dp-brand-on-brand);
-  --dp-banner-speed: 60s;
-
-  /* ── Prose ── */
-  --dp-prose-max-width: 760px;
-  --dp-prose-gap: var(--dp-space-6);
-  --dp-prose-section-gap: var(--dp-space-12);
-  --dp-prose-heading-size: var(--dp-text-2xl);
-  --dp-prose-subheading-size: var(--dp-text-xl);
-  --dp-prose-body-size: var(--dp-text-base);
-  --dp-prose-body-leading: var(--dp-leading-relaxed);
-
-  /* ── Dropdown ── */
-  --dp-dropdown-bg: rgba(30, 30, 30, 0.95);
-  --dp-dropdown-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-  /* ── Drawer ── */
-  --dp-drawer-bg: var(--dp-glass-bg);
-  --dp-drawer-overlay: var(--dp-bg-overlay);
-  --dp-drawer-border: var(--dp-border-default);
-
-  /* ── TLDR ── */
-  --dp-tldr-bg: var(--dp-bg-raised);
-  --dp-tldr-border: var(--dp-border-default);
-  --dp-tldr-radius: var(--dp-radius-lg);
-  --dp-tldr-padding: var(--dp-space-8);
-  --dp-tldr-gap: var(--dp-space-4);
-  --dp-tldr-heading-size: var(--dp-text-lg);
-  --dp-tldr-bullet-size: var(--dp-prose-body-size);
-  --dp-tldr-bullet-leading: var(--dp-prose-body-leading);
+  --dp-paper-accent: #5E6AD2;
 }
 
 /* --------------------------------------------
@@ -315,13 +271,13 @@
   color-scheme: light;
 
   /* Surfaces — "paper on desk" hierarchy */
-  --dp-bg-base: #EDF0F7;
-  --dp-bg-raised: #F0F2FA;
-  --dp-bg-card: rgba(255, 255, 255, 0.75);
+  --dp-bg-base: #EDF0F7;                   /* Softer grey — halfway between old #F5F7FF and #E8EAF2 */
+  --dp-bg-raised: #F0F2FA;                   /* Slightly lighter shelf */
+  --dp-bg-card: rgba(255, 255, 255, 0.75);  /* More opaque — less base bleed-through */
   --dp-glass-bg: rgba(255, 255, 255, 0.65);
   --dp-glass-bg-mid: rgba(255, 255, 255, 0.75);
   --dp-glass-bg-elevated: rgba(255, 255, 255, 0.85);
-  --dp-bg-card-hover: rgba(255, 255, 255, 0.8);
+  --dp-bg-card-hover: rgba(255, 255, 255, 0.8);  /* Brighter on hover */
   --dp-bg-overlay: rgba(255, 255, 255, 0.8);
 
   /* Text */
@@ -329,9 +285,8 @@
   --dp-text-secondary: #4B5060;
   --dp-text-tertiary: rgba(0, 0, 0, 0.75);
   --dp-text-ghost: rgba(0, 0, 0, 0.20);
-  --dp-brand-text: var(--dp-raw-brand-on-light);
 
-  /* Semantic: on-dark (inverse) context — unchanged */
+  /* Semantic: on-dark (inverse) context */
   --dp-on-dark-text-primary: var(--dp-raw-white);
   --dp-on-dark-text-secondary: rgba(255, 255, 255, 0.75);
   --dp-on-dark-surface: var(--dp-raw-grey-900);
@@ -344,22 +299,19 @@
   --dp-border-active: rgba(0, 0, 0, 0.20);
   --dp-border-divider: rgba(0, 0, 0, 0.06);
 
-  /* Accent / brand */
-  --dp-accent: var(--dp-raw-brand-on-light);
-  --dp-accent-hover: var(--dp-raw-grey-800);
-  /* Hardcoded RGB of brand primitive — update when brand colour changes */
-  --dp-accent-glow: rgba(17, 17, 19, 0.06);
-  --dp-brand-on-brand: var(--dp-raw-brand-on-dark);
-
-  /* Card-scoped text */
-  --dp-card-text-primary: var(--dp-raw-grey-900);
+  /* Accent */
+  --dp-accent: var(--dp-raw-accent);
+  --dp-accent-hover: var(--dp-raw-accent-light);
+  --dp-accent-glow: rgba(94, 106, 210, 0.06);
+  /* Card-scoped text (accounts for composited glass backgrounds) */
+  --dp-card-text-primary: #111113;
   --dp-card-text-secondary: #3B4049;
 
-  /* DEPRECATED: gradient text removed — kept for reference */
+  /* Gradient text */
   --dp-gradient-text-from: rgba(0, 0, 0, 0.90);
   --dp-gradient-text-to: rgba(0, 0, 0, 0.65);
 
-  /* DEPRECATED: gradient text removed — kept for reference */
+  /* Hero heading — per-line gradient (light from sky: lighter top → darker bottom) */
   --dp-hero-line-from: rgba(0, 0, 0, 0.92);
   --dp-hero-line-to: rgba(0, 0, 0, 0.72);
   --dp-hero-accent-from: #6B76E0;
@@ -373,12 +325,12 @@
   /* Noise overlay */
   --dp-noise-opacity: 0.03;
 
-  /* Toggle (shared) */
+  /* Theme toggle */
   --dp-toggle-bg: rgba(0, 0, 0, 0.04);
   --dp-toggle-bg-hover: rgba(0, 0, 0, 0.08);
   --dp-toggle-icon: var(--dp-raw-grey-500);
 
-  /* Theme toggle — moon hover (switch to dark) */
+  /* Theme toggle — moon hover (night) */
   --dp-theme-moon-icon-hover: #fef9c3;
   --dp-theme-moon-bg-hover: #1e293b;
 
@@ -386,55 +338,81 @@
   --dp-snake-icon-hover: #22c55e;
   --dp-snake-icon-glow: rgba(var(--dp-raw-glow-green), 0.4);
 
-  /* Nav logo */
-  --dp-nav-logo-ring: rgba(0, 0, 0, 0.12);
-
-  /* Button — primary (brand surface + contrasting text) */
-  --dp-btn-bg-primary: var(--dp-accent);
-  --dp-btn-text-primary: var(--dp-brand-on-brand);
-  --dp-btn-hover-bg-primary: var(--dp-accent-hover);
+  /* Button — primary (WCAG AAA 7:1: #FFF on #4A52B8 ≥7:1) */
+  --dp-btn-bg-primary: #4A52B8;
+  --dp-btn-text-primary: var(--dp-raw-white);
+  --dp-btn-hover-bg-primary: var(--dp-accent);
   --dp-btn-focus-ring: var(--dp-accent);
 
-  /* Button — primary on dark (unchanged) */
+  /* Button — primary on dark (white bg, dark text; for strip/dark sections) */
   --dp-btn-bg-primary-on-dark: var(--dp-raw-white);
   --dp-btn-text-primary-on-dark: var(--dp-on-dark-surface);
   --dp-btn-hover-bg-primary-on-dark: var(--dp-on-dark-surface-hover);
   --dp-btn-focus-ring-on-dark: var(--dp-on-dark-surface);
 
-  /* Button — secondary on dark (unchanged) */
+  /* Button — secondary on dark (outline; for strip external link) */
   --dp-btn-secondary-on-dark-border: rgba(255, 255, 255, 0.5);
   --dp-btn-secondary-on-dark-text: var(--dp-on-dark-text-primary);
   --dp-btn-secondary-on-dark-hover-bg: rgba(255, 255, 255, 0.1);
   --dp-btn-secondary-on-dark-focus-ring: var(--dp-on-dark-text-primary);
 
-  /* Button — secondary on light (unchanged) */
+  /* Button — secondary on light (outline; for light overlay) */
   --dp-btn-secondary-on-light-text: rgba(0, 0, 0, 0.85);
   --dp-btn-secondary-on-light-border: rgba(0, 0, 0, 0.55);
   --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
   --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
 
+  /* Strip — same as dark theme (darkened for contrast) */
+  --dp-strip-bg: #0a2020;
+  --dp-strip-orb-1: #2e7d76;
+  --dp-strip-orb-2: #E8919B;
+  --dp-strip-orb-dark: rgba(0, 0, 0, 0.22);
+  --dp-strip-orb-opacity: 0.4;
+  --dp-strip-title-color: #eafcf8;
+  --dp-strip-text-color: rgba(234, 252, 248, 0.85);
+  --dp-strip-badge-bg: rgba(255, 255, 255, 0.15);
+  --dp-strip-badge-text: rgba(234, 252, 248, 0.95);
+  --dp-device-border: 1px solid rgba(255, 255, 255, 0.1);
+  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --dp-strip-title-from: var(--dp-strip-title-color);
+  --dp-strip-title-to: var(--dp-strip-title-color);
+  --dp-strip-border: 1px solid transparent;
+
+  /* Strip theme — SCP Reader */
+  --dp-strip-scp-bg: #141414;
+  --dp-strip-scp-orb-1: #791a1f;
+  --dp-strip-scp-orb-2: #431418;
+  --dp-strip-scp-orb-dark: rgba(0, 0, 0, 0.18);
+  --dp-strip-scp-orb-opacity: 0.3;
+  --dp-strip-scp-title-color: #ffffff;
+  --dp-strip-scp-text-color: rgba(255, 255, 255, 0.85);
+  --dp-strip-scp-badge-bg: rgba(255, 255, 255, 0.08);
+  --dp-strip-scp-badge-text: rgba(255, 255, 255, 0.9);
+  --dp-strip-scp-device-border: 1px solid #303030;
+  --dp-strip-scp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* Strip theme — Flip 7 (navy + teal; light theme: same brand tokens, higher orb visibility) */
+  --dp-strip-flip7-bg: lch(25 18 275);
+  /* Title gradient: warm cream to muted teal (title-to slightly lighter in light for AAA 7:1) */
+  --dp-strip-flip7-title-from: lch(96 4 92);   /* cream-white, warm */
+  --dp-strip-flip7-title-to: lch(84 5 185);    /* lighter teal for light mode, AAA 7:1 (walked back from L82) */
+  --dp-strip-flip7-border: 1px solid lch(55 12 185 / 0.15);
+  --dp-strip-flip7-orb-1: lch(55 12 185);
+  --dp-strip-flip7-orb-2: lch(78 16 75);
+  --dp-strip-flip7-orb-dark: rgba(0, 0, 0, 0.15);
+  --dp-strip-flip7-orb-opacity: 0.45;              /* bump for light — backgrounds absorb more glow */
+  --dp-strip-flip7-title-color: lch(98 2.5 92);
+  --dp-strip-flip7-text-color: lch(94 3 92 / 0.92);
+  --dp-strip-flip7-badge-bg: lch(35 10 185 / 0.55);
+  --dp-strip-flip7-badge-text: lch(98 2 92);
+  --dp-strip-flip7-device-border: 1px solid lch(40 8 265);
+  --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+
   /* Resume / paper */
-  --dp-paper-surface: var(--dp-raw-white);
-  --dp-paper-text-primary: var(--dp-raw-grey-900);
-  --dp-paper-text-secondary: var(--dp-raw-grey-500);
+  --dp-paper-surface: #FFFFFF;
+  --dp-paper-text-primary: #111113;
+  --dp-paper-text-secondary: #5A6170;
   --dp-paper-border: rgba(0, 0, 0, 0.06);
   --dp-paper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --dp-paper-accent: var(--dp-raw-accent);
-
-  /* Banner — brand bg + contrasting text */
-  --dp-banner-bg: var(--dp-accent);
-  --dp-banner-text: var(--dp-brand-on-brand);
-
-  /* Dropdown */
-  --dp-dropdown-bg: rgba(255, 255, 255, 0.95);
-  --dp-dropdown-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-
-  /* Drawer */
-  --dp-drawer-bg: rgba(255, 255, 255, 0.85);
-  --dp-drawer-overlay: rgba(0, 0, 0, 0.3);
-  --dp-drawer-border: rgba(0, 0, 0, 0.08);
-
-  /* TLDR */
-  --dp-tldr-bg: var(--dp-bg-raised);
-  --dp-tldr-border: var(--dp-border-default);
+  --dp-paper-accent: #5E6AD2;
 }

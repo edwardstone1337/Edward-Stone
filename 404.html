@@ -21,15 +21,27 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
+    <script>
+    (function() {
+      var theme;
+      try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+      if (!theme) {
+        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.add('dp-no-transition');
+    })();
+    </script>
   </head>
   <body>
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
       import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
+      import { initThemeToggle } from './assets/js/dev-projects/theme-toggle.js';
       initNav();
       initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+      initThemeToggle();
     </script>
     <div class="dp-404-page">
       <div class="dp-404-glow" aria-hidden="true"></div>
@@ -43,5 +55,12 @@ gtag('config', 'G-6MPMYG36LE');
         </div>
       </main>
     </div>
+    <script>
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.remove('dp-no-transition');
+      });
+    });
+    </script>
   </body>
 </html>

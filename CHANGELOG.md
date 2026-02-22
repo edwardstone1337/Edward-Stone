@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Nav dropdown and drawer light theme**: Dropdown and drawer use tokens (`--dp-dropdown-bg`, `--dp-dropdown-shadow`, `--dp-drawer-bg`, `--dp-drawer-overlay`, `--dp-drawer-border`) in dev-styles.css; defaults in dev-tokens.css; light overrides in case-study-theme.css so nav dropdown and mobile drawer match light case study pages (fixes hardcoded dark dropdown).
+- **TLDR component (case studies)**: Bullet-summary box (`.dp-tldr`) under hero on planner, product-discovery, design-systems; tokens in dev-tokens.css, styles in dev-styles.css, light overrides in case-study-theme.css; `.dp-prose-layout` wrapper for future grid/sidebar (Phase 2). Static HTML per page; no new JS.
+- **Back-to-top on case study pages**: `planner.html`, `design-systems.html`, `product-discovery.html` now load `back-to-top.js` after `effects.js` (same order as index, resume, gallery). Button uses existing tokens; light theme already remapped in `case-study-theme.css`.
+- **Case study script manifest**: Comment `<!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->` above the script block on all three case study pages for copy-paste consistency.
+- **Back-to-top reduced-motion**: In `dev-styles.css`, `.dp-back-to-top { transition: none; }` inside existing `@media (prefers-reduced-motion: reduce)` so button show/hide is instant when user prefers reduced motion (scroll behavior already handled in JS).
 - **Product Discovery case study** (`case-studies/product-discovery.html`): Public case study — customer voice infrastructure at Inquisitive, 95% actionable insights in one month. Dev system + `case-study-theme.css`, GA4 tagged.
 - **Hero card section** (index): Case study links moved into standalone `.dp-hero-card-section` below hero; `.dp-hero-card-section`, `.dp-hero-card-section .dp-hero-card` in dev-styles.css.
 - **Nav**: Case Studies dropdown uses full-sentence link labels; third item "Changing how an organisation decides what to build" → product-discovery. Opening one dropdown closes the others. Case Studies menu with 3 items gets `min-width: 400px`; dropdown background `rgba(30, 30, 30, 0.95)` for legibility.

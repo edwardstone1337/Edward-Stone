@@ -8,7 +8,17 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" />
     <link rel="stylesheet" href="../assets/css/dev-tokens.css" />
     <link rel="stylesheet" href="../assets/css/dev-styles.css" />
-    <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
+    <script>
+    (function() {
+      var theme;
+      try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+      if (!theme) {
+        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.add('dp-no-transition');
+    })();
+    </script>
     <style>
       /* Reference-page-only scaffolding (ds- prefix) */
       .ds-page { max-width: 1200px; margin: 0 auto; padding: var(--dp-space-8) var(--dp-space-6); }
@@ -871,5 +881,16 @@
       </section>
     </main>
 
+    <script type="module">
+      import { initThemeToggle } from '../assets/js/dev-projects/theme-toggle.js';
+      initThemeToggle();
+    </script>
+    <script>
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.remove('dp-no-transition');
+      });
+    });
+    </script>
   </body>
 </html>

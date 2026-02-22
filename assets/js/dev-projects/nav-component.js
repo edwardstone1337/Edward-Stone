@@ -274,20 +274,20 @@ export function initNav() {
     '<div class="dp-nav-inner">' +
       '<a href="/index.html" class="dp-nav-brand" aria-label="Edward Stone, Go to homepage">' +
         '<svg class="dp-nav-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-          '<rect x="40" y="40" width="40" height="40" rx="20" transform="rotate(-180 40 40)" fill="black"/>' +
+          '<rect class="dp-nav-logo-bg" x="40" y="40" width="40" height="40" rx="20" transform="rotate(-180 40 40)"/>' +
           '<g clip-path="url(#nav-clip)">' +
             '<path d="M17.5356 4.99999C27.6155 2.01097 38.8338 11.6176 33.7466 26.1765C35.0001 19.5588 25.0997 16.3646 16.4009 13.8235C11.1332 12.2847 7.45569 7.98901 17.5356 4.99999Z" fill="url(#nav-paint0)"/>' +
             '<path d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z" fill="url(#nav-paint1)" fill-opacity="0.5"/>' +
-            '<path d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z" fill="white"/>' +
+            '<path class="dp-nav-logo-swirl" d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z"/>' +
           '</g>' +
           '<defs>' +
             '<linearGradient id="nav-paint0" x1="11.5176" y1="9.51703" x2="36.2755" y2="24.2457" gradientUnits="userSpaceOnUse">' +
-              '<stop stop-color="#B8C2FF"/>' +
-              '<stop offset="1" stop-color="#5E6AD2"/>' +
+              '<stop class="dp-nav-logo-grad-start" />' +
+              '<stop class="dp-nav-logo-grad-end" offset="1" />' +
             '</linearGradient>' +
             '<linearGradient id="nav-paint1" x1="16.9063" y1="13.8235" x2="16.9063" y2="35.5455" gradientUnits="userSpaceOnUse">' +
-              '<stop stop-color="#B8C2FF"/>' +
-              '<stop offset="1" stop-color="#5E6AD2"/>' +
+              '<stop class="dp-nav-logo-grad-start" />' +
+              '<stop class="dp-nav-logo-grad-end" offset="1" />' +
             '</linearGradient>' +
             '<clipPath id="nav-clip">' +
               '<rect x="5" y="5" width="30" height="30" rx="15" fill="white"/>' +
