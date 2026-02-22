@@ -21,40 +21,40 @@ function generateCard(project) {
   var preview = project.preview;
   var previewSrc = preview && preview.src ? escapeHTML(sanitizeUrl(preview.src)) : '';
 
-    var mediaBlock;
-    if (previewSrc) {
-      mediaBlock =
-        '<div class="dp-card-media">' +
-          '<iframe class="dp-card-media-iframe" src="' + previewSrc + '" loading="lazy" tabindex="-1" aria-hidden="true" title="' + title + ' preview"></iframe>' +
-        '</div>';
-    } else if (imagePath) {
-      mediaBlock =
-        '<div class="dp-card-media">' +
-          '<img src="' + imagePath + '" alt="' + imageAlt + '" loading="lazy" />' +
-          '<div class="dp-card-media-fade"></div>' +
-        '</div>';
-    } else {
-      mediaBlock =
-        '<div class="dp-card-media">' +
-          '<div class="dp-card-media-placeholder"></div>' +
-        '</div>';
-    }
-
-    return (
-      '<a href="' + url + '" class="dp-card" target="_blank" rel="noopener noreferrer">' +
-        '<div class="dp-card-inner">' +
-          mediaBlock +
-          '<div class="dp-card-content">' +
-            '<h3 class="dp-card-title">' + title + '</h3>' +
-            '<p class="dp-card-description">' + description + '</p>' +
-          '</div>' +
-        '</div>' +
-      '</a>'
-    );
+  var mediaBlock;
+  if (previewSrc) {
+    mediaBlock =
+      '<div class="dp-card-media">' +
+        '<iframe class="dp-card-media-iframe" src="' + previewSrc + '" loading="lazy" tabindex="-1" aria-hidden="true" title="' + title + ' preview"></iframe>' +
+      '</div>';
+  } else if (imagePath) {
+    mediaBlock =
+      '<div class="dp-card-media">' +
+        '<img src="' + imagePath + '" alt="' + imageAlt + '" loading="lazy" />' +
+        '<div class="dp-card-media-fade"></div>' +
+      '</div>';
+  } else {
+    mediaBlock =
+      '<div class="dp-card-media">' +
+        '<div class="dp-card-media-placeholder"></div>' +
+      '</div>';
   }
 
-  window.DPProjectCard = {
-    generate: generateCard
-  };
+  return (
+    '<a href="' + url + '" class="dp-card" target="_blank" rel="noopener noreferrer">' +
+      '<div class="dp-card-inner">' +
+        mediaBlock +
+        '<div class="dp-card-content">' +
+          '<h3 class="dp-card-title">' + title + '</h3>' +
+          '<p class="dp-card-description">' + description + '</p>' +
+        '</div>' +
+      '</div>' +
+    '</a>'
+  );
+}
 
-  export { generateCard };
+window.DPProjectCard = {
+  generate: generateCard
+};
+
+export { generateCard };

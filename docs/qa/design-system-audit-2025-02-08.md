@@ -104,7 +104,7 @@ Grouped by category as in dev-tokens.css.
 Comparison: what’s demoed in design-system.html vs classes defined in dev-styles.css. **Atoms and molecules only** — organisms (nav, footer, resume, lightbox, 404, split-row, strip, grid) skipped.
 
 **Classification used:**  
-- **Atoms:** utility/single-purpose classes (e.g. gradient-text, noise, glass, glow, shimmer, fade-edge, overline, hero-line, hero-accent; plus no-transition, reveal, skip-link, avatar-wiggle, magnetic-tilt, avatar-wrap where they are single-purpose).  
+- **Atoms:** utility/single-purpose classes (e.g. gradient-text, noise, glass, glow, shimmer, fade-edge, overline, hero-line, hero-accent; plus no-transition, reveal, skip-link, avatar-wiggle, avatar-wrap where they are single-purpose).
 - **Molecules:** composite components (button, theme-toggle, back-to-top, snake-toggle, hero block, card, testimonial).  
 - **Organisms (excluded):** dp-nav, dp-footer, dp-resume-*, dp-lightbox*, dp-404-*, dp-split-row*, dp-strip* (and strip modifiers), dp-card-grid, dp-grid-section, dp-snake-overlay, dp-snake-canvas, etc.
 
@@ -123,7 +123,7 @@ Comparison: what’s demoed in design-system.html vs classes defined in dev-styl
 
 - `.dp-no-transition` (utility, no visual demo)
 - `.dp-hero-heading` (only its children `.dp-hero-line` / `.dp-hero-accent` are shown in hero demo — the heading is shown but not called out as its own atom)
-- `.dp-magnetic-tilt`, `.dp-avatar-wrap`, `.dp-avatar-wiggle` (avatar/hero context)
+- `.dp-avatar-wrap`, `.dp-avatar-wiggle` (avatar/hero context)
 - `.dp-reveal`, `.dp-revealed` (reveal state)
 - `.dp-skip-link` (a11y, no visual demo)
 - `.dp-btn-icon` (button sub-part, no standalone demo)

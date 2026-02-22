@@ -21,17 +21,17 @@ Add the container div and module import to any page:
 Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`:
 
 ```
-{ text: 'Projects', children: [
-    { text: 'Fair Share', href: '/projects/fair-share.html' },
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
-]},
 { text: 'Case Studies', children: [
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' }
 ]},
-{ text: 'Resume', href: '/resume.html' },
-{ text: 'Gallery', href: '/gallery.html' }
+{ text: 'Projects', children: [
+    { text: 'Fair Share', href: '/projects/fair-share.html' },
+    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+]},
+{ text: 'Gallery', href: '/gallery.html' },
+{ text: 'Resume', href: '/resume.html' }
 ```
 
 - **Top-level items with `href`** render as direct links
@@ -43,7 +43,7 @@ To add a new page to the nav, add an entry to `NAV_LINKS`.
 ## Desktop Layout
 
 ```
-[ Logo  Edward Stone ]    [ Projects v ]  [ Resume ]    [ Theme Toggle ]
+[ Logo  Edward Stone ]    [ Case Studies v ] [ Projects v ] [ Gallery ] [ Resume ]    [ Theme Toggle ]
         brand                  links (centre)               actions
 ```
 
@@ -107,9 +107,11 @@ Dropdown parents from `NAV_LINKS` render as section headings (`.dp-nav-drawer-he
 
 Set automatically via `isCurrentPage(linkHref)` which normalises pathnames (strips trailing slashes, treats `/index.html` as `/`). Applied to desktop links, dropdown child links, and drawer links.
 
-## Theme Toggle Integration
+## Theme Toggle Integration (dev-only)
 
 The nav component renders an empty `<div id="dp-nav-actions">` container. The theme toggle module (`theme-toggle.js`, ES6 `export function initThemeToggle()`) finds this container and injects a sun/moon toggle button. Call `initThemeToggle()` after `initNav()` so the container exists. The nav does not depend on the theme toggle — they are decoupled. On click, the toggle flips `data-theme` on `<html>` and persists to `localStorage('dp-theme')`.
+
+The theme toggle is loaded only on `dev/design-system.html` for testing. Public pages default dark and do not load the toggle. Case study pages hardcode `data-theme="light"` and do not load the toggle.
 
 ## CSS Selectors (in `dev-styles.css`)
 

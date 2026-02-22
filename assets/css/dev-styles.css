@@ -246,6 +246,12 @@ img { display: block; max-width: 100%; }
   border-bottom: 1px solid var(--dp-border-default);
 }
 
+/* Light theme: --dp-glass-bg (0.65 opacity) is too transparent for a sticky
+   bar on light backgrounds; bump to 0.80 so scrolled content stays readable */
+[data-theme="light"] .dp-nav {
+  background: rgba(255, 255, 255, 0.80);
+}
+
 .dp-nav-inner {
   max-width: 1200px;
   width: 100%;
@@ -808,12 +814,6 @@ img { display: block; max-width: 100%; }
   border-radius: var(--dp-radius-full);
   object-fit: cover;
   display: block;
-}
-
-/* Magnetic tilt wrapper — tilt on wrapper so child can have reveal/easter-egg transforms */
-.dp-magnetic-tilt {
-  display: inline-block;
-  transform: perspective(600px) rotateY(0deg) rotateX(0deg);
 }
 
 /* Avatar wrapper specifics */
@@ -2721,10 +2721,6 @@ body.dp-overlay-active {
   .dp-hero::before {
     filter: blur(120px);
     /* Keep the glow but don't animate it */
-  }
-
-  .dp-magnetic-tilt {
-    transform: none !important;
   }
 
   .dp-avatar-wiggle {

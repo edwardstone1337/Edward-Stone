@@ -36,7 +36,7 @@ For every `.js` file in `assets/js/`, findings:
 | `dev-projects/resume-lightbox.js` | L61–87 | SVGs use `stroke="currentColor"` — theme-safe. | Low |
 | `dev-projects/snake-game.js` | L11–12 | Snake/close icons use `fill="currentColor"` — theme-safe. | Low |
 | `dev-projects/back-to-top.js` | L15 | Arrow SVG uses `stroke="currentColor"` — theme-safe. | Low |
-| Other inline styles | nav-component (overflow), resume-lightbox (overflow), strip-effects (orb coords), effects (mouse coords), back-to-top (opacity/pointer-events), avatar-easter-egg (transform, will-change), magnetic-tilt (transform) | Layout/UX only, no colours | Low |
+| Other inline styles | nav-component (overflow), resume-lightbox (overflow), strip-effects (orb coords), effects (mouse coords), back-to-top (opacity/pointer-events), avatar-easter-egg (transform, will-change) | Layout/UX only, no colours | Low |
 
 ### 1.4 Theme-dependent class names
 

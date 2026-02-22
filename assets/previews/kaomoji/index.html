@@ -274,7 +274,7 @@
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
             announceCopy(text);
-            showSnackbar();
+            showSnackbar('Copied');
           }).catch(function (err) {
             if (typeof console !== 'undefined' && console.error) console.error('Clipboard copy failed:', err);
             statusEl.textContent = 'Copy failed';
@@ -282,7 +282,7 @@
           });
         } else {
           announceCopy(text);
-          showSnackbar();
+          showSnackbar('Copied');
         }
       }
 
