@@ -53,7 +53,7 @@
 
   function getAccentColor() {
     var style = getComputedStyle(document.documentElement);
-    return style.getPropertyValue('--dp-accent').trim() || '#5BBFB5';
+    return style.getPropertyValue('--dp-accent').trim() || (getTheme() === 'dark' ? '#5BBFB5' : '#4A52B8');
   }
 
   function getGridColor() {
@@ -62,7 +62,7 @@
 
   function getLabelColor() {
     var style = getComputedStyle(document.documentElement);
-    return style.getPropertyValue('--dp-text-secondary').trim() || '#8A94A6';
+    return style.getPropertyValue('--dp-text-secondary').trim() || (getTheme() === 'dark' ? '#8A94A6' : '#4B5060');
   }
 
   function prefersReducedMotion() {

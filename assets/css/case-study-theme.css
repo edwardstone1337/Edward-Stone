@@ -84,7 +84,7 @@
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 
-/* Hero heading: plain off-black text, no gradient treatment */
+/* Now redundant — base selector flattened */
 [data-theme="light"] .dp-hero-line {
   background: none;
   -webkit-background-clip: unset;
@@ -96,4 +96,14 @@
 [data-theme="light"] .dp-prose p,
 [data-theme="light"] .dp-prose li {
   font-size: 1.125rem;
+}
+
+[data-theme="light"] .dp-pullquote p {
+  font-size: var(--dp-text-xl);
+}
+
+@media (min-width: 768px) {
+  [data-theme="light"] .dp-pullquote p {
+    font-size: var(--dp-text-2xl);
+  }
 }

@@ -17,13 +17,13 @@
   --dp-text-tertiary: rgba(255, 255, 255, 0.64);
   --dp-text-ghost: rgba(255, 255, 255, 0.2);
 
-  /* Hero heading gradient (dev-styles uses these for .dp-hero-line; light theme otherwise sets dark) */
+  /* DEPRECATED: gradient text removed — selectors no longer consume these tokens */
   --dp-hero-line-from: rgba(255, 255, 255, 1);
   --dp-hero-line-to: rgba(255, 255, 255, 0.55);
   --dp-hero-accent-from: rgba(255, 255, 255, 0.95);
   --dp-hero-accent-to: rgba(255, 255, 255, 0.7);
 
-  /* Gradient text utility (if used) */
+  /* DEPRECATED: gradient text removed — selectors no longer consume these tokens */
   --dp-gradient-text-from: rgba(255, 255, 255, 0.95);
   --dp-gradient-text-to: rgba(255, 255, 255, 0.55);
 

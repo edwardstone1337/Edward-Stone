@@ -43,8 +43,10 @@ gtag('config', 'G-6MPMYG36LE');
     <script type="module">
       import { initNav } from '../assets/js/dev-projects/nav-component.js';
       import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
+      import { initThemeToggle } from '../assets/js/dev-projects/theme-toggle.js';
       initNav();
       initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+      initThemeToggle();
     </script>
 
     <main class="dp-page">
@@ -194,5 +196,12 @@ gtag('config', 'G-6MPMYG36LE');
     <script src="../assets/js/dev-projects/growth-chart.js"></script>
     <script src="../assets/js/dev-projects/back-to-top.js"></script>
     <script src="../assets/js/dev-projects/effects.js"></script>
+    <script>
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.remove('dp-no-transition');
+      });
+    });
+    </script>
   </body>
 </html>

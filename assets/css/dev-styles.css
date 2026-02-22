@@ -48,20 +48,14 @@ img { display: block; max-width: 100%; }
    ATOMS — Utility classes
    -------------------------------------------- */
 
-/* Hero heading — each line has its own on-theme gradient (darker top, lighter bottom) */
+/* Hero heading — flat text per line */
 .dp-hero-heading .dp-hero-line {
   display: block;
   text-wrap: balance;
-  background: linear-gradient(180deg, var(--dp-hero-line-from) 0%, var(--dp-hero-line-to) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--dp-text-primary);
 }
 .dp-hero-heading .dp-hero-line.dp-hero-accent {
-  background: linear-gradient(180deg, var(--dp-hero-accent-from) 0%, var(--dp-hero-accent-to) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--dp-brand-text);
 }
 
 /* Overline label */
@@ -286,8 +280,13 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-nav-logo {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 1px var(--dp-nav-logo-ring);
 }
+
+.dp-nav-logo-bg { fill: var(--dp-nav-logo-bg); }
+.dp-nav-logo-swirl { fill: var(--dp-nav-logo-swirl); }
+.dp-nav-logo-grad-start { stop-color: var(--dp-nav-logo-gradient-from); }
+.dp-nav-logo-grad-end { stop-color: var(--dp-nav-logo-gradient-to); }
 
 .dp-nav-name {
   font-family: var(--dp-font-display);
@@ -611,24 +610,36 @@ img { display: block; max-width: 100%; }
               stroke var(--dp-duration-base) var(--dp-ease-out);
 }
 
-/* Show/hide icons (dark-only) */
-.dp-toggle-sun { display: block; }
-.dp-toggle-moon { display: none; }
+/* Show/hide icons per theme */
+[data-theme="dark"] .dp-toggle-sun  { display: block; }
+[data-theme="dark"] .dp-toggle-moon { display: none; }
+[data-theme="light"] .dp-toggle-sun  { display: none; }
+[data-theme="light"] .dp-toggle-moon { display: block; }
 
-/* Theme toggle — sun hover (darker sky, filled sun for contrast) */
-.dp-theme-toggle:hover {
+/* Theme toggle — sun hover: dark mode, hovering sun (switch to light) */
+[data-theme="dark"] .dp-theme-toggle:hover {
   background: var(--dp-theme-sun-bg-hover);
   border-color: rgba(7, 89, 133, 0.6);
 }
-.dp-theme-toggle:hover .dp-toggle-sun {
+[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun {
   color: var(--dp-theme-sun-icon-hover);
   stroke: var(--dp-theme-sun-icon-hover);
 }
 .dp-theme-toggle .dp-toggle-sun circle {
   transition: fill var(--dp-duration-base) var(--dp-ease-out);
 }
-.dp-theme-toggle:hover .dp-toggle-sun circle {
+[data-theme="dark"] .dp-theme-toggle:hover .dp-toggle-sun circle {
   fill: var(--dp-theme-sun-icon-hover);
+}
+
+/* Theme toggle — moon hover: light mode, hovering moon (switch to dark) */
+[data-theme="light"] .dp-theme-toggle:hover {
+  background: var(--dp-theme-moon-bg-hover);
+  border-color: rgba(30, 41, 59, 0.6);
+}
+[data-theme="light"] .dp-theme-toggle:hover .dp-toggle-moon {
+  color: var(--dp-theme-moon-icon-hover);
+  stroke: var(--dp-theme-moon-icon-hover);
 }
 
 /* --------------------------------------------
@@ -973,12 +984,9 @@ img { display: block; max-width: 100%; }
 
 /* ============ ATOMS (reusable utilities) ============ */
 
-/* Gradient text */
+/* Flat text (was gradient text) */
 .dp-gradient-text {
-  background: linear-gradient(180deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--dp-text-primary);
 }
 
 /* Noise overlay (fixed full-screen) */
@@ -1210,6 +1218,7 @@ img { display: block; max-width: 100%; }
   margin-top: var(--dp-section-gap);
   padding: var(--dp-strip-padding);
   background: var(--dp-strip-bg);
+  color-scheme: dark;
 }
 
 .dp-strip::before,
@@ -1558,7 +1567,7 @@ img { display: block; max-width: 100%; }
   position: absolute;
   top: var(--dp-space-4);
   left: var(--dp-space-4);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--dp-font-serif);
   font-size: 0;
   font-weight: var(--dp-weight-bold);
   line-height: 1;
@@ -1570,7 +1579,7 @@ img { display: block; max-width: 100%; }
 
 .dp-testimonial-mark::before {
   content: '\201C';
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--dp-font-serif);
   font-size: 10rem;
   font-weight: normal;
   font-style: normal;
@@ -1578,7 +1587,7 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-testimonial-quote {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--dp-font-serif);
   font-size: var(--dp-text-base);
   font-style: italic;
   font-weight: normal;
@@ -1612,6 +1621,34 @@ img { display: block; max-width: 100%; }
   font-weight: var(--dp-weight-normal);
   line-height: var(--dp-leading-normal);
   color: var(--dp-text-secondary);
+}
+
+/* ── Pull Quote ── */
+.dp-pullquote {
+  margin-block: var(--dp-prose-section-gap);
+  padding-block: var(--dp-space-6);
+  border-top: 1px solid var(--dp-border-divider);
+  border-bottom: 1px solid var(--dp-border-divider);
+  border-left: none;
+  border-right: none;
+  background: none;
+}
+
+.dp-pullquote p {
+  font-family: var(--dp-font-serif);
+  font-style: italic;
+  font-size: var(--dp-text-xl);
+  line-height: var(--dp-leading-normal);
+  color: var(--dp-text-primary);
+  font-weight: var(--dp-weight-normal);
+  margin: 0;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .dp-pullquote p {
+    font-size: var(--dp-text-4xl);
+  }
 }
 
 /* --------------------------------------------
@@ -2213,6 +2250,16 @@ body.dp-overlay-active {
 .dp-lightbox-close:focus-visible {
   outline: 2px solid var(--dp-paper-accent);
   outline-offset: 2px;
+}
+
+[data-theme="light"] .dp-lightbox-close {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(0, 0, 0, 0.10);
+  color: rgba(0, 0, 0, 0.80);
+}
+
+[data-theme="light"] .dp-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.8);
 }
 
 /* Print-only lightbox: hidden on screen, visible when printing */
