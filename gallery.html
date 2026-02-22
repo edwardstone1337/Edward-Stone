@@ -46,10 +46,8 @@ gtag('config', 'G-6MPMYG36LE');
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
       import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
-      import { initThemeToggle } from './assets/js/dev-projects/theme-toggle.js';
       initNav();
       initBannerTicker({ text: 'Currently open to new opportunities', separator: '\u2726' });
-      initThemeToggle();
     </script>
     <a href="#main" class="dp-skip-link">Skip to main content</a>
     <main id="main">
@@ -87,12 +85,5 @@ gtag('config', 'G-6MPMYG36LE');
 
     <!-- Analytics: custom GA4 event tracking (must load after all other scripts) -->
     <script src="assets/js/analytics.js"></script>
-    <script>
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        document.documentElement.classList.remove('dp-no-transition');
-      });
-    });
-    </script>
   </body>
 </html>
