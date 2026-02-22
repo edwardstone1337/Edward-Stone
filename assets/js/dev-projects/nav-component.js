@@ -20,7 +20,9 @@ const NAV_LINKS = [
   ]},
   { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+    /* PROD-HIDE: SCP Reader not ready */
+    // { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+    /* END PROD-HIDE */
   ]},
   { text: 'Gallery', href: '/gallery.html' },
   { text: 'Resume', href: '/resume.html' }
