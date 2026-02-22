@@ -25,8 +25,7 @@ gtag('config', 'G-6MPMYG36LE');
 ## Inclusion strategy
 
 - Include on all public HTML pages in:
-- `/index.html`
-- `/404.html`
+- `/index.html`, `/resume.html`, `/gallery.html`, `/404.html`
 - `/projects/*.html`
 - `/case-studies/*.html`
 

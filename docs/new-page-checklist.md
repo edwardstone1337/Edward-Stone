@@ -58,19 +58,19 @@ First element in `<body>`:
 <a href="#main-content" class="dp-skip-link">Skip to content</a>
 ```
 
-## 6. Nav Container + Theme Toggle
+## 6. Nav Container
 
 ```html
 <div id="nav-container"></div>
 <script type="module">
   import { initNav } from '/assets/js/dev-projects/nav-component.js';
-  import { initThemeToggle } from '/assets/js/dev-projects/theme-toggle.js';
+  import { initBannerTicker } from '/assets/js/dev-projects/banner-ticker.js';
   initNav();
-  initThemeToggle();
+  initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
 </script>
 ```
 
-`initThemeToggle()` must be called **after** `initNav()` so `#dp-nav-actions` exists.
+Do **not** load the theme toggle on public pages — it is dev-only (see `docs/theme-init-pattern.md`).
 
 ## 7. Main Content
 
@@ -102,12 +102,25 @@ Add a `<noscript>` block if the page relies on JS for critical content.
 
 ## 10. Verify
 
-- [ ] Both themes render correctly (toggle between light/dark)
+- [ ] Page renders correctly in dark theme (default)
 - [ ] Keyboard navigation works (Tab, Shift+Tab, Escape on overlays)
 - [ ] Mobile drawer opens and closes at ≤768px
 - [ ] Skip link reaches main content
 - [ ] GA coverage check passes: `./scripts/check-ga-coverage.sh`
-- [ ] No console errors in either theme
+- [ ] No console errors
+
+## Case Study Pages (variant)
+
+Case studies in `case-studies/` are permanently light. They **differ** from the standard checklist:
+
+- **Hardcode `data-theme="light"`** in `<head>` (before CSS) — no pre-init script, no theme toggle
+- **Add** `case-study-theme.css` after dev-styles.css
+- **Omit** `initThemeToggle()` — load nav + banner ticker only
+- **Script block**: `initNav()`, `initBannerTicker({ text: '...', separator: '✦' })`
+- **Main**: Use `class="dp-page"` (not `dp-page-content`); case-study-theme handles spacing
+- **Manifest comment**: `<!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->` above scripts for copy-paste consistency
+
+Reference: `case-studies/design-systems.html`, `case-studies/planner.html`, `case-studies/product-discovery.html`.
 
 ## Internal/Dev Pages
 

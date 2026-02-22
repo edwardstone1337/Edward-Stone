@@ -12,8 +12,9 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 | `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
 | `gallery.html` | Design gallery — masonry grid of UI/branding/illustration work | Yes | dev + `gallery.css` |
 | `404.html` | Custom error page | Yes | dev |
-| `projects/fair-share.html` | Fair Share case study | Yes | dev + `project-fair-share.css` |
+| `projects/fair-share.html` | Fair Share case study | Yes | dev + `case-study-theme.css` |
 | `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
+| `case-studies/design-systems.html` | Design Systems case study | Yes | dev + `case-study-theme.css` |
 | `case-studies/planner.html` | Planner case study | Yes | dev + `case-study-theme.css` |
 | `case-studies/product-discovery.html` | Product Discovery case study | Yes | dev + `case-study-theme.css` |
 | `dev/design-system.html` | Living design system reference | No | dev |
@@ -32,7 +33,7 @@ Two CSS systems that must not cross-contaminate. The **dev system** (`assets/css
 ### JavaScript
 
 Two JS directories with different patterns:
-- **`assets/js/dev-projects/`** — 17 files, mostly ES6 modules (`export function`). Active development. New work goes here.
+- **`assets/js/dev-projects/`** — 19 files, mostly ES6 modules (`export function`). Active development. New work goes here.
 - **`assets/js/components/`** — 8 legacy IIFEs. All require global `Utils` from `assets/js/utils.js` loaded first.
 
 ES6 modules import sanitisation from `assets/js/dev-projects/utils.js` when needed. Full inventory: `docs/architecture-js.md`.
@@ -43,9 +44,11 @@ Shared nav component (`assets/js/dev-projects/nav-component.js`) injected via `<
 
 ### Theming
 
-Dual light/dark theme with toggle. A pre-init script in `<head>` reads `localStorage('dp-theme')` then falls back to `prefers-color-scheme`, sets `data-theme` on `<html>`, and adds `dp-no-transition` to suppress flash. The theme toggle (`assets/js/dev-projects/theme-toggle.js`) injects a sun/moon button into `#dp-nav-actions` and persists choice to `localStorage`. A double-`requestAnimationFrame` at end of `<body>` removes `dp-no-transition` to re-enable transitions. Pattern: `docs/theme-init-pattern.md`.
+Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="light"]` — single source of truth. A pre-init script in `<head>` reads `localStorage('dp-theme')` then falls back to `prefers-color-scheme`, sets `data-theme` on `<html>`, and adds `dp-no-transition` to suppress flash. A double-`requestAnimationFrame` at end of `<body>` removes `dp-no-transition` to re-enable transitions. Public pages default dark and do not load the theme toggle. Pattern: `docs/theme-init-pattern.md`.
 
-**Case studies** (`case-studies/*.html`) are permanently light — they hardcode `data-theme="light"` in `<head>` and do not load the theme toggle or pre-init script. **Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
+**Theme toggle** (`assets/js/dev-projects/theme-toggle.js`) is **dev-only** — loaded on `dev/design-system.html` for testing. It injects a sun/moon button into `#dp-nav-actions` and persists choice to `localStorage`.
+
+**Case studies** (`case-studies/*.html`) and `projects/fair-share.html` are permanently light — they hardcode `data-theme="light"` in `<head>` and do not load the theme toggle or pre-init script. They load `case-study-theme.css` for component overrides only (prose sizing, pullquote, hero line); light tokens come from `dev-tokens.css`. **Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
 
 ## Key Patterns
 
@@ -87,6 +90,7 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - No frameworks, no build tools, no npm
 - `dp-` prefix tokens belong to dev system only — never use in legacy pages
 - Sanitise all dynamic content (`escapeHTML` + `sanitizeUrl`)
-- Dual theme (light/dark) with toggle on dev; case studies stay permanently light
+- Light tokens: single source of truth in `dev-tokens.css [data-theme="light"]`; case studies stay permanently light
+- Theme toggle is dev-only (`dev/design-system.html`); public pages default dark
 - Run GA coverage check before pushing
 - Accessibility is not optional — WCAG AAA target

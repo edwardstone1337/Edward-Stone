@@ -1,8 +1,10 @@
 # Theme init pattern (canonical)
 
-> **Status:** Dual light/dark theme with toggle. Seven pages support toggling; case studies are permanently light.
+> **Status:** Public pages default dark. Case studies and project pages (`projects/fair-share.html`) are permanently light. The theme toggle is dev-only (loaded on `dev/design-system.html`).
 
-The theme system has three parts: a **pre-init script** in `<head>`, the **theme-toggle.js** ES6 module, and a **transition-unlock** double-`requestAnimationFrame` at end of `<body>`.
+Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="light"]`. Case-study-specific component overrides (prose sizing, pullquote, hero line) live in `case-study-theme.css`. Nav light overrides (sticky bar opacity, logo ring) live in `dev-styles.css`.
+
+The theme system has two parts for public pages: a **pre-init script** in `<head>` and a **transition-unlock** double-`requestAnimationFrame` at end of `<body>`. Dev pages additionally load the **theme-toggle.js** ES6 module.
 
 ## 1. Head: pre-init script
 
@@ -28,24 +30,18 @@ This runs before first paint and:
 3. Sets `data-theme` on `<html>` for CSS token resolution
 4. Adds `dp-no-transition` class to suppress transition flicker during load
 
-## 2. Body: theme toggle module
+## 2. Body: nav module (public pages)
 
-After `initNav()` in the nav module script block:
+Public pages load nav and banner ticker only — no theme toggle:
 
 ```html
 <script type="module">
   import { initNav } from './assets/js/dev-projects/nav-component.js';
-  import { initThemeToggle } from './assets/js/dev-projects/theme-toggle.js';
+  import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
   initNav();
-  initThemeToggle();
+  initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
 </script>
 ```
-
-`initThemeToggle()` finds `#dp-nav-actions` (created by nav component) and injects a sun/moon toggle button. On click it:
-- Toggles `data-theme` between `dark` and `light` on `<html>`
-- Persists the choice to `localStorage('dp-theme')`
-
-Must be called **after** `initNav()` so the `#dp-nav-actions` container exists.
 
 ## 3. End of body: transition unlock
 
@@ -63,25 +59,34 @@ requestAnimationFrame(function() {
 
 The double-`requestAnimationFrame` ensures the browser has completed first paint with the correct theme before re-enabling CSS transitions. Without this, theme-dependent properties would visibly transition from their default values.
 
-## Files using this pattern
+## Files using this pattern (dark default, no toggle)
 
 - `index.html`
 - `resume.html`
 - `gallery.html`
 - `404.html`
-- `projects/fair-share.html`
 - `projects/scp-reader.html`
-- `dev/design-system.html`
 
-## Case studies (permanently light)
+## Theme toggle (dev-only)
 
-Case study pages (`case-studies/*.html`) use a simpler pattern — they hardcode light theme and do not support toggling:
+The theme toggle (`assets/js/dev-projects/theme-toggle.js`) is loaded only on `dev/design-system.html`. It injects a sun/moon button into `#dp-nav-actions`, toggles `data-theme` between `dark` and `light`, and persists to `localStorage('dp-theme')`. Must be called after `initNav()`.
+
+```html
+<script type="module">
+  import { initThemeToggle } from '../assets/js/dev-projects/theme-toggle.js';
+  initThemeToggle();
+</script>
+```
+
+## Case studies and project pages (permanently light)
+
+Case study pages (`case-studies/*.html`) and `projects/fair-share.html` are permanently light. They hardcode light theme and do not support toggling:
 
 ```html
 <script>document.documentElement.setAttribute('data-theme', 'light');</script>
 ```
 
-No pre-init script, no theme-toggle.js, no transition-unlock needed.
+No pre-init script, no theme-toggle.js, no transition-unlock needed. They load `case-study-theme.css` after dev-styles for component overrides (prose sizing, pullquote, hero line). Light tokens come from `dev-tokens.css`.
 
 ## Preview iframes
 

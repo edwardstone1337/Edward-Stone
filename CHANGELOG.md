@@ -5,18 +5,21 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- **Nav dropdown and drawer light theme**: Dropdown and drawer use tokens (`--dp-dropdown-bg`, `--dp-dropdown-shadow`, `--dp-drawer-bg`, `--dp-drawer-overlay`, `--dp-drawer-border`) in dev-styles.css; defaults in dev-tokens.css; light overrides in case-study-theme.css so nav dropdown and mobile drawer match light case study pages (fixes hardcoded dark dropdown).
-- **TLDR component (case studies)**: Bullet-summary box (`.dp-tldr`) under hero on planner, product-discovery, design-systems; tokens in dev-tokens.css, styles in dev-styles.css, light overrides in case-study-theme.css; `.dp-prose-layout` wrapper for future grid/sidebar (Phase 2). Static HTML per page; no new JS.
-- **Back-to-top on case study pages**: `planner.html`, `design-systems.html`, `product-discovery.html` now load `back-to-top.js` after `effects.js` (same order as index, resume, gallery). Button uses existing tokens; light theme already remapped in `case-study-theme.css`.
-- **Case study script manifest**: Comment `<!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->` above the script block on all three case study pages for copy-paste consistency.
-- **Back-to-top reduced-motion**: In `dev-styles.css`, `.dp-back-to-top { transition: none; }` inside existing `@media (prefers-reduced-motion: reduce)` so button show/hide is instant when user prefers reduced motion (scroll behavior already handled in JS).
-- **Product Discovery case study** (`case-studies/product-discovery.html`): Public case study — customer voice infrastructure at Inquisitive, 95% actionable insights in one month. Dev system + `case-study-theme.css`, GA4 tagged.
-- **Hero card section** (index): Case study links moved into standalone `.dp-hero-card-section` below hero; `.dp-hero-card-section`, `.dp-hero-card-section .dp-hero-card` in dev-styles.css.
-- **Nav**: Case Studies dropdown uses full-sentence link labels; third item "Changing how an organisation decides what to build" → product-discovery. Opening one dropdown closes the others. Case Studies menu with 3 items gets `min-width: 400px`; dropdown background `rgba(30, 30, 30, 0.95)` for legibility.
+- **Fair Share project page** (`projects/fair-share.html`): Impact-first case study template with growth chart, CTA card; nav Projects dropdown live (Fair Share, SCP Reader).
+- **Design Systems case study** (`case-studies/design-systems.html`): Public case study — accelerating team velocity at Inquisitive. Listed in nav Case Studies dropdown.
+- **Nav dropdown and drawer light theme**: Dropdown and drawer use tokens (`--dp-dropdown-bg`, `--dp-dropdown-shadow`, `--dp-drawer-bg`, `--dp-drawer-overlay`, `--dp-drawer-border`) in dev-styles.css; light overrides in case-study-theme.css so nav matches light case study pages.
+- **TLDR component (case studies)**: Bullet-summary box (`.dp-tldr`) under hero on planner, product-discovery, design-systems; static HTML per page; no new JS.
+- **Back-to-top on case study pages**: All three case studies load `back-to-top.js`; manifest comment `<!-- CASE-STUDY-SCRIPTS: effects.js, back-to-top.js, module(nav-component, banner-ticker) -->` for copy-paste consistency.
+- **Back-to-top reduced-motion**: `.dp-back-to-top { transition: none; }` inside `prefers-reduced-motion` so show/hide is instant.
+- **Product Discovery case study** (`case-studies/product-discovery.html`): Customer voice infrastructure at Inquisitive, 95% actionable insights in one month.
+- **Hero card section** (index): Case study links in `.dp-hero-card-section` below hero; full-width at 768px breakpoint.
+- **Nav**: Case Studies + Projects dropdowns; full-sentence labels; opening one closes others; `min-width: 400px` for Case Studies; dropdown background `rgba(30, 30, 30, 0.95)`.
+- **Dual theme restore**: Flattened gradients, accent rewired to brand tokens; theme toggle and pre-init script in `<head>`.
+- **Banner ticker** (`banner-ticker.js`): Slim scrolling bar above nav; "Currently open to new opportunities" with separator ✦; used on index, resume, gallery, 404, project pages, case studies.
 
 ### Changed
-- **Index hero**: Removed `dp-hero--split`; hero card and CTA block moved out of hero into `dp-hero-card-section`. Removed hero card CTA (Get in touch button + "I could write one about your product too"). Hero/card section padding tuned per breakpoint.
-- **Banner ticker** (design-systems, planner): Text "This page is a work in progress" → "Currently open to new opportunities"; separator → ✦.
+- **Index hero**: Hero card and CTA moved into `dp-hero-card-section`; hero/card padding tuned per breakpoint; `dp-hero-card-section` full-width at 768px.
+- **Fair Share project page**: Impact-first copy; uses `growth-chart-light.js` (permanent light theme).
 
 ### Added
 - **Gallery page** (`gallery.html`): New public page showcasing design work — masonry grid layout (3/2/1 columns), data-driven via `assets/data/gallery.json`, scroll-reveal animations, GA4 tagged. Uses dev system tokens.
@@ -155,7 +158,7 @@ All notable changes to this project will be documented in this file.
 - **Logo.svg**: Modified dimensions and design for improved aesthetics.
 - **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Replaced centered green toast with Linear-style snackbar — dark pill at bottom, blur, slide-up + fade-in (8px), 3s visible (UX snackbar duration), exit slides up 4px + fade (150ms); checkmark icon + "Copied to clipboard"; theme-aware (light/dark); reduced-motion instant show/hide; re-copy clears timeouts and re-triggers. Screen reader `.km-status` aria-live unchanged. "Click to copy" tooltip restyled to match snackbar (pill, blur, theme-aware).
 - **Kaomoji preview** (`assets/previews/kaomoji/index.html`): Rows frozen by default (`animation-play-state: paused`); all rows drift on container hover (`.km-container:hover`). Row-level hover rule removed; focus-within still pauses for keyboard users. Reduced motion unchanged.
-- **Homepage (index.html)**: Replaced with dev-projects-style landing (dp-hero, projects grid, theme toggle, magnetic tilt, avatar easter egg, effects); previous portfolio sections (nav, testimonials, case studies, skills, contact, reading) removed. Original saved as dev/old-index.html.
+- **Homepage (index.html)**: Replaced with dev-projects-style landing (dp-hero, projects grid, theme toggle, avatar easter egg, effects); previous portfolio sections (nav, testimonials, case studies, skills, contact, reading) removed. Original saved as dev/old-index.html.
 - **Component template**: Uses shared Utils.escapeHTML guard instead of local escapeHTML; aligns new components with utils.js dependency.
 - **Meta viewport**: Added `viewport-fit=cover` for safe-area-inset-* support on notched devices (iPhone X+).
 - **Dev-projects toggles (snake, theme)**: Snake button uses `snake.svg` with theme-aware colour; hover = luminous green + drop-shadow (tokens: `--dp-snake-icon-hover`, `--dp-snake-icon-glow`). Theme toggle: sun hover = darker sky gradient + filled sun centre; moon hover = dark bg + filled moon glow. Toggle transitions use `--dp-duration-base` (200ms).
