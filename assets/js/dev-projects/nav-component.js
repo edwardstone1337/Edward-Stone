@@ -13,17 +13,17 @@
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
-  { text: 'Projects', children: [
-    { text: 'Fair Share', href: '/projects/fair-share.html' },
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
-  ]},
   { text: 'Case Studies', children: [
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' }
   ]},
-  { text: 'Resume', href: '/resume.html' },
-  { text: 'Gallery', href: '/gallery.html' }
+  { text: 'Projects', children: [
+    { text: 'Fair Share', href: '/projects/fair-share.html' },
+    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+  ]},
+  { text: 'Gallery', href: '/gallery.html' },
+  { text: 'Resume', href: '/resume.html' }
 ];
 
 /**

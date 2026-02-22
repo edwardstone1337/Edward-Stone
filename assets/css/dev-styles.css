@@ -1553,8 +1553,8 @@ img { display: block; max-width: 100%; }
   justify-content: center;
   position: relative;
   background: var(--dp-glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--dp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--dp-glass-blur));
   border: 1px solid var(--dp-border-default);
   border-radius: var(--dp-radius-xl);
   padding: var(--dp-space-8) var(--dp-space-6);
@@ -1621,6 +1621,138 @@ img { display: block; max-width: 100%; }
   font-weight: var(--dp-weight-normal);
   line-height: var(--dp-leading-normal);
   color: var(--dp-text-secondary);
+}
+
+/* ── Testimonials container / track ── */
+.dp-testimonials {
+  --dp-testimonial-min-width: 280px;
+  --dp-testimonial-min-width-lg: 300px;
+  --dp-testimonial-track-max-width: 960px;
+  padding-top: 0;
+  padding-bottom: var(--dp-space-16);
+}
+
+.dp-testimonials-track {
+  display: flex;
+  flex-direction: row;
+  gap: var(--dp-space-6);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.dp-testimonials-track::-webkit-scrollbar {
+  display: none;
+}
+
+.dp-testimonials .dp-testimonial {
+  min-width: var(--dp-testimonial-min-width);
+  flex: 1;
+}
+
+@media (max-width: 767px) {
+  .dp-testimonials {
+    position: relative;
+  }
+  .dp-testimonials::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--dp-space-10);
+    background: linear-gradient(to right, transparent, var(--dp-bg-base));
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .dp-testimonials {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+  .dp-testimonials-track {
+    max-width: var(--dp-testimonial-track-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dp-testimonials .dp-testimonial {
+    min-width: var(--dp-testimonial-min-width-lg);
+  }
+}
+
+/* ── Star rating ── */
+.dp-star-rating {
+  --dp-star-rating-icon-size: 28px;
+  padding-top: 0;
+  padding-bottom: var(--dp-space-16);
+}
+
+.dp-star-rating-card {
+  --dp-star-rating-max-width: 400px;
+  background: var(--dp-glass-bg);
+  backdrop-filter: blur(var(--dp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--dp-glass-blur));
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-md);
+  padding: var(--dp-space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--dp-space-2);
+  max-width: var(--dp-star-rating-max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dp-star-rating-stars {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--dp-space-2);
+  color: var(--dp-accent);
+}
+
+.dp-star-rating-stars svg {
+  width: var(--dp-star-rating-icon-size);
+  height: var(--dp-star-rating-icon-size);
+  flex-shrink: 0;
+}
+
+.dp-star-rating-value {
+  font-size: var(--dp-text-3xl);
+  font-weight: var(--dp-weight-bold);
+  color: var(--dp-accent);
+}
+
+.dp-star-rating-label {
+  font-size: var(--dp-text-sm);
+  color: var(--dp-text-secondary);
+}
+
+/* ── Growth chart ── */
+.dp-growth-chart {
+  --dp-growth-chart-max-height: 320px;
+  background: var(--dp-glass-bg);
+  backdrop-filter: blur(var(--dp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--dp-glass-blur));
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-md);
+  padding: var(--dp-space-6);
+  margin-top: var(--dp-space-8);
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  max-height: var(--dp-growth-chart-max-height);
+}
+
+.dp-growth-chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
 }
 
 /* ── Pull Quote ── */

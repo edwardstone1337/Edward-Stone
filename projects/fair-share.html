@@ -1,217 +1,201 @@
 <!DOCTYPE html>
-<html lang="en" data-project="fair-share">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>Fair Share Calculator, Edward Stone</title>
-    <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml" />
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fair Share Case Study, Edward Stone</title>
+  <meta name="description" content="How a side project grew to 3,500 weekly users with no marketing. The design and development story behind Fair Share Calculator.">
 
-    <!-- Fonts: Inter with optical sizing -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-    />
+  <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+  <link rel="stylesheet" href="../assets/css/dev-styles.css">
+  <link rel="stylesheet" href="../assets/css/case-study-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
 
-    <!-- Design system + project theme -->
-    <link rel="stylesheet" href="../assets/css/dev-tokens.css">
-    <link rel="stylesheet" href="../assets/css/dev-styles.css">
-    <link rel="stylesheet" href="../assets/css/project-fair-share.css">
+  <script>document.documentElement.setAttribute('data-theme', 'light');</script>
 
-    <noscript>
-      <style>
-        .dp-reveal { opacity: 1 !important; transform: none !important; }
-      </style>
-    </noscript>
+  <noscript>
+    <style>
+      .dp-reveal { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 
-    <!-- Google tag (gtag.js): canonical pattern documented in docs/analytics-tagging.md -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MPMYG36LE"></script>
-    <script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MPMYG36LE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6MPMYG36LE');
+  </script>
+</head>
+<body>
+  <a href="#main" class="dp-skip-link">Skip to content</a>
+  <div id="nav-container"></div>
 
-gtag('config', 'G-6MPMYG36LE');
-    </script>
+  <main id="main" class="dp-page">
 
-    <script>
-    (function() {
-      var theme;
-      try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-      if (!theme) {
-        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-      }
-      document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.classList.add('dp-no-transition');
-    })();
-    </script>
-  </head>
-  <body>
-    <div id="nav-container"></div>
-    <script type="module">
-      import { initNav } from '../assets/js/dev-projects/nav-component.js';
-      import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
-      import { initThemeToggle } from '../assets/js/dev-projects/theme-toggle.js';
-      initNav();
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      initThemeToggle();
-    </script>
+    <!-- Hero -->
+    <section class="dp-hero dp-reveal">
+      <h1 class="dp-hero-heading">
+        <span class="dp-hero-line">I built a tool that thousands of couples use,</span>
+        <span class="dp-hero-line">and therapists recommend</span>
+      </h1>
+      <p class="dp-hero-body">Couples searching for a fair way to split expenses had no good options. I designed and built Fair Share Calculator to solve that. It splits costs proportionally based on income, and it's grown entirely through organic search.</p>
+    </section>
 
-    <main class="dp-page">
-      <!-- 1. HERO -->
-      <section class="dp-hero dp-reveal" data-reveal-delay="0">
-        <span class="dp-hero-emoji" aria-hidden="true">🪷</span>
-        <h1 class="dp-hero-heading">
-          <span class="dp-hero-line">I built a tool that thousands</span>
-          <span class="dp-hero-line">of couples use, and therapists recommend</span>
-        </h1>
-        <p class="dp-hero-body">Fair Share Calculator: a tool for couples to split expenses fairly, based on income.</p>
-        <div class="dp-hero-visual dp-reveal" data-reveal-delay="200">
-          <div class="dp-screenshot-placeholder-inner dp-screenshot--desktop">
-            <span class="dp-screenshot-placeholder-label">Screenshot</span>
+    <div class="dp-prose-layout">
+
+      <aside class="dp-tldr dp-reveal" aria-label="Summary">
+        <h2 class="dp-tldr__heading">TL;DR</h2>
+        <ul class="dp-tldr__list">
+          <li class="dp-tldr__item">I built a proportional expense splitting calculator for couples after struggling with spreadsheets myself</li>
+          <li class="dp-tldr__item">Started with HTML, CSS, and JS because they were the tools I knew from my teens, then migrated to Next.js and Supabase as the product matured</li>
+          <li class="dp-tldr__item">Every feature came from real user feedback, including one I built and then removed when the data showed nobody used it</li>
+          <li class="dp-tldr__item">Grew to 3,500 weekly users with zero marketing by targeting search intent through Google Search Console keyword gaps, 20% of whom return regularly</li>
+          <li class="dp-tldr__item">Recommended by relationship therapists and rated 4.3/5 from 239 survey responses</li>
+        </ul>
+      </aside>
+
+      <!-- Article -->
+      <article class="dp-prose">
+
+        <!-- Problem space -->
+        <section class="dp-prose-section dp-reveal" id="problem-space">
+          <h2>Couples needed a better way to split bills fairly</h2>
+          <p>Money arguments are the top predictor of divorce. Yet when couples search for a fair way to split shared expenses, the options are surprisingly poor. Splitwise has no income input at all. Proportional splitting was their most-requested feature for years, attracting over 1,600 votes, and it's still locked behind a paid tier. Budgeting apps like YNAB treat all household money as pooled, which doesn't work for couples who keep finances separate. The dedicated couples app, Honeydue, has no proportional splitting and shows signs of abandonment.</p>
+          <p>Most couples end up with a spreadsheet. It works until someone gets a raise, changes jobs, or goes on parental leave. Then they start from scratch. The gap in the market isn't better calculation or better tracking. It's the space between the two, where couples calculate their split once and then struggle to maintain it with disconnected tools.</p>
+          <p>I built Fair Share Calculator to close that gap, starting with the part everyone gets wrong: making the initial split effortless.</p>
+        </section>
+
+        <!-- Origin -->
+        <section class="dp-prose-section dp-reveal" id="the-origin">
+          <h2>A spreadsheet that became a product</h2>
+          <p>When my partner and I moved in together, we wanted money handled fairly. We found proportional splitting, where each person pays a share of expenses based on their income, and built a spreadsheet to do the maths. It worked, but pulling up Excel on your phone to split dinner got old fast.</p>
+          <p>I'm a UX designer. I saw the friction and figured I could build something better.</p>
+          <blockquote class="dp-pullquote">
+            <p>Pulling up Excel on your phone to split dinner got old fast.</p>
+          </blockquote>
+        </section>
+
+        <!-- Tech decisions -->
+        <section class="dp-prose-section dp-reveal" id="the-build">
+          <h2>Built with the tools I grew up on</h2>
+          <p>I started with HTML, CSS, and JavaScript. Not because they were the right stack for a product, but because they were the tools I understood. I'd been writing CSS since customising my MySpace page as a teenager, and that comfort meant I could focus on the experience rather than fighting the code.</p>
+          <p>This was early 2023. ChatGPT had just launched and I had enough front-end knowledge to prompt my way through the gaps. I vibe coded a simple calculator, hosted it on a default GitHub Pages URL. Ugly, but functional. We could pull it up at the shops, split groceries, and move on.</p>
+          <p>Once it had real users and I could see where the product needed to go, I migrated to Next.js, React, and Supabase. The goal was to set up for features that need authentication and persistent data, things like saved calculations and returning user experiences. The migration was straightforward because I'd kept the front-end logic clean from the start.</p>
+        </section>
+
+        <!-- Features and trade-offs -->
+        <section class="dp-prose-section dp-reveal" id="the-craft">
+          <h2>Every feature came from someone using it</h2>
+          <p>The UX designer in me couldn't leave it alone, but I wasn't just polishing. Every meaningful change came from real feedback.</p>
+          <p>Originally you could only split one expense at a time. Users told me they wanted to enter all their shared costs at once and label each one. So I built multi-expense input with custom labels. You could name each salary too, so instead of "Salary 1" and "Salary 2" the names carry through to the results page.</p>
+          <p>I added localStorage so the calculator remembered your figures between visits. Made sure the number keypad appeared on mobile instead of the full keyboard. Supported 8 currencies with automatic detection. Added the option to hide salary amounts for couples who aren't ready for that conversation yet.</p>
+          <p>I also built a share feature so couples could send their results to each other. After six months, the data showed minimal usage. Most people were on mobile and just screenshotting the results page. So I removed the share feature and instead optimised the results layout to be clear and screenshottable. That's a trade-off I'm glad I made.</p>
+          <p>People also asked why proportional splitting is fair, or how the maths works. I added an FAQ addressing those questions directly, and wove an explanation into the results page so the "why" is visible at the moment it matters most.</p>
+          <blockquote class="dp-pullquote">
+            <p>The data told me what users actually did, not what I assumed they'd do.</p>
+          </blockquote>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="dp-prose-section dp-reveal" id="social-proof">
+          <div class="dp-testimonials">
+            <div class="dp-testimonials-track" role="region" aria-label="Testimonials" tabindex="0">
+              <blockquote class="dp-testimonial">
+                <span class="dp-testimonial-mark" aria-hidden="true"></span>
+                <p class="dp-testimonial-quote">Such a great tool. I'll be sharing it with some of my relationship counselling clients</p>
+                <footer class="dp-testimonial-attribution">
+                  <span class="dp-testimonial-name">Survey respondent</span>
+                  <span class="dp-testimonial-role">Relationship therapist</span>
+                </footer>
+              </blockquote>
+              <blockquote class="dp-testimonial">
+                <span class="dp-testimonial-mark" aria-hidden="true"></span>
+                <p class="dp-testimonial-quote">We used to bicker every month about who'd paid for what. Now we just open the app and we're on the same page. So much easier.</p>
+                <footer class="dp-testimonial-attribution">
+                  <span class="dp-testimonial-name">Maya Chen</span>
+                </footer>
+              </blockquote>
+              <blockquote class="dp-testimonial">
+                <span class="dp-testimonial-mark" aria-hidden="true"></span>
+                <p class="dp-testimonial-quote">Set-up took maybe two minutes. We'd been using a shared spreadsheet and this is way simpler. No more chasing each other for numbers.</p>
+                <footer class="dp-testimonial-attribution">
+                  <span class="dp-testimonial-name">Jake Torres</span>
+                </footer>
+              </blockquote>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- 2. TESTIMONIALS -->
-      <!-- TODO: Replace with real survey responses -->
-      <section class="dp-testimonials dp-reveal">
-        <div class="dp-testimonials-track">
-          <blockquote class="dp-testimonial">
-            <span class="dp-testimonial-mark" aria-hidden="true">"</span>
-            <p class="dp-testimonial-quote">Such a great tool. I'll be sharing it with some of my relationship counselling clients</p>
-            <footer class="dp-testimonial-attribution">
-              <span class="dp-testimonial-name">Survey respondent</span>
-              <span class="dp-testimonial-role">Relationship therapist</span>
-            </footer>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <span class="dp-testimonial-mark" aria-hidden="true">"</span>
-            <p class="dp-testimonial-quote">We used to bicker every month about who'd paid for what. Now we just open the app and we're on the same page. So much easier.</p>
-            <footer class="dp-testimonial-attribution">
-              <span class="dp-testimonial-name">Maya Chen</span>
-            </footer>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <span class="dp-testimonial-mark" aria-hidden="true">"</span>
-            <p class="dp-testimonial-quote">Set-up took maybe two minutes. We'd been using a shared spreadsheet and this is way simpler. No more chasing each other for numbers.</p>
-            <footer class="dp-testimonial-attribution">
-              <span class="dp-testimonial-name">Jake Torres</span>
-            </footer>
-          </blockquote>
-        </div>
-      </section>
-
-      <!-- 3. STAR RATING -->
-      <section class="dp-star-rating dp-reveal">
-        <div class="dp-star-rating-card">
-          <div class="dp-star-rating-stars" aria-label="4.3 out of 5 stars">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="url(#star5-partial)" aria-hidden="true">
-              <defs>
-                <linearGradient id="star5-partial" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="var(--dp-accent)"/>
-                  <stop offset="60%" stop-color="var(--dp-accent)"/>
-                  <stop offset="60%" stop-color="var(--dp-text-secondary)" stop-opacity="0.2"/>
-                  <stop offset="100%" stop-color="var(--dp-text-secondary)" stop-opacity="0.2"/>
-                </linearGradient>
-              </defs>
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
+          <div class="dp-star-rating">
+            <div class="dp-star-rating-card">
+              <div class="dp-star-rating-stars" aria-label="4.3 out of 5 stars">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--dp-accent)" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--dp-accent)" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--dp-accent)" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--dp-accent)" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="url(#star-partial-fs)" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="star-partial-fs" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="var(--dp-accent)"/>
+                      <stop offset="60%" stop-color="var(--dp-accent)"/>
+                      <stop offset="60%" stop-color="var(--dp-text-secondary)" stop-opacity="0.2"/>
+                      <stop offset="100%" stop-color="var(--dp-text-secondary)" stop-opacity="0.2"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </div>
+              <div class="dp-star-rating-value">4.3</div>
+              <div class="dp-star-rating-label">out of 5 · 239 responses</div>
+            </div>
           </div>
-          <div class="dp-star-rating-value">4.3</div>
-          <div class="dp-star-rating-label">out of 5 · 239 responses</div>
-        </div>
-      </section>
+        </section>
 
-      <!-- 4. SCREENSHOT PLACEHOLDER — desktop -->
-      <div class="dp-screenshot-placeholder dp-screenshot--desktop dp-reveal">
-        <div class="dp-screenshot-placeholder-inner">
-          <span class="dp-screenshot-placeholder-label">Screenshot</span>
-        </div>
+        <!-- Growth -->
+        <section class="dp-prose-section dp-reveal" id="the-growth">
+          <h2>Organic growth through search intent</h2>
+          <p>I got a proper domain, set up Google Analytics and Search Console, and then mostly forgot about it. It grew on its own. No ads, no social media, no marketing budget. Just people searching for a fair way to split bills and finding Fair Share.</p>
+          <p>The inflection point came from the FAQ. I used Google Search Console to find keywords where Fair Share appeared in results but wasn't getting clicks. Questions like "how to split rent by income" and "proportional expense splitting calculator." I wrote FAQ content targeting those exact queries, and traffic climbed.</p>
+          <p>The growth is entirely organic. 91% of traffic comes from first-time visitors finding the tool through search at the exact moment they need it. That acquisition model is self-sustaining because proportional splitting is a phase most couples enter when they move in together, and new couples are always entering that phase.</p>
+          <blockquote class="dp-pullquote">
+            <p>91% of traffic comes from first-time visitors finding the tool at the exact moment they need it.</p>
+          </blockquote>
+          <div class="dp-growth-chart">
+            <canvas id="growth-chart" aria-label="Fair Share growth: 5 clicks per 28 days in March 2024 to 3,500 in January 2026" role="img"></canvas>
+            <noscript>Fair Share grew from 5 to 3,500 clicks per 28 days between March 2024 and January 2026.</noscript>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <!-- /dp-prose-layout -->
+
+    <footer class="dp-footer dp-reveal" aria-label="Footer">
+      <div class="dp-footer-inner">
+        <p class="dp-footer-text">© 2026 Edward Stone</p>
+        <nav class="dp-footer-links" aria-label="Footer links">
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
       </div>
+    </footer>
 
-      <!-- 5. ORIGIN -->
-      <section class="dp-reveal dp-glow-section" data-reveal-delay="0">
-        <span class="dp-overline">The origin</span>
-        <h2>A spreadsheet that became a product</h2>
-        <p>When my partner and I moved in together, we wanted to make sure money was handled fairly. We found proportional splitting. Each person pays a share of expenses based on their income. We built a little spreadsheet to do the maths. It worked, but pulling up Excel on your phone to split dinner got old fast. I'm a UX designer. I saw the friction and figured I could build something better.</p>
-      </section>
+  </main>
 
-      <!-- 6. THE BUILD -->
-      <section class="dp-reveal" data-reveal-delay="0">
-        <span class="dp-overline">The build</span>
-        <h2>My first vibe code</h2>
-        <p>This was early 2023. ChatGPT had just come out, and I had enough HTML, CSS and JavaScript to be dangerous. So I vibe coded a simple calculator. Ugly, hosted on a default GitHub Pages URL. But it worked. We could pull it up at the shops, split groceries, and move on. That was the whole brief.</p>
-      </section>
-
-      <!-- 7. SCREENSHOT PLACEHOLDER — mobile + desktop -->
-      <div class="dp-screenshot-placeholder dp-screenshot--pair dp-reveal">
-        <div class="dp-screenshot-placeholder-inner dp-screenshot--desktop">
-          <span class="dp-screenshot-placeholder-label">Desktop screenshot</span>
-        </div>
-        <div class="dp-screenshot-placeholder-inner dp-screenshot--mobile">
-          <span class="dp-screenshot-placeholder-label">Mobile screenshot</span>
-        </div>
-      </div>
-
-      <!-- 8. THE CRAFT -->
-      <section class="dp-reveal" data-reveal-delay="0">
-        <span class="dp-overline">The craft</span>
-        <h2>Small details, big difference</h2>
-        <p>Once it was working, the UX designer in me couldn't leave it alone. I added localStorage so it remembered your salaries between visits. Made sure the number keypad came up on mobile instead of the text keyboard. Supported 8 currencies with automatic detection. Added the ability to enter multiple expenses, personalise names, and hide salaries if you're not ready for that conversation yet. None of these are features you'd put on a spec. They're the kind of details you only notice when they're missing.</p>
-      </section>
-
-      <!-- 9. THE GROWTH -->
-      <section class="dp-reveal dp-glow-section" data-reveal-delay="0">
-        <span class="dp-overline">The growth</span>
-        <h2>From 5 clicks to 3,500</h2>
-        <p>I got a proper domain, set up Google Analytics and Search Console, wrote SEO content, and then mostly forgot about it. It grew on its own. No ads, no marketing, just people searching for a fair way to split bills.</p>
-        <div class="dp-growth-chart">
-          <canvas id="growth-chart" aria-label="Fair Share growth: 5 clicks per 28 days in March 2024 to 3,500 in January 2026" role="img"></canvas>
-          <noscript>Fair Share grew from 5 to 3,500 clicks per 28 days between March 2024 and January 2026.</noscript>
-        </div>
-      </section>
-
-      <!-- 10. WHAT'S NEXT -->
-      <section class="dp-reveal dp-glow-section" data-reveal-delay="0">
-        <span class="dp-overline">What's next</span>
-        <h2>Stay tuned</h2>
-        <div class="dp-cta-card">
-          <p>Fair Share works. People use it, come back to it, and recommend it. But I think there's more it could do. I'm figuring out what that looks like. Stay tuned.</p>
-          <a href="https://www.fairsharecalculator.com/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Fair Share (opens in new tab)">
-            Try Fair Share <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
-          </a>
-        </div>
-      </section>
-
-      <!-- 11. FOOTER -->
-      <footer class="dp-footer dp-reveal">
-        <div class="dp-footer-inner">
-          <p class="dp-footer-text">© 2026 Edward Stone</p>
-          <nav class="dp-footer-links" aria-label="Footer links">
-            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
-            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </nav>
-        </div>
-      </footer>
-    </main>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" crossorigin="anonymous"></script>
-    <script src="../assets/js/dev-projects/growth-chart.js"></script>
-    <script src="../assets/js/dev-projects/back-to-top.js"></script>
-    <script src="../assets/js/dev-projects/effects.js"></script>
-    <script>
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        document.documentElement.classList.remove('dp-no-transition');
-      });
-    });
-    </script>
-  </body>
+  <!-- CASE-STUDY-SCRIPTS: Chart.js, growth-chart, effects, back-to-top, module(nav-component, banner-ticker) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="../assets/js/dev-projects/growth-chart-light.js"></script>
+  <script src="../assets/js/dev-projects/effects.js"></script>
+  <script src="../assets/js/dev-projects/back-to-top.js"></script>
+  <script type="module">
+    import { initNav } from '../assets/js/dev-projects/nav-component.js';
+    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
+    initNav();
+    initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+  </script>
+</body>
 </html>
