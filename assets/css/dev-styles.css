@@ -2641,6 +2641,11 @@ body.dp-overlay-active {
   .dp-hero-card__link {
     font-size: var(--dp-text-base);
   }
+  .dp-hero-card-section {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
   .dp-strip {
     margin-top: var(--dp-section-gap);
     padding: var(--dp-space-10) var(--dp-space-5);
