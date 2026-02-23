@@ -2,7 +2,7 @@
 
 ## Two Component Systems
 
-This project has two JS component directories with different conventions. **New work goes in `assets/js/dev-projects/`** using ES6 modules.
+This project has two JS component directories with different conventions. **New work goes in `assets/js/dev-projects/`** using ES6 modules (18 files).
 
 ## `assets/js/dev-projects/` — Active Development (ES6 Modules)
 

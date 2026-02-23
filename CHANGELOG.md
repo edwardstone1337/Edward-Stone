@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Gallery image src**: Sanitised via `sanitizeUrl()` before use; XSS hardening.
+- **404 Snake button**: onclick guarded with `typeof SnakeGame !== 'undefined' && SnakeGame.open()` to avoid errors if nav/snake load order differs.
+- **Kaomoji snackbar message**; project-card indentation.
+- **Nav links and button**: UA default background reset to prevent unwanted link/button styling.
+
+### Removed
+- **magnetic-tilt.js**: Deleted; no longer used.
+
 ### Added
 - **Fair Share project page** (`projects/fair-share.html`): Impact-first case study template with growth chart, CTA card; nav Projects dropdown live (Fair Share, SCP Reader).
 - **Design Systems case study** (`case-studies/design-systems.html`): Public case study — accelerating team velocity at Inquisitive. Listed in nav Case Studies dropdown.
