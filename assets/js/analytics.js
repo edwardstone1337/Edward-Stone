@@ -8,7 +8,7 @@
  * - project_click: clicks on project strip buttons (learn more / visit)
  * - snake_opened: snake game overlay opened
  * - resume_lightbox: resume lightbox opened
- * - resume_download: resume download actions (pdf, print, clipboard)
+ * - resume_download: resume download actions (pdf, print, clipboard, hero)
  * - easter_egg: avatar easter egg triggered
  */
 (function () {
@@ -123,7 +123,22 @@
   }
 
   /**
-   * 5. easter_egg
+   * 5. hero_resume_download
+   * Listen for click on hero resume download button (static PDF)
+   */
+  function initHeroResumeTracking() {
+    var heroBtn = document.querySelector('.dp-hero .dp-btn-primary[download]');
+    if (!heroBtn) return;
+    heroBtn.addEventListener('click', function () {
+      track('resume_download', {
+        method: 'pdf',
+        location: 'hero'
+      });
+    });
+  }
+
+  /**
+   * 6. easter_egg
    * Listen for click on .dp-avatar-wrap
    */
   function initEasterEggTracking() {
@@ -145,6 +160,7 @@
     initSnakeTracking();
     initResumeLightboxTracking();
     initResumeDownloadTracking();
+    initHeroResumeTracking();
     initEasterEggTracking();
   }
 

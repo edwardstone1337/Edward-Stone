@@ -26,6 +26,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
+  scroll-behavior: smooth;
 }
 
 body {
