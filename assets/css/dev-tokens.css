@@ -114,6 +114,7 @@
   /* Surfaces */
   --dp-bg-base: var(--dp-raw-grey-950);
   --dp-bg-raised: var(--dp-raw-grey-900);
+  --dp-bg-elevated: var(--dp-raw-grey-900);
   --dp-bg-card: rgba(255, 255, 255, 0.03);
   --dp-glass-bg: rgba(255, 255, 255, 0.05);
   --dp-glass-bg-mid: rgba(30, 30, 30, 0.55);
@@ -320,6 +321,7 @@
   /* Surfaces — "paper on desk" hierarchy */
   --dp-bg-base: #EDF0F7;
   --dp-bg-raised: #F0F2FA;
+  --dp-bg-elevated: var(--dp-raw-white);
   --dp-bg-card: rgba(255, 255, 255, 0.75);
   --dp-glass-bg: rgba(255, 255, 255, 0.65);
   --dp-glass-bg-mid: rgba(255, 255, 255, 0.75);
@@ -438,6 +440,6 @@
   --dp-drawer-border: rgba(0, 0, 0, 0.08);
 
   /* TLDR */
-  --dp-tldr-bg: var(--dp-bg-raised);
+  --dp-tldr-bg: var(--dp-bg-elevated);
   --dp-tldr-border: var(--dp-border-default);
 }
