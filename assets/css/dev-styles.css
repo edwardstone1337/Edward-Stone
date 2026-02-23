@@ -1202,6 +1202,91 @@ img { display: block; max-width: 100%; }
   color: var(--dp-card-text-secondary);
 }
 
+/* ── Toolbox ────────────────────────────── */
+
+.dp-toolbox {
+  margin-top: var(--dp-space-16);
+}
+
+.dp-toolbox__heading {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-xl);
+  font-weight: var(--dp-weight-semibold);
+  color: var(--dp-text-primary);
+  text-align: center;
+  margin-bottom: var(--dp-space-8);
+}
+
+.dp-toolbox__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--dp-space-6);
+}
+
+/* Row 1: each card spans 2 of 6 columns (3 equal cards) */
+.dp-toolbox__card:nth-child(-n+3) {
+  grid-column: span 2;
+}
+
+/* Row 2: each card spans 3 of 6 columns (2 centered cards) */
+.dp-toolbox__card:nth-child(n+4) {
+  grid-column: span 3;
+}
+
+.dp-toolbox__card {
+  padding: var(--dp-space-6);
+  border-radius: var(--dp-radius-lg);
+  background: var(--dp-glass-bg-elevated);
+  transition: border-color var(--dp-duration-base) var(--dp-ease-out),
+              background var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-toolbox__card:hover {
+  border-color: var(--dp-border-hover);
+  background: var(--dp-bg-card-hover);
+}
+
+.dp-toolbox__card-title {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-base);
+  font-weight: var(--dp-weight-semibold);
+  color: var(--dp-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--dp-tracking-wider);
+  margin-bottom: var(--dp-space-4);
+}
+
+.dp-toolbox__list {
+  list-style: disc;
+  padding-left: var(--dp-space-5);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-2);
+}
+
+.dp-toolbox__list li {
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-base);
+  line-height: var(--dp-leading-normal);
+  color: var(--dp-text-primary);
+}
+
+@media (max-width: 768px) {
+  .dp-toolbox {
+    padding: 0 var(--dp-space-4);
+  }
+
+  .dp-toolbox__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dp-toolbox__card:nth-child(-n+3),
+  .dp-toolbox__card:nth-child(n+4) {
+    grid-column: auto;
+  }
+}
+
 /* --------------------------------------------
    ORGANISMS — Product strip
    -------------------------------------------- */
@@ -2703,6 +2788,10 @@ body.dp-overlay-active {
 
   .dp-card:hover {
     transform: none;
+  }
+
+  .dp-toolbox__card {
+    transition: none;
   }
 
   .dp-card::after {

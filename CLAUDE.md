@@ -33,7 +33,7 @@ Two CSS systems that must not cross-contaminate. The **dev system** (`assets/css
 ### JavaScript
 
 Two JS directories with different patterns:
-- **`assets/js/dev-projects/`** — 19 files, mostly ES6 modules (`export function`). Active development. New work goes here.
+- **`assets/js/dev-projects/`** — 18 files, mostly ES6 modules (`export function`). Active development. New work goes here.
 - **`assets/js/components/`** — 8 legacy IIFEs. All require global `Utils` from `assets/js/utils.js` loaded first.
 
 ES6 modules import sanitisation from `assets/js/dev-projects/utils.js` when needed. Full inventory: `docs/architecture-js.md`.
