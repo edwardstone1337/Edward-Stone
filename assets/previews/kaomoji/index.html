@@ -276,6 +276,7 @@
             announceCopy(text);
             showSnackbar('Copied');
           }).catch(function (err) {
+            // Defensive console check for iframe environments where console may be unavailable
             if (typeof console !== 'undefined' && console.error) console.error('Clipboard copy failed:', err);
             statusEl.textContent = 'Copy failed';
             showSnackbar('Copy failed');

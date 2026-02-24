@@ -136,6 +136,7 @@ function openLightbox() {
     weAddedOverlay = true;
   }
 
+  // TRUST: Content is extracted from .dp-resume-page, which is static same-origin HTML hardcoded in resume.html. No user input is injected.
   const header = resumePage.querySelector('header');
   const body = resumePage.querySelector('.dp-resume-body');
   const innerHTML = [header, body].filter(Boolean).map(el => el.outerHTML).join('') || resumePage.innerHTML;
@@ -232,6 +233,7 @@ export function printResume() {
   const resumeContainer = document.querySelector('.dp-resume-container');
   if (!resumePage || !resumeContainer) return;
 
+  // TRUST: Content is extracted from .dp-resume-page, which is static same-origin HTML hardcoded in resume.html. No user input is injected.
   const header = resumePage.querySelector('header');
   const body = resumePage.querySelector('.dp-resume-body');
   const resumeContent = [header, body].filter(Boolean).map(el => el.outerHTML).join('') || resumePage.innerHTML;
