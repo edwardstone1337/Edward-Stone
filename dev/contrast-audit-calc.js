@@ -1,3 +1,4 @@
+// DEV TOOL ONLY — not loaded in production. Uses console.log for output.
 /**
  * Deep contrast audit — compositing and WCAG contrast.
  * Run with: node dev/contrast-audit-calc.js

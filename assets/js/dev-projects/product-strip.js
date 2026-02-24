@@ -21,6 +21,7 @@ export function renderProductStrip(config, containerSelector, options) {
 
   var section = document.createElement('section');
   section.className = 'dp-strip';
+  // TRUST: Config values (ariaLabel, mediaAlt, ctaLabel) are authored in product-strip init calls, not user-supplied. No escaping required.
   if (config.ariaLabel) {
     section.setAttribute('aria-label', config.ariaLabel);
   }

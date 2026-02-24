@@ -1,3 +1,4 @@
+// DEV TOOL ONLY — not loaded in production. Uses console.log for output.
 /**
  * Flip 7 strip — WCAG AAA contrast check for gradient title on --dp-strip-flip7-bg.
  * LCH → sRGB → relative luminance → contrast ratio.
