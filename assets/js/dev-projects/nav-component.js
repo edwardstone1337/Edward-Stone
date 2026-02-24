@@ -22,7 +22,9 @@ const NAV_LINKS = [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
-  { text: 'Gallery', href: '/gallery.html' },
+  /* PROD-HIDE: Gallery nav link */
+  // { text: 'Gallery', href: '/gallery.html' },
+  /* END PROD-HIDE */
   { text: 'Resume', href: '/resume.html' }
 ];
 
