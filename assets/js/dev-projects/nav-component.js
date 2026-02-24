@@ -24,7 +24,9 @@ const NAV_LINKS = [
     // { text: 'SCP Reader', href: '/projects/scp-reader.html' }
     /* END PROD-HIDE */
   ]},
-  { text: 'Gallery', href: '/gallery.html' },
+  /* PROD-HIDE: Gallery nav link */
+  // { text: 'Gallery', href: '/gallery.html' },
+  /* END PROD-HIDE */
   { text: 'Resume', href: '/resume.html' }
 ];
 
