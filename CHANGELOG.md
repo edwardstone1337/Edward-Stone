@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Testimonials section** (index): Three testimonials (Jason Allen, Chris George, Bella Jagger) in `.dp-testimonials-section`; grid layout.
+- **Contact CTA section** (index): "Let's talk" section with Email me and LinkedIn buttons; `.dp-contact-cta`.
+- **Toolbox section** (index): "My tools of the trade" grid of glass cards (Design & Prototyping, Strategy & Methods, Research & Leadership, AI & Dev, Also into). Wrapped in PROD-HIDE; uncomment on dev to preview.
+- **GA4 hero tracking** (`analytics.js`): Hero Download resume button fires `resume_download` with `method: 'pdf'` and `location: 'hero'`; existing `resume_download` handlers unchanged.
+
+### Changed
+- **Index hero (recruiter-focused)**: Rewritten copy for seniority/impact; "I lead UX that drives real business outcomes"; 10 years ed-tech/sport/agencies; Head of UX at Inquisitive; direct Download resume CTA; meta descriptions updated.
+- **PROD-HIDE convention**: Toolbox, project strips, testimonials wrapped in PROD-HIDE on main for hero → case studies → footer flow; dev branch shows full content (strips, toolbox).
+
 ### Fixed
+- **TLDR background (light theme)**: `.dp-tldr` uses `--dp-bg-elevated` (white in light theme); new semantic token `--dp-bg-elevated` for elevated surfaces.
 - **Gallery image src**: Sanitised via `sanitizeUrl()` before use; XSS hardening.
 - **404 Snake button**: onclick guarded with `typeof SnakeGame !== 'undefined' && SnakeGame.open()` to avoid errors if nav/snake load order differs.
 - **Kaomoji snackbar message**; project-card indentation.

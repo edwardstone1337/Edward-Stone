@@ -1993,6 +1993,41 @@ img { display: block; max-width: 100%; }
 }
 
 /* --------------------------------------------
+   Impact Metrics Banner
+   -------------------------------------------- */
+.dp-impact-banner {
+  display: flex;
+  justify-content: center;
+  gap: var(--dp-space-10);
+  max-width: var(--dp-prose-max-width);
+  margin: 0 auto;
+  padding: 0 var(--dp-space-6) var(--dp-space-12);
+}
+
+.dp-impact-banner__item {
+  text-align: center;
+}
+
+.dp-impact-banner__value {
+  display: block;
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-3xl);
+  font-weight: var(--dp-weight-bold);
+  line-height: var(--dp-leading-tight);
+  color: var(--dp-text-primary);
+  margin-bottom: var(--dp-space-2);
+}
+
+.dp-impact-banner__label {
+  display: block;
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: var(--dp-weight-normal);
+  line-height: var(--dp-leading-normal);
+  color: var(--dp-text-secondary);
+}
+
+/* --------------------------------------------
    TLDR Card
    -------------------------------------------- */
 .dp-tldr {
@@ -3032,6 +3067,12 @@ body.dp-overlay-active {
   .dp-404-snake-btn {
     display: none;
   }
+  .dp-impact-banner {
+    gap: var(--dp-space-6);
+  }
+  .dp-impact-banner__value {
+    font-size: var(--dp-text-2xl);
+  }
 }
 
 @media (max-width: 480px) {
@@ -3051,6 +3092,14 @@ body.dp-overlay-active {
   }
   .dp-hero-body {
     font-size: var(--dp-text-base);
+  }
+  .dp-impact-banner {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--dp-space-6);
+  }
+  .dp-impact-banner__value {
+    font-size: var(--dp-text-xl);
   }
   .dp-strip {
     margin-top: var(--dp-section-gap);

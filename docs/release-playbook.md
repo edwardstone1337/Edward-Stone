@@ -84,10 +84,11 @@ git reset --hard <previous-commit> && git push --force origin main
 
 ## Currently Hidden on Prod
 
-As of `b22ef31` (`release/prod-update`, 2025-02-12):
+As of `b22ef31` (`release/prod-update`, 2025-02-12). On dev, strips and toolbox may be visible; release branch comments these out for main.
 
 | Item | File | Marker |
 |------|------|--------|
+| Toolbox section | `index.html` | `PROD-HIDE: Toolbox` |
 | Flip 7 strip | `index.html` | `PROD-HIDE: Flip 7 strip` |
 | Fair Share "Learn More" link | `index.html` | `PROD-HIDE: Fair Share learn more link` |
 | SCP Reader "Learn More" link | `index.html` | `PROD-HIDE: SCP Reader learn more link` |
