@@ -188,9 +188,11 @@
   <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
-    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
     initNav();
+    /* PROD-HIDE: banner ticker
+    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
     initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+    END PROD-HIDE */
   </script>
 </body>
 </html>

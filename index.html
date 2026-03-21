@@ -58,9 +58,20 @@ gtag('config', 'G-6MPMYG36LE');
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
+      /* PROD-HIDE: banner ticker
       import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
-      initNav();
       initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+      END PROD-HIDE */
+      import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
+      initNav();
+      initImageLightbox({
+        selector: '.dp-ticker__item',
+        getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',
+        getImageAlt: (item) => item.querySelector('img')?.getAttribute('alt') || '',
+        getDescription: () => '',
+        ariaLabel: 'Portfolio work viewer',
+        dedupe: true,
+      });
     </script>
     <a href="#projects" class="dp-skip-link">Skip to projects</a>
     <main class="dp-page">
