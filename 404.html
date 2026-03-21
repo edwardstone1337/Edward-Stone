@@ -21,17 +21,25 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+    <script>
+    (function() {
+      var theme;
+      try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
+      if (!theme) {
+        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.add('dp-no-transition');
+    })();
+    </script>
   </head>
   <body>
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      initNav();
-      /* PROD-HIDE: banner ticker
       import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
+      initNav();
       initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      END PROD-HIDE */
     </script>
     <div class="dp-404-page">
       <div class="dp-404-glow" aria-hidden="true"></div>
@@ -40,10 +48,17 @@ gtag('config', 'G-6MPMYG36LE');
         <h2 class="dp-404-title">This page doesn't exist</h2>
         <p class="dp-404-body">The page you're looking for has moved or never existed. Let's get you back on track.</p>
         <div class="dp-404-actions">
-          <a href="/index.html" class="dp-btn dp-btn-primary">Go home</a>
+          <a href="/" class="dp-btn dp-btn-primary">Go home</a>
           <button type="button" class="dp-btn dp-btn-secondary dp-404-snake-btn" onclick="typeof SnakeGame !== 'undefined' && SnakeGame.open()" aria-label="Play Snake game">Play Snake instead</button>
         </div>
       </main>
     </div>
+    <script>
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        document.documentElement.classList.remove('dp-no-transition');
+      });
+    });
+    </script>
   </body>
 </html>
