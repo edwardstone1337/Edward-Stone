@@ -67,6 +67,13 @@
 
   /* --- Glass --- */
   --dp-glass-blur: 16px;
+  /* --- Elevation shadows --- */
+  --dp-shadow-showcase-image: 0 120px 120px 0 rgba(22, 34, 51, 0.08),
+                              0 64px 64px 0 rgba(22, 34, 51, 0.12),
+                              0 32px 32px 0 rgba(22, 34, 51, 0.04),
+                              0 24px 24px 0 rgba(22, 34, 51, 0.04),
+                              0 4px 24px 0 rgba(22, 34, 51, 0.04),
+                              0 4px 4px 0 rgba(22, 34, 51, 0.04);
 
   /* --- Raw colors (not used directly — semantic tokens reference these) --- */
   --dp-raw-white: #FFFFFF;
@@ -86,14 +93,15 @@
   --dp-raw-glow-teal: 16, 185, 129;
   --dp-raw-glow-amber: 245, 158, 11;
   --dp-raw-glow-green: 74, 222, 128;
-  --dp-raw-brand-on-dark: var(--dp-raw-grey-50);
-  --dp-raw-brand-on-light: var(--dp-raw-grey-900);
+  --dp-raw-brand: #0066CC;           /* ← single place to update brand colour */
+  --dp-raw-brand-on-dark: var(--dp-raw-brand);
+  --dp-raw-brand-on-light: var(--dp-raw-brand);
 
   /* --- Nav action (shared height for links, toggles, hamburger) --- */
   --dp-nav-action-height: 40px;
 
   /* --- Button (shared, 48px min height for a11y touch) --- */
-  --dp-btn-radius: 6px;
+  --dp-btn-radius: var(--dp-radius-sm); /* 8px — aligned to scale */
   --dp-btn-padding: 0.625rem 1.25rem;
   --dp-btn-min-height: var(--dp-space-12); /* 48px */
   --dp-btn-font-size: 0.875rem;
@@ -102,7 +110,7 @@
   /* --- Strip / device (shared, 8px grid) --- */
   --dp-strip-padding: var(--dp-space-16) var(--dp-space-8);
   --dp-strip-gap: var(--dp-space-8);
-  --dp-device-radius: 1.5rem;
+  --dp-device-radius: var(--dp-radius-xl); /* 24px — single source of truth */
 
   /* --- Page section rhythm (airy gap between hero, strips, grid) --- */
   --dp-section-gap: var(--dp-space-24);
@@ -148,8 +156,8 @@
   --dp-accent: var(--dp-raw-brand-on-dark);
   --dp-accent-hover: var(--dp-raw-grey-200);
   /* Hardcoded RGB of brand primitive — update when brand colour changes */
-  --dp-accent-glow: rgba(247, 248, 248, 0.10);
-  --dp-brand-on-brand: var(--dp-raw-brand-on-light);
+  --dp-accent-glow: rgba(0, 102, 204, 0.10);
+  --dp-brand-on-brand: var(--dp-on-dark-text-primary);
   /* Card-scoped text (accounts for composited glass backgrounds) */
   --dp-card-text-primary: #FFFFFF;
   --dp-card-text-secondary: #B0BCCA;
@@ -189,8 +197,8 @@
   --dp-nav-logo-ring: rgba(255, 255, 255, 1);
   --dp-nav-logo-bg: var(--dp-raw-black);
   --dp-nav-logo-swirl: var(--dp-raw-white);
-  --dp-nav-logo-gradient-from: #B8C2FF;
-  --dp-nav-logo-gradient-to: #5E6AD2;
+  --dp-nav-logo-gradient-from: #3399FF;  /* lighter tint — update alongside --dp-raw-brand */
+  --dp-nav-logo-gradient-to: var(--dp-raw-brand);
 
   /* Button — primary (brand surface + contrasting text) */
   --dp-btn-bg-primary: var(--dp-accent);
@@ -358,8 +366,8 @@
   --dp-accent: var(--dp-raw-brand-on-light);
   --dp-accent-hover: var(--dp-raw-grey-800);
   /* Hardcoded RGB of brand primitive — update when brand colour changes */
-  --dp-accent-glow: rgba(17, 17, 19, 0.06);
-  --dp-brand-on-brand: var(--dp-raw-brand-on-dark);
+  --dp-accent-glow: rgba(0, 102, 204, 0.06);
+  --dp-brand-on-brand: var(--dp-on-dark-text-primary);
 
   /* Card-scoped text */
   --dp-card-text-primary: var(--dp-raw-grey-900);
