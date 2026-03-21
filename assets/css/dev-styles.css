@@ -303,6 +303,39 @@ img { display: block; max-width: 100%; }
   }
 }
 
+/* ── Logo bar ── */
+.dp-logo-bar {
+  padding: var(--dp-space-12) 0;
+}
+
+.dp-logo-bar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dp-space-16);
+  flex-wrap: wrap;
+}
+
+.dp-logo-bar__logo {
+  display: block;
+  height: var(--logo-h, 32px);
+  width: auto;
+  fill: var(--dp-text-tertiary);
+  opacity: 0.5;
+}
+
+@media (max-width: 480px) {
+  .dp-logo-bar__list {
+    gap: var(--dp-space-8);
+  }
+  .dp-logo-bar__logo {
+    height: calc(var(--logo-h, 32px) * 0.75);
+  }
+}
+
 /* ============================================
    Navigation Bar
    ============================================ */
