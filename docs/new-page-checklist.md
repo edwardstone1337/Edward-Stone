@@ -15,7 +15,7 @@ Step-by-step for adding a new public page to the site. Reference existing pages 
   <link rel="canonical" href="https://edwardstone.design/your-page.html">
 ```
 
-Do **not** hardcode `data-theme` on `<html>` — the pre-init script (step 4) sets it dynamically.
+**Theme:** On **`main`**, most public pages **pin light** with a one-liner in `<head>` (see step 4). Use the full pre-init + step 8 **only** for pages that behave like **`dev/design-system.html`** (user-chosen dark/light).
 
 ## 2. CSS (dev system)
 
@@ -30,9 +30,21 @@ Tokens must load before styles. Add project-specific CSS after if needed.
 
 Add in `<head>` after CSS. Measurement ID: `G-6MPMYG36LE`. See `docs/analytics-tagging.md` for the canonical snippet.
 
-## 4. Theme Pre-init Script
+## 4. Theme on `<html>`
 
-Add inline script in `<head>` after GA4. This reads `localStorage` / `prefers-color-scheme`, sets `data-theme` before first paint, and adds `dp-no-transition` to suppress flash:
+### 4a. Pinned light (default for new public pages matching the live site)
+
+After GA4, before CSS is fine:
+
+```html
+<script>document.documentElement.setAttribute('data-theme', 'light');</script>
+```
+
+**Skip step 8** (no `dp-no-transition` / rAF). For prose-heavy case-study-style pages, add `case-study-theme.css` after `dev-styles.css` (see §Case Study variant).
+
+### 4b. Pre-init (user-chosen theme — `dev/design-system.html` pattern)
+
+Add inline script in `<head>` after GA4. Reads `localStorage` / `prefers-color-scheme`, sets `data-theme` before first paint, adds `dp-no-transition`:
 
 ```html
 <script>
@@ -82,9 +94,9 @@ Wrap page content in a section with the `dp-page-content` class (accounts for fi
 </main>
 ```
 
-## 8. Theme Transition Unlock
+## 8. Theme transition unlock
 
-Add as the last inline script before closing `</body>`. This removes the `dp-no-transition` class after first paint using double `requestAnimationFrame`:
+**Only if you used §4b.** Add as the last inline script before closing `</body>`. Removes `dp-no-transition` after first paint (double `requestAnimationFrame`):
 
 ```html
 <script>
@@ -102,7 +114,7 @@ Add a `<noscript>` block if the page relies on JS for critical content.
 
 ## 10. Verify
 
-- [ ] Page renders correctly in dark theme (default)
+- [ ] Page renders correctly at the intended theme (pinned light vs pre-init)
 - [ ] Keyboard navigation works (Tab, Shift+Tab, Escape on overlays)
 - [ ] Mobile drawer opens and closes at ≤768px
 - [ ] Skip link reaches main content
@@ -111,9 +123,9 @@ Add a `<noscript>` block if the page relies on JS for critical content.
 
 ## Case Study Pages (variant)
 
-Case studies in `case-studies/` are permanently light. They **differ** from the standard checklist:
+Case studies in `case-studies/` are permanently light — same **§4a** one-liner as index/resume/gallery. They **differ** from generic pages mainly by CSS and layout:
 
-- **Hardcode `data-theme="light"`** in `<head>` (before CSS) — no pre-init script, no theme toggle
+- **`data-theme="light"`** in `<head>` — no §4b pre-init, no theme toggle
 - **Add** `case-study-theme.css` after dev-styles.css
 - **Omit** `initThemeToggle()` — load nav + banner ticker only
 - **Script block**: `initNav()`, `initBannerTicker({ text: '...', separator: '✦' })`

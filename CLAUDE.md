@@ -8,7 +8,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 
 | Path | Purpose | Public | CSS System |
 |------|---------|:------:|------------|
-| `index.html` | Homepage — hero, project strips, side quests, skills, contact | Yes | dev |
+| `index.html` | Homepage — split hero + case-study card, image ticker (`.dp-ticker`), project strips, side quests, skills, contact (several strips/toolbox/testimonials behind `PROD-HIDE` on main) | Yes | dev |
 | `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
 | `gallery.html` | Design gallery — masonry grid of UI/branding/illustration work | Yes | dev + `gallery.css` |
 | `404.html` | Custom error page | Yes | dev |
@@ -44,11 +44,15 @@ Shared nav component (`assets/js/dev-projects/nav-component.js`) injected via `<
 
 ### Theming
 
-Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="light"]` — single source of truth. A pre-init script in `<head>` reads `localStorage('dp-theme')` then falls back to `prefers-color-scheme`, sets `data-theme` on `<html>`, and adds `dp-no-transition` to suppress flash. A double-`requestAnimationFrame` at end of `<body>` removes `dp-no-transition` to re-enable transitions. Public pages default dark and do not load the theme toggle. Pattern: `docs/theme-init-pattern.md`.
+Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="light"]` — single source of truth.
 
-**Theme toggle** (`assets/js/dev-projects/theme-toggle.js`) is **dev-only** — loaded on `dev/design-system.html` for testing. It injects a sun/moon button into `#dp-nav-actions` and persists choice to `localStorage`.
+**Public pages today:** `index.html`, `resume.html`, `gallery.html`, `404.html`, `projects/*.html`, and `case-studies/*.html` set `data-theme="light"` with a one-line inline script in `<head>`. They do not load the theme toggle. Case studies (and similar) also load `case-study-theme.css` for component overrides (prose, pullquote, hero line); light tokens still resolve from `dev-tokens.css`.
 
-**Case studies** (`case-studies/*.html`) and `projects/fair-share.html` are permanently light — they hardcode `data-theme="light"` in `<head>` and do not load the theme toggle or pre-init script. They load `case-study-theme.css` for component overrides only (prose sizing, pullquote, hero line); light tokens come from `dev-tokens.css`. **Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
+**`dev/design-system.html`** uses the full pre-init pattern: `localStorage('dp-theme')` → `prefers-color-scheme` fallback, `dp-no-transition` on `<html>`, double-`requestAnimationFrame` at end of `<body>` to re-enable transitions. Pattern reference: `docs/theme-init-pattern.md`.
+
+**Theme toggle** (`assets/js/dev-projects/theme-toggle.js`) is **dev-only** — loaded on `dev/design-system.html`. Injects sun/moon into `#dp-nav-actions`, persists to `localStorage`.
+
+**Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
 
 ## Key Patterns
 

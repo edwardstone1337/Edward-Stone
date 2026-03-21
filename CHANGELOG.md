@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Homepage image ticker** (`index.html`): Full-bleed `.dp-ticker` — two rows, opposite-direction CSS marquees (50s), cards from `assets/images/ticker/UI.jpg` … `UI-5.jpg` (duplicated per row for seamless loop); section `aria-hidden="true"`; `prefers-reduced-motion: reduce` disables `.dp-ticker__track` animation.
 - **Testimonials section** (index): Three testimonials (Jason Allen, Chris George, Bella Jagger) in `.dp-testimonials-section`; grid layout.
 - **Contact CTA section** (index): "Let's talk" section with Email me and LinkedIn buttons; `.dp-contact-cta`.
 - **Toolbox section** (index): "My tools of the trade" grid of glass cards (Design & Prototyping, Strategy & Methods, Research & Leadership, AI & Dev, Also into). Wrapped in PROD-HIDE; uncomment on dev to preview.

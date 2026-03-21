@@ -1,12 +1,14 @@
 # Theme init pattern (canonical)
 
-> **Status:** Public pages default dark. Case studies and project pages (`projects/fair-share.html`) are permanently light. The theme toggle is dev-only (loaded on `dev/design-system.html`).
+> **Status:** On **`main`**, index, resume, gallery, 404, projects, and case studies pin **`data-theme="light"`** with a one-line `<head>` script (no user toggle). The full **pre-init + `dp-no-transition` + body-end rAF** flow below is what **`dev/design-system.html`** uses, together with **theme-toggle.js** (dev-only).
 
 Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="light"]`. Case-study-specific component overrides (prose sizing, pullquote, hero line) live in `case-study-theme.css`. Nav light overrides (sticky bar opacity, logo ring) live in `dev-styles.css`.
 
-The theme system has two parts for public pages: a **pre-init script** in `<head>` and a **transition-unlock** double-`requestAnimationFrame` at end of `<body>`. Dev pages additionally load the **theme-toggle.js** ES6 module.
+**Design system pages:** pre-init in `<head>` plus **transition-unlock** double-`requestAnimationFrame` at end of `<body>`, and **`theme-toggle.js`** ES6 module. **Public listing pages** that only need a fixed theme can keep a single `setAttribute('data-theme', 'light'|'dark')` line instead of this full block.
 
 ## 1. Head: pre-init script
+
+For **`dev/design-system.html`** (or any page that restores user-chosen dark/light). Pinned-light public pages **omit** this block.
 
 Place in `<head>`, after stylesheets and GA4, before `</head>`:
 
@@ -30,9 +32,9 @@ This runs before first paint and:
 3. Sets `data-theme` on `<html>` for CSS token resolution
 4. Adds `dp-no-transition` class to suppress transition flicker during load
 
-## 2. Body: nav module (public pages)
+## 2. Body: nav + banner ticker (no theme toggle)
 
-Public pages load nav and banner ticker only — no theme toggle:
+Most public pages load nav and banner ticker only — no `theme-toggle.js`:
 
 ```html
 <script type="module">
@@ -44,6 +46,8 @@ Public pages load nav and banner ticker only — no theme toggle:
 ```
 
 ## 3. End of body: transition unlock
+
+Pair with **§1** only (removes `dp-no-transition` after first paint). Pinned-light pages **omit** this.
 
 Last script before `</body>`:
 
@@ -59,13 +63,14 @@ requestAnimationFrame(function() {
 
 The double-`requestAnimationFrame` ensures the browser has completed first paint with the correct theme before re-enabling CSS transitions. Without this, theme-dependent properties would visibly transition from their default values.
 
-## Files using this pattern (dark default, no toggle)
+## Files by wiring
 
-- `index.html`
-- `resume.html`
-- `gallery.html`
-- `404.html`
-- `projects/scp-reader.html`
+| Wiring | HTML files |
+|--------|------------|
+| **Full pattern** — §1 pre-init, §3 body-end rAF, optional §4 toggle | `dev/design-system.html` |
+| **Pinned light** — one-line `setAttribute('data-theme', 'light')` in `<head>`; §2 nav + ticker; no §1/§3/§4 | `index.html`, `resume.html`, `gallery.html`, `404.html`, `projects/fair-share.html`, `projects/scp-reader.html`, `case-studies/planner.html`, `case-studies/design-systems.html`, `case-studies/product-discovery.html` |
+
+Case study and Fair Share pages also load `case-study-theme.css` after `dev-styles.css` for prose/pullquote/hero overrides.
 
 ## Theme toggle (dev-only)
 
@@ -77,16 +82,6 @@ The theme toggle (`assets/js/dev-projects/theme-toggle.js`) is loaded only on `d
   initThemeToggle();
 </script>
 ```
-
-## Case studies and project pages (permanently light)
-
-Case study pages (`case-studies/*.html`) and `projects/fair-share.html` are permanently light. They hardcode light theme and do not support toggling:
-
-```html
-<script>document.documentElement.setAttribute('data-theme', 'light');</script>
-```
-
-No pre-init script, no theme-toggle.js, no transition-unlock needed. They load `case-study-theme.css` after dev-styles for component overrides (prose sizing, pullquote, hero line). Light tokens come from `dev-tokens.css`.
 
 ## Preview iframes
 
