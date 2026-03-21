@@ -18,19 +18,21 @@ Add the container div and module import to any page:
 
 ## NAV_LINKS Configuration
 
-Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`:
+Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`. **Order in the array matches desktop left-to-right.** On `main`, some entries are commented behind `PROD-HIDE` — uncomment on branches where those pages should appear in nav.
 
 ```
 { text: 'Case Studies', children: [
-    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
-    { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' }
+    { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
+    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
 ]},
 { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+    /* PROD-HIDE: SCP Reader */
+    // { text: 'SCP Reader', href: '/projects/scp-reader.html' }
 ]},
-{ text: 'Gallery', href: '/gallery.html' },
+/* PROD-HIDE: Gallery */
+// { text: 'Gallery', href: '/gallery.html' },
 { text: 'Resume', href: '/resume.html' }
 ```
 
@@ -43,13 +45,13 @@ To add a new page to the nav, add an entry to `NAV_LINKS`.
 ## Desktop Layout
 
 ```
-[ Logo  Edward Stone ]    [ Case Studies v ] [ Projects v ] [ Gallery ] [ Resume ]    [ Theme Toggle ]
-        brand                  links (centre)               actions
+[ Logo  Edward Stone ]    [ Case Studies v ] [ Projects v ] [ Resume ]    [ actions: hamburger hidden ]
+        brand                  links (centre)                    #dp-nav-actions
 ```
 
 - **Brand** (`.dp-nav-brand`): Logo SVG + "Edward Stone" text, links to `/index.html`
 - **Links** (`.dp-nav-links`): Rendered from `NAV_LINKS`. Items with children become dropdowns
-- **Actions** (`.dp-nav-actions`, `#dp-nav-actions`): Container for theme toggle (injected by `theme-toggle.js`) and hamburger button (hidden on desktop via CSS)
+- **Actions** (`.dp-nav-actions`, `#dp-nav-actions`): Hamburger lives here (visible ≤768px). On **`dev/design-system.html` only**, `theme-toggle.js` also injects the sun/moon control into this container
 
 ## Dropdown Menus (Desktop)
 
@@ -111,7 +113,7 @@ Set automatically via `isCurrentPage(linkHref)` which normalises pathnames (stri
 
 The nav component renders an empty `<div id="dp-nav-actions">` container. The theme toggle module (`theme-toggle.js`, ES6 `export function initThemeToggle()`) finds this container and injects a sun/moon toggle button. Call `initThemeToggle()` after `initNav()` so the container exists. The nav does not depend on the theme toggle — they are decoupled. On click, the toggle flips `data-theme` on `<html>` and persists to `localStorage('dp-theme')`.
 
-The theme toggle is loaded only on `dev/design-system.html` for testing. Public pages default dark and do not load the toggle. Case study pages hardcode `data-theme="light"` and do not load the toggle.
+The theme toggle is loaded only on `dev/design-system.html`. Public pages on `main` pin light (or load without the toggle); they do not load `theme-toggle.js`.
 
 ## CSS Selectors (in `dev-styles.css`)
 

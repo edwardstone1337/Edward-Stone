@@ -5,10 +5,10 @@
 All tokens use the `dp-` prefix and follow a three-layer atomic model:
 
 1. **Primitives** — Raw values (spacing, radii, typography, colours). Defined on `:root`.
-2. **Semantic** — Purpose-driven tokens (surfaces, text, borders, accents). Defined on `:root` (dark-only, single theme).
-3. **Component** — Scoped to specific UI (buttons, nav, strips, paper). Defined within the same `:root` block.
+2. **Semantic** — Purpose-driven tokens (surfaces, text, borders, accents). Base values on `:root` (dark-first defaults).
+3. **Component** — Scoped to specific UI (buttons, nav, strips, paper). Mostly in `:root`; some theme-specific tweaks live under `[data-theme="light"]`.
 
-The site is dark-only. All semantic and component tokens are defined in a single `:root` block — there are no `[data-theme]` selector overrides. Contextual light tokens (e.g. `--dp-paper-surface-light`) exist for embedded light surfaces within the dark theme.
+**Light theme:** `[data-theme="light"] { … }` in the same file remaps semantic/component tokens for full light pages. On **`main`**, most public HTML sets `data-theme="light"` on `<html>`. **`dev/design-system.html`** can switch themes via pre-init + toggle. Contextual light tokens (e.g. `--dp-paper-surface-light`) still support light-in-dark pockets where needed.
 
 ## Key Token Groups
 

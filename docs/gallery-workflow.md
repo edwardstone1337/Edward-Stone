@@ -48,6 +48,10 @@ Current categories (will grow):
 
 `branding` · `logo` · `ui-design` · `mobile` · `graphic-design` · `poster` · `concept` · `playsport`
 
+## Embedded grids (not `gallery.json`)
+
+The main gallery page is data-driven. Other pages can reuse masonry markup + `gallery.css` with **`.dp-gallery-grid--compact`** for fewer columns inside prose (e.g. `about.html`). Images live under `assets/images/...` as static `<img>` tags; optional `data-description` pairs with `about-lightbox.js`.
+
 ## Removing images
 
 No script needed — manual two-step:
