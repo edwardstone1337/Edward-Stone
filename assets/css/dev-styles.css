@@ -108,12 +108,12 @@ img { display: block; max-width: 100%; }
 .dp-btn-secondary {
   background: transparent;
   color: var(--dp-text-primary);
-  border: 1px solid var(--dp-border-default);
+  border: 1px solid var(--dp-btn-secondary-border);
 }
 
 .dp-btn-secondary:hover {
   background: var(--dp-bg-card-hover);
-  border-color: var(--dp-border-hover);
+  border-color: var(--dp-btn-secondary-border-hover);
 }
 
 .dp-btn-secondary:focus-visible {
