@@ -23,6 +23,7 @@
   --dp-text-xs: 0.75rem;    /* 12px */
   --dp-text-sm: 0.875rem;   /* 14px */
   --dp-text-base: 1rem;     /* 16px */
+  --dp-text-md: 1.125rem;   /* 18px */
   --dp-text-lg: 1.25rem;    /* 20px */
   --dp-text-xl: 1.5rem;     /* 24px */
   --dp-text-2xl: 2rem;      /* 32px */
@@ -289,7 +290,7 @@
   --dp-prose-section-gap: var(--dp-space-12);
   --dp-prose-heading-size: var(--dp-text-2xl);
   --dp-prose-subheading-size: var(--dp-text-xl);
-  --dp-prose-body-size: var(--dp-text-base);
+  --dp-prose-body-size: var(--dp-text-md);
   --dp-prose-body-leading: var(--dp-leading-relaxed);
 
   /* ── Dropdown ── */
@@ -319,7 +320,7 @@
   color-scheme: light;
 
   /* Surfaces — "paper on desk" hierarchy */
-  --dp-bg-base: #EDF0F7;
+  --dp-bg-base: var(--dp-raw-white);
   --dp-bg-raised: #F0F2FA;
   --dp-bg-elevated: var(--dp-raw-white);
   --dp-bg-card: rgba(255, 255, 255, 0.75);
@@ -440,6 +441,6 @@
   --dp-drawer-border: rgba(0, 0, 0, 0.08);
 
   /* TLDR */
-  --dp-tldr-bg: var(--dp-bg-elevated);
+  --dp-tldr-bg: #EDF0F7;
   --dp-tldr-border: var(--dp-border-default);
 }
