@@ -54,9 +54,10 @@ function renderGallery() {
         }
 
         return (
-          '<div class="dp-gallery-item" role="listitem"' +
+          '<div class="dp-gallery-item dp-reveal" role="listitem"' +
             catAttr +
             ' data-alt="' + alt + '"' +
+            ' data-reveal-delay="' + (index * 50) + '"' +
             ' style="--aspect: ' + aspect + '">' +
             '<img' +
               ' src="' + src + '"' +
@@ -82,10 +83,12 @@ function renderGallery() {
         };
       }
 
-      // Fade in the whole grid after paint
+      // Reveal individual items via scroll-reveal system after paint
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
-          grid.classList.add('dp-gallery-grid--visible');
+          if (typeof window.DPEffectsObserveReveals === 'function') {
+            window.DPEffectsObserveReveals();
+          }
         });
       });
     })

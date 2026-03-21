@@ -21,17 +21,7 @@ gtag('js', new Date());
 gtag('config', 'G-6MPMYG36LE');
     </script>
 
-    <script>
-    (function() {
-      var theme;
-      try { theme = localStorage.getItem('dp-theme'); } catch(e) {}
-      if (!theme) {
-        theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-      }
-      document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.classList.add('dp-no-transition');
-    })();
-    </script>
+    <script>document.documentElement.setAttribute('data-theme','light')</script>
   </head>
   <body>
     <div id="nav-container"></div>
