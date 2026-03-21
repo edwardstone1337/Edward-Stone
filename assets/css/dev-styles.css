@@ -933,6 +933,12 @@ img { display: block; max-width: 100%; }
   max-width: 540px;
 }
 
+.dp-hero-actions {
+  display: flex;
+  gap: var(--dp-space-3);
+  align-items: center;
+}
+
 /* Hero case study card */
 .dp-hero-card {
   background: var(--dp-glass-bg);
@@ -3285,6 +3291,14 @@ body.dp-overlay-active {
   }
   .dp-hero-body {
     font-size: var(--dp-text-base);
+  }
+  .dp-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .dp-hero-actions .dp-btn {
+    width: 100%;
+    text-align: center;
   }
   .dp-impact-banner {
     flex-direction: column;
