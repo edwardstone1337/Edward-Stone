@@ -275,7 +275,7 @@ export function initNav() {
 
   nav.innerHTML =
     '<div class="dp-nav-inner">' +
-      '<a href="/index.html" class="dp-nav-brand" aria-label="Edward Stone, Go to homepage">' +
+      '<a href="/" class="dp-nav-brand" aria-label="Edward Stone, Go to homepage">' +
         '<svg class="dp-nav-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
           '<rect class="dp-nav-logo-bg" x="40" y="40" width="40" height="40" rx="20" transform="rotate(-180 40 40)"/>' +
           '<g clip-path="url(#nav-clip)">' +
