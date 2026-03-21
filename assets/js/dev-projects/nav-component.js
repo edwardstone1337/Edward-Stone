@@ -25,8 +25,10 @@ const NAV_LINKS = [
   /* PROD-HIDE: Gallery nav link */
   // { text: 'Gallery', href: '/gallery.html' },
   /* END PROD-HIDE */
-  { text: 'Resume', href: '/resume.html' },
+  { text: 'Resume', href: '/resume.html' }
+  /* PROD-HIDE: About nav link
   { text: 'About', href: '/about.html' }
+  END PROD-HIDE */
 ];
 
 /**

@@ -216,6 +216,10 @@
   --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
   --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
 
+  /* Button — secondary (generic; used by .dp-btn-secondary on any theme surface) */
+  --dp-btn-secondary-border: rgba(255, 255, 255, 0.25);
+  --dp-btn-secondary-border-hover: rgba(255, 255, 255, 0.4);
+
   /* Strip — product strip (Fair Share); darkened for text contrast */
   --dp-strip-bg: #0a2020;
   --dp-strip-orb-1: #2e7d76;
@@ -418,6 +422,10 @@
   --dp-btn-secondary-on-light-border: rgba(0, 0, 0, 0.55);
   --dp-btn-secondary-on-light-hover-bg: rgba(0, 0, 0, 0.12);
   --dp-btn-secondary-on-light-focus-ring: rgba(0, 0, 0, 0.7);
+
+  /* Button — secondary (generic) */
+  --dp-btn-secondary-border: rgba(0, 0, 0, 0.25);
+  --dp-btn-secondary-border-hover: rgba(0, 0, 0, 0.4);
 
   /* Resume / paper */
   --dp-paper-surface: var(--dp-raw-white);
