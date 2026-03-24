@@ -248,8 +248,12 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-ticker__row {
-  overflow: hidden;
   width: 100%;
+}
+
+.dp-ticker__row--left {
+  position: relative;
+  z-index: 1;
 }
 
 .dp-ticker__track {
@@ -301,6 +305,46 @@ img { display: block; max-width: 100%; }
   .dp-ticker__track {
     animation: none;
   }
+}
+
+/* ── Ticker composite item ── */
+.dp-ticker__item--composite {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  aspect-ratio: 1280 / 832;
+  pointer-events: none;
+  cursor: default;
+}
+
+.dp-ticker__composite-bg {
+  width: 100%;
+  height: auto;
+  border-radius: var(--dp-radius-md);
+  pointer-events: none;
+}
+
+.dp-ticker__composite-fg {
+  position: absolute;
+  top: 0;
+  right: -12.5%;
+  width: 150%;
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (max-width: 767px) {
+  .dp-ticker__item--composite {
+    width: 240px;
+  }
+}
+
+.dp-ticker__item--static {
+  pointer-events: none;
+  cursor: default;
 }
 
 /* ── Logo bar ── */
@@ -1037,6 +1081,16 @@ img { display: block; max-width: 100%; }
   min-width: 460px;
   max-width: 540px;
   margin-top: var(--dp-space-16);
+  position: relative;
+}
+
+.dp-hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../images/scribble-frame.png') center / 100% 100% no-repeat;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .dp-hero-card__heading {
