@@ -1154,6 +1154,24 @@ img { display: block; max-width: 100%; }
   border-bottom: none;
 }
 
+[data-theme="light"] .dp-hero-card__link {
+  color: var(--dp-accent);
+}
+
+[data-theme="light"] .dp-hero-card__link:hover,
+[data-theme="light"] .dp-hero-card__link:focus-visible {
+  color: var(--dp-text-primary);
+}
+
+[data-theme="light"] .dp-hero-card__link::after {
+  color: var(--dp-accent);
+}
+
+[data-theme="light"] .dp-hero-card__link:hover::after,
+[data-theme="light"] .dp-hero-card__link:focus-visible::after {
+  color: var(--dp-text-primary);
+}
+
 .dp-hero-card__cta {
   display: flex;
   flex-direction: column;
