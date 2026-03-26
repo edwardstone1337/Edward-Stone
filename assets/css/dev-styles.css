@@ -1,3 +1,8 @@
+/* ── Feature Gate ── */
+/* Elements with data-prod-hide are visible everywhere except production. */
+/* The 'is-prod' class is added to <html> by env.js on production hostnames. */
+.is-prod [data-prod-hide] { display: none !important; }
+
 /* Suppress transitions on initial load to prevent flash */
 .dp-no-transition,
 .dp-no-transition *,
