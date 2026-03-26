@@ -8,12 +8,13 @@ All notable changes to this project will be documented in this file.
 - **Homepage image ticker** (`index.html`): Full-bleed `.dp-ticker` — two rows, opposite-direction CSS marquees (50s), cards from `assets/images/ticker/UI.jpg` … `UI-5.jpg` (duplicated per row for seamless loop); section `aria-hidden="true"`; `prefers-reduced-motion: reduce` disables `.dp-ticker__track` animation.
 - **Testimonials section** (index): Three testimonials (Jason Allen, Chris George, Bella Jagger) in `.dp-testimonials-section`; grid layout.
 - **Contact CTA section** (index): "Let's talk" section with Email me and LinkedIn buttons; `.dp-contact-cta`.
-- **Toolbox section** (index): "My tools of the trade" grid of glass cards (Design & Prototyping, Strategy & Methods, Research & Leadership, AI & Dev, Also into). Wrapped in PROD-HIDE; uncomment on dev to preview.
+- **Toolbox section** (index): "My tools of the trade" grid of glass cards (Design & Prototyping, Strategy & Methods, Research & Leadership, AI & Dev, Also into). Wrapped in `data-prod-hide` so it’s hidden only on the production hostname.
+- **Feature gate infrastructure**: `assets/js/env.js` adds `is-prod` to `<html>` on `edwardstone.design`/`www.edwardstone.design`; `assets/css/dev-styles.css` hides `.is-prod [data-prod-hide]`. Nav links use `prodHide` flags to omit non-public items on production.
 - **GA4 hero tracking** (`analytics.js`): Hero Download resume button fires `resume_download` with `method: 'pdf'` and `location: 'hero'`; existing `resume_download` handlers unchanged.
 
 ### Changed
 - **Index hero (recruiter-focused)**: Rewritten copy for seniority/impact; "I lead UX that drives real business outcomes"; 10 years ed-tech/sport/agencies; Head of UX at Inquisitive; direct Download resume CTA; meta descriptions updated.
-- **PROD-HIDE convention**: Toolbox, project strips, testimonials wrapped in PROD-HIDE on main for hero → case studies → footer flow; dev branch shows full content (strips, toolbox).
+- **Feature gate convention**: Toolbox, project strips, and testimonials are annotated with `data-prod-hide`; `env.js` toggles visibility via `html.is-prod`.
 
 ### Fixed
 - **TLDR background (light theme)**: `.dp-tldr` uses `--dp-bg-elevated` (white in light theme); new semantic token `--dp-bg-elevated` for elevated surfaces.
@@ -26,7 +27,7 @@ All notable changes to this project will be documented in this file.
 - **magnetic-tilt.js**: Deleted; no longer used.
 
 ### Added
-- **Fair Share project page** (`projects/fair-share.html`): Impact-first case study template with growth chart, CTA card; nav Projects dropdown live (Fair Share, SCP Reader).
+- **Fair Share project page** (`case-studies/fair-share.html`): Impact-first case study template with growth chart, CTA card; nav Projects dropdown live (Fair Share, SCP Reader).
 - **Design Systems case study** (`case-studies/design-systems.html`): Public case study — accelerating team velocity at Inquisitive. Listed in nav Case Studies dropdown.
 - **Nav dropdown and drawer light theme**: Dropdown and drawer use tokens (`--dp-dropdown-bg`, `--dp-dropdown-shadow`, `--dp-drawer-bg`, `--dp-drawer-overlay`, `--dp-drawer-border`) in dev-styles.css; light overrides in case-study-theme.css so nav matches light case study pages.
 - **TLDR component (case studies)**: Bullet-summary box (`.dp-tldr`) under hero on planner, product-discovery, design-systems; static HTML per page; no new JS.
@@ -77,12 +78,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Glow section utility**: .dp-glow-section (position: relative) for sections with blurred glow ::before; will-change: transform on .dp-glow::before and project glow pseudo-elements (Fair Share, SCP Reader) for animation performance.
-- **Fair Share strip**: "Learn more" primary button (`.dp-btn-primary-on-dark`) linking to `projects/fair-share.html`; secondary "Go to Fair Share" for external link.
+- **Fair Share strip**: "Learn more" primary button (`.dp-btn-primary-on-dark`) linking to `case-studies/fair-share.html`; secondary "Go to Fair Share" for external link.
 - **Secondary-on-light button**: `.dp-btn-secondary-on-light` and tokens `--dp-btn-secondary-on-light-*` (text, border, hover-bg, focus-ring) for outline buttons on light overlays; light + dark theme in dev-tokens.
 - **Resume print tokens**: `--dp-print-name`, `--dp-print-tagline`, `--dp-print-body`, `--dp-print-role-title`, `--dp-print-meta`, `--dp-print-section-title`, `--dp-print-leading`, `--dp-print-leading-tight`, `--dp-print-section-gap`, `--dp-print-role-gap`, `--dp-print-column-gap`, `--dp-print-li-gap`, `--dp-print-page-v`, `--dp-print-page-h`; used in `@media print` for resume lightbox typography and spacing.
 - **Page section spacing**: `.dp-page section p + h3` — margin-top `var(--dp-space-12)` for breathing room when h3 follows paragraph (e.g. Product Decisions pattern).
 - **Strip logo**: `.dp-strip-logo` — img in emoji slot (36×36px); `.dp-strip--scp .dp-strip-logo` white filter on dark strip; SCP Reader strip uses `scp-logo.svg`.
-- **Project case study pages**: `projects/fair-share.html`, `projects/scp-reader.html` — full case studies linked from homepage strips; project-specific CSS (`project-fair-share.css`, `project-scp-reader.css`); `growth-chart.js` (Chart.js line chart) for Fair Share Origin/Growth section.
+- **Project case study pages**: `case-studies/fair-share.html`, `projects/scp-reader.html` — full case studies linked from homepage strips; project-specific CSS (`project-fair-share.css`, `project-scp-reader.css`); `growth-chart.js` (Chart.js line chart) for Fair Share Origin/Growth section.
 
 ### Added (continued)
 - **Fixed nav bar**: `.dp-nav` — glass-style fixed bar with brand (logo + name) and `#dp-nav-actions` (theme toggle, snake toggle). Toggles inject into nav when present, else body.

@@ -27,7 +27,7 @@ Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`. **Ord
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
 ]},
 { text: 'Projects', children: [
-    { text: 'Fair Share', href: '/projects/fair-share.html' },
+    { text: 'Fair Share', href: '/case-studies/fair-share.html' },
     /* PROD-HIDE: SCP Reader */
     // { text: 'SCP Reader', href: '/projects/scp-reader.html' }
 ]},

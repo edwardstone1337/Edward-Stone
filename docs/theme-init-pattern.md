@@ -68,7 +68,7 @@ The double-`requestAnimationFrame` ensures the browser has completed first paint
 | Wiring | HTML files |
 |--------|------------|
 | **Full pattern** — §1 pre-init, §3 body-end rAF, optional §4 toggle | `dev/design-system.html` |
-| **Pinned light** — one-line `setAttribute('data-theme', 'light')` in `<head>`; §2 nav + ticker; no §1/§3/§4 | `index.html`, `resume.html`, `gallery.html`, `404.html`, `projects/fair-share.html`, `projects/scp-reader.html`, `case-studies/planner.html`, `case-studies/design-systems.html`, `case-studies/product-discovery.html` |
+| **Pinned light** — one-line `setAttribute('data-theme', 'light')` in `<head>`; §2 nav + ticker; no §1/§3/§4 | `index.html`, `resume.html`, `gallery.html`, `404.html`, `case-studies/fair-share.html`, `projects/scp-reader.html`, `case-studies/planner.html`, `case-studies/design-systems.html`, `case-studies/product-discovery.html` |
 
 Case study and Fair Share pages also load `case-study-theme.css` after `dev-styles.css` for prose/pullquote/hero overrides.
 

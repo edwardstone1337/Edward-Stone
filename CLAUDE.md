@@ -12,7 +12,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 | `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
 | `gallery.html` | Design gallery — masonry grid of UI/branding/illustration work | Yes | dev + `gallery.css` |
 | `404.html` | Custom error page | Yes | dev |
-| `projects/fair-share.html` | Fair Share case study | Yes | dev + `case-study-theme.css` |
+| `case-studies/fair-share.html` | Fair Share case study | Yes | dev + `case-study-theme.css` |
 | `projects/scp-reader.html` | SCP Reader case study | Yes | dev + `project-scp-reader.css` |
 | `case-studies/design-systems.html` | Design Systems case study | Yes | dev + `case-study-theme.css` |
 | `case-studies/planner.html` | Planner case study | Yes | dev + `case-study-theme.css` |

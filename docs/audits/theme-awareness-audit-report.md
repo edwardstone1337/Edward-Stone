@@ -96,7 +96,7 @@ Commits touching `dev-styles.css` since `c7d8b57`: 8aa4679, 91ae994, 2a7a6da, 31
 | `nav-component.js` | 276–293 | `fill="black"`, `fill="white"`, `stop-color="#B8C2FF"`, `stop-color="#5E6AD2"` | **High** |
 | `index.html` | 123, 164, 199, 227 | External-link SVGs: `stroke="currentColor"` | Low |
 | `resume.html` | 61–75, 257–271 | Chevron, download, external-link SVGs: `stroke="currentColor"` | Low |
-| `projects/fair-share.html` | 99–112 | Star SVGs: `fill="currentColor"`, one uses `fill="url(#star5-partial)"` with `var(--dp-accent)`, `var(--dp-text-secondary)` | Low — tokenised |
+| `case-studies/fair-share.html` | 99–112 | Star SVGs: `fill="currentColor"`, one uses `fill="url(#star5-partial)"` with `var(--dp-accent)`, `var(--dp-text-secondary)` | Low — tokenised |
 | `projects/scp-reader.html` | 125 | External-link SVG: `stroke="currentColor"` | Low |
 | `assets/previews/kaomoji/index.html` | 202–203 | Snackbar check: `stroke="currentColor"` | Low |
 | `assets/previews/flip-7/index.html` | 342–343 | Snackbar check: `stroke="currentColor"` | Low |

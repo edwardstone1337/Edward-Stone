@@ -128,7 +128,7 @@
 | **Orbs** | Present | Present (same) |
 | **Media block** | **Absent** — `.dp-strip-inner` has only content + actions | **Always present** — content, media (empty or skeleton), actions |
 | **Content order** | emoji, title, overline, badges, description | Same (emoji, title, overline, badges, description) |
-| **Primary CTA** | "Learn more" → `projects/fair-share.html` | Supported via `learnMoreLabel` / `learnMoreUrl` |
+| **Primary CTA** | "Learn more" → `case-studies/fair-share.html` | Supported via `learnMoreLabel` / `learnMoreUrl` |
 | **Secondary CTA** | "Go to Fair Share" + external URL + icon | Supported; aria-label "Go to Fair Share (opens in new tab)" in hardcoded; JS uses `(config.ctaLabel \|\| 'Open') + ' (opens in new tab)'` |
 | **aria-label** | `aria-label="Fair Share, featured project"` | Supported via `config.ariaLabel` |
 | **Inline styles** | None | N/A |

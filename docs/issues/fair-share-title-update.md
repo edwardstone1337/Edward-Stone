@@ -14,7 +14,7 @@ Update the Fair Share case study page title — current "Fair Share Calculator, 
 
 ## Current state
 
-- `projects/fair-share.html` uses: `<title>Fair Share Calculator, Edward Stone</title>`
+- `case-studies/fair-share.html` uses: `<title>Fair Share Case Study — Edward Stone</title>`
 - Hero body: "Fair Share Calculator: a tool for couples to split expenses fairly, based on income."
 
 ---
@@ -29,7 +29,7 @@ Update the Fair Share case study page title — current "Fair Share Calculator, 
 
 ## Relevant files
 
-- `projects/fair-share.html` — `<title>`, possibly hero copy.
+- `case-studies/fair-share.html` — `<title>`, possibly hero copy.
 - `assets/js/dev-projects/nav-component.js` — nav link text ("Fair Share").
 - `docs/architecture-nav.md` — if nav label changes.
 

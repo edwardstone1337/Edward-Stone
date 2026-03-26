@@ -16,7 +16,7 @@
 - `index.html` line 423: HTML comment
 - `dev/design-system.html` line 563: code fallback `val \|\| '—'`
 - `dev/design-system.html` line 824: HTML comment
-- `projects/fair-share.html` lines 124, 145: HTML comments
+- `case-studies/fair-share.html` lines 124, 145: HTML comments
 - `projects/scp-reader.html` lines 67, 98: HTML comments
 
 ---
@@ -49,7 +49,7 @@
 | `Digital Designer — <em>john+john</em>` | `Digital Designer, <em>john+john</em>` |
 | `Archivist — <em>The Office of Sir Elton John...` | `Archivist, <em>The Office of Sir Elton John...` |
 
-### projects/fair-share.html (9 replaced)
+### case-studies/fair-share.html (9 replaced)
 
 | Original line | Updated line |
 |--------------|--------------|
@@ -137,7 +137,7 @@
 
 ## Flagged for manual review (awkward or forced)
 
-1. **projects/fair-share.html — “We found proportional splitting, each person pays a share of expenses based on their income, and built...”**  
+1. **case-studies/fair-share.html — “We found proportional splitting, each person pays a share of expenses based on their income, and built...”**
    Comma splice: “splitting, each person pays” reads as run-on. Consider: “We found proportional splitting (each person pays a share of expenses based on their income) and built...” or splitting into two sentences.
 
 2. **projects/scp-reader.html — “Every action, marking as read, bookmarking, updates the interface...”**  
@@ -146,7 +146,7 @@
 3. **projects/scp-reader.html — “Sign-in is only prompted when they try to save progress, helpful, not blocking.”**  
    “Helpful, not blocking” is a bit dangling after a comma. Consider: “Sign-in is only prompted when they try to save progress; helpful, not blocking.” or “...when they try to save progress (helpful, not blocking).”
 
-4. **projects/fair-share.html — “So I vibe coded a simple calculator, ugly, hosted on a default GitHub Pages URL, but it worked.”**  
+4. **case-studies/fair-share.html — “So I vibe coded a simple calculator, ugly, hosted on a default GitHub Pages URL, but it worked.”**
    “ugly, hosted” as parenthetical is fine but the comma chain is long. Optional: “...calculator (ugly, hosted on a default GitHub Pages URL) but it worked.”
 
 5. **assets/previews/flip-7/index.html — Card face placeholder “—” → “.”**  

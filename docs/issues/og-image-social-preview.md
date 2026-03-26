@@ -33,7 +33,7 @@ Add `og:image` (and related Open Graph meta tags) to public pages so link previe
 ## Relevant files
 
 - `index.html`, `resume.html`, `gallery.html`, `404.html`
-- `projects/fair-share.html`, `projects/scp-reader.html`
+- `case-studies/fair-share.html`, `projects/scp-reader.html`
 - `case-studies/planner.html`, `case-studies/product-discovery.html`
 - `assets/images/` — add og image(s).
 - `docs/new-page-checklist.md` — add og:image to new-page steps.

@@ -18,10 +18,10 @@ const NAV_LINKS = [
   { text: 'Case Studies', children: [
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
-    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
+    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
+    { text: 'Designing the tool therapists recommend to their clients', href: '/case-studies/fair-share.html' }
   ]},
   { text: 'Projects', prodHide: true, children: [
-    { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
   { text: 'Gallery', href: '/gallery.html', prodHide: true },
