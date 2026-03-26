@@ -18,22 +18,23 @@ Add the container div and module import to any page:
 
 ## NAV_LINKS Configuration
 
-Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`. **Order in the array matches desktop left-to-right.** On `main`, some entries are commented behind `PROD-HIDE` — uncomment on branches where those pages should appear in nav.
+Links are defined in a `NAV_LINKS` array at the top of `nav-component.js`. **Order in the array matches desktop left-to-right.** Items with `prodHide: true` are filtered out on production by `ACTIVE_LINKS` in the `env.js` feature gate system — they remain visible on all non-production hostnames.
 
-```
-{ text: 'Case Studies', children: [
+```js
+const NAV_LINKS = [
+  { text: 'Case Studies', children: [
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
-    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
-]},
-{ text: 'Projects', children: [
-    { text: 'Fair Share', href: '/case-studies/fair-share.html' },
-    /* PROD-HIDE: SCP Reader */
-    // { text: 'SCP Reader', href: '/projects/scp-reader.html' }
-]},
-/* PROD-HIDE: Gallery */
-// { text: 'Gallery', href: '/gallery.html' },
-{ text: 'Resume', href: '/resume.html' }
+    { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
+    { text: 'Designing the tool therapists recommend to their clients', href: '/case-studies/fair-share.html' }
+  ]},
+  { text: 'Projects', prodHide: true, children: [
+    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+  ]},
+  { text: 'Gallery', href: '/gallery.html', prodHide: true },
+  { text: 'Resume', href: '/resume.html' },
+  { text: 'About', href: '/about.html', prodHide: true }
+];
 ```
 
 - **Top-level items with `href`** render as direct links
@@ -44,9 +45,18 @@ To add a new page to the nav, add an entry to `NAV_LINKS`.
 
 ## Desktop Layout
 
+On production (`is-prod`), only items without `prodHide: true` are rendered:
+
 ```
-[ Logo  Edward Stone ]    [ Case Studies v ] [ Projects v ] [ Resume ]    [ actions: hamburger hidden ]
-        brand                  links (centre)                    #dp-nav-actions
+[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Resume ]    [ actions: hamburger hidden ]
+        brand                  links (centre)                   #dp-nav-actions
+```
+
+On non-production hostnames, all items are rendered:
+
+```
+[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Projects ▾ ] [ Gallery ] [ Resume ] [ About ]    [ actions ]
+        brand                                    links (centre)                                   #dp-nav-actions
 ```
 
 - **Brand** (`.dp-nav-brand`): Logo SVG + "Edward Stone" text, links to `/index.html`
@@ -63,7 +73,7 @@ Behaviour:
 - **Click trigger** → open; opening one dropdown closes any other open dropdown first
 - **Click outside** → close
 - **Escape key** → close and return focus to trigger
-- Elevated background (`rgba(30, 30, 30, 0.95)`) with backdrop blur for legibility. Case Studies menu (3 items) uses `min-width: 400px` for full-sentence labels.
+- Elevated background (`rgba(30, 30, 30, 0.95)`) with backdrop blur for legibility. Case Studies menu (4 items) uses `min-width: 400px` for full-sentence labels.
 
 CSS: `.dp-nav-dropdown`, `.dp-nav-dropdown-trigger`, `.dp-nav-dropdown-menu`, `.dp-dropdown-menu`
 
@@ -127,7 +137,7 @@ The theme toggle is loaded only on `dev/design-system.html`. Public pages on `ma
 | `.dp-nav-link:focus-visible` | Accent outline with 2px offset |
 | `.dp-nav-actions` | Right-side action container |
 | `.dp-nav-hamburger` | Mobile menu button (hidden at >768px) |
-| `.dp-dropdown-menu`, `.dp-nav-dropdown-menu` | Dropdown panel; Case Studies (3 items) gets min-width 400px |
+| `.dp-dropdown-menu`, `.dp-nav-dropdown-menu` | Dropdown panel; Case Studies (4 items) gets min-width 400px |
 | `.dp-nav-drawer` | Full-viewport overlay |
 | `.dp-nav-drawer-panel` | Right-side slide-in panel (max-width: 320px) |
 | `.dp-nav-drawer-backdrop` | Semi-transparent backdrop |
