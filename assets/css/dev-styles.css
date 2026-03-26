@@ -1972,6 +1972,7 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 
+
 /* Testimonial card (split-row 1/3 slot) */
 .dp-testimonial {
   display: flex;
