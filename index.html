@@ -69,6 +69,7 @@
             { type: 'hover', selector: '.dp-logo-bar__item:nth-child(4)', message: 'My time in agency' },
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
             { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
+            { type: 'hover', selector: '.dp-counter', message: 'Such a throwback' },
           ]
         });
       });
@@ -565,6 +566,7 @@
           <nav class="dp-footer-links" aria-label="Footer links">
             <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
             <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://surveys.hotjar.com/ff9d31ea-8b61-4bb2-961d-85b3373ccb2a" class="dp-footer-link" target="_blank" rel="noopener noreferrer">Feedback</a>
           </nav>
         </div>
       </footer>
@@ -616,6 +618,12 @@
         }
         */
       });
+    </script>
+
+    <!-- Page view counter -->
+    <script type="module">
+      import { initPageCounter } from './assets/js/dev-projects/page-counter.js';
+      initPageCounter();
     </script>
 
     <!-- Analytics: custom GA4 event tracking (must load after all other scripts) -->
