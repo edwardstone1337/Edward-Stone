@@ -2014,7 +2014,7 @@ img { display: block; max-width: 100%; }
 
 .dp-testimonial-quote {
   font-family: var(--dp-font-serif);
-  font-size: var(--dp-text-base);
+  font-size: var(--dp-text-lg);
   font-style: italic;
   font-weight: normal;
   line-height: var(--dp-leading-relaxed);
@@ -2545,8 +2545,8 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-footer-inner {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
@@ -2559,11 +2559,13 @@ img { display: block; max-width: 100%; }
   font-weight: var(--dp-weight-normal);
   line-height: var(--dp-leading-normal);
   color: var(--dp-text-secondary);
+  text-align: left;
 }
 
 .dp-footer-links {
   display: flex;
   gap: var(--dp-space-6);
+  justify-content: flex-end;
 }
 
 .dp-footer-link {
@@ -3574,8 +3576,14 @@ body.dp-overlay-active {
 
 @media (max-width: 768px) {
   .dp-footer-inner {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: var(--dp-space-4);
+  }
+  .dp-footer-text {
+    text-align: center;
+  }
+  .dp-footer-links {
+    justify-content: center;
   }
   .dp-split-row {
     grid-template-columns: 1fr;
