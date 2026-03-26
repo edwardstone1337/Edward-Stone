@@ -7,6 +7,8 @@
     <title>SCP Reader, Edward Stone</title>
     <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml" />
 
+    <script src="/assets/js/env.js"></script>
+
     <!-- Fonts: Inter with optical sizing -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,11 +45,12 @@ gtag('config', 'G-6MPMYG36LE');
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from '../assets/js/dev-projects/nav-component.js';
-      // PROD-HIDE: banner ticker
-      import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
       initNav();
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      // END PROD-HIDE
+      // Banner ticker — visible on dev only
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('../assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
     </script>
 
     <main id="main" class="dp-page">

@@ -8,6 +8,8 @@
     <meta name="description" content="Edward Stone's resume — UX/PM with a decade of experience across ed-tech, sport, and agencies.">
     <link rel="canonical" href="https://edwardstone.design/resume.html">
 
+    <script src="/assets/js/env.js"></script>
+
     <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,11 +44,12 @@ gtag('config', 'G-6MPMYG36LE');
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      // PROD-HIDE: banner ticker
-      import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
       initNav();
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      // END PROD-HIDE
+      // Banner ticker — visible on dev only
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
     </script>
     <a href="#resume" class="dp-skip-link">Skip to resume</a>
     <main class="dp-page">

@@ -1,3 +1,8 @@
+/* ── Feature Gate ── */
+/* Elements with data-prod-hide are visible everywhere except production. */
+/* The 'is-prod' class is added to <html> by env.js on production hostnames. */
+.is-prod [data-prod-hide] { display: none !important; }
+
 /* Suppress transitions on initial load to prevent flash */
 .dp-no-transition,
 .dp-no-transition *,
@@ -1168,8 +1173,7 @@ img { display: block; max-width: 100%; }
   position: relative;
 }
 
-/* PROD-HIDE: hero card scribble overlay */
-/*
+/* ── Hero card scribble overlay ── */
 .dp-hero-card::after {
   content: '';
   position: absolute;
@@ -1178,8 +1182,7 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
   z-index: 1;
 }
-*/
-/* END PROD-HIDE */
+.is-prod .dp-hero-card::after { display: none; }
 
 .dp-hero-card__heading {
   font-family: var(--dp-font-display);

@@ -11,6 +11,8 @@
     <meta property="og:type" content="website">
     <!-- Future: og:image for social preview card before launch -->
 
+    <script src="/assets/js/env.js"></script>
+
     <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,12 +60,13 @@ gtag('config', 'G-6MPMYG36LE');
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      // PROD-HIDE: banner ticker
-      import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      // END PROD-HIDE
       import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
       initNav();
+      // Banner ticker — visible on dev only
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
       initImageLightbox({
         selector: '.dp-ticker__item',
         getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',
@@ -116,24 +119,20 @@ gtag('config', 'G-6MPMYG36LE');
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-01.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-02.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-03.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
-            <!-- PROD-HIDE: ticker composite item
-            <div class="dp-ticker__item dp-ticker__item--composite">
+            <div class="dp-ticker__item dp-ticker__item--composite" data-prod-hide>
               <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
               <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
             </div>
-            END PROD-HIDE -->
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-05.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-06.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-07.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-01.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-02.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-03.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
-            <!-- PROD-HIDE: ticker composite item
-            <div class="dp-ticker__item dp-ticker__item--composite" aria-hidden="true">
+            <div class="dp-ticker__item dp-ticker__item--composite" aria-hidden="true" data-prod-hide>
               <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
               <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
             </div>
-            END PROD-HIDE -->
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-05.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-06.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-07.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
@@ -147,18 +146,14 @@ gtag('config', 'G-6MPMYG36LE');
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-11.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-12.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-13.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
-            <!-- PROD-HIDE: ticker static item
-            <div class="dp-ticker__item dp-ticker__item--static"><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
-            END PROD-HIDE -->
+            <div class="dp-ticker__item dp-ticker__item--static" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-08.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-09.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-10.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-11.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-12.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
             <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-13.jpg" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
-            <!-- PROD-HIDE: ticker static item
-            <div class="dp-ticker__item dp-ticker__item--static" aria-hidden="true"><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
-            END PROD-HIDE -->
+            <div class="dp-ticker__item dp-ticker__item--static" aria-hidden="true" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
           </div>
         </div>
       </section>
@@ -369,8 +364,7 @@ gtag('config', 'G-6MPMYG36LE');
         </div>
       </section>
 
-      <!-- PROD-HIDE: Toolbox
-      <section class="dp-toolbox dp-reveal" data-reveal-delay="200">
+      <section class="dp-toolbox dp-reveal" data-prod-hide data-reveal-delay="200">
         <h2 class="dp-toolbox__heading">My tools of the trade</h2>
         <div class="dp-toolbox__grid">
           <div class="dp-toolbox__card dp-glass dp-reveal" data-reveal-delay="300">
@@ -424,10 +418,8 @@ gtag('config', 'G-6MPMYG36LE');
           </div>
         </div>
       </section>
-      END PROD-HIDE -->
 
-      <!-- PROD-HIDE: Fair Share strip + testimonial
-      <div class="dp-split-row" id="projects">
+      <div class="dp-split-row" id="projects" data-prod-hide>
         <section class="dp-strip dp-strip--compact" id="strip-fair-share" aria-label="Fair Share, featured project">
           <div class="dp-strip-orbs">
             <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
@@ -459,10 +451,8 @@ gtag('config', 'G-6MPMYG36LE');
           </footer>
         </blockquote>
       </div>
-      END PROD-HIDE -->
 
-      <!-- PROD-HIDE: Flip 7 strip
-      <section class="dp-strip dp-strip--flip7" id="strip-flip-7" aria-label="Flip 7 Scorecard, featured project">
+      <section class="dp-strip dp-strip--flip7" id="strip-flip-7" data-prod-hide aria-label="Flip 7 Scorecard, featured project">
         <div class="dp-strip-orbs">
           <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
           <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
@@ -492,10 +482,8 @@ gtag('config', 'G-6MPMYG36LE');
           </div>
         </div>
       </section>
-      END PROD-HIDE -->
 
-      <!-- PROD-HIDE: SCP Reader strip + testimonial
-      <div class="dp-split-row dp-split-row--flipped">
+      <div class="dp-split-row dp-split-row--flipped" data-prod-hide>
         <blockquote class="dp-testimonial" aria-label="Testimonial from Jason Allen">
           <span class="dp-testimonial-mark" aria-hidden="true">"</span>
           <p class="dp-testimonial-quote">Ed is a rare talent. He is a world class designer, with a great business mind that understands UX deeply. He is hard working, trustworthy and gets along with everyone. If I was starting a new company he would be one of the first people I would hire.</p>
@@ -527,10 +515,8 @@ gtag('config', 'G-6MPMYG36LE');
           </div>
         </section>
       </div>
-      END PROD-HIDE -->
 
-      <!-- PROD-HIDE: Kaomoji strip
-      <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" id="strip-kaomoji" aria-label="Kaomoji.click, featured project">
+      <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" id="strip-kaomoji" data-prod-hide aria-label="Kaomoji.click, featured project">
         <div class="dp-strip-inner">
           <div class="dp-strip-content">
             <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
@@ -556,7 +542,6 @@ gtag('config', 'G-6MPMYG36LE');
           </div>
         </div>
       </section>
-      END PROD-HIDE -->
 
       <!-- #projects-container hidden for Phase 1 MVP
       <div id="projects-container" role="region" aria-label="Development projects"></div>

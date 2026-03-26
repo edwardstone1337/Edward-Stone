@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Discovery — Edward Stone</title>
   <meta name="description" content="How I designed and implemented a customer voice infrastructure at Inquisitive that captured 95% of actionable insights within one month.">
+  <script src="/assets/js/env.js"></script>
   <link rel="stylesheet" href="../assets/css/dev-tokens.css">
   <link rel="stylesheet" href="../assets/css/dev-styles.css">
   <link rel="stylesheet" href="../assets/css/case-study-theme.css">
@@ -152,11 +153,12 @@
   <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
-    // PROD-HIDE: banner ticker
-    import { initBannerTicker } from '../assets/js/dev-projects/banner-ticker.js';
     initNav();
-    initBannerTicker({ text: 'This page is a work in progress', separator: '\u2726' });
-    // END PROD-HIDE
+    // Banner ticker — visible on dev only
+    const isProd = document.documentElement.classList.contains('is-prod');
+    if (!isProd) {
+      import('../assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'This page is a work in progress', separator: '\u2726' }));
+    }
   </script>
 </body>
 </html>

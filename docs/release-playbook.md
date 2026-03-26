@@ -2,73 +2,91 @@
 
 ## Overview
 
-We use a **release branch pattern** to selectively promote changes from `dev` to `main` (production). Dev is never modified during this process. GitHub Pages deploys from `main` automatically.
+Features are hidden or shown on production via a **feature gate** — not comment wrappers. Both `dev` and `main` carry identical code. Visibility is controlled at runtime by detecting the production hostname.
 
 ```
-dev ──→ release/<name> ──→ main (prod)
-         (hide/unhide)
+dev ──→ main (prod)
+  (gate attributes/flags control visibility on each host)
 ```
+
+GitHub Pages deploys from `main` automatically (~60s).
+
+## How the Feature Gate Works
+
+**`assets/js/env.js`** runs synchronously in `<head>` (first script, no defer/async) and adds `is-prod` to `<html>` when the hostname is `edwardstone.design` or `www.edwardstone.design`. All gating logic reads this class.
+
+| Gate method | Mechanism |
+|---|---|
+| HTML sections | `data-prod-hide` attribute on outermost element → CSS rule hides it |
+| Nav items | `prodHide: true` property in `NAV_LINKS` → filtered out of `ACTIVE_LINKS` |
+| JS-initialised features | `if (!isProd)` check wrapping the init call |
+| CSS-only features | `.is-prod .selector { display: none; }` override rule |
+
+**CSS rule** (top of `dev-styles.css`):
+```css
+.is-prod [data-prod-hide] { display: none !important; }
+```
+
+**Nav filter** (`nav-component.js`):
+```js
+const isProd = document.documentElement.classList.contains('is-prod');
+const ACTIVE_LINKS = isProd ? NAV_LINKS.filter(item => !item.prodHide) : NAV_LINKS;
+```
+
+**dev** renders on a non-prod hostname (Vercel) — all gated features are visible.
+**main** renders on `edwardstone.design` — all gated features are hidden.
+
+## Hiding a New Feature on Prod
+
+**HTML section:**
+```html
+<section data-prod-hide>
+  ...
+</section>
+```
+
+**Nav item:**
+```js
+{ text: 'Gallery', href: '/gallery.html', prodHide: true },
+```
+
+**JS-initialised feature:**
+```js
+const isProd = document.documentElement.classList.contains('is-prod');
+if (!isProd) {
+  import('./assets/js/dev-projects/my-feature.js').then(m => m.init());
+}
+```
+
+**CSS-only feature:**
+```css
+.is-prod .my-selector { display: none; }
+```
+
+## Shipping a Feature to Prod
+
+Remove the gate. No branch gymnastics required.
+
+- HTML: remove `data-prod-hide`
+- Nav: remove `prodHide: true`
+- JS: remove the `if (!isProd)` wrapper
+- CSS: remove the `.is-prod` override rule
+
+Commit and push to `main` (or merge from `dev`). Deploy takes ~60s.
 
 ## Release Steps
 
 ```bash
-# 1. Start from latest dev
-git checkout dev && git pull origin dev
+# 1. Develop on dev
+git checkout dev
 
-# 2. Create release branch
-git checkout -b release/<name>   # e.g. release/prod-update
-
-# 3. Make hiding/unhiding changes using PROD-HIDE markers (see below)
-
-# 4. Verify
-node -c <modified-js-file>       # JS syntax check
-# Visually inspect HTML comments are well-formed (no nesting, no unclosed)
-# python3 -m http.server 5500    # Optional: local visual check
-
-# 5. Commit
-git add -A && git commit -m "release: <description>"
-
-# 6. Merge to main and push
+# 2. When ready to ship, merge to main
 git checkout main
-git merge release/<name>
+git merge dev
 git push origin main
 
-# 7. Verify on edwardstone.design (~60s deploy)
-
-# 8. Clean up
-git branch -d release/<name>
+# 3. Verify on edwardstone.design (~60s deploy)
 ```
-
-## PROD-HIDE Marker Conventions
-
-**HTML:**
-```html
-<!-- PROD-HIDE: Flip 7 strip
-<section>...</section>
-END PROD-HIDE -->
-```
-
-**Single-line HTML:**
-```html
-<!-- PROD-HIDE: Fair Share learn more link -->
-<!-- <a href="...">Learn more</a> -->
-<!-- END PROD-HIDE -->
-```
-
-**JS:**
-```js
-const NAV_LINKS = [
-  /* PROD-HIDE: Project and Resume nav items
-  { text: 'Projects', children: [...] },
-  { text: 'Resume', href: '/resume.html' }
-  END PROD-HIDE */
-];
-```
-
-Rules:
-- Always include a short description after `PROD-HIDE:`
-- Ensure JS arrays/objects remain syntactically valid after commenting (no trailing commas)
-- All markers are searchable: `grep -r "PROD-HIDE" --include="*.html" --include="*.js"`
 
 ## Rollback
 
@@ -82,14 +100,26 @@ git revert <merge-commit> && git push origin main
 git reset --hard <previous-commit> && git push --force origin main
 ```
 
-## Currently Hidden on Prod
+## Currently Gated Features
 
-As of `b22ef31` (`release/prod-update`, 2025-02-12). On dev, strips and toolbox may be visible; release branch comments these out for main.
+| Feature | Gate method | File |
+|---|---|---|
+| Toolbox section | `data-prod-hide` | `index.html` |
+| Fair Share strip + testimonial | `data-prod-hide` | `index.html` |
+| Flip 7 strip | `data-prod-hide` | `index.html` |
+| SCP Reader strip + testimonial | `data-prod-hide` | `index.html` |
+| Kaomoji strip | `data-prod-hide` | `index.html` |
+| Ticker composite items (×2) | `data-prod-hide` | `index.html` |
+| Ticker static items (×2) | `data-prod-hide` | `index.html` |
+| Projects nav dropdown | `prodHide: true` | `nav-component.js` |
+| Gallery nav link | `prodHide: true` | `nav-component.js` |
+| About nav link | `prodHide: true` | `nav-component.js` |
+| Banner ticker init | `isProd` check | 8 HTML files |
+| Hero card scribble overlay | `.is-prod` CSS override | `dev-styles.css` |
 
-| Item | File | Marker |
-|------|------|--------|
-| Toolbox section | `index.html` | `PROD-HIDE: Toolbox` |
-| Flip 7 strip | `index.html` | `PROD-HIDE: Flip 7 strip` |
-| Fair Share "Learn More" link | `index.html` | `PROD-HIDE: Fair Share learn more link` |
-| SCP Reader "Learn More" link | `index.html` | `PROD-HIDE: SCP Reader learn more link` |
-| All NAV_LINKS (Fair Share, SCP Reader, Resume) | `assets/js/dev-projects/nav-component.js` | `PROD-HIDE: Project and Resume nav items` |
+## Important Notes
+
+- `env.js` must be the **first `<script>` in `<head>`** on every page — synchronous, no `defer` or `async`
+- Both branches carry identical code — no comment-syntax differences between `dev` and `main`
+- Merges between branches are conflict-free
+- To verify coverage: `grep -rn "env.js" --include="*.html" . | grep -v dev/ | grep -v assets/previews`
