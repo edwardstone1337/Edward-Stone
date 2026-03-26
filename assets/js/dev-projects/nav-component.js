@@ -19,7 +19,8 @@ const isProd = document.documentElement.classList.contains('is-prod');
 const NAV_LINKS = [
   { text: 'Case Studies', children: CASE_STUDIES },
   { text: 'Projects', prodHide: true, children: [
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+    { text: 'SCP Reader', href: '/projects/scp-reader.html' },
+    { text: 'Prang Out', href: '/projects/prang-out.html' }
   ]},
   { text: 'Gallery', href: '/gallery.html', prodHide: true },
   { text: 'Resume', href: '/resume.html' },

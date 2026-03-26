@@ -1,0 +1,44 @@
+/* Prang Out — project theme overrides
+   Load after dev-tokens.css, dev-styles.css, and case-study-theme.css.
+   All selectors scoped to [data-project="prang-out"].
+   No new tokens — uses existing dp- primitives and semantic tokens only. */
+
+/* ── Photo grid (CSS columns masonry) ── */
+[data-project="prang-out"] .dp-photo-grid {
+  column-count: 3;
+  column-gap: var(--dp-space-3);
+  margin-block: var(--dp-space-8);
+}
+
+[data-project="prang-out"] .dp-photo-grid__item {
+  break-inside: avoid;
+  margin-bottom: var(--dp-space-3);
+}
+
+[data-project="prang-out"] .dp-photo-grid__item img {
+  width: 100%;
+  border-radius: var(--dp-radius-md);
+  display: block;
+}
+
+[data-project="prang-out"] .dp-photo-grid__caption {
+  font-size: var(--dp-text-sm);
+  color: var(--dp-text-secondary);
+  margin-top: var(--dp-space-2);
+  line-height: var(--dp-leading-normal);
+}
+
+@media (max-width: 899px) {
+  [data-project="prang-out"] .dp-photo-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 639px) {
+  [data-project="prang-out"] .dp-photo-grid {
+    column-count: 1;
+  }
+}
+
+/* === Prang Out brand overrides === */
+/* [data-project="prang-out"] .dp-hero-accent { color: ...; } */
