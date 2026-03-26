@@ -1212,7 +1212,7 @@ img { display: block; max-width: 100%; }
 
 .dp-hero-card__link {
   font-family: var(--dp-font-body);
-  font-size: var(--dp-text-lg);
+  font-size: var(--dp-text-md);
   font-weight: var(--dp-weight-normal);
   line-height: var(--dp-leading-normal);
   color: var(--dp-text-secondary);
