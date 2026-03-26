@@ -15,6 +15,12 @@
   color: var(--dp-raw-grey-900);
 }
 
+/* Hero accent line: brand colour override (restores dp-hero-accent on light) */
+[data-theme="light"] .dp-hero-line.dp-hero-accent {
+  -webkit-text-fill-color: var(--dp-brand-text);
+  color: var(--dp-brand-text);
+}
+
 /* Prose body: 18px minimum (WCAG AAA readability, between --dp-text-base 16px and --dp-text-lg 20px) */
 [data-theme="light"] .dp-prose p,
 [data-theme="light"] .dp-prose li {

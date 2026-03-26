@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- **Homepage image ticker** (`index.html`): Full-bleed `.dp-ticker` — two rows, opposite-direction CSS marquees (50s), cards from `assets/images/ticker/UI.jpg` … `UI-5.jpg` (duplicated per row for seamless loop); section `aria-hidden="true"`; `prefers-reduced-motion: reduce` disables `.dp-ticker__track` animation.
+- **Homepage image ticker** (`index.html`): Full-bleed `.dp-ticker` (two rows) scrolls via rAF loop (`initImageTicker()`), speed from `--dp-ticker-speed`; left row right-to-left + right row left-to-right; ticker set `assets/images/ticker/ticker-01…ticker-13` (+ composite `background-1/foreground-1`, static `ticker-pretty.png`); composite/static gated with `data-prod-hide`; `prefers-reduced-motion` prevents the rAF loop; caption in `.dp-ticker-caption`.
 - **Testimonials section** (index): Three testimonials (Jason Allen, Chris George, Bella Jagger) in `.dp-testimonials-section`; grid layout.
 - **Contact CTA section** (index): "Let's talk" section with Email me and LinkedIn buttons; `.dp-contact-cta`.
 - **Toolbox section** (index): "My tools of the trade" grid of glass cards (Design & Prototyping, Strategy & Methods, Research & Leadership, AI & Dev, Also into). Wrapped in `data-prod-hide` so it’s hidden only on the production hostname.
@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **TLDR background (light theme)**: `.dp-tldr` uses `--dp-bg-elevated` (white in light theme); new semantic token `--dp-bg-elevated` for elevated surfaces.
 - **Gallery image src**: Sanitised via `sanitizeUrl()` before use; XSS hardening.
+- **Image ticker assets / PROD gating**: Updated ticker card images + hid composite/static variants on prod via `data-prod-hide`.
 - **404 Snake button**: onclick guarded with `typeof SnakeGame !== 'undefined' && SnakeGame.open()` to avoid errors if nav/snake load order differs.
 - **Kaomoji snackbar message**; project-card indentation.
 - **Nav links and button**: UA default background reset to prevent unwanted link/button styling.
