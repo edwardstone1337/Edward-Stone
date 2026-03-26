@@ -296,6 +296,9 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 767px) {
+  .dp-ticker {
+    margin-top: var(--dp-space-10);
+  }
   .dp-ticker__img {
     width: 240px;
   }
@@ -431,6 +434,87 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .dp-case-promo { animation: none; transition: none; }
 }
+
+/* ── Side Quests ── */
+.dp-side-quests {
+  margin-top: var(--dp-section-gap);
+  text-align: center;
+}
+
+.dp-side-quests__title {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-2xl);
+  font-weight: var(--dp-weight-semibold);
+  color: var(--dp-text-primary);
+  margin: 0 0 var(--dp-space-3);
+}
+
+.dp-side-quests__subtitle {
+  font-size: var(--dp-text-md);
+  color: var(--dp-text-secondary);
+  margin: 0 0 var(--dp-space-12);
+}
+
+.dp-side-quests__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--dp-space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.dp-side-quests__card {
+  border-radius: var(--dp-radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color-scheme: light;
+}
+
+.dp-side-quests__card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.dp-side-quests__card-body {
+  padding: var(--dp-space-6) var(--dp-space-6) var(--dp-space-8);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dp-side-quests__card-title {
+  font-family: var(--dp-font-display);
+  font-size: var(--dp-text-lg);
+  font-weight: var(--dp-weight-bold);
+  color: var(--dp-raw-black, #111);
+  line-height: 1.35;
+  margin: 0 0 var(--dp-space-4);
+}
+
+.dp-side-quests__card-subtitle {
+  display: block;
+  font-size: var(--dp-text-base);
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: var(--dp-space-3);
+}
+
+.dp-side-quests__card-actions {
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .dp-side-quests__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 /* ============================================
    Navigation Bar
@@ -1084,6 +1168,8 @@ img { display: block; max-width: 100%; }
   position: relative;
 }
 
+/* PROD-HIDE: hero card scribble overlay */
+/*
 .dp-hero-card::after {
   content: '';
   position: absolute;
@@ -1092,6 +1178,8 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
   z-index: 1;
 }
+*/
+/* END PROD-HIDE */
 
 .dp-hero-card__heading {
   font-family: var(--dp-font-display);
@@ -3600,6 +3688,7 @@ body.dp-overlay-active {
   .dp-nav,
   .dp-hero,
   .dp-section-label,
+  .dp-side-quests,
   .dp-strip,
   .dp-resume-section,
   .dp-footer,
