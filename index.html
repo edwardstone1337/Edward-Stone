@@ -24,6 +24,7 @@
     <!-- Design system (independent from main site) -->
     <link rel="stylesheet" href="assets/css/dev-tokens.css">
     <link rel="stylesheet" href="assets/css/dev-styles.css">
+    <link rel="stylesheet" href="assets/css/cursor-chat.css">
 
     <!-- Index-only: spacing between hero, card section, and first strip -->
     <style>
@@ -67,6 +68,18 @@ gtag('config', 'G-6MPMYG36LE');
       if (!isProd) {
         import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
       }
+      import('./assets/js/dev-projects/cursor-chat.js').then(m => {
+        m.initCursorChat({
+          triggers: [
+            { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable 🙄' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(1)', message: 'The Rocket Man himself' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(2)', message: 'Where I\'m making teachers\' lives easier' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(3)', message: 'Where I transitioned to UX' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(4)', message: 'My time in agency' },
+            { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
+          ]
+        });
+      });
       initImageLightbox({
         selector: '.dp-ticker__item',
         getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',

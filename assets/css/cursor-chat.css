@@ -1,0 +1,83 @@
+/* ============================================
+   Cursor Chat Bubble
+   Desktop only — JS gate on (hover: hover) and (pointer: fine)
+   PROD gate — JS bails on is-prod before this is ever used
+   z-index: 5000 (above nav 1000, below lightboxes 10000)
+   ============================================ */
+
+.dp-cursor-chat {
+  --_ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 5000;
+  transform: translate(var(--x, 0px), var(--y, 0px));
+}
+
+/* Subtle nub: 4px dot at the top-left of the bubble, pointing back toward cursor.
+   Lives on the container (not bubble) so it isn't clipped by overflow:hidden. */
+.dp-cursor-chat::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  transform: none;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--dp-radius-full);
+  background: var(--dp-raw-grey-900);
+  opacity: 0;
+  transition: opacity var(--dp-duration-base) var(--_ease-spring);
+}
+
+.dp-cursor-chat--active::before {
+  opacity: 1;
+}
+
+/* Bubble — collapsed by default, grows on --active */
+.dp-cursor-chat__bubble {
+  background: var(--dp-raw-grey-900);
+  backdrop-filter: blur(var(--dp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--dp-glass-blur));
+  color: var(--dp-raw-grey-50);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--dp-radius-md);
+  font-family: var(--dp-font-body);
+  font-size: var(--dp-text-sm);
+  font-weight: var(--dp-weight-medium);
+  line-height: var(--dp-leading-normal);
+  white-space: nowrap;
+
+  /* Collapsed state */
+  max-width: 0;
+  opacity: 0;
+  padding: var(--dp-space-2) 0;
+  overflow: hidden;
+
+  transition:
+    max-width var(--dp-duration-slow) var(--_ease-spring),
+    opacity var(--dp-duration-base) var(--_ease-spring),
+    padding var(--dp-duration-slow) var(--_ease-spring);
+}
+
+/* Active state — bubble grows open */
+.dp-cursor-chat--active .dp-cursor-chat__bubble {
+  max-width: 300px;
+  opacity: 1;
+  padding: var(--dp-space-2) var(--dp-space-3);
+}
+
+/* Reduced motion — still appears/disappears, just instantly */
+@media (prefers-reduced-motion: reduce) {
+  .dp-cursor-chat__bubble {
+    transition:
+      max-width 0ms,
+      opacity 0ms,
+      padding 0ms;
+  }
+
+  .dp-cursor-chat::before {
+    transition: opacity 0ms;
+  }
+}
