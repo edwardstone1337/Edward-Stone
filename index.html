@@ -53,7 +53,9 @@
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
       import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
+      import { initImageTicker } from './assets/js/dev-projects/image-ticker.js';
       initNav();
+      initImageTicker();
       // Banner ticker — visible on dev only
       const isProd = document.documentElement.classList.contains('is-prod');
       if (!isProd) {
