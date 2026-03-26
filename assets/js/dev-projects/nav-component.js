@@ -18,19 +18,19 @@ const NAV_LINKS = [
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
   ]},
-  // PROD-HIDE: Projects nav dropdown
+  /* PROD-HIDE: Projects nav dropdown
   { text: 'Projects', children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
-  // END PROD-HIDE
-  // PROD-HIDE: Gallery nav link
+  END PROD-HIDE */
+  /* PROD-HIDE: Gallery nav link
   { text: 'Gallery', href: '/gallery.html' },
-  // END PROD-HIDE
+  END PROD-HIDE */
   { text: 'Resume', href: '/resume.html' },
-  // PROD-HIDE: About nav link
+  /* PROD-HIDE: About nav link
   { text: 'About', href: '/about.html' }
-  // END PROD-HIDE
+  END PROD-HIDE */
 ];
 
 /**
