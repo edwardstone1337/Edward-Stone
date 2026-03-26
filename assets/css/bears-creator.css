@@ -1,0 +1,219 @@
+/* ============================================================
+   Bears Creator — layout, controls, and interactive states
+   Uses dp- tokens exclusively; no new tokens introduced.
+   ============================================================ */
+
+/* ── Section wrapper ──────────────────────────────────────── */
+
+.bears-section {
+  margin-top: var(--dp-section-gap);
+  padding-inline: var(--dp-space-8);
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .bears-section {
+    padding-inline: var(--dp-space-4);
+  }
+}
+
+/* ── Outer layout ─────────────────────────────────────────── */
+
+.bears-creator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--dp-space-8);
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--dp-space-8);
+  box-sizing: border-box;
+
+  background: var(--dp-paper-surface-light);
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-lg);
+}
+
+@media (max-width: 768px) {
+  .bears-creator {
+    grid-template-columns: 1fr;
+    padding: var(--dp-space-6) var(--dp-space-5);
+    gap: var(--dp-space-6);
+  }
+}
+
+/* ── Canvas ───────────────────────────────────────────────── */
+
+.bears-creator__canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.bears-creator__canvas svg {
+  width: 100%;
+  max-width: 66%;
+  height: auto;
+  display: block;
+  overflow: visible;   /* ears extend beyond canvas bounds */
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .bears-creator__canvas {
+    max-height: 360px;
+    overflow: visible;
+  }
+}
+
+/* ── Controls panel ───────────────────────────────────────── */
+
+.bears-creator__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-3);
+}
+
+/* ── Stepper rows ─────────────────────────────────────────── */
+
+.bears-creator__stepper-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-1);
+  max-width: 200px;
+}
+
+.bears-creator__stepper-label {
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-semibold);
+  letter-spacing: var(--dp-tracking-wider);
+  text-transform: uppercase;
+  color: var(--dp-text-secondary);
+  margin: 0;
+  line-height: var(--dp-leading-snug);
+}
+
+.bears-creator__stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dp-space-2);
+}
+
+.bears-creator__stepper-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--dp-text-secondary);
+  font-size: var(--dp-text-base);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.bears-creator__stepper-arrow:hover {
+  color: var(--dp-text-primary);
+}
+
+.bears-creator__stepper-arrow:focus-visible {
+  outline: 2px solid var(--dp-accent);
+  outline-offset: 2px;
+  border-radius: var(--dp-radius-sm);
+}
+
+.bears-creator__stepper-name {
+  flex: 1;
+  text-align: center;
+  font-size: var(--dp-text-sm);
+  color: var(--dp-text-primary);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Colour swatches ──────────────────────────────────────── */
+
+.bears-creator__colour-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-2);
+  margin-top: var(--dp-space-3);
+}
+
+.bears-creator__colour-label {
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-semibold);
+  letter-spacing: var(--dp-tracking-wider);
+  text-transform: uppercase;
+  color: var(--dp-text-secondary);
+  margin: 0;
+  line-height: var(--dp-leading-snug);
+}
+
+.bears-creator__swatch-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dp-space-2);
+  align-items: center;
+}
+
+.bears-creator__swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--dp-radius-full);
+  border: 1px solid var(--dp-border-default);
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* outline-offset animates smoothly */
+  outline: 2px solid transparent;
+  outline-offset: 0px;
+  transition:
+    outline-color  var(--dp-duration-base) var(--dp-ease-out),
+    outline-offset var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.bears-creator__swatch:hover {
+  outline-color: var(--dp-border-active);
+  outline-offset: 2px;
+}
+
+.bears-creator__swatch:focus-visible {
+  outline-color: var(--dp-accent);
+  outline-offset: 2px;
+}
+
+.bears-creator__swatch.is-active {
+  outline-color: var(--dp-text-primary);
+  outline-offset: 3px;
+}
+
+/* White swatch needs a visible border to distinguish itself from the page bg */
+.bears-creator__swatch[data-hex="#FFFFFF"] {
+  border-color: var(--dp-border-active);
+}
+
+/* ── Randomise button (layout only — visuals from dp-btn dp-btn-secondary-on-light) */
+
+.bears-creator__randomise {
+  width: 100%;
+  margin-top: var(--dp-space-3);
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bears-creator__stepper-arrow,
+  .bears-creator__swatch {
+    transition: none;
+  }
+}

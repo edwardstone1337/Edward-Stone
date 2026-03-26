@@ -1,0 +1,407 @@
+{
+  "canvas": {
+    "width": 704,
+    "height": 666
+  },
+  "layers": {
+    "ears": {
+      "zIndex": 0,
+      "anchor": {
+        "x": 352,
+        "y": 112
+      }
+    },
+    "head": {
+      "zIndex": 1,
+      "anchor": {
+        "x": 352,
+        "y": 361
+      }
+    },
+    "eyes": {
+      "zIndex": 2,
+      "anchor": {
+        "x": 296,
+        "y": 318
+      }
+    },
+    "mouth": {
+      "zIndex": 3,
+      "anchor": {
+        "x": 296,
+        "y": 487
+      }
+    }
+  },
+  "parts": {
+    "ears": [
+      {
+        "id": "ears-buggs-bunny",
+        "file": "ears/ears-buggs-bunny.svg",
+        "viewBox": "0 0 704 661",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "ears-cat",
+        "file": "ears/ears-cat.svg",
+        "viewBox": "0 0 704 420",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "ears-finn",
+        "file": "ears/ears-finn.svg",
+        "viewBox": "0 0 707 554",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "ears-rabbit",
+        "file": "ears/ears-rabbit.svg",
+        "viewBox": "0 0 766 486",
+        "colorable": [
+          "inner-ear",
+          "skin"
+        ]
+      },
+      {
+        "id": "ears-split",
+        "file": "ears/ears-split.svg",
+        "viewBox": "0 0 737 639",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "ears-teddy",
+        "file": "ears/ears-teddy.svg",
+        "viewBox": "0 0 704 224",
+        "colorable": [
+          "skin"
+        ]
+      }
+    ],
+    "heads": [
+      {
+        "id": "head-default",
+        "file": "heads/head-default.svg",
+        "viewBox": "0 0 704 610",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "head-robot",
+        "file": "heads/head-robot.svg",
+        "viewBox": "0 0 704 610",
+        "colorable": [
+          "skin"
+        ]
+      },
+      {
+        "id": "head-stitched",
+        "file": "heads/head-stitched.svg",
+        "viewBox": "0 0 704 610",
+        "colorable": [
+          "skin"
+        ]
+      }
+    ],
+    "eyes": [
+      {
+        "id": "eyes-angry",
+        "file": "eyes/eyes-angry.svg",
+        "viewBox": "0 0 320 78",
+        "colorable": []
+      },
+      {
+        "id": "eyes-basic-with-eyebrows",
+        "file": "eyes/eyes-basic-with-eyebrows.svg",
+        "viewBox": "0 0 358 112",
+        "colorable": []
+      },
+      {
+        "id": "eyes-blush",
+        "file": "eyes/eyes-blush.svg",
+        "viewBox": "0 0 528 224",
+        "colorable": []
+      },
+      {
+        "id": "eyes-button",
+        "file": "eyes/eyes-button.svg",
+        "viewBox": "0 0 384 152",
+        "colorable": []
+      },
+      {
+        "id": "eyes-cartoons",
+        "file": "eyes/eyes-cartoons.svg",
+        "viewBox": "0 0 424 192",
+        "colorable": []
+      },
+      {
+        "id": "eyes-concerned",
+        "file": "eyes/eyes-concerned.svg",
+        "viewBox": "0 0 357 135",
+        "colorable": []
+      },
+      {
+        "id": "eyes-crosses",
+        "file": "eyes/eyes-crosses.svg",
+        "viewBox": "0 0 432 136",
+        "colorable": []
+      },
+      {
+        "id": "eyes-default",
+        "file": "eyes/eyes-default.svg",
+        "viewBox": "0 0 320 64",
+        "colorable": []
+      },
+      {
+        "id": "eyes-hearts",
+        "file": "eyes/eyes-hearts.svg",
+        "viewBox": "0 0 477 191",
+        "colorable": []
+      },
+      {
+        "id": "eyes-jake",
+        "file": "eyes/eyes-jake.svg",
+        "viewBox": "0 0 476 192",
+        "colorable": []
+      },
+      {
+        "id": "eyes-large-black",
+        "file": "eyes/eyes-large-black.svg",
+        "viewBox": "0 0 450 168",
+        "colorable": []
+      },
+      {
+        "id": "eyes-large-white",
+        "file": "eyes/eyes-large-white.svg",
+        "viewBox": "0 0 482 184",
+        "colorable": []
+      },
+      {
+        "id": "eyes-panda",
+        "file": "eyes/eyes-panda.svg",
+        "viewBox": "0 0 416 160",
+        "colorable": []
+      },
+      {
+        "id": "eyes-robot",
+        "file": "eyes/eyes-robot.svg",
+        "viewBox": "0 0 368 112",
+        "colorable": []
+      },
+      {
+        "id": "eyes-sparkle",
+        "file": "eyes/eyes-sparkle.svg",
+        "viewBox": "0 0 320 80",
+        "colorable": []
+      },
+      {
+        "id": "eyes-spider",
+        "file": "eyes/eyes-spider.svg",
+        "viewBox": "0 0 344 92",
+        "colorable": []
+      },
+      {
+        "id": "eyes-spot",
+        "file": "eyes/eyes-spot.svg",
+        "viewBox": "0 0 386 183",
+        "colorable": []
+      },
+      {
+        "id": "eyes-stars",
+        "file": "eyes/eyes-stars.svg",
+        "viewBox": "0 0 529 220",
+        "colorable": []
+      },
+      {
+        "id": "eyes-unimpressed",
+        "file": "eyes/eyes-unimpressed.svg",
+        "viewBox": "0 0 358 64",
+        "colorable": []
+      },
+      {
+        "id": "eyes-up-up",
+        "file": "eyes/eyes-up-up.svg",
+        "viewBox": "0 0 368 64",
+        "colorable": []
+      },
+      {
+        "id": "eyes-uu",
+        "file": "eyes/eyes-uu.svg",
+        "viewBox": "0 0 368 64",
+        "colorable": []
+      },
+      {
+        "id": "eyes-white-eyes",
+        "file": "eyes/eyes-white-eyes.svg",
+        "viewBox": "0 0 352 96",
+        "colorable": []
+      }
+    ],
+    "mouths": [
+      {
+        "id": "mouth-beaver",
+        "file": "mouths/mouth-beaver.svg",
+        "viewBox": "0 0 320 338",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-21",
+        "file": "mouths/mouth-ellipse-21.svg",
+        "viewBox": "0 0 320 292",
+        "colorable": []
+      },
+      {
+        "id": "mouth-ellipse-24",
+        "file": "mouths/mouth-ellipse-24.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-25",
+        "file": "mouths/mouth-ellipse-25.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-ellipse-26",
+        "file": "mouths/mouth-ellipse-26.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-ellipse-27",
+        "file": "mouths/mouth-ellipse-27.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-28",
+        "file": "mouths/mouth-ellipse-28.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-29",
+        "file": "mouths/mouth-ellipse-29.svg",
+        "viewBox": "0 0 320 300",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-33",
+        "file": "mouths/mouth-ellipse-33.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-34",
+        "file": "mouths/mouth-ellipse-34.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-ellipse-8",
+        "file": "mouths/mouth-ellipse-8.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-jake",
+        "file": "mouths/mouth-jake.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-mask",
+        "file": "mouths/mouth-mask.svg",
+        "viewBox": "0 0 692 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-nose-only",
+        "file": "mouths/mouth-nose-only.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-nose-only-line",
+        "file": "mouths/mouth-nose-only-line.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-open-mouth",
+        "file": "mouths/mouth-open-mouth.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-open-mouth-teeth",
+        "file": "mouths/mouth-open-mouth-teeth.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-outline-only",
+        "file": "mouths/mouth-outline-only.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": []
+      },
+      {
+        "id": "mouth-robot",
+        "file": "mouths/mouth-robot.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-soppy",
+        "file": "mouths/mouth-soppy.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-straight",
+        "file": "mouths/mouth-straight.svg",
+        "viewBox": "0 0 320 268",
+        "colorable": [
+          "muzzle"
+        ]
+      },
+      {
+        "id": "mouth-tongue-out",
+        "file": "mouths/mouth-tongue-out.svg",
+        "viewBox": "0 0 320 320",
+        "colorable": [
+          "muzzle"
+        ]
+      }
+    ]
+  }
+}
