@@ -8,7 +8,7 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 
 | Path | Purpose | Public | CSS System |
 |------|---------|:------:|------------|
-| `index.html` | Homepage — split hero + case-study card, image ticker (`.dp-ticker`), project strips, side quests, skills, contact (several strips/toolbox/testimonials behind `PROD-HIDE` on main) | Yes | dev |
+| `index.html` | Homepage — split hero + case-study card, image ticker (`.dp-ticker`), project strips, side quests, skills, contact (several strips/toolbox/testimonials gated with `data-prod-hide`, hidden on prod via `env.js` feature gate) | Yes | dev |
 | `resume.html` | Resume with lightbox viewer and download widget | Yes | dev |
 | `gallery.html` | Design gallery — masonry grid of UI/branding/illustration work | Yes | dev + `gallery.css` |
 | `404.html` | Custom error page | Yes | dev |
@@ -80,8 +80,6 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - `docs/architecture-nav.md` — Nav component, drawer, dropdown, focus management
 - `docs/architecture-tokens.md` — Token layers, glass/nav/paper/strip tokens, shared CSS classes
 - `docs/new-page-checklist.md` — Step-by-step for adding a new public page
-- `docs/component-methodology.md` — Legacy IIFE component patterns and best practices
-- `docs/component-template.js` — Template for new legacy IIFE components
 - `docs/analytics-tagging.md` — GA4 canonical snippet and coverage rules
 - `docs/theme-init-pattern.md` — Theme pre-init script pattern
 - `docs/code-review.md` — Security review (XSS, architecture validation)
