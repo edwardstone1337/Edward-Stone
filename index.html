@@ -60,12 +60,13 @@ gtag('config', 'G-6MPMYG36LE');
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      // PROD-HIDE: banner ticker
-      import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
-      // END PROD-HIDE
       import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
       initNav();
+      // Banner ticker — visible on dev only
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
       initImageLightbox({
         selector: '.dp-ticker__item',
         getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',

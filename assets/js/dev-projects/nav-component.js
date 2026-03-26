@@ -11,6 +11,8 @@
  *   </script>
  */
 
+const isProd = document.documentElement.classList.contains('is-prod');
+
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
   { text: 'Case Studies', children: [
@@ -18,20 +20,16 @@ const NAV_LINKS = [
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' }
   ]},
-  // PROD-HIDE: Projects nav dropdown
-  { text: 'Projects', children: [
+  { text: 'Projects', prodHide: true, children: [
     { text: 'Fair Share', href: '/projects/fair-share.html' },
     { text: 'SCP Reader', href: '/projects/scp-reader.html' }
   ]},
-  // END PROD-HIDE
-  // PROD-HIDE: Gallery nav link
-  { text: 'Gallery', href: '/gallery.html' },
-  // END PROD-HIDE
+  { text: 'Gallery', href: '/gallery.html', prodHide: true },
   { text: 'Resume', href: '/resume.html' },
-  // PROD-HIDE: About nav link
-  { text: 'About', href: '/about.html' }
-  // END PROD-HIDE
+  { text: 'About', href: '/about.html', prodHide: true }
 ];
+
+const ACTIVE_LINKS = isProd ? NAV_LINKS.filter(item => !item.prodHide) : NAV_LINKS;
 
 /**
  * Check if a link href matches the current page pathname
@@ -57,7 +55,7 @@ var CLOSE_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" str
  * @returns {string}
  */
 function generateLinksHTML() {
-  return NAV_LINKS.map(function (link) {
+  return ACTIVE_LINKS.map(function (link) {
     if (link.children) {
       var childLinks = link.children.map(function (child) {
         var ariaCurrent = isCurrentPage(child.href) ? ' aria-current="page"' : '';
@@ -86,8 +84,8 @@ function generateLinksHTML() {
 function generateDrawerLinksHTML() {
   var html = '';
   var moreHeadingRendered = false;
-  var hasChildGroups = NAV_LINKS.some(function (link) { return !!link.children; });
-  NAV_LINKS.forEach(function (link) {
+  var hasChildGroups = ACTIVE_LINKS.some(function (link) { return !!link.children; });
+  ACTIVE_LINKS.forEach(function (link) {
     if (link.children) {
       html += '<span class="dp-nav-drawer-heading">' + link.text + '</span>';
       link.children.forEach(function (child) {
