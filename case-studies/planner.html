@@ -6,6 +6,7 @@
   <title>Planner Case Study — Edward Stone</title>
   <meta name="description" content="How I designed Inquisitive's Planner from scratch, turning a simple save-for-later into the platform's most-loved feature and a proven driver of conversion.">
   <script src="/assets/js/env.js"></script>
+  <script src="/assets/js/third-party.js"></script>
   <link rel="stylesheet" href="../assets/css/dev-tokens.css">
   <link rel="stylesheet" href="../assets/css/dev-styles.css">
   <link rel="stylesheet" href="../assets/css/case-study-theme.css">
@@ -22,14 +23,6 @@
     </style>
   </noscript>
 
-  <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6MPMYG36LE"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-6MPMYG36LE');
-  </script>
 </head>
 <body>
   <a href="#main" class="dp-skip-link">Skip to content</a>
@@ -149,6 +142,10 @@
     </div>
     <!-- /dp-prose-layout -->
 
+    <div id="read-more-container"></div>
+
+    <div id="contact-cta-container"></div>
+
     <footer class="dp-footer dp-reveal" aria-label="Footer">
       <div class="dp-footer-inner">
         <p class="dp-footer-text">&copy; 2026 Edward Stone</p>
@@ -166,7 +163,11 @@
   <script src="../assets/js/dev-projects/back-to-top.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
+    import { initContactCta } from '../assets/js/dev-projects/contact-cta.js';
+    import { initReadMore } from '../assets/js/dev-projects/case-study-read-more.js';
     initNav();
+    initReadMore();
+    initContactCta();
     // Banner ticker — visible on dev only
     const isProd = document.documentElement.classList.contains('is-prod');
     if (!isProd) {
