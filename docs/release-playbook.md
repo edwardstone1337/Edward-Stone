@@ -115,7 +115,6 @@ git reset --hard <previous-commit> && git push --force origin main
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
 | Banner ticker init | `isProd` check | 8 HTML files |
-| Hero card scribble overlay | `.is-prod` CSS override | `dev-styles.css` |
 
 ## Important Notes
 

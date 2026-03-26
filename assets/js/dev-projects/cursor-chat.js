@@ -14,6 +14,23 @@
  *   });
  */
 
+/**
+ * Cursor Chat — desktop-only hover/click chat bubble system.
+ * A Figma-inspired speech bubble that follows the cursor and displays
+ * contextual messages when hovering or scrolling past trigger points.
+ *
+ * @param {Object} config
+ * @param {Array} config.triggers
+ * @param {string} config.triggers[].type - 'hover' or 'scroll'
+ * @param {string} [config.triggers[].selector] - CSS selector (hover triggers)
+ * @param {number} [config.triggers[].y] - scroll Y threshold (scroll triggers)
+ * @param {string} config.triggers[].message - bubble text
+ * @param {string} [config.triggers[].clickMessage] - alt text shown on click (hover only)
+ * @param {number} [config.triggers[].duration=3000] - auto-hide ms (scroll only)
+ *
+ * Gates: desktop only (hover + fine pointer), reduced-motion safe.
+ * Styles: assets/css/cursor-chat.css
+ */
 export function initCursorChat(config) {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
@@ -77,7 +94,14 @@ export function initCursorChat(config) {
 
       elements.forEach(function (el) {
         el.addEventListener('mouseenter', function () { show(trigger.message, false); });
-        el.addEventListener('mouseleave', hide);
+        el.addEventListener('mouseleave', function () {
+          if (trigger.leaveMessage) {
+            show(trigger.leaveMessage, false);
+            setTimeout(hide, 500);
+          } else {
+            hide();
+          }
+        });
         if (trigger.clickMessage) {
           el.addEventListener('click', function () { show(trigger.clickMessage, false); });
         }

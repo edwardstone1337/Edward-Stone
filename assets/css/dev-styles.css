@@ -64,6 +64,31 @@ img { display: block; max-width: 100%; }
   color: var(--dp-brand-text);
 }
 
+/* Wave emoji — hover animation */
+.dp-hero-wave {
+  display: inline-block;
+  cursor: default;
+  transition: transform 150ms ease-out;
+}
+
+.dp-hero-wave:hover {
+  animation: dp-wave 600ms ease-in-out;
+}
+
+@keyframes dp-wave {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-hero-wave:hover {
+    animation: none;
+  }
+}
+
 /* Overline label */
 .dp-overline {
   font-family: var(--dp-font-body);
@@ -283,6 +308,18 @@ img { display: block; max-width: 100%; }
 @keyframes dp-ticker-images-right {
   0%   { transform: translateX(-50%); }
   100% { transform: translateX(0); }
+}
+
+.dp-ticker__row:hover .dp-ticker__track {
+  animation-play-state: paused;
+}
+
+.dp-ticker-caption {
+  font-size: var(--dp-text-sm);
+  color: var(--dp-text-secondary);
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 var(--dp-space-6);
 }
 
 .dp-ticker__item {
@@ -1182,16 +1219,6 @@ img { display: block; max-width: 100%; }
   position: relative;
 }
 
-/* ── Hero card scribble overlay ── */
-.dp-hero-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('../images/scribble-frame.png') center / 100% 100% no-repeat;
-  pointer-events: none;
-  z-index: 1;
-}
-.is-prod .dp-hero-card::after { display: none; }
 
 .dp-hero-card__heading {
   font-family: var(--dp-font-display);
