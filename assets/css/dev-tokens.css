@@ -60,6 +60,8 @@
   --dp-duration-base: 200ms;
   --dp-duration-slow: 400ms;
   --dp-duration-entrance: 600ms;
+  /* Image ticker base cycle duration — read by image-ticker.js via getComputedStyle */
+  --dp-ticker-speed: 75s;
 
   /* --- Easings --- */
   --dp-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);

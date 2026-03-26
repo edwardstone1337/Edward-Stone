@@ -292,28 +292,6 @@ img { display: block; max-width: 100%; }
   width: max-content;
 }
 
-.dp-ticker__row--left .dp-ticker__track {
-  animation: dp-ticker-images-left 50s linear infinite;
-}
-
-.dp-ticker__row--right .dp-ticker__track {
-  animation: dp-ticker-images-right 50s linear infinite;
-}
-
-@keyframes dp-ticker-images-left {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes dp-ticker-images-right {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
-
-.dp-ticker__row:hover .dp-ticker__track {
-  animation-play-state: paused;
-}
-
 .dp-ticker-caption {
   font-size: var(--dp-text-sm);
   color: var(--dp-text-secondary);
@@ -347,8 +325,8 @@ img { display: block; max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dp-ticker__track {
-    animation: none;
+  .dp-ticker--reduced {
+    /* rAF loop is not started by image-ticker.js when prefers-reduced-motion is set */
   }
 }
 
