@@ -511,7 +511,16 @@ img { display: block; max-width: 100%; }
 }
 
 .dp-side-quests__card-actions {
+  display: flex;
+  gap: var(--dp-space-3);
+  align-items: center;
   margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .dp-side-quests__card-actions {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 768px) {

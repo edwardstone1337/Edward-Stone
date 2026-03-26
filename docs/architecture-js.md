@@ -25,7 +25,7 @@ This project has two JS component directories with different conventions. **New 
 | `avatar-easter-egg.js` | IIFE | Physics-based avatar spin with confetti burst |
 | `snake-game.js` | IIFE | Full-screen canvas snake game easter egg |
 | `growth-chart.js` | IIFE | Chart.js line chart for Fair Share (theme-aware; used where `data-theme` switches) |
-| `growth-chart-light.js` | IIFE | Chart.js line chart for Fair Share project page — light theme only, reads colours from CSS vars; used on `projects/fair-share.html` |
+| `growth-chart-light.js` | IIFE | Chart.js line chart for Fair Share project page — light theme only, reads colours from CSS vars; used on `case-studies/fair-share.html` |
 | `utils.js` | ES6 module | `escapeHTML()` and `sanitizeUrl()` — ES6 version for module imports |
 
 ## `assets/js/components/` — Legacy IIFEs
