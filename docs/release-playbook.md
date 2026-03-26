@@ -116,6 +116,12 @@ git reset --hard <previous-commit> && git push --force origin main
 | About nav link | `prodHide: true` | `nav-component.js` |
 | Banner ticker init | `isProd` check | 8 HTML files |
 
+## Third-Party Scripts
+
+**`assets/js/third-party.js`** — GA4 (G-6MPMYG36LE) + Hotjar (ID 6677072). Production-gated by hostname check. Fires only on `edwardstone.design`.
+
+Loaded on all 10 public pages via `<script src="/assets/js/third-party.js"></script>` immediately after `env.js` in `<head>`.
+
 ## Important Notes
 
 - `env.js` must be the **first `<script>` in `<head>`** on every page — synchronous, no `defer` or `async`
