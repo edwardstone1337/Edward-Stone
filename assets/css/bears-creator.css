@@ -3,32 +3,17 @@
    Uses dp- tokens exclusively; no new tokens introduced.
    ============================================================ */
 
-/* ── Section wrapper ──────────────────────────────────────── */
-
-.bears-section {
-  margin-top: var(--dp-section-gap);
-  padding-inline: var(--dp-space-8);
-  display: flex;
-  justify-content: center;
-}
-
-@media (max-width: 480px) {
-  .bears-section {
-    padding-inline: var(--dp-space-4);
-  }
-}
-
-/* ── Outer layout ─────────────────────────────────────────── */
+/* ── Outer layout — mobile-first ──────────────────────────── */
 
 .bears-creator {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--dp-space-8);
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: var(--dp-space-6);
+  align-items: start;
   width: 100%;
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: var(--dp-space-8);
+  padding: var(--dp-space-6);
   box-sizing: border-box;
 
   background: var(--dp-paper-surface-light);
@@ -36,15 +21,17 @@
   border-radius: var(--dp-radius-lg);
 }
 
-@media (max-width: 768px) {
+/* Tablet + desktop: canvas left, controls right */
+@media (min-width: 768px) {
   .bears-creator {
-    grid-template-columns: 1fr;
-    padding: var(--dp-space-6) var(--dp-space-5);
-    gap: var(--dp-space-6);
+    grid-template-columns: 3fr 2fr;
+    gap: var(--dp-space-8);
+    padding: var(--dp-space-8);
+    align-items: center;
   }
 }
 
-/* ── Canvas ───────────────────────────────────────────────── */
+/* ── Canvas ──────────────────────────────────────────────── */
 
 .bears-creator__canvas {
   display: flex;
@@ -62,19 +49,20 @@
   margin: auto;
 }
 
-@media (max-width: 768px) {
-  .bears-creator__canvas {
-    max-height: 360px;
-    overflow: visible;
-  }
-}
-
 /* ── Controls panel ───────────────────────────────────────── */
 
 .bears-creator__controls {
   display: flex;
   flex-direction: column;
-  gap: var(--dp-space-3);
+  gap: var(--dp-space-2);
+}
+
+/* ── Stepper cards ────────────────────────────────────────── */
+
+.bears-creator__stepper-card {
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-md);
+  padding: var(--dp-space-3) var(--dp-space-4);
 }
 
 /* ── Stepper rows ─────────────────────────────────────────── */
@@ -83,7 +71,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--dp-space-1);
-  max-width: 200px;
 }
 
 .bears-creator__stepper-label {
@@ -146,7 +133,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--dp-space-2);
-  margin-top: var(--dp-space-3);
+  margin-top: var(--dp-space-5);
 }
 
 .bears-creator__colour-label {
@@ -202,10 +189,14 @@
   border-color: var(--dp-border-active);
 }
 
-/* ── Randomise button (layout only — visuals from dp-btn dp-btn-secondary-on-light) */
+/* ── Action buttons (layout only — visuals from dp-btn dp-btn-secondary-on-light) */
+
+.bears-creator__randomise,
+.bears-creator__download {
+  width: 100%;
+}
 
 .bears-creator__randomise {
-  width: 100%;
   margin-top: var(--dp-space-3);
 }
 
@@ -216,4 +207,37 @@
   .bears-creator__swatch {
     transition: none;
   }
+}
+
+/* ── Modal body sizing ────────────────────────────────────── */
+
+.dp-lightbox-body--bears {
+  position: relative;        /* anchor for the scoped close button */
+  width: 90vw;
+  max-width: 1080px;
+  padding: var(--dp-space-8);
+  box-sizing: border-box;
+  pointer-events: auto;
+  /* Scroll vertically if content overflows on small screens */
+  overflow-y: auto;
+  max-height: 90vh;
+  border-radius: var(--dp-radius-lg);
+  background: var(--dp-paper-surface-light);
+  box-shadow: var(--dp-shadow-showcase-image);
+}
+
+/* Close button scoped to the bears modal — sits inside the card, not the viewport */
+.dp-lightbox-body--bears > .dp-lightbox-close {
+  position: absolute;
+  top: var(--dp-space-3);
+  right: var(--dp-space-3);
+  z-index: 1;
+}
+
+/* Widget inside modal: collapse the inner card surface into the modal body */
+.dp-lightbox-body--bears .bears-creator {
+  margin: 0;
+  max-width: none;
+  background: none;
+  border: none;
 }

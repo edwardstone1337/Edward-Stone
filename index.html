@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Edward Stone, Lead UX Designer</title>
+    <title>Edward Stone, Senior Product Designer</title>
     <link rel="icon" href="assets/images/Logo.svg" type="image/svg+xml">
-    <meta name="description" content="UX Design Leader with 10+ years across ed-tech, sport, and agencies. Currently Head of UX at Inquisitive. Portfolio featuring case studies with real business outcomes.">
-    <meta property="og:title" content="Edward Stone, Lead UX Designer">
-    <meta property="og:description" content="UX Design Leader with 10+ years across ed-tech, sport, and agencies. Currently Head of UX at Inquisitive. Portfolio featuring case studies with real business outcomes.">
+    <meta name="description" content="Senior Product Designer with 10+ years across ed-tech, sport, and agencies. Currently at Inquisitive, a platform used by 50,000+ teachers. Portfolio featuring case studies with real business outcomes.">
+    <meta property="og:title" content="Edward Stone, Senior Product Designer">
+    <meta property="og:description" content="Senior Product Designer with 10+ years across ed-tech, sport, and agencies. Currently at Inquisitive, a platform used by 50,000+ teachers. Portfolio featuring case studies with real business outcomes.">
     <meta property="og:type" content="website">
     <!-- Future: og:image for social preview card before launch -->
 
@@ -50,18 +50,14 @@
       import { initNav } from './assets/js/dev-projects/nav-component.js';
       import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
       import { initImageTicker } from './assets/js/dev-projects/image-ticker.js';
-      import { initBearsCreator, setPart, setColor, getColors, getCurrentParts, getManifest } from './assets/js/dev-projects/bears-creator.js';
-      import { initBearsControls } from './assets/js/dev-projects/bears-controls.js';
+      import { initBearsModal } from './assets/js/dev-projects/bears-modal.js';
       initNav();
       initImageTicker();
+      initBearsModal();
       // Banner ticker — visible on dev only
       const isProd = document.documentElement.classList.contains('is-prod');
       if (!isProd) {
         import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
-        document.addEventListener('DOMContentLoaded', async () => {
-          await initBearsCreator('.bears-creator__canvas');
-          initBearsControls('.bears-creator__controls', { setPart, setColor, getColors, getCurrentParts, getManifest });
-        });
       }
       import('./assets/js/dev-projects/cursor-chat.js').then(m => {
         m.initCursorChat({
@@ -94,9 +90,9 @@
           <div class="dp-avatar-wrap">
             <img src="assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar dp-reveal" data-reveal-delay="0" width="96" height="96" />
           </div>
-          <span class="dp-overline dp-reveal" data-reveal-delay="0">UX Design Leader · Sydney</span>
-          <h1 class="dp-hero-heading dp-reveal" data-reveal-delay="100"><span class="dp-hero-line">I'm Edward Stone <span class="dp-hero-wave" aria-hidden="true">👋</span></span><span class="dp-hero-line dp-hero-accent">I lead UX that drives</span><span class="dp-hero-line">real business outcomes.</span></h1>
-          <p class="dp-hero-body dp-reveal" data-reveal-delay="200">10 years of product design and UX leadership across ed-tech, sport, and agencies. Currently Head of UX at Inquisitive, a platform used by 50,000+ teachers.</p>
+          <span class="dp-overline dp-reveal" data-reveal-delay="0">Senior Product Designer · Sydney</span>
+          <h1 class="dp-hero-heading dp-reveal" data-reveal-delay="100"><span class="dp-hero-line">I'm Edward Stone <span class="dp-hero-wave" aria-hidden="true">👋</span></span><span class="dp-hero-line dp-hero-accent">I design products with</span><span class="dp-hero-line">real business impact.</span></h1>
+          <p class="dp-hero-body dp-reveal" data-reveal-delay="200">10 years of product design and UX leadership across ed-tech, sport, and agencies. Currently at Inquisitive, a platform used by 50,000+ teachers.</p>
           <div class="dp-hero-actions dp-reveal" data-reveal-delay="300">
             <a href="files/resume.pdf" download class="dp-btn dp-btn-primary">Download resume</a>
             <a href="https://www.linkedin.com/in/edwardstone1337/" target="_blank" rel="noopener noreferrer" class="dp-btn dp-btn-secondary-on-light">LinkedIn</a>
@@ -371,6 +367,18 @@
               </div>
             </div>
           </article>
+          <article class="dp-side-quests__card dp-side-quests__card--bears">
+            <img class="dp-side-quests__card-image" src="assets/images/bears.jpg" alt="Bears Character Creator" loading="lazy" decoding="async" />
+            <div class="dp-side-quests__card-body">
+              <p class="dp-side-quests__card-title">
+                Design systems, but make it bears.
+                <span class="dp-side-quests__card-subtitle">I used my design system skills to build a modular illustration system. Go on, make your own bear.</span>
+              </p>
+              <div class="dp-side-quests__card-actions">
+                <button type="button" class="dp-btn dp-btn-secondary-on-light" id="bears-modal-trigger">Build my bear</button>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -562,22 +570,6 @@
       <div id="projects-container" role="region" aria-label="Development projects"></div>
       -->
 
-      <!-- PROD-HIDE: bears strip -->
-      <section class="bears-section" id="bears" data-prod-hide aria-label="Bears Character Creator, side project">
-        <div class="bears-creator" id="bears-creator">
-          <div class="bears-creator__intro">
-            <h2 class="bears-creator__title">Bears</h2>
-            <p class="bears-creator__description">After learning to build design systems, I wanted to try the same modular thinking with illustration. This is a proof of concept, a simple illustration system where every part is interchangeable. All illustrations made in Figma, no AI.</p>
-          </div>
-          <div class="bears-creator__canvas">
-            <!-- bears-creator.js mounts SVG here -->
-          </div>
-          <div class="bears-creator__controls">
-            <!-- bears-controls.js generates controls here -->
-          </div>
-        </div>
-      </section>
-      <!-- END PROD-HIDE -->
 
       <footer class="dp-footer">
         <div class="dp-footer-inner">

@@ -125,12 +125,6 @@
         "colorable": []
       },
       {
-        "id": "eyes-blush",
-        "file": "eyes/eyes-blush.svg",
-        "viewBox": "0 0 528 224",
-        "colorable": []
-      },
-      {
         "id": "eyes-button",
         "file": "eyes/eyes-button.svg",
         "viewBox": "0 0 384 152",
@@ -337,7 +331,7 @@
       {
         "id": "mouth-mask",
         "file": "mouths/mouth-mask.svg",
-        "viewBox": "0 0 692 268",
+        "viewBox": "0 0 596 268",
         "colorable": []
       },
       {

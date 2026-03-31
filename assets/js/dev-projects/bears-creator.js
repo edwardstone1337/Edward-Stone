@@ -45,8 +45,9 @@ const DEFAULT_COLORS = {
 
 let _manifest      = null;
 let _rootSVG       = null;
+let _sharedDefs    = null;        // <defs> for shared filter elements
 let _layers        = {};          // layerName → <g> element
-let _svgCache      = new Map();   // partId → { children: Node[], viewBox: string }
+let _svgCache      = new Map();   // partId → { children: Node[], filters: Element[], viewBox: string }
 let _currentParts  = { ears: null, heads: null, eyes: null, mouths: null };
 let _currentColors = { ...DEFAULT_COLORS };
 let _motionQuery   = null;        // reserved for future animation use
@@ -82,9 +83,18 @@ async function _fetchPart(part) {
     return null;
   }
 
-  const viewBox  = svgEl.getAttribute('viewBox') || '';
-  const children = Array.from(svgEl.childNodes);
-  const cached   = { children, viewBox };
+  const viewBox = svgEl.getAttribute('viewBox') || '';
+
+  // Separate <defs> (filter elements) from drawable children
+  const defsEl  = svgEl.querySelector('defs');
+  const filters  = defsEl
+    ? Array.from(defsEl.querySelectorAll('filter'))
+    : [];
+  const children = Array.from(svgEl.childNodes).filter(
+    node => !(node.nodeType === 1 && node.tagName.toLowerCase() === 'defs')
+  );
+
+  const cached = { children, filters, viewBox };
   _svgCache.set(part.id, cached);
   return cached;
 }
@@ -130,6 +140,11 @@ export async function initBearsCreator(selector) {
   _rootSVG.style.width  = '100%';
   _rootSVG.style.height = 'auto';
   _rootSVG.style.display = 'block';
+
+  // Shared <defs> for filter elements — must be first child so filters are
+  // defined before the layer groups that reference them.
+  _sharedDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  _rootSVG.appendChild(_sharedDefs);
 
   // Create 4 layer groups in z-order (ears behind head, etc.)
   for (const layerName of ['ears', 'head', 'eyes', 'mouth']) {
@@ -180,12 +195,35 @@ async function _setPartNoColor(category, partId) {
   const tx      = anchor.x - W / 2;
   const ty      = anchor.y - H / 2;
 
+  // ── Filter management ────────────────────────────────────────────────────
+  // Remove this category's previous filters from the shared <defs>.
+  // Filter IDs are namespaced as filterN_[partId], so we match by suffix.
+  const oldPartId = _currentParts[category];
+  if (oldPartId && _sharedDefs) {
+    const suffix = '_' + oldPartId;
+    Array.from(_sharedDefs.querySelectorAll('filter')).forEach(filterEl => {
+      if ((filterEl.getAttribute('id') || '').endsWith(suffix)) {
+        _sharedDefs.removeChild(filterEl);
+      }
+    });
+  }
+
+  // Clone new filters into shared <defs>
+  if (_sharedDefs && cached.filters.length > 0) {
+    cached.filters.forEach(filterEl => {
+      _sharedDefs.appendChild(document.importNode(filterEl, true));
+    });
+  }
+
+  // ── Layer update ─────────────────────────────────────────────────────────
   while (layer.firstChild) layer.removeChild(layer.firstChild);
 
   const wrapper = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   wrapper.setAttribute('transform', `translate(${tx}, ${ty})`);
   // Preserve the fill="none" that Figma sets on the root <svg>: stroke-only paths
   // inherit transparent fill from the parent SVG root; without this they default to black.
+  // <g filter="url(#...)"> wrappers inside are preserved as-is — they reference
+  // the filter IDs now live in _sharedDefs.
   wrapper.setAttribute('fill', 'none');
 
   for (const child of cached.children) {
@@ -246,4 +284,135 @@ export function getCurrentParts() {
  */
 export function getManifest() {
   return _manifest;
+}
+
+/**
+ * Export the current bear as a transparent PNG with a watermark.
+ * Measures the full rendered bounds (including ears outside the viewBox), adds
+ * 24px padding, clones the SVG at 2× resolution, draws to an offscreen canvas,
+ * stamps a watermark, and triggers a file download.
+ */
+export async function exportBearPNG() {
+  if (!_rootSVG) {
+    console.warn('[bears-creator] exportBearPNG called before init');
+    return;
+  }
+
+  // ── 1. Measure full bounds across all four layers ─────────────────────────
+
+  const PAD = 24;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+  for (const layerName of ['ears', 'head', 'eyes', 'mouth']) {
+    const layer = _layers[layerName];
+    if (!layer) continue;
+    try {
+      const bbox = layer.getBBox();
+      if (bbox.width === 0 && bbox.height === 0) continue;
+      minX = Math.min(minX, bbox.x);
+      minY = Math.min(minY, bbox.y);
+      maxX = Math.max(maxX, bbox.x + bbox.width);
+      maxY = Math.max(maxY, bbox.y + bbox.height);
+    } catch (_) { /* empty layer — skip */ }
+  }
+
+  if (!isFinite(minX)) {
+    // Fallback to manifest canvas dimensions
+    minX = 0; minY = 0;
+    maxX = _manifest.canvas.width;
+    maxY = _manifest.canvas.height;
+  }
+
+  const vbX = minX - PAD;
+  const vbY = minY - PAD;
+  const vbW = (maxX - minX) + PAD * 2;
+  const vbH = (maxY - minY) + PAD * 2;
+
+  const SCALE   = 2;  // 2× retina
+  const canvasW = Math.round(vbW * SCALE);
+  const canvasH = Math.round(vbH * SCALE);
+
+  // ── 2. Clone and reframe ──────────────────────────────────────────────────
+
+  function _buildClone(stripFilters) {
+    const clone = _rootSVG.cloneNode(true);
+    clone.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
+    clone.setAttribute('width',   String(canvasW));
+    clone.setAttribute('height',  String(canvasH));
+    if (stripFilters) {
+      clone.querySelectorAll('[filter]').forEach(el => el.removeAttribute('filter'));
+      const defs = clone.querySelector('defs');
+      if (defs) defs.remove();
+    }
+    return clone;
+  }
+
+  // ── 3. Serialize to data URL ──────────────────────────────────────────────
+
+  function _toDataUrl(svgEl) {
+    const str = new XMLSerializer().serializeToString(svgEl);
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(str);
+  }
+
+  // ── 4. Draw SVG + watermark onto an offscreen canvas ─────────────────────
+
+  async function _drawCanvas(dataUrl) {
+    const canvas = document.createElement('canvas');
+    canvas.width  = canvasW;
+    canvas.height = canvasH;
+    const ctx = canvas.getContext('2d');
+
+    await new Promise((resolve, reject) => {
+      const img   = new Image();
+      img.onload  = () => { ctx.drawImage(img, 0, 0); resolve(); };
+      img.onerror = reject;
+      img.src     = dataUrl;
+    });
+
+    // Watermark — bottom-right, offset white shadow for legibility on any bg
+    const wmPad = 16 * SCALE;
+    ctx.font          = `${12 * SCALE}px Inter, system-ui, sans-serif`;
+    ctx.textAlign     = 'right';
+    ctx.textBaseline  = 'bottom';
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur    = 0;
+    ctx.shadowColor   = 'rgba(255, 255, 255, 0.6)';
+    ctx.fillStyle     = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillText('edwardstone.design', canvasW - wmPad, canvasH - wmPad);
+    ctx.shadowColor   = 'transparent';
+
+    return canvas;
+  }
+
+  // ── 5. Trigger download ───────────────────────────────────────────────────
+
+  function _triggerDownload(blob) {
+    const url = URL.createObjectURL(blob);
+    const a   = document.createElement('a');
+    a.href     = url;
+    a.download = 'the-cute-little-bear-i-made-on-edwardstone-dot-design.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ── 6. Export — with filter-strip fallback ────────────────────────────────
+
+  const canvas = await _drawCanvas(_toDataUrl(_buildClone(false)));
+
+  try {
+    canvas.toBlob(blob => {
+      if (!blob) { console.warn('[bears-creator] toBlob returned null'); return; }
+      _triggerDownload(blob);
+    }, 'image/png');
+  } catch (err) {
+    console.warn('[bears-creator] Export failed — retrying without filters:', err);
+    const canvas2 = await _drawCanvas(_toDataUrl(_buildClone(true)));
+    canvas2.toBlob(blob => {
+      if (!blob) { console.warn('[bears-creator] toBlob returned null on retry'); return; }
+      _triggerDownload(blob);
+    }, 'image/png');
+  }
 }

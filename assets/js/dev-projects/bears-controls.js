@@ -197,7 +197,7 @@ export function initBearsControls(controlsSelector, creatorAPI) {
       (cat, partId) => creatorAPI.setPart(cat, partId),
     );
 
-    container.appendChild(group);
+    container.appendChild(el('div', { class: 'bears-creator__stepper-card' }, group));
     stepperRefs[category] = { setIndex, parts };
   }
 
@@ -243,4 +243,16 @@ export function initBearsControls(controlsSelector, creatorAPI) {
   });
 
   container.appendChild(randomiseBtn);
+
+  // ── Download button ───────────────────────────────────────────────────────
+
+  if (creatorAPI.exportBearPNG) {
+    const downloadBtn = el('button', {
+      class: 'bears-creator__download dp-btn dp-btn-primary',
+      type:  'button',
+    }, 'Download');
+
+    downloadBtn.addEventListener('click', () => creatorAPI.exportBearPNG());
+    container.appendChild(downloadBtn);
+  }
 }
