@@ -1990,29 +1990,6 @@ img { display: block; max-width: 100%; }
   min-height: 0;
 }
 
-.dp-testimonial-mark {
-  position: absolute;
-  top: var(--dp-space-4);
-  left: var(--dp-space-4);
-  font-family: var(--dp-font-serif);
-  font-size: 0;
-  font-weight: var(--dp-weight-bold);
-  line-height: 1;
-  color: var(--dp-text-primary);
-  opacity: 0.07;
-  pointer-events: none;
-  user-select: none;
-}
-
-.dp-testimonial-mark::before {
-  content: '\201C';
-  font-family: var(--dp-font-serif);
-  font-size: 10rem;
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-}
-
 .dp-testimonial-quote {
   font-family: var(--dp-font-serif);
   font-size: var(--dp-text-lg);
@@ -2126,6 +2103,42 @@ img { display: block; max-width: 100%; }
   .dp-testimonials-grid {
     grid-template-columns: 1fr;
     gap: var(--dp-space-5);
+  }
+}
+
+/* ── Testimonials section heading (used when .dp-testimonials-section has an h2) ── */
+.dp-testimonials-section h2 {
+  font-size: var(--dp-prose-heading-size);
+  font-weight: var(--dp-weight-semibold);
+  line-height: var(--dp-leading-tight);
+  letter-spacing: var(--dp-tracking-tight);
+  color: var(--dp-text-primary);
+  margin: 0 0 var(--dp-space-8) 0;
+  padding-inline: var(--dp-space-5);
+}
+
+/* ── Testimonials masonry layout (wall of love, case-study pages) ── */
+.dp-testimonials-masonry {
+  column-count: 3;
+  column-gap: var(--dp-space-6);
+  padding-inline: var(--dp-space-5);
+}
+
+.dp-testimonials-masonry .dp-testimonial {
+  break-inside: avoid;
+  margin-bottom: var(--dp-space-6);
+}
+
+@media (max-width: 960px) {
+  .dp-testimonials-masonry {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .dp-testimonials-masonry {
+    column-count: 1;
+    padding-inline: 0;
   }
 }
 
