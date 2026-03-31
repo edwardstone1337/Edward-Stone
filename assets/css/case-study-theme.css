@@ -36,3 +36,8 @@
     font-size: var(--dp-text-2xl);
   }
 }
+
+/* Wall-of-love: ensure bottom margin when inside .dp-prose (base rule has 0 bottom) */
+[data-theme="light"] .dp-testimonials-section {
+  margin-bottom: var(--dp-section-gap);
+}
