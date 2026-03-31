@@ -1,0 +1,12 @@
+/* noscript.css
+ * Loaded only via <noscript> tags — never in a regular <link>.
+ * Ensures scroll-reveal and card elements are fully visible when JS is disabled.
+ */
+.dp-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.dp-card {
+  opacity: 1 !important;
+}

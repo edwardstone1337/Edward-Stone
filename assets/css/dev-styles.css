@@ -477,7 +477,7 @@ img { display: block; max-width: 100%; }
 
 .dp-side-quests__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--dp-space-6);
   max-width: 1200px;
   margin: 0 auto;
@@ -2977,6 +2977,19 @@ a.dp-resume-contact-item:hover {
   color: var(--dp-paper-accent);
 }
 
+.dp-resume-body-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(17, 17, 19, 0.3); /* --dp-raw-grey-900, no opacity token exists */
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 150ms ease-out;
+}
+
+.dp-resume-body-link:hover {
+  text-decoration-color: rgba(17, 17, 19, 0.8);
+}
+
 .dp-resume-body {
   display: grid;
   grid-template-columns: 1fr 200px;
@@ -4154,6 +4167,11 @@ body.dp-overlay-active {
 
   .dp-resume-contact-item {
     font-size: var(--dp-print-meta) !important;
+  }
+
+  .dp-resume-body-link {
+    text-decoration: underline;
+    text-decoration-color: rgba(17, 17, 19, 0.4);
   }
 
   .dp-resume-skill-list li {

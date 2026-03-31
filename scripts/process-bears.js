@@ -9,9 +9,11 @@
  *   2. Manifest      → assets/images/bears/bears-manifest.json
  *
  * Cleaning:
- *   - Strips <defs>...</defs> blocks (SVG filters live here)
- *   - Strips filter="url(#...)" from elements
- *   - Unwraps <g filter="..."> wrappers (keeps inner shapes, drops the <g>)
+ *   - Preserves <filter> elements inside <defs>, namespaced to avoid ID clashes
+ *   - Filter IDs renamed: filter0_xxx_yyy → filter0_[partId]
+ *   - filter="url(#...)" references updated to match namespaced IDs
+ *   - <g filter="url(#...)"> wrapper elements are preserved (not unwrapped)
+ *   - Non-filter content in <defs> is stripped (none expected from Figma)
  *   - Adds data-colorable="skin"      to fill="#A06A4C" elements
  *   - Adds data-colorable="muzzle"    to fill="#CCA48E" elements
  *   - Adds data-colorable="inner-ear" to fill="#E8C2AE" elements
@@ -62,28 +64,68 @@ const KNOWN_FILLS = new Set([
 // ─── SVG helpers ─────────────────────────────────────────────────────────────
 
 /**
- * Remove all <defs>…</defs> blocks (holds filters, gradients, etc.).
+ * Escape a string for use as a regex literal.
  */
-function removeDefs(svg) {
-  return svg.replace(/<defs[\s\S]*?<\/defs>/g, '');
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
- * Unwrap every <g filter="url(#…)"> … </g> wrapper:
- * keeps the inner children, discards the <g> open/close tags.
+ * Namespace filter IDs inside <defs> and update all filter="url(#...)" references.
  *
- * Runs in a loop until no more matches (handles multiple groups per file).
- * Safe assumption: filter <g> elements in these assets contain only
- * self-closing child elements (path/circle/rect) — no nested <g>.
+ * - Each filter ID is renamed: original_id → filterN_[partId]
+ * - filter="url(#...)" references in the SVG body are updated to match
+ * - Non-filter content in <defs> is stripped (none expected from Figma output)
+ * - If <defs> contains no filters, the block is removed entirely
+ * - If no <defs> block is present, the SVG is returned unchanged
  */
-function unwrapFilterGroups(svg) {
-  const re = /<g\b[^>]*\bfilter="url\(#[^"]*\)"[^>]*>([\s\S]*?)<\/g>/g;
-  let prev;
-  do {
-    prev = svg;
-    svg  = svg.replace(re, (_, inner) => inner);
-  } while (svg !== prev);
-  return svg;
+function namespaceDefs(svg, partId) {
+  const defsRe    = /<defs[\s\S]*?<\/defs>/;
+  const defsMatch = svg.match(defsRe);
+  if (!defsMatch) return svg;
+
+  const defsBlock = defsMatch[0];
+
+  // Collect all filter IDs defined in this defs block
+  const filterIdRe = /<filter\b[^>]*\bid="([^"]+)"/g;
+  const filterIds  = [];
+  let m;
+  while ((m = filterIdRe.exec(defsBlock)) !== null) {
+    filterIds.push(m[1]);
+  }
+
+  // No filters → strip defs entirely
+  if (filterIds.length === 0) {
+    return svg.replace(defsRe, '');
+  }
+
+  // Build old → new ID map
+  const idMap = new Map();
+  filterIds.forEach((oldId, i) => {
+    idMap.set(oldId, `filter${i}_${partId}`);
+  });
+
+  // Rename filter id="" attributes inside the defs block
+  let newDefs = defsBlock;
+  for (const [oldId, newId] of idMap) {
+    newDefs = newDefs.replace(
+      new RegExp(`\\bid="${escapeRegex(oldId)}"`, 'g'),
+      `id="${newId}"`
+    );
+  }
+
+  // Replace the original defs block with the renamed version
+  let result = svg.replace(defsRe, newDefs);
+
+  // Update filter="url(#oldId)" references in the SVG body
+  for (const [oldId, newId] of idMap) {
+    result = result.replace(
+      new RegExp(`filter="url\\(#${escapeRegex(oldId)}\\)"`, 'g'),
+      `filter="url(#${newId})"`
+    );
+  }
+
+  return result;
 }
 
 /**
@@ -152,6 +194,13 @@ function countShapes(svg) {
 }
 
 /**
+ * Count <filter> elements present in a processed SVG.
+ */
+function countFilters(svg) {
+  return (svg.match(/<filter\b/g) || []).length;
+}
+
+/**
  * Collapse multiple consecutive blank lines into one.
  */
 function cleanWhitespace(svg) {
@@ -187,12 +236,11 @@ function fileToId(filename, prefix) {
 
 // ─── Full SVG processing pipeline ────────────────────────────────────────────
 
-function processSVG(sourcePath, prefix) {
+function processSVG(sourcePath, prefix, partId) {
   const source = fs.readFileSync(sourcePath, 'utf8');
 
   let svg = source;
-  svg = removeDefs(svg);
-  svg = unwrapFilterGroups(svg);
+  svg = namespaceDefs(svg, partId);
   svg = addColorableAttrs(svg);
   svg = cleanWhitespace(svg);
 
@@ -202,6 +250,7 @@ function processSVG(sourcePath, prefix) {
     colorable:        detectColorables(svg),
     unexpectedFills:  findUnexpectedFills(svg),
     shapeCount:       countShapes(svg),
+    filterCount:      countFilters(svg),
   };
 }
 
@@ -229,6 +278,8 @@ const verifyLog = {
   counts:          {},   // { [categoryDir]: number }
   emptyShapes:     [],   // files that end up with 0 shape elements
   unexpectedFills: [],   // { id, fills[] }
+  withFilters:     [],   // ids that have filter elements
+  withoutFilters:  [],   // ids with no filters
 };
 
 for (const cat of CATEGORIES) {
@@ -247,7 +298,7 @@ for (const cat of CATEGORIES) {
     const sourcePath = path.join(inDir, filename);
     const outPath    = path.join(outDir, outFile);
 
-    const result = processSVG(sourcePath, cat.prefix);
+    const result = processSVG(sourcePath, cat.prefix, id);
 
     // Write cleaned SVG
     fs.writeFileSync(outPath, result.svg, 'utf8');
@@ -258,6 +309,11 @@ for (const cat of CATEGORIES) {
     }
     if (result.unexpectedFills.length > 0) {
       verifyLog.unexpectedFills.push({ id, fills: result.unexpectedFills });
+    }
+    if (result.filterCount > 0) {
+      verifyLog.withFilters.push({ id, filterCount: result.filterCount });
+    } else {
+      verifyLog.withoutFilters.push(id);
     }
 
     // Add to manifest
@@ -295,6 +351,16 @@ const totalOut = CATEGORIES.reduce((sum, cat) => {
   return sum + fs.readdirSync(path.join(OUT_DIR, cat.dir)).filter(f => f.endsWith('.svg')).length;
 }, 0);
 console.log(`  ${'TOTAL'.padEnd(8)}  input: ${String(totalIn).padStart(2)}  output: ${String(totalOut).padStart(2)}`);
+
+console.log('');
+console.log(`Filter preservation:`);
+console.log(`  With filters:    ${verifyLog.withFilters.length} SVGs`);
+console.log(`  Without filters: ${verifyLog.withoutFilters.length} SVGs`);
+if (verifyLog.withFilters.length > 0) {
+  for (const { id, filterCount } of verifyLog.withFilters) {
+    console.log(`    ✓ ${id}  (${filterCount} filter${filterCount !== 1 ? 's' : ''})`);
+  }
+}
 
 console.log('');
 if (verifyLog.emptyShapes.length === 0) {
