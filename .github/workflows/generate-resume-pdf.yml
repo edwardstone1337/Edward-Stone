@@ -22,12 +22,12 @@ jobs:
         run: sleep 60
 
       - name: Generate PDF from live URL
-        uses: misaelnieto/web_to_pdf_action@master
+        uses: imbhargav5/puppeteer-pdf-action@master
         with:
-          webPageURL: https://edwardstone.design/resume.html
+          url: https://edwardstone.design/resume.html
           outputFile: ./files/Edward Stone Resume.pdf
-          usePuppeteer: true
           pdfOptions: '{"format": "A4", "margin": {"top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm"}, "printBackground": true}'
+          waitUntil: networkidle0
 
       - name: Check if PDF changed
         id: check_changes
