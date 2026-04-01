@@ -262,6 +262,23 @@ export function initResumeLightbox() {
   if (!container) return;
 
   container.addEventListener('click', openLightbox, { signal: controller.signal });
+
+  // Auto-inject print layout for headless PDF generation (e.g. Puppeteer)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('print') === '1') {
+    const resumePage = document.querySelector('.dp-resume-page');
+    if (resumePage) {
+      const header = resumePage.querySelector('header');
+      const body = resumePage.querySelector('.dp-resume-body');
+      const resumeContent = [header, body].filter(Boolean).map(el => el.outerHTML).join('')
+        || resumePage.innerHTML;
+
+      const printNode = document.createElement('div');
+      printNode.className = 'dp-lightbox dp-lightbox--print-only';
+      printNode.innerHTML = buildLightboxHTML(resumeContent);
+      document.body.appendChild(printNode);
+    }
+  }
 }
 
 /**
