@@ -8,6 +8,8 @@ on:
       - 'resume.html'
       - 'assets/css/dev-tokens.css'
       - 'assets/css/dev-styles.css'
+      - 'assets/js/dev-projects/resume-lightbox.js'
+      - 'assets/js/dev-projects/resume-download.js'
 
 jobs:
   generate-pdf:
