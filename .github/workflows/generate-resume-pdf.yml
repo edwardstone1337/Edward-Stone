@@ -25,9 +25,7 @@ jobs:
         uses: imbhargav5/puppeteer-pdf-action@master
         with:
           url: https://edwardstone.design/resume.html
-          outputFile: ./files/Edward Stone Resume.pdf
-          pdfOptions: '{"format": "A4", "margin": {"top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm"}, "printBackground": true}'
-          waitUntil: networkidle0
+          output-file-path: ./files/Edward Stone Resume.pdf
 
       - name: Check if PDF changed
         id: check_changes
