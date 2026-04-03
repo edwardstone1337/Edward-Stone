@@ -76,6 +76,8 @@
                               0 24px 24px 0 rgba(22, 34, 51, 0.04),
                               0 4px 24px 0 rgba(22, 34, 51, 0.04),
                               0 4px 4px 0 rgba(22, 34, 51, 0.04);
+  --dp-shadow-card-sm: 0 8px 16px -4px rgba(22, 34, 51, 0.08);
+  --dp-shadow-card: 0 4px 8px -4px rgba(22, 34, 51, 0.08), 0 16px 24px 0 rgba(22, 34, 51, 0.08);
 
   /* --- Raw colors (not used directly — semantic tokens reference these) --- */
   --dp-raw-white: #FFFFFF;
