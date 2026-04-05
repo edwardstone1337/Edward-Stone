@@ -20,9 +20,11 @@
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      import { initBannerTicker } from './assets/js/dev-projects/banner-ticker.js';
       initNav();
-      initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' });
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
     </script>
     <div class="dp-404-page">
       <div class="dp-404-glow" aria-hidden="true"></div>

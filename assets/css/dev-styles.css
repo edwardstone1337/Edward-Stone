@@ -448,6 +448,10 @@ img { display: block; max-width: 100%; }
   .dp-case-promo__inner {
     grid-template-columns: 1fr;
     gap: var(--dp-space-8);                    /* 32px */
+    padding-inline: 0;
+  }
+  .dp-case-promo__media .dp-case-promo__planner-image {
+    box-shadow: var(--dp-shadow-card);
   }
 }
 
@@ -463,7 +467,7 @@ img { display: block; max-width: 100%; }
 
 .dp-side-quests__title {
   font-family: var(--dp-font-display);
-  font-size: var(--dp-text-2xl);
+  font-size: var(--dp-text-3xl);
   font-weight: var(--dp-weight-semibold);
   color: var(--dp-text-primary);
   margin: 0 0 var(--dp-space-3);
@@ -473,6 +477,11 @@ img { display: block; max-width: 100%; }
   font-size: var(--dp-text-md);
   color: var(--dp-text-secondary);
   margin: 0 0 var(--dp-space-12);
+}
+
+.dp-brand-highlight {
+  color: var(--dp-brand-text);
+  display: block;
 }
 
 .dp-side-quests__grid {
@@ -536,6 +545,9 @@ img { display: block; max-width: 100%; }
   .dp-side-quests__card-actions {
     flex-direction: column;
   }
+  .dp-side-quests__card-actions .dp-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -557,6 +569,12 @@ img { display: block; max-width: 100%; }
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--dp-border-default);
+  transition: transform var(--dp-duration-slow) var(--dp-ease-in-out);
+  will-change: transform;
+}
+
+.dp-nav--hidden {
+  transform: translateY(-100%);
 }
 
 /* Light theme: --dp-glass-bg (0.65 opacity) is too transparent for a sticky
@@ -3739,6 +3757,10 @@ body.dp-overlay-active {
   .dp-hero-card__link:hover::after {
     transform: none;
   }
+
+  .dp-nav {
+    transition-duration: 0ms;
+  }
 }
 
 /* Focus visible — high contrast ring for keyboard users */
@@ -3823,6 +3845,9 @@ body.dp-overlay-active {
     max-width: none;
     padding-left: 0;
     padding-right: 0;
+  }
+  .dp-hero-card {
+    box-shadow: var(--dp-shadow-card);
   }
   .dp-strip {
     margin-top: var(--dp-section-gap);
@@ -3912,12 +3937,15 @@ body.dp-overlay-active {
   .dp-hero {
     padding-top: var(--dp-space-16);
     padding-bottom: var(--dp-section-gap);
-    gap: var(--dp-space-4);
+    gap: var(--dp-space-8);
   }
   .dp-hero-heading {
     font-size: var(--dp-text-2xl);
     max-width: 20ch;
     margin-inline: auto;
+  }
+  .dp-side-quests__title {
+    font-size: var(--dp-text-2xl);
   }
   .dp-hero-body {
     font-size: var(--dp-text-base);

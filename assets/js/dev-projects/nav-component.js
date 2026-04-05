@@ -316,4 +316,78 @@ export function initNav() {
   initDrawer(hamburger);
 
   loadSnakeGame();
+  initNavAutoHide();
+}
+
+/**
+ * Hide nav on scroll down, reveal on scroll up.
+ * Uses rAF throttling. Guards against iOS rubber-band, tiny jitter,
+ * and positions above the nav height.
+ */
+function initNavAutoHide() {
+  var nav = document.querySelector('.dp-nav');
+  if (!nav) return;
+
+  var lastScrollY = window.scrollY;
+  var ticking = false;
+  var DELTA = 10;
+
+  function getNavHeight() {
+    return nav.offsetHeight;
+  }
+
+  function update() {
+    var currentScrollY = window.scrollY;
+
+    // Guard: negative scroll (iOS rubber-band)
+    if (currentScrollY < 0) {
+      ticking = false;
+      return;
+    }
+
+    // Don't hide while drawer is open or snake overlay is active
+    var hamburger = nav.querySelector('.dp-nav-hamburger');
+    var drawerOpen = hamburger && hamburger.getAttribute('aria-expanded') === 'true';
+    var overlayActive = document.body.classList.contains('dp-overlay-active');
+
+    if (drawerOpen || overlayActive) {
+      nav.classList.remove('dp-nav--hidden');
+      lastScrollY = currentScrollY;
+      ticking = false;
+      return;
+    }
+
+    // Don't hide if we haven't scrolled past the nav
+    if (currentScrollY < getNavHeight()) {
+      nav.classList.remove('dp-nav--hidden');
+      lastScrollY = currentScrollY;
+      ticking = false;
+      return;
+    }
+
+    // Ignore tiny scroll movements
+    if (Math.abs(currentScrollY - lastScrollY) < DELTA) {
+      ticking = false;
+      return;
+    }
+
+    // Scrolling down — hide
+    if (currentScrollY > lastScrollY) {
+      nav.classList.add('dp-nav--hidden');
+    }
+    // Scrolling up — show
+    else {
+      nav.classList.remove('dp-nav--hidden');
+    }
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
 }

@@ -49,6 +49,12 @@
   margin: auto;
 }
 
+@media (max-width: 768px) {
+  .bears-creator__canvas {
+    padding-top: var(--dp-space-12);
+  }
+}
+
 /* ── Controls panel ───────────────────────────────────────── */
 
 .bears-creator__controls {
