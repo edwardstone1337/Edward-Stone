@@ -52,6 +52,7 @@
     <script>document.documentElement.setAttribute('data-theme','light')</script>
   </head>
   <body>
+    <a href="#main" class="dp-skip-link">Skip to content</a>
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
@@ -90,8 +91,7 @@
         dedupe: true,
       });
     </script>
-    <a href="#projects" class="dp-skip-link">Skip to projects</a>
-    <main class="dp-page">
+    <main id="main" class="dp-page">
       <section class="dp-hero dp-hero--split">
         <div class="dp-hero-content">
           <div class="dp-avatar-wrap">
@@ -346,7 +346,7 @@
 
       <section class="dp-side-quests" aria-label="Designed by me, built with AI — personal projects">
         <div class="dp-side-quests__header">
-          <h2 class="dp-side-quests__title">Designed by me, built with AI</h2>
+          <h2 class="dp-side-quests__title">Designed by me, <span class="dp-brand-highlight">built with AI</span></h2>
           <p class="dp-side-quests__subtitle">Personal projects I ship and support alongside my day job.</p>
         </div>
         <div class="dp-side-quests__grid">
@@ -360,6 +360,18 @@
               <div class="dp-side-quests__card-actions">
                 <a href="/case-studies/fair-share.html" class="dp-btn dp-btn-primary">Learn more</a>
                 <a href="https://www.fairsharecalculator.com/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener" aria-label="Go to Fair Share (opens in new tab)">Go to Fair Share <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+              </div>
+            </div>
+          </article>
+          <article class="dp-side-quests__card dp-side-quests__card--bears">
+            <img class="dp-side-quests__card-image" src="assets/images/bears.jpg" alt="Bears Character Creator" loading="lazy" decoding="async" />
+            <div class="dp-side-quests__card-body">
+              <p class="dp-side-quests__card-title">
+                Design systems, but make it bears.
+                <span class="dp-side-quests__card-subtitle">I used my design system skills to build a modular illustration system. Go on, make your own bear.</span>
+              </p>
+              <div class="dp-side-quests__card-actions">
+                <button type="button" class="dp-btn dp-btn-primary" id="bears-modal-trigger">Build my bear</button>
               </div>
             </div>
           </article>
@@ -384,18 +396,6 @@
               </p>
               <div class="dp-side-quests__card-actions">
                 <a href="https://lostcitiesscorecalculator.com/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener" aria-label="Go to Lost Cities (opens in new tab)">Go to Lost Cities <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
-              </div>
-            </div>
-          </article>
-          <article class="dp-side-quests__card dp-side-quests__card--bears">
-            <img class="dp-side-quests__card-image" src="assets/images/bears.jpg" alt="Bears Character Creator" loading="lazy" decoding="async" />
-            <div class="dp-side-quests__card-body">
-              <p class="dp-side-quests__card-title">
-                Design systems, but make it bears.
-                <span class="dp-side-quests__card-subtitle">I used my design system skills to build a modular illustration system. Go on, make your own bear.</span>
-              </p>
-              <div class="dp-side-quests__card-actions">
-                <button type="button" class="dp-btn dp-btn-secondary-on-light" id="bears-modal-trigger">Build my bear</button>
               </div>
             </div>
           </article>
