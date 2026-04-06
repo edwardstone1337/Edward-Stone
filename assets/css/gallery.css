@@ -56,12 +56,26 @@
   transition-duration: var(--dp-duration-base), var(--dp-duration-base), var(--dp-duration-base);
 }
 
+/* --- Skeleton placeholder --- */
+.dp-gallery-skeleton {
+  aspect-ratio: var(--aspect);
+  background: var(--dp-bg-card);
+  border-radius: var(--dp-radius-md);
+  overflow: hidden;
+}
+
 /* --- Image --- */
 .dp-gallery-img {
   display: block;
   width: 100%;
   height: auto;
   aspect-ratio: var(--aspect);
+  opacity: 0;
+  transition: opacity var(--dp-duration-base) var(--dp-ease-out);
+}
+
+.dp-gallery-img--loaded {
+  opacity: 1;
 }
 
 /* --- Image error / placeholder fallback --- */
@@ -162,5 +176,10 @@
 
   .dp-gallery-item:hover {
     transform: none;
+  }
+
+  .dp-gallery-img {
+    opacity: 1;
+    transition: none;
   }
 }
