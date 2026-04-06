@@ -244,6 +244,142 @@
       "width": 2560,
       "height": 1664,
       "categories": ["graphic-design"]
+    },
+    {
+      "id": "central-line-tshirt-feature",
+      "src": "assets/images/gallery/central-line-tshirt-feature.webp",
+      "alt": "Time Out London editorial feature on Edward Stone's Central Line seat-fabric T-shirt design, with photos of the garment and article copy",
+      "width": 1646,
+      "height": 2400,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "empire-deadpool-feature",
+      "src": "assets/images/gallery/empire-deadpool-feature.webp",
+      "alt": "Scanned Empire Magazine spread featuring Edward Stone's Deadpool x Hunger Games fan art on the letters page",
+      "width": 1483,
+      "height": 1024,
+      "categories": ["graphic-design", "fan-art"]
+    },
+    {
+      "id": "future-reference",
+      "src": "assets/images/gallery/future-reference.webp",
+      "alt": "Future Reference wordmark and spiral icon centred over a glowing galaxy-ring nebula on a deep teal background",
+      "width": 2000,
+      "height": 773,
+      "categories": ["branding", "logo"]
+    },
+    {
+      "id": "halloween-cover",
+      "src": "assets/images/gallery/halloween-cover.webp",
+      "alt": "Prang Out wordmark in dripping orange graffiti lettering on a white bubble-pattern background, social media cover image",
+      "width": 850,
+      "height": 315,
+      "categories": ["branding", "graphic-design"]
+    },
+    {
+      "id": "prang-out-star-wars-posters",
+      "src": "assets/images/gallery/prang-out-star-wars-posters.webp",
+      "alt": "Three alternative Star Wars trilogy posters in a minimal silhouette style, C-3PO, Boba Fett helmet, and Darth Vader against warm gradient skies",
+      "width": 1378,
+      "height": 666,
+      "categories": ["poster", "illustration"]
+    },
+    {
+      "id": "blue-crystal",
+      "src": "assets/images/gallery/blue-crystal.webp",
+      "alt": "Photo mockup of a blue tie-dye crystal-pattern vest worn against a desert scene with an RV, Breaking Bad merchandise concept",
+      "width": 1800,
+      "height": 1041,
+      "categories": ["concept", "graphic-design"]
+    },
+    {
+      "id": "central-line",
+      "src": "assets/images/gallery/central-line.webp",
+      "alt": "Person wearing a London Underground Central Line moquette T-shirt designed by Edward Stone, seated on matching tube carriage upholstery",
+      "width": 960,
+      "height": 555,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "fight-club",
+      "src": "assets/images/gallery/fight-club.webp",
+      "alt": "Vector illustration of Fight Club's three leads in profile, the Narrator, Marla Singer with cigarette, Tyler Durden, in purple and magenta on deep purple",
+      "width": 1697,
+      "height": 2400,
+      "categories": ["illustration", "poster", "fan-art"]
+    },
+    {
+      "id": "mask",
+      "src": "assets/images/gallery/mask.webp",
+      "alt": "Stylised jester mask illustration in red, gold and black with pointed hat tips and a wide grin, on a black background",
+      "width": 1080,
+      "height": 1440,
+      "categories": ["illustration"]
+    },
+    {
+      "id": "pineapple-express",
+      "src": "assets/images/gallery/pineapple-express.webp",
+      "alt": "Flat vector portrait of a laughing long-haired man, eyes creased shut with delight, on a light grey background",
+      "width": 1696,
+      "height": 2400,
+      "categories": ["illustration", "fan-art"]
+    },
+    {
+      "id": "playing-card",
+      "src": "assets/images/gallery/playing-card.webp",
+      "alt": "Prang Out branded playing card back in black and white, ornate symmetrical border with character medallions and mirrored logo",
+      "width": 2481,
+      "height": 3508,
+      "categories": ["branding", "graphic-design"]
+    },
+    {
+      "id": "prang-out-double-exposure",
+      "src": "assets/images/gallery/prang-out-double-exposure.webp",
+      "alt": "Double-exposure composition merging a Prang Out branded figure with a city street scene in cool blue-grey monochrome",
+      "width": 2400,
+      "height": 1599,
+      "categories": ["graphic-design", "concept"]
+    },
+    {
+      "id": "rubicks",
+      "src": "assets/images/gallery/rubicks.webp",
+      "alt": "Four isometric Rubik's cubes in varying sizes with drop shadows on a light blue background, in blue, orange, white and green",
+      "width": 2400,
+      "height": 1800,
+      "categories": ["illustration"]
+    },
+    {
+      "id": "shogun",
+      "src": "assets/images/gallery/shogun.webp",
+      "alt": "High-contrast black and white poster illustration of four Shogun Audio artists with kanji logo and wordmark on black",
+      "width": 1697,
+      "height": 2400,
+      "categories": ["illustration", "poster"]
+    },
+    {
+      "id": "true-detective",
+      "src": "assets/images/gallery/true-detective.webp",
+      "alt": "Fan art poster for True Detective, four characters arranged around a red cross with a rust-coloured spiral motif against black",
+      "width": 2096,
+      "height": 2400,
+      "categories": ["illustration", "poster", "fan-art"]
+    },
+    {
+      "id": "wilfred",
+      "src": "assets/images/gallery/wilfred.webp",
+      "alt": "Greyscale vector portrait of a smiling bearded man with a cigarette dangling from his mouth, on a mid-grey background",
+      "width": 2076,
+      "height": 2400,
+      "categories": ["illustration", "fan-art"]
+    },
+    {
+      "id": "yeezus",
+      "src": "assets/images/gallery/yeezus.webp",
+      "alt": "Photo collage placing a diamond-masked, black-robed figure into a classical Renaissance painting of kneeling worshippers, Yeezus-era fan art",
+      "width": 1800,
+      "height": 1939,
+      "categories": ["graphic-design", "concept", "fan-art"]
     }
   ]
 }
