@@ -194,7 +194,7 @@ function openLightbox(index) {
   const nextBtn = lightbox.querySelector('.dp-about-lightbox__next');
 
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
+    if (!e.target.closest('img, .dp-about-lightbox__prev, .dp-about-lightbox__next, .dp-about-lightbox__panel, .dp-lightbox-close')) closeLightbox();
   }, { signal: controller.signal });
 
   closeBtn.addEventListener('click', closeLightbox, { signal: controller.signal });
