@@ -44,6 +44,7 @@ function renderGallery() {
         var w = parseInt(img.width, 10) || 800;
         var h = parseInt(img.height, 10) || 600;
         var aspect = w + '/' + h;
+        var loadingAttr = index < 8 ? 'eager' : 'lazy';
 
         // Build optional data-categories attribute
         var catAttr = '';
@@ -53,20 +54,21 @@ function renderGallery() {
         }
 
         return (
-          '<div class="dp-gallery-item dp-reveal" role="listitem"' +
+          '<div class="dp-gallery-item" role="listitem"' +
             catAttr +
             ' data-alt="' + alt + '"' +
-            ' data-reveal-delay="' + (index * 50) + '"' +
             ' style="--aspect: ' + aspect + '">' +
-            '<img' +
-              ' src="' + src + '"' +
-              ' alt="' + alt + '"' +
-              ' width="' + w + '"' +
-              ' height="' + h + '"' +
-              ' loading="lazy"' +
-              ' decoding="async"' +
-              ' class="dp-gallery-img"' +
-            ' />' +
+            '<div class="dp-gallery-skeleton" style="--aspect: ' + aspect + '">' +
+              '<img' +
+                ' src="' + src + '"' +
+                ' alt="' + alt + '"' +
+                ' width="' + w + '"' +
+                ' height="' + h + '"' +
+                ' loading="' + loadingAttr + '"' +
+                ' decoding="async"' +
+                ' class="dp-gallery-img"' +
+              ' />' +
+            '</div>' +
           '</div>'
         );
       }).join('');
@@ -74,16 +76,27 @@ function renderGallery() {
       grid.innerHTML = html;
       grid.dispatchEvent(new CustomEvent('gallery:rendered', { bubbles: true }));
 
-      // Attach error handlers for broken images (expected for placeholders)
+      // Attach load and error handlers to each image
       var imgs = grid.querySelectorAll('.dp-gallery-img');
       for (var i = 0; i < imgs.length; i++) {
-        imgs[i].onerror = function () {
-          this.onerror = null; // prevent infinite loop
-          this.classList.add('dp-gallery-img--error');
-        };
+        (function (img) {
+          // Already loaded from cache
+          if (img.complete && img.naturalWidth > 0) {
+            img.classList.add('dp-gallery-img--loaded');
+          } else {
+            img.addEventListener('load', function () {
+              img.classList.add('dp-gallery-img--loaded');
+            }, { once: true });
+          }
+          img.onerror = function () {
+            img.onerror = null; // prevent infinite loop
+            img.classList.add('dp-gallery-img--error');
+            img.classList.add('dp-gallery-img--loaded'); // collapse skeleton on error too
+          };
+        })(imgs[i]);
       }
 
-      // Reveal individual items via scroll-reveal system after paint
+      // Reveal section-level dp-reveal elements (hero, header, etc.) after paint
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           if (typeof window.DPEffectsObserveReveals === 'function') {
