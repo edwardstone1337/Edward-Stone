@@ -13,56 +13,6 @@
       ]
     },
     {
-      "id": "playsport-category-cards-dark",
-      "src": "assets/images/gallery/playsport-category-cards-dark.webp",
-      "alt": "Isometric grid of Playsport sport category cards with bold typography and photography — Fitness Fanatics, Just Run, Mind Games, Horse Play, and more",
-      "width": 800,
-      "height": 600,
-      "categories": [
-        "ui-design",
-        "playsport"
-      ],
-      "caption": "Sport category card system for Playsport — each card pairs bold type with action photography"
-    },
-    {
-      "id": "playsport-category-cards-light",
-      "src": "assets/images/gallery/playsport-category-cards-light.webp",
-      "alt": "Isometric grid of Playsport activity cards in lighter tones — Ballerinas, Table Tennis, Running, Wave Chasers, Hiking, Jazz Dance, and more",
-      "width": 800,
-      "height": 600,
-      "categories": [
-        "ui-design",
-        "playsport"
-      ],
-      "caption": "Extended category card system showing breadth of sport and activity coverage"
-    },
-    {
-      "id": "playsport-sport-detail-screens",
-      "src": "assets/images/gallery/playsport-sport-detail-screens.webp",
-      "alt": "Three Playsport mobile app screens showing Boxing, Yoga, and Crossfit sport detail pages with organisers, experiences, and near-me map tabs",
-      "width": 800,
-      "height": 600,
-      "categories": [
-        "ui-design",
-        "mobile",
-        "playsport"
-      ],
-      "caption": "Sport detail pages with tab navigation — each sport has its own colour theme"
-    },
-    {
-      "id": "playsport-home-booking-screens",
-      "src": "assets/images/gallery/playsport-home-booking-screens.webp",
-      "alt": "Two Playsport mobile screens — home feed with personalised sport recommendations and categories, and a venue booking page with quick book class schedule",
-      "width": 800,
-      "height": 600,
-      "categories": [
-        "ui-design",
-        "mobile",
-        "playsport"
-      ],
-      "caption": "Home feed with personalised recommendations and quick-book venue flow"
-    },
-    {
       "id": "neumorphic-music-player",
       "src": "assets/images/gallery/neumorphic-music-player.webp",
       "alt": "Neumorphic music player UI concept in all-white with soft shadows, showing album art, progress bar, and playback controls",
@@ -140,10 +90,10 @@
     },
     {
       "id": "playsport-wordmark-full",
-      "src": "assets/images/gallery/playsport-wordmark-full.webp",
+      "src": "assets/images/gallery/playsport-wordmark-full.jpg",
       "alt": "Playsport lowercase wordmark in red gradient on white, centred composition with generous whitespace",
-      "width": 800,
-      "height": 441,
+      "width": 1911,
+      "height": 1921,
       "categories": [
         "branding",
         "logo",
@@ -182,6 +132,118 @@
         "branding",
         "logo"
       ]
+    },
+    {
+      "id": "ticker-01",
+      "src": "assets/images/ticker/ticker-01.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-02",
+      "src": "assets/images/ticker/ticker-02.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-03",
+      "src": "assets/images/ticker/ticker-03.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-04",
+      "src": "assets/images/ticker/ticker-04.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-05",
+      "src": "assets/images/ticker/ticker-05.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-06",
+      "src": "assets/images/ticker/ticker-06.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-07",
+      "src": "assets/images/ticker/ticker-07.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-08",
+      "src": "assets/images/ticker/ticker-08.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-09",
+      "src": "assets/images/ticker/ticker-09.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-10",
+      "src": "assets/images/ticker/ticker-10.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-11",
+      "src": "assets/images/ticker/ticker-11.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-12",
+      "src": "assets/images/ticker/ticker-12.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-13",
+      "src": "assets/images/ticker/ticker-13.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
+    },
+    {
+      "id": "ticker-14",
+      "src": "assets/images/ticker/ticker-14.webp",
+      "alt": "",
+      "width": 2560,
+      "height": 1664,
+      "categories": ["graphic-design"]
     }
   ]
 }

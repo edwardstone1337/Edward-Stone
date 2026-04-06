@@ -1,9 +1,8 @@
 /**
- * Gallery Grid — Gallery Page
- *
- * Fetches image data from gallery.json and renders a masonry grid.
- * Grid fades in as a single unit after render (dp-gallery-grid--visible).
- * Sanitises all dynamic content via utils.js.
+ * Gallery grid — loads images from assets/data/gallery.json
+ * Image src paths are relative to assets/images/ and can reference
+ * any subfolder (e.g. gallery/, ticker/). Images are shuffled on
+ * each page load. See gallery.json to add or remove entries.
  */
 
 import { escapeHTML, sanitizeUrl } from './utils.js';
@@ -73,6 +72,7 @@ function renderGallery() {
       }).join('');
 
       grid.innerHTML = html;
+      grid.dispatchEvent(new CustomEvent('gallery:rendered', { bubbles: true }));
 
       // Attach error handlers for broken images (expected for placeholders)
       var imgs = grid.querySelectorAll('.dp-gallery-img');
