@@ -379,7 +379,7 @@ export async function exportBearPNG() {
     ctx.shadowBlur    = 0;
     ctx.shadowColor   = 'rgba(255, 255, 255, 0.6)';
     ctx.fillStyle     = 'rgba(0, 0, 0, 0.4)';
-    ctx.fillText('edwardstone.design', canvasW - wmPad, canvasH - wmPad);
+    ctx.fillText('www.edwardstone.design', canvasW - wmPad, canvasH - wmPad);
     ctx.shadowColor   = 'transparent';
 
     return canvas;

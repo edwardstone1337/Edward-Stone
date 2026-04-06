@@ -22,7 +22,7 @@ const NAV_LINKS = [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' },
     { text: 'Prang Out', href: '/projects/prang-out.html' }
   ]},
-  { text: 'Gallery', href: '/gallery.html', prodHide: true },
+  { text: 'Gallery', href: '/gallery.html' },
   { text: 'Resume', href: '/resume.html' },
   { text: 'About', href: '/about.html', prodHide: true }
 ];

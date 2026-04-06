@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Gallery — Edward Stone</title>
+    <title>Gallery, Edward Stone</title>
     <link rel="icon" href="assets/images/Logo.svg" type="image/svg+xml">
     <meta name="description" content="A collection of things Edward Stone has designed and built — UI design, branding, and side projects.">
     <meta property="og:title" content="Gallery — Edward Stone">
@@ -34,12 +34,23 @@
     <div id="nav-container"></div>
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
+      import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
       initNav();
       // Banner ticker — visible on dev only
       const isProd = document.documentElement.classList.contains('is-prod');
       if (!isProd) {
         import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '\u2726' }));
       }
+      document.addEventListener('gallery:rendered', () => {
+        initImageLightbox({
+          selector: '.dp-gallery-grid .dp-gallery-item',
+          getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',
+          getImageAlt: (item) => item.querySelector('img')?.getAttribute('alt') || '',
+          getDescription: (item) => item.getAttribute('data-description') || '',
+          ariaLabel: 'Gallery viewer',
+          dedupe: false,
+        });
+      }, { once: true });
     </script>
     <a href="#main" class="dp-skip-link">Skip to main content</a>
     <main id="main">
