@@ -28,3 +28,12 @@ jobs:
 
       - name: Check sitemap lastmod and URL health
         run: ./scripts/update-sitemap.sh --check
+
+  token-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check design token hygiene
+        run: ./scripts/check-token-hygiene.sh

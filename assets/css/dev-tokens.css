@@ -518,5 +518,19 @@
     /* Page margins (matched in web container) */
     --dp-print-page-v: 15mm;
     --dp-print-page-h: 15mm;
+
+    /* Force light values for print — print can't rely on the runtime
+       data-theme attribute, so these restate the [data-theme="light"] block
+       above. Kept here rather than in dev-styles.css so the duplication sits
+       next to what it duplicates. dev-styles.css sets color-scheme: light. */
+    --dp-paper-surface: #FFFFFF;
+    --dp-paper-text-primary: #111113;
+    --dp-paper-text-secondary: #5A6170;
+    --dp-paper-border: rgba(0, 0, 0, 0.06);
+    --dp-paper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --dp-paper-accent: #5E6AD2;
+    --dp-text-primary: #111113;
+    --dp-text-secondary: #4B5060;
+    --dp-border-default: rgba(0, 0, 0, 0.08);
   }
 }

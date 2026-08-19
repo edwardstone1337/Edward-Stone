@@ -4072,18 +4072,10 @@ body.dp-overlay-active {
 @media print {
   /* Print type/rhythm/spacing scale lives in dev-tokens.css (@media print block) */
 
-  /* Force light theme for print (values from dev-tokens.css [data-theme="light"] lines 250-263, 352-357) */
+  /* Force light theme for print. The token values this relies on live in
+     dev-tokens.css (@media print block) — values belong in the token file. */
   :root {
     color-scheme: light !important;
-    --dp-paper-surface: #FFFFFF;
-    --dp-paper-text-primary: #111113;
-    --dp-paper-text-secondary: #5A6170;
-    --dp-paper-border: rgba(0, 0, 0, 0.06);
-    --dp-paper-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    --dp-paper-accent: #5E6AD2;
-    --dp-text-primary: #111113;
-    --dp-text-secondary: #4B5060;
-    --dp-border-default: rgba(0, 0, 0, 0.08);
   }
 
   /* Hide everything except resume content */

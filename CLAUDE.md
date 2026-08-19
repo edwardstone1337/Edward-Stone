@@ -85,7 +85,7 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - No frameworks, no build tools, no npm
 - `dp-` prefix tokens belong to dev system only — never use in legacy pages
 - Sanitise all dynamic content (`escapeHTML` + `sanitizeUrl`)
-- Tokens carrying **values** live in `dev-tokens.css` only (light overrides under `[data-theme="light"]`, print scale under `@media print`, everything else in `:root`). Component CSS may define *scoped* tokens on its own class, but only ones that reference existing tokens — never raw values. `.dp-counter` and `.dp-strip--scp` are the reference examples. Case studies stay permanently light
+- Tokens carrying **values** live in `dev-tokens.css` (light overrides under `[data-theme="light"]`, print under `@media print`, everything else in `:root`) or in a per-project theme file (`assets/css/project-*.css`, scoped to `[data-project="…"]`). `dev-styles.css` is the shared component layer and must **never** carry a raw value: it may define scoped tokens, but only ones that reference existing tokens. `.dp-counter` and `.dp-strip--scp` are the reference examples. Enforced by `./scripts/check-token-hygiene.sh`. Case studies stay permanently light
 - Before writing new CSS, check the Shared CSS Components table in `docs/architecture-tokens.md` and grep `dev-styles.css` for an existing class — extend it instead of adding a duplicate
 - No new raw hex or `rgba()` literals as CSS *values* — use an existing `--dp-*` token or add one to `dev-tokens.css`. Fallbacks inside `var()` and mask/gradient mechanics are fine
 - Prefer a modifier class over an inline `style=` attribute; one-off styling belongs in `dev-styles.css` as a class
