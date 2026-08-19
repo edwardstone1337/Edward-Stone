@@ -83,14 +83,48 @@ Full token contract: `docs/strip-branding-spec.md`.
 
 ## Shared CSS Components (in `dev-styles.css`)
 
-These reusable class patterns are available to any page using the dev system:
+**Check this table before writing new CSS.** A class is listed if it's used on 2+ pages, is a sitewide JS-injected widget, is accessibility-load-bearing, or is a documented extensible pattern. Modifiers and variants are grouped onto their parent component's row. Ordered by how central the component is, not alphabetically.
+
+Single-page bespoke layout is intentionally left out — the resume page internals, the 404 page, and homepage-only sections (side quests, toolbox, split rows, hero card, logo bar). Read that page's own CSS block instead of reaching for these.
 
 | Class | Line | Purpose |
 |-------|------|---------|
-| `.dp-dropdown-menu` | ~300 | Glass dropdown with blur, border, shadow. Used by nav and download widget |
-| `.dp-page-content` | ~694 | Content wrapper — top padding accounts for 64px fixed nav |
-| `.dp-snackbar` | ~1924 | Fixed bottom toast notification with glass bg and slide-up animation |
-| `.dp-snackbar--visible` | ~1945 | Visible state (opacity + transform transition) |
+| `.dp-nav`, `.dp-nav-inner`, `.dp-nav--hidden` | ~563 | Fixed top nav bar shell (hides on scroll-down). Injected on every public page by `nav-component.js` via `#nav-container` — never hand-write nav markup |
+| `.dp-nav-brand`, `.dp-nav-logo(-bg/-swirl/-grad-start/-grad-end)`, `.dp-nav-name` | ~597 | Nav logo mark + wordmark, left side of the bar |
+| `.dp-nav-actions`, `.dp-nav-links`, `.dp-nav-link` | ~638 | Desktop nav link row; `.dp-nav-link[aria-current="page"]` marks the active page (a11y) |
+| `.dp-nav-dropdown`, `-trigger`, `-menu`, `-item` | ~747 | Desktop "More" dropdown for overflow nav links |
+| `.dp-nav-hamburger`, `-label` | ~788 | Mobile hamburger button (≤768px), toggles the drawer |
+| `.dp-nav-drawer`, `-backdrop`, `-panel`, `-close`, `-links`, `-heading`, `-link`, `--open` | ~802 | Mobile right-side nav drawer. Focus-trapped + scroll-locked (`.dp-overlay-active`) — see `docs/architecture-nav.md` |
+| `.dp-skip-link` | ~3773 | "Skip to content" link, first focusable element on every page. WCAG AAA requirement — do not remove |
+| `.dp-page` | ~1090 | Root `<main>` wrapper on every page — sets base page padding/max-width |
+| `.dp-footer`, `-inner`, `-text`, `-links`, `-link` | ~2754 | Sitewide footer (copyright, links). Hosts the page counter widget |
+| `.dp-counter`, `__track`, `__digit`, `__reel` | ~2805 | Animated visit-count digits in the footer. Injected by `page-counter.js`, called on nearly every public page |
+| `.dp-banner-ticker`, `__track`, `__content`, `__separator` | ~207 | Scrolling "currently open to new opportunities" marquee. Injected by `banner-ticker.js`, dynamically imported on every public page |
+| `.dp-back-to-top` | ~985 | Floating scroll-to-top button. Injected by `back-to-top.js`, loaded via `<script src>` on every page except 404 |
+| `.dp-reveal`, `.dp-revealed` | ~3656 | Scroll-triggered fade/slide-in entrance animation, applied via `effects.js` (IntersectionObserver). Fully respects `prefers-reduced-motion` — add `.dp-reveal` to any section you want to animate in |
+| `body.dp-overlay-active` | ~3212 | Body class that locks background scroll while any overlay (nav drawer, lightbox, modal) is open. Toggled by 6+ overlay modules — pair with focus trapping per `docs/code-review.md` |
+| `.dp-no-transition` | ~7 | Suppresses CSS transitions during the theme pre-init flash-guard. See `docs/theme-init-pattern.md` |
+| `.dp-noise` | ~1352 | Subtle SVG noise texture overlay on `<body>`, `aria-hidden`. Injected sitewide by `effects.js` |
+| `.dp-btn`, `-primary`, `-secondary`, `-primary-on-dark`, `-secondary-on-dark`, `-secondary-on-light`, `-icon` | ~106 | The button component. Pick the `-on-dark`/`-on-light` variant to match the surface it sits on — never restyle a raw `<button>` |
+| `.dp-dropdown-menu` | ~697 | Shared glass dropdown (blur, border, shadow). Reused by the nav dropdown and the resume download menu — reach for this before inventing a new popover style |
+| `.dp-snackbar`, `--visible` | ~3438 | Fixed bottom toast notification, glass bg + slide-up transition. Currently triggered from the resume page (download/print feedback); styled as a sitewide primitive |
+| `.dp-hero`, `-heading`, `-line`, `-accent`, `-body` | ~1107 | Standard page-top hero (overline + heading + intro paragraph) used on the homepage and every case study / project page. Not the homepage's split hero — that's `.dp-hero--split` (excluded, index-only) |
+| `.dp-overline` | ~93 | Small uppercase eyebrow label, typically sits above a hero heading or section title |
+| `.dp-contact-cta`, `__heading`, `__body`, `__actions` | ~2332 | "Let's talk" closing CTA block. Hard-coded on the homepage, injected via `initContactCta()` on resume and all 4 case studies + Prang Out |
+| `.dp-read-more`, `__heading`, `__list`, `__link` | ~2229 | "Read more" related-links list at the end of a case study. Injected by `case-study-read-more.js` on all 4 case studies + Prang Out |
+| `.dp-prose`, `-section`, `-layout` | ~2475 | Long-form article wrapper for case-study body copy (headings/paragraphs/lists styled via bare-tag selectors inside `.dp-prose`) |
+| `.dp-prose-image`, `-figure`, `-figure--wide`, `-figure--full`, `-caption` | ~2531 | Captioned image inside a case-study article, with wide/full-bleed size variants |
+| `.dp-pullquote` | ~2437 | Large blockquote-style pullquote inside case-study prose |
+| `.dp-tldr`, `__heading`, `__list`, `__item` | ~2692 | "TL;DR" summary callout box near the top of a case study |
+| `.dp-impact-banner`, `__item`, `__value`, `__label` | ~2657 | Row of stat tiles (metric + label) inside a case study |
+| `.dp-testimonial`, `-quote`, `-attribution`, `-details`, `-name`, `-role` | ~2004 | Single testimonial quote card |
+| `.dp-testimonials`, `-section`, `-grid`, `-track`, `-masonry`, `--full` | ~2066 | Layout wrappers for arranging multiple `.dp-testimonial` cards (scroll track on homepage, masonry grid on Planner) |
+| `.dp-card`, `-inner`, `-content`, `-title`, `-description`, `-grid` | ~1450 | Project card component (hover-glow tracks cursor via `effects.js`). Generated by `project-card.js` / `projects-grid.js` — don't hand-roll card markup |
+| `.dp-card-media`, `-media-iframe`, `-media-placeholder`, `-media-fade` | ~1498 | Media slot inside a project card (image, iframe preview, or loading placeholder) |
+| `.dp-strip`, `-inner`, `-content`, `-media`, `-title`, `-description`, `-badge(s)`, `-logo`, `-orbs`, `-skeleton`, `--compact`, `--flipped`, `--interactive`, `--scp`, `--flip7`, `--kaomoji` | ~1657 | Branded product strip — the most systematised pattern in the codebase. Brand a new one with **tokens only, no new CSS**: see `docs/strip-branding-spec.md`. Homepage-only today and `data-prod-hide`, but built for reuse |
+| `.dp-lightbox`, `-backdrop`, `-close` | ~3216 | Shared modal/lightbox shell (backdrop + close button). Reused by the image lightbox, the resume lightbox, and the homepage "bears" modal — reach for this instead of building a new overlay |
+| `.dp-about-lightbox__body`, `-image`, `-panel`, `-description`, `-prev`, `-next` | ~3315 | Prev/next image + caption content panel inside the lightbox shell. Used on gallery.html and index.html via `image-lightbox.js` |
+| `.dp-gradient-text` | ~1347 | Gradient-fill text utility, used on gallery.html and 404.html headings |
 
 Nav-specific selectors are documented in `docs/architecture-nav.md`.
 

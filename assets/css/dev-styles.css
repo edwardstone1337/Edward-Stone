@@ -1891,17 +1891,17 @@ img { display: block; max-width: 100%; }
 
 /* Strip theme — Kaomoji (dark monochrome) */
 .dp-strip--kaomoji {
-  --dp-strip-bg: #141414;
-  --dp-strip-orb-1: #3a3a3a;
-  --dp-strip-orb-2: #2a2a2a;
-  --dp-strip-orb-dark: rgba(0, 0, 0, 0.12);
-  --dp-strip-orb-opacity: 0.3;
-  --dp-strip-title-color: #f0f0f0;
-  --dp-strip-text-color: rgba(240, 240, 240, 0.8);
-  --dp-strip-badge-bg: rgba(255, 255, 255, 0.1);
-  --dp-strip-badge-text: rgba(240, 240, 240, 0.9);
-  --dp-device-border: 1px solid rgba(255, 255, 255, 0.08);
-  --dp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --dp-strip-bg: var(--dp-strip-kaomoji-bg);
+  --dp-strip-orb-1: var(--dp-strip-kaomoji-orb-1);
+  --dp-strip-orb-2: var(--dp-strip-kaomoji-orb-2);
+  --dp-strip-orb-dark: var(--dp-strip-kaomoji-orb-dark);
+  --dp-strip-orb-opacity: var(--dp-strip-kaomoji-orb-opacity);
+  --dp-strip-title-color: var(--dp-strip-kaomoji-title-color);
+  --dp-strip-text-color: var(--dp-strip-kaomoji-text-color);
+  --dp-strip-badge-bg: var(--dp-strip-kaomoji-badge-bg);
+  --dp-strip-badge-text: var(--dp-strip-kaomoji-badge-text);
+  --dp-device-border: var(--dp-strip-kaomoji-device-border);
+  --dp-device-shadow: var(--dp-strip-kaomoji-device-shadow);
 }
 .dp-strip--kaomoji::before,
 .dp-strip--kaomoji::after {
@@ -2064,9 +2064,6 @@ img { display: block; max-width: 100%; }
 
 /* ── Testimonials container / track ── */
 .dp-testimonials {
-  --dp-testimonial-min-width: 280px;
-  --dp-testimonial-min-width-lg: 300px;
-  --dp-testimonial-track-max-width: 960px;
   padding-top: 0;
   padding-bottom: var(--dp-space-16);
 }
@@ -2363,13 +2360,11 @@ img { display: block; max-width: 100%; }
 
 /* ── Star rating ── */
 .dp-star-rating {
-  --dp-star-rating-icon-size: 28px;
   padding-top: 0;
   padding-bottom: var(--dp-space-16);
 }
 
 .dp-star-rating-card {
-  --dp-star-rating-max-width: 400px;
   background: var(--dp-glass-bg);
   backdrop-filter: blur(var(--dp-glass-blur));
   -webkit-backdrop-filter: blur(var(--dp-glass-blur));
@@ -2413,7 +2408,6 @@ img { display: block; max-width: 100%; }
 
 /* ── Growth chart ── */
 .dp-growth-chart {
-  --dp-growth-chart-max-height: 320px;
   background: var(--dp-glass-bg);
   backdrop-filter: blur(var(--dp-glass-blur));
   -webkit-backdrop-filter: blur(var(--dp-glass-blur));
@@ -4076,30 +4070,7 @@ body.dp-overlay-active {
    PRINT — Resume lightbox to PDF
    ============================================ */
 @media print {
-  :root {
-    /* Print type scale */
-    --dp-print-name: 22px;
-    --dp-print-tagline: 12px;
-    --dp-print-body: 11px;
-    --dp-print-body-sm: 11px;
-    --dp-print-role-title: 13px;
-    --dp-print-meta: 10px;
-    --dp-print-section-title: 11px;
-
-    /* Print rhythm */
-    --dp-print-leading: 1.35;
-    --dp-print-leading-tight: 1.2;
-
-    /* Print spacing */
-    --dp-print-section-gap: 16px;
-    --dp-print-role-gap: 12px;
-    --dp-print-column-gap: 16px;
-    --dp-print-li-gap: 2px;
-
-    /* Page margins (matched in web container) */
-    --dp-print-page-v: 15mm;
-    --dp-print-page-h: 15mm;
-  }
+  /* Print type/rhythm/spacing scale lives in dev-tokens.css (@media print block) */
 
   /* Force light theme for print (values from dev-tokens.css [data-theme="light"] lines 250-263, 352-357) */
   :root {

@@ -1,4 +1,4 @@
-name: GA Coverage
+name: Site Checks
 
 on:
   pull_request:
@@ -15,3 +15,16 @@ jobs:
 
       - name: Check GA coverage
         run: ./scripts/check-ga-coverage.sh
+
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # update-sitemap.sh derives lastmod from each page's last commit date,
+          # so it needs full history — the default shallow clone breaks git log.
+          fetch-depth: 0
+
+      - name: Check sitemap lastmod and URL health
+        run: ./scripts/update-sitemap.sh --check

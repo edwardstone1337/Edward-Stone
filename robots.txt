@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /projects/fair-share.html
-Disallow: /projects/scp-reader.html
+
+# Dev-only pages — not part of the public site
+Disallow: /dev/
 
 Sitemap: https://edwardstone.design/sitemap.xml

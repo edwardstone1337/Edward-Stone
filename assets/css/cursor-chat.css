@@ -1,7 +1,7 @@
 /* ============================================
    Cursor Chat Bubble
    Desktop only — JS gate on (hover: hover) and (pointer: fine)
-   PROD gate — JS bails on is-prod before this is ever used
+   Live on production — intentional. There is no is-prod gate here.
    z-index: 5000 (above nav 1000, below lightboxes 10000)
    ============================================ */
 

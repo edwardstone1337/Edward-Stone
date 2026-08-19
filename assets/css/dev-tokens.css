@@ -279,6 +279,31 @@
   --dp-strip-flip7-device-border: 1px solid lch(38 8 265);
   --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 
+  /* Strip theme — Kaomoji (dark monochrome) */
+  --dp-strip-kaomoji-bg: #141414;
+  --dp-strip-kaomoji-orb-1: #3a3a3a;
+  --dp-strip-kaomoji-orb-2: #2a2a2a;
+  --dp-strip-kaomoji-orb-dark: rgba(0, 0, 0, 0.12);
+  --dp-strip-kaomoji-orb-opacity: 0.3;
+  --dp-strip-kaomoji-title-color: #f0f0f0;
+  --dp-strip-kaomoji-text-color: rgba(240, 240, 240, 0.8);
+  --dp-strip-kaomoji-badge-bg: rgba(255, 255, 255, 0.1);
+  --dp-strip-kaomoji-badge-text: rgba(240, 240, 240, 0.9);
+  --dp-strip-kaomoji-device-border: 1px solid rgba(255, 255, 255, 0.08);
+  --dp-strip-kaomoji-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* ── Testimonials ── */
+  --dp-testimonial-min-width: 280px;
+  --dp-testimonial-min-width-lg: 300px;
+  --dp-testimonial-track-max-width: 960px;
+
+  /* ── Star rating ── */
+  --dp-star-rating-icon-size: 28px;
+  --dp-star-rating-max-width: 400px;
+
+  /* ── Growth chart ── */
+  --dp-growth-chart-max-height: 320px;
+
   /* Resume / paper */
   --dp-paper-surface: #18181B;
   --dp-paper-text-primary: #F7F8F8;
@@ -463,4 +488,35 @@
   /* TLDR */
   --dp-tldr-bg: #EDF0F7;
   --dp-tldr-border: var(--dp-border-default);
+}
+
+/* --------------------------------------------
+   PRINT — token scale for the resume PDF export
+   Consumed by the @media print rules in dev-styles.css
+   -------------------------------------------- */
+@media print {
+  :root {
+    /* Print type scale */
+    --dp-print-name: 22px;
+    --dp-print-tagline: 12px;
+    --dp-print-body: 11px;
+    --dp-print-body-sm: 11px;
+    --dp-print-role-title: 13px;
+    --dp-print-meta: 10px;
+    --dp-print-section-title: 11px;
+
+    /* Print rhythm */
+    --dp-print-leading: 1.35;
+    --dp-print-leading-tight: 1.2;
+
+    /* Print spacing */
+    --dp-print-section-gap: 16px;
+    --dp-print-role-gap: 12px;
+    --dp-print-column-gap: 16px;
+    --dp-print-li-gap: 2px;
+
+    /* Page margins (matched in web container) */
+    --dp-print-page-v: 15mm;
+    --dp-print-page-h: 15mm;
+  }
 }

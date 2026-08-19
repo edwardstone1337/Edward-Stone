@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Sitemap automation** (`scripts/update-sitemap.sh`): Refreshes `<lastmod>` from each page's last commit date rather than stamping today — inflating `lastmod` on unchanged pages trains crawlers to ignore the signal. Only rewrites `<lastmod>`; the URL list, `priority` and `changefreq` stay hand-curated, so a deliberately removed page can't be silently re-added. `--check` mode reports without writing and exits non-zero, and additionally flags sitemap URLs whose page sets `noindex`, URLs with no matching file, and pages with uncommitted changes whose `lastmod` will lag.
+- **CI sitemap job** (`.github/workflows/ga-coverage.yml`): New `sitemap` job runs `update-sitemap.sh --check` on PRs and pushes to `main`. Uses `fetch-depth: 0` because the default shallow checkout breaks the per-file `git log` the script relies on. Workflow renamed `GA Coverage` → `Site Checks` now that it covers more than analytics.
+- **Component inventory** (`docs/architecture-tokens.md`): "Shared CSS Components" table expanded from 4 to 36 rows covering the reusable component surface (nav, drawer, lightbox, footer, prose, testimonials, strips, cards, buttons). Single-page bespoke layout deliberately excluded. Intended as the first stop before writing new CSS.
+- **Design-system rules** (`CLAUDE.md`): Rules for token location, component reuse, raw colour literals, and inline styles. The token rule now covers all `--dp-*` definitions rather than only light-theme overrides.
+- **Strip theme tokens — Kaomoji** (`dev-tokens.css`): `--dp-strip-kaomoji-*` named tokens, bringing the Kaomoji strip in line with `docs/strip-branding-spec.md` (SCP and Flip 7 already complied).
+- **Print token scale** (`dev-tokens.css`): 15 `--dp-print-*` tokens relocated from `dev-styles.css` into an `@media print` block in the token file.
+- **Component tokens** (`dev-tokens.css`): `--dp-testimonial-*`, `--dp-star-rating-*`, `--dp-growth-chart-max-height` promoted from `dev-styles.css`.
+
+### Changed
+- **Testimonials section width** (`index.html`, `case-studies/planner.html`): Now capped at 960px (was 1152px). `.dp-testimonials-section` always declared `max-width: var(--dp-testimonial-track-max-width)`, but the token was scoped to `.dp-testimonials`, which is absent on both pages — so the cap never applied. Promoting the token to `:root` activates the intended behaviour and matches Fair Share's track width.
+
+### Fixed
+- **`sitemap.xml`**: `/projects/fair-share.html` corrected to `/case-studies/fair-share.html`; expanded from 3 to 6 entries covering all publicly indexable pages. `/projects/scp-reader.html` deliberately excluded — the page sets `noindex, nofollow` (see `b15da25`), so advertising it in the sitemap would tell crawlers to fetch a page that then refuses indexing.
+- **`robots.txt`**: Removed two stale `Disallow` rules pointing at paths that no longer exist (`/projects/fair-share.html` moved to `/case-studies/`). Added `Disallow: /dev/`. `/projects/scp-reader.html` needs no rule — its own `noindex` meta tag is the authoritative signal.
+- **Cursor chat comment** (`cursor-chat.css`): Header claimed a `is-prod` gate that does not exist in `cursor-chat.js`. The feature is intentionally live on production; comment corrected to match.
+- **Page inventory** (`CLAUDE.md`): Added missing `about.html` (live, unlinked from prod nav) and `projects/prang-out.html` (redirects to 404 on prod).
+- **`CLAUDE.md` trimmed**: Page-inventory table replaced with a short note covering only what the file tree can't tell you (which pages are deliberately non-public). Stale JS file counts, the nav description duplicated in `docs/architecture-nav.md`, the grep-derivable light-theme page list, and the "9/9 currently tagged" GA count removed — all reconstructable from the codebase, and all drifting. 103 → 94 lines.
+
+### Added
 - **Homepage image ticker** (`index.html`): Full-bleed `.dp-ticker` (two rows) scrolls via rAF loop (`initImageTicker()`), speed from `--dp-ticker-speed`; left row right-to-left + right row left-to-right; ticker set `assets/images/ticker/ticker-01…ticker-13` (+ composite `background-1/foreground-1`, static `ticker-pretty.png`); composite/static gated with `data-prod-hide`; `prefers-reduced-motion` prevents the rAF loop; caption in `.dp-ticker-caption`.
 - **Testimonials section** (index): Three testimonials (Jason Allen, Chris George, Bella Jagger) in `.dp-testimonials-section`; grid layout.
 - **Contact CTA section** (index): "Let's talk" section with Email me and LinkedIn buttons; `.dp-contact-cta`.
