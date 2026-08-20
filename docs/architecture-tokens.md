@@ -10,6 +10,19 @@ All tokens use the `dp-` prefix and follow a three-layer atomic model:
 
 **Light theme:** `[data-theme="light"] { … }` in the same file remaps semantic/component tokens for full light pages. On **`main`**, most public HTML sets `data-theme="light"` on `<html>`. **`dev/design-system.html`** can switch themes via pre-init + toggle. Contextual light tokens (e.g. `--dp-paper-surface-light`) still support light-in-dark pockets where needed.
 
+**Print:** an `@media print { :root { … } }` block at the end of the file holds the `--dp-print-*` scale for the resume PDF export, plus the light values print needs (print can't rely on the runtime `data-theme` attribute). `getComputedStyle` cannot read these outside an actual print context — the design system page shows them as a transcribed table for that reason.
+
+### Where values may live
+
+Two files may carry raw token **values**:
+
+- **`dev-tokens.css`** — the primary source of truth.
+- **`assets/css/project-*.css`** — a per-project theme layer, scoped to `[data-project="…"]`, re-skinning semantic tokens for one page. `project-scp-reader.css` is the reference example. Structurally this is the same idea as `[data-theme="light"]`, scoped to a project rather than a theme.
+
+**`dev-styles.css` may not carry values.** It's the shared component layer. It may define *scoped* tokens on a class, but only ones that reference existing tokens — `.dp-counter` and `.dp-strip--scp` are the reference examples. Pointing an existing token at a raw literal there (e.g. `.dp-strip--kaomoji { --dp-strip-bg: #141414; }`) is the drift this rule exists to prevent, and `./scripts/check-token-hygiene.sh` fails the build on it.
+
+The live reference for every token below is `dev/design-system.html` — sections 2–3 render swatches directly from the token file, so they can't fall out of date.
+
 ## Key Token Groups
 
 ### Spacing & Radius (Static)
@@ -86,6 +99,8 @@ Full token contract: `docs/strip-branding-spec.md`.
 **Check this table before writing new CSS.** A class is listed if it's used on 2+ pages, is a sitewide JS-injected widget, is accessibility-load-bearing, or is a documented extensible pattern. Modifiers and variants are grouped onto their parent component's row. Ordered by how central the component is, not alphabetically.
 
 Single-page bespoke layout is intentionally left out — the resume page internals, the 404 page, and homepage-only sections (side quests, toolbox, split rows, hero card, logo bar). Read that page's own CSS block instead of reaching for these.
+
+**Keeping this table and the reference page in sync:** when a new reusable `.dp-*` component meets the bar above, add it to this table **and** give it a demo in the "6. Organisms" tier of `dev/design-system.html`, in the same change. The two use the same inclusion test, so a component that earns one earns the other — and they only stay accurate if they move together.
 
 | Class | Line | Purpose |
 |-------|------|---------|

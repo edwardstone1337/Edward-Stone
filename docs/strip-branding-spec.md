@@ -37,7 +37,7 @@ Step-by-step: add a new strip theme using only tokens and one modifier block.
 
 ### Step 1 — Define named tokens in `dev-tokens.css`
 
-Create `--dp-strip-[name]-*` tokens for your strip in the `:root` block of `dev-tokens.css` (the site is dark-only — there is no light theme block).
+Create `--dp-strip-[name]-*` tokens for your strip in the `:root` block of `dev-tokens.css`. Strips stay dark via `color-scheme: dark` regardless of page theme, so they need no `[data-theme="light"]` variants — note the *pages* are light, the strips are not.
 
 Define at least the required tokens (see Token checklist below). Add optional tokens (e.g. `title-from`, `title-to`, `border`, `device-border`, `device-shadow`) when the strip needs them.
 
@@ -145,7 +145,7 @@ If an optional token is omitted, the base strip token (or its default) is used.
 
 - **All text-on-background** (title, description, overline, badge text on badge background) must meet **7:1** contrast ratio against their backgrounds.
 - **Gradient title:** Check contrast at **both** gradient endpoints (title-from on strip bg, title-to on strip bg). Both must meet 7:1.
-- The site is dark-only — validate against the single dark theme.
+- Strips render dark on every page via `color-scheme: dark`, so validate against the dark strip surface — not the (light) page around it.
 
 ---
 
@@ -156,9 +156,9 @@ If an optional token is omitted, the base strip token (or its default) is used.
 | Fair Share (default) | *(none)* | Teal / pink | — |
 | SCP Reader | `.dp-strip--scp` | Dark red / maroon | `device-border`, `device-shadow` |
 | Flip 7 | `.dp-strip--flip7` | Navy / teal + amber | `title-from`, `title-to`, `border`, `device-border`, `device-shadow` |
-| Kaomoji | `.dp-strip--kaomoji` | Monochrome (grey) | *(values set in dev-styles.css block only; no named tokens in dev-tokens)* |
+| Kaomoji | `.dp-strip--kaomoji` | Monochrome (grey) | `title-color`, `text-color`, `badge-bg`, `badge-text`, `device-border`, `device-shadow` |
 
-**Note:** Kaomoji is an exception: its colours are defined inline in the `.dp-strip--kaomoji` block in `dev-styles.css` and it hides orbs via extra CSS. A future pass could move Kaomoji to named tokens in `dev-tokens.css` for consistency.
+**Note:** Kaomoji hides its orbs via extra CSS in the modifier block. Its colours previously lived inline in `dev-styles.css`; they now follow this spec as `--dp-strip-kaomoji-*` tokens in `dev-tokens.css`, so all three strips are consistent. `./scripts/check-token-hygiene.sh` fails the build if a strip regresses to inline values.
 
 ---
 

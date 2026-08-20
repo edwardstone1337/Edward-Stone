@@ -3722,6 +3722,10 @@ body.dp-overlay-active {
     animation: none;
   }
 
+  .dp-shimmer::after {
+    animation: none;
+  }
+
   .dp-strip::before,
   .dp-strip::after {
     animation: none;

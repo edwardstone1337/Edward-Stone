@@ -80,13 +80,20 @@ Commit and push to `main` (or merge from `dev`). Deploy takes ~60s.
 # 1. Develop on dev
 git checkout dev
 
-# 2. When ready to ship, merge to main
+# 2. Run the three checks CI enforces — catching these locally beats a red main
+./scripts/check-ga-coverage.sh      # GA4 tag on every public page
+./scripts/update-sitemap.sh --check # sitemap lastmod + URL health
+./scripts/check-token-hygiene.sh    # tokens defined outside dev-tokens.css
+
+# 3. When ready to ship, merge to main
 git checkout main
 git merge dev
 git push origin main
 
-# 3. Verify on edwardstone.design (~60s deploy)
+# 4. Verify on edwardstone.design (~60s deploy)
 ```
+
+**Known-accepted warnings.** `check-token-hygiene.sh` prints dead-token warnings without failing — these are cleanup debt, not blockers. Brand blue (`--dp-raw-brand: #0066CC`) is AA at 5.57:1, not AAA; that's a live trade-off, not an oversight, so don't "fix" it reflexively without deciding to change the brand colour.
 
 ## Rollback
 

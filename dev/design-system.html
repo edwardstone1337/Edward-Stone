@@ -73,6 +73,14 @@
            Force it visible here so the reference page shows it regardless of
            viewport width. Descendant selector (0,2,0) already outranks the base
            rule (0,1,0) without !important. */
+        /* 6a shows the DESKTOP nav. Below 768px the real .dp-nav-hamburger inside it
+           becomes visible on its own, colliding with 6b's forced-visible demo copy —
+           two buttons pointing at the same aria-controls with contradictory
+           aria-expanded. 6b is the mobile entry, so suppress 6a's copy there. */
+        @media (max-width: 768px) {
+          .ds-nav-demo .dp-nav-hamburger { display: none; }
+        }
+
         .ds-hamburger-demo .dp-nav-hamburger {
           display: flex;
         }
@@ -403,7 +411,7 @@
         <!-- 3p. Theme-exclusive tokens -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">3p. Theme-exclusive tokens (sun/moon hover)</h3>
-          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">--dp-theme-sun-* only exists in the dark theme block, --dp-theme-moon-* only in the light theme block. Whichever pair isn't active for the current theme reads empty from <code>getComputedStyle</code> and renders as a placeholder below — toggle the theme (top right) to see it swap.</p>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">The sun/moon hover pairs are <em>asymmetric</em>, which is easy to miss: <code>--dp-theme-moon-*</code> is declared inside <code>[data-theme="light"]</code> (<code>dev-tokens.css:429</code>), so it reads empty in dark theme and renders the placeholder below. <code>--dp-theme-sun-*</code> is declared in the unconditional <code>:root</code> block (<code>dev-tokens.css:193</code>), so it resolves in <em>both</em> themes and never placeholders. Toggle the theme (top right) to see only the moon pair swap.</p>
           <div class="ds-swatch-grid" id="ds-theme-exclusive" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));"></div>
         </div>
 
@@ -498,11 +506,11 @@
           <h3 class="ds-subsection-title">5a. Hero</h3>
           <div class="ds-demo dp-hero" style="padding-top: var(--dp-space-8); padding-bottom: var(--dp-space-8);">
             <span class="dp-overline">UX Designer × Developer</span>
-            <h1 class="dp-hero-heading">
+            <p class="dp-hero-heading">
               <span class="dp-hero-line">Hey, I'm Edward.</span>
               <span class="dp-hero-line">I design user experiences.</span>
               <span class="dp-hero-line dp-hero-accent">Now I'm building them too.</span>
-            </h1>
+            </p>
             <p class="dp-hero-body">A UX designer picking up code. Each project a little more ambitious than the last.</p>
           </div>
           <span class="ds-label">.dp-hero, .dp-overline, .dp-hero-heading, .dp-hero-line, .dp-hero-accent, .dp-hero-body</span>
@@ -1531,6 +1539,26 @@
       // stay correct after switching light/dark, without needing a page reload.
       var themeObserver = new MutationObserver(renderAll);
       themeObserver.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+      // ── Neutralise non-functional demo controls ──
+      // Organism demos are static snapshots of real markup, so they carry real
+      // buttons and links that do nothing, plus role="dialog" aria-modal="true"
+      // on the drawer and lightbox — which announces a dialog a screen reader
+      // can freely tab straight out of. `inert` removes them from the tab order
+      // and hides the false semantics from assistive tech in one step, without
+      // changing anything visually or touching the markup being demonstrated.
+      //
+      // Applied by rule rather than hardcoded so demos added later are covered
+      // automatically. Two deliberate exclusions:
+      //   - .ds-anim-box demos (duration/easing) are driven by :hover, and inert
+      //     kills pointer events as well as focus.
+      //   - the testimonials track's tabindex="0" is a WORKING keyboard-scroll
+      //     affordance, not a dead control, so it stays reachable.
+      document.querySelectorAll('.ds-demo').forEach(function(demo) {
+        if (demo.querySelector('.ds-anim-box')) return;
+        if (demo.querySelector('.dp-testimonials-track')) return;
+        if (demo.querySelector('button, a[href]')) demo.setAttribute('inert', '');
+      });
     })();
     </script>
 

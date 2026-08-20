@@ -63,7 +63,15 @@ WCAG AAA target. Skip links, `aria-labels`, `prefers-reduced-motion` respected i
 
 ## Development
 
-No build tools. Test locally: `python3 -m http.server 5500`. Changes committed directly. Run `./scripts/check-ga-coverage.sh` before pushing. Track changes in `CHANGELOG.md` (Keep a Changelog format).
+No build tools. Test locally: `python3 -m http.server 5500`. Changes committed directly. Track changes in `CHANGELOG.md` (Keep a Changelog format).
+
+Before pushing, run the three checks CI enforces (`.github/workflows/ga-coverage.yml`, "Site Checks"):
+
+```
+./scripts/check-ga-coverage.sh      # GA4 tag on every public page
+./scripts/update-sitemap.sh --check # sitemap lastmod + URL health
+./scripts/check-token-hygiene.sh    # tokens defined outside dev-tokens.css
+```
 
 For adding a new page, follow: `docs/new-page-checklist.md`.
 
@@ -90,5 +98,6 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - No new raw hex or `rgba()` literals as CSS *values* — use an existing `--dp-*` token or add one to `dev-tokens.css`. Fallbacks inside `var()` and mask/gradient mechanics are fine
 - Prefer a modifier class over an inline `style=` attribute; one-off styling belongs in `dev-styles.css` as a class
 - Theme toggle is dev-only (`dev/design-system.html`); public pages default dark
-- Run GA coverage check before pushing
+- A new shared `.dp-*` component that qualifies for the Shared CSS Components table also gets a `dev/design-system.html` Organisms entry in the same change — see `docs/architecture-tokens.md`
+- Run all three check scripts before pushing (see Development above)
 - Accessibility is not optional — WCAG AAA target
