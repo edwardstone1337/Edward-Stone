@@ -40,6 +40,133 @@
       .ds-noise-demo .dp-noise { position: absolute; inset: 0; z-index: 1; }
       /* Card static: ensure visible without reveal JS */
       .ds-card-demo .dp-card { opacity: 1; }
+
+
+      /* ── 6. Organisms — demo containment overrides ──
+         Scoped to .ds-* wrappers; never restyles real .dp-* selectors. */
+      /* ==========================================================================
+           Containment overrides for 6a / 6b / 6p (ds- prefixed, scoped to demo
+           wrappers only — the real .dp-nav / .dp-nav-drawer / .dp-lightbox classes
+           are never restyled on their own, only in combination with a wrapper class
+           added here). See ds-page-plan.md §2 "Awkward parts" for why each of
+           these exists.
+           ========================================================================== */
+
+        /* 6a — .dp-nav is position: sticky; top: 0 (dev-styles.css:563-565).
+           Scope the sticky behaviour to this box instead of the viewport by making
+           the box itself the nearest scrolling ancestor. max-height (not a fixed
+           height) so the box hugs the nav + open dropdown instead of leaving a
+           dead gap when content is shorter than the cap.
+           min-height: the dropdown is position: absolute, so it contributes no
+           layout height — without a floor the box collapses to the nav's own 67px
+           and overflow: auto clips ~160px of the open menu. */
+        .ds-nav-demo {
+          min-height: 260px;
+          max-height: 340px;
+          overflow: auto;
+          border: 1px solid var(--dp-border-default);
+          border-radius: var(--dp-radius-md);
+        }
+
+        /* 6b (hamburger) — .dp-nav-hamburger is display: none by default and only
+           display: flex at max-width: 768px (dev-styles.css:788-793, 3909-3911).
+           Force it visible here so the reference page shows it regardless of
+           viewport width. Descendant selector (0,2,0) already outranks the base
+           rule (0,1,0) without !important. */
+        .ds-hamburger-demo .dp-nav-hamburger {
+          display: flex;
+        }
+
+        /* 6b (drawer) — .dp-nav-drawer is position: fixed; inset: 0 (dev-styles.css:802-807),
+           which would ambush the whole viewport if simply dropped inline. The
+           drawer markup below carries an extra .ds-drawer-demo marker class so this
+           override only ever touches this one instance, never the real component
+           class. .dp-nav-drawer--open is applied directly as a static class (not
+           toggled by JS) purely to render the "open" transform state for the
+           snapshot. */
+        .ds-drawer-viewport {
+          position: relative;
+          overflow: hidden;
+          height: 420px;
+          border: 1px solid var(--dp-border-default);
+          border-radius: var(--dp-radius-md);
+          background: var(--dp-bg-base);
+        }
+        .ds-drawer-viewport .ds-drawer-demo.dp-nav-drawer {
+          position: absolute;
+          inset: 0;
+        }
+
+        /* 6p — .dp-lightbox, .dp-lightbox-backdrop, .dp-lightbox-close and the
+           .dp-about-lightbox__prev/__next nav buttons are all position: fixed
+           (dev-styles.css:3210-3229, 3262-3267, 3359-3364), sized against the
+           viewport (90vh panels/images). Rescope everything to the small relative
+           box below and cap the image/panel/body height so nothing calls for more
+           room than the box has. */
+        .ds-lightbox-demo {
+          position: relative;
+          overflow: hidden;
+          height: 380px;
+          border: 1px solid var(--dp-border-default);
+          border-radius: var(--dp-radius-md);
+          background: var(--dp-bg-overlay);
+        }
+        .ds-lightbox-demo .dp-lightbox {
+          position: absolute;
+          inset: 0;
+        }
+        .ds-lightbox-demo .dp-lightbox-backdrop {
+          position: absolute;
+          inset: 0;
+        }
+        .ds-lightbox-demo .dp-lightbox-close {
+          position: absolute;
+          top: var(--dp-space-3);
+          right: var(--dp-space-3);
+        }
+        .ds-lightbox-demo .dp-about-lightbox__prev,
+        .ds-lightbox-demo .dp-about-lightbox__next {
+          position: absolute;
+          top: 50%;
+        }
+        .ds-lightbox-demo .dp-about-lightbox__body,
+        .ds-lightbox-demo .dp-about-lightbox__panel {
+          max-height: 100%;
+        }
+        .ds-lightbox-demo .dp-about-lightbox__image img {
+          max-height: 220px;
+        }
+
+      /* Fragment-scoped overrides for dev/design-system.html "6. Organisms" (chunks 4-5).
+           Every rule here targets a distinct .ds-demo--* wrapper introduced by this
+           fragment, never a bare .dp-* selector, so real component CSS is untouched. */
+
+        /* 6c: real .dp-skip-link is position: absolute; top: -100% until :focus (dev-styles.css:3767).
+           Demo forces it static so it's visible without requiring a real Tab keypress. */
+        .ds-demo--skiplink .dp-skip-link { position: static; }
+
+        /* 6f: real .dp-back-to-top is position: fixed, bottom-right of the viewport, and starts
+           opacity: 0 / pointer-events: none until scrollY exceeds one viewport height
+           (back-to-top.js). Render inline and permanently visible for the demo. */
+        .ds-demo--backtotop .dp-back-to-top { position: static; opacity: 1; pointer-events: auto; }
+
+        /* 6h: .dp-resume-download already sets position: relative (its native anchor for the
+           absolutely-positioned .dp-dropdown-menu), so no positioning override is needed — this
+           just reserves vertical space below the trigger so the open menu doesn't overlap the
+           .ds-label caption underneath it. */
+        .ds-demo--dropdown { min-height: 140px; }
+
+        /* 6i: real .dp-snackbar is position: fixed, bottom-centered on the viewport via
+           translateX(-50%) (dev-styles.css:3432). Render inline within the demo box instead —
+           otherwise it would pin to the browser viewport, not this page section. */
+        .ds-demo--snackbar .dp-snackbar { position: static; transform: none; }
+
+        /* 6j/6k/6l/6m/6n: markup transcribed verbatim from source pages carries the real
+           .dp-reveal class (opacity: 0 / translateY(20px) at rest — dev-styles.css:3650),
+           which only reaches .dp-revealed via a live IntersectionObserver (effects.js).
+           Nothing wires that up on this reference page, so force it visible here rather
+           than leave transcribed sections permanently invisible. */
+        .ds-demo--reveal-visible .dp-reveal { opacity: 1; transform: none; }
     </style>
   </head>
   <body>
@@ -56,283 +183,77 @@
       <!-- 2. Primitives -->
       <section class="ds-section">
         <h2 class="ds-section-title">2. Primitives</h2>
+        <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-4);">Rendered by a JS token-swatch loop at the bottom of the page (reads live values via <code>getComputedStyle</code>). If a box shows a dashed placeholder reading "toggle theme to preview," that token is only defined in the other theme.</p>
 
         <!-- 2a. Spacing scale -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2a. Spacing scale</h3>
-          <div class="ds-token-row" style="flex-wrap: wrap;">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-1); height: var(--dp-space-1); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-1 · 4px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-2); height: var(--dp-space-2); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-2 · 8px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-3); height: var(--dp-space-3); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-3 · 12px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-4); height: var(--dp-space-4); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-4 · 16px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-5); height: var(--dp-space-5); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-5 · 20px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-6); height: var(--dp-space-6); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-6 · 24px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-8); height: var(--dp-space-8); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-8 · 32px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-10); height: var(--dp-space-10); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-10 · 40px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-12); height: var(--dp-space-12); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-12 · 48px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-16); height: var(--dp-space-16); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-16 · 64px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-20); height: var(--dp-space-20); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-20 · 80px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-24); height: var(--dp-space-24); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-24 · 96px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-30); height: var(--dp-space-30); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-30 · 120px</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: var(--dp-space-40); height: var(--dp-space-40); background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default);"></div>
-              <span class="ds-label">--dp-space-40 · 160px</span>
-            </div>
-          </div>
+          <div class="ds-token-row" id="ds-spacing" style="flex-wrap: wrap;"></div>
         </div>
 
         <!-- 2b. Radii -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2b. Radii</h3>
-          <div class="ds-token-row">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-radius-sm</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-md);"></div>
-              <span class="ds-label">--dp-radius-md</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-lg);"></div>
-              <span class="ds-label">--dp-radius-lg</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-xl);"></div>
-              <span class="ds-label">--dp-radius-xl</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 64px; height: 64px; background: var(--dp-accent); border-radius: var(--dp-radius-full);"></div>
-              <span class="ds-label">--dp-radius-full</span>
-            </div>
-          </div>
+          <div class="ds-token-row" id="ds-radii"></div>
         </div>
 
         <!-- 2c. Typography scale -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2c. Typography scale</h3>
-          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-3);">
-            <div><span style="font-size: var(--dp-text-xs); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-xs</span></div>
-            <div><span style="font-size: var(--dp-text-sm); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-sm</span></div>
-            <div><span style="font-size: var(--dp-text-base); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-base</span></div>
-            <div><span style="font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-lg</span></div>
-            <div><span style="font-size: var(--dp-text-xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-xl</span></div>
-            <div><span style="font-size: var(--dp-text-2xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-2xl</span></div>
-            <div><span style="font-size: var(--dp-text-3xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-3xl</span></div>
-            <div><span style="font-size: var(--dp-text-4xl); color: var(--dp-text-primary);">The quick brown fox</span><span class="ds-label" style="display: block;">--dp-text-4xl</span></div>
-          </div>
+          <div class="ds-demo" id="ds-fontsize" style="display: flex; flex-direction: column; gap: var(--dp-space-3);"></div>
         </div>
 
         <!-- 2d. Font weights -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2d. Font weights</h3>
-          <p style="color: var(--dp-text-primary);">
-            <span style="font-weight: var(--dp-weight-normal);">Inter 400</span>
-            <span style="margin: 0 var(--dp-space-2);">·</span>
-            <span style="font-weight: var(--dp-weight-medium);">500</span>
-            <span style="margin: 0 var(--dp-space-2);">·</span>
-            <span style="font-weight: var(--dp-weight-semibold);">600</span>
-            <span style="margin: 0 var(--dp-space-2);">·</span>
-            <span style="font-weight: var(--dp-weight-bold);">700</span>
-            <span style="margin: 0 var(--dp-space-2);">·</span>
-            <span style="font-weight: var(--dp-weight-extrabold);">800</span>
-          </p>
+          <p style="color: var(--dp-text-primary);" id="ds-weights"></p>
           <span class="ds-label">--dp-weight-normal · --dp-weight-medium · --dp-weight-semibold · --dp-weight-bold · --dp-weight-extrabold</span>
         </div>
 
-        <!-- 2e. Duration & easing -->
+        <!-- 2e. Duration -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">2e. Duration & easing</h3>
-          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hover each box to see translate animation</p>
-          <div class="ds-token-row" style="gap: var(--dp-space-8);">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-fast) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
-              <span class="ds-label">--dp-duration-fast · 150ms</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-base) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
-              <span class="ds-label">--dp-duration-base · 200ms</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-slow) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
-              <span class="ds-label">--dp-duration-slow · 400ms</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-entrance) var(--dp-ease-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
-              <span class="ds-label">--dp-duration-entrance · 600ms</span>
-            </div>
-          </div>
+          <h3 class="ds-subsection-title">2e. Duration</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hover each box to see translate animation. Includes the two component cycle-speed tokens (ticker/banner) — hover and wait, the transition is intentionally slow for those.</p>
+          <div class="ds-token-row" id="ds-duration" style="gap: var(--dp-space-8); flex-wrap: wrap;"></div>
         </div>
 
         <!-- 2f. Font families -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2f. Font families</h3>
-          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-3);">
-            <div><span style="font-family: var(--dp-font-display); font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox. Display</span><span class="ds-label" style="display: block;">--dp-font-display</span></div>
-            <div><span style="font-family: var(--dp-font-body); font-size: var(--dp-text-lg); color: var(--dp-text-primary);">The quick brown fox. Body</span><span class="ds-label" style="display: block;">--dp-font-body</span></div>
-          </div>
+          <div class="ds-demo" id="ds-fontfamily" style="display: flex; flex-direction: column; gap: var(--dp-space-3);"></div>
         </div>
 
         <!-- 2g. Line heights -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2g. Line heights</h3>
           <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Same font-size; 2–3 lines each</p>
-          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-4);">
-            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-none); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-none</span></div>
-            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-tight); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-tight</span></div>
-            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-snug); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-snug</span></div>
-            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-normal); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-normal</span></div>
-            <div><span style="font-size: var(--dp-text-base); line-height: var(--dp-leading-relaxed); color: var(--dp-text-primary); display: block;">Line one. Line two. Line three.</span><span class="ds-label" style="display: block;">--dp-leading-relaxed</span></div>
-          </div>
+          <div class="ds-demo" id="ds-leading" style="display: flex; flex-direction: column; gap: var(--dp-space-4);"></div>
         </div>
 
         <!-- 2h. Letter spacing -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2h. Letter spacing</h3>
-          <div class="ds-token-row">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
-              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-tight); color: var(--dp-text-primary);">Tracking tight</span>
-              <span class="ds-label">--dp-tracking-tight</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
-              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-normal); color: var(--dp-text-primary);">Tracking normal</span>
-              <span class="ds-label">--dp-tracking-normal</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
-              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-wide); color: var(--dp-text-primary);">Tracking wide</span>
-              <span class="ds-label">--dp-tracking-wide</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: flex-start;">
-              <span style="font-size: var(--dp-text-base); letter-spacing: var(--dp-tracking-wider); color: var(--dp-text-primary);">Tracking wider</span>
-              <span class="ds-label">--dp-tracking-wider</span>
-            </div>
-          </div>
+          <div class="ds-token-row" id="ds-tracking"></div>
         </div>
 
-        <!-- 2i. Easing (additional) -->
+        <!-- 2i. Easing -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">2i. Easing (additional)</h3>
+          <h3 class="ds-subsection-title">2i. Easing</h3>
           <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hover to see translate animation</p>
-          <div class="ds-token-row">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 48px; height: 48px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); transition: transform var(--dp-duration-base) var(--dp-ease-in-out);" onmouseover="this.style.transform='translateX(24px)'" onmouseout="this.style.transform='translateX(0)'"></div>
-              <span class="ds-label">--dp-ease-in-out</span>
-            </div>
-          </div>
+          <div class="ds-token-row" id="ds-easing"></div>
         </div>
 
         <!-- 2j. Raw color palette -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">2j. Raw color palette</h3>
-          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-white); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-white</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-black); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-black</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-50); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-50</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-100); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-100</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-200); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-200</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-400); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-400</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-500); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-500</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-800); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-800</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-900); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-900</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-grey-950); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-grey-950</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-accent); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-accent</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: var(--dp-raw-accent-light); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-accent-light</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-purple), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-glow-purple</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-blue), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #fff; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-glow-blue</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-teal), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-glow-teal</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-amber), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-glow-amber</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 100%; min-height: 64px; background: rgba(var(--dp-raw-glow-green), 1); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm); color: #111; font-size: var(--dp-text-xs); padding: var(--dp-space-2); display: flex; align-items: center; justify-content: center;">Sample</div>
-              <span class="ds-label">--dp-raw-glow-green</span>
-            </div>
-          </div>
+          <div class="ds-swatch-grid" id="ds-rawcolors" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));"></div>
+        </div>
+
+        <!-- 2k. Shadows (elevation) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">2k. Shadows (elevation)</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Raw elevation primitives — not theme-conditional</p>
+          <div class="ds-token-row" id="ds-shadows"></div>
         </div>
       </section>
 
@@ -343,93 +264,25 @@
         <!-- 3a. Surfaces -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">3a. Surfaces</h3>
-          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-base); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-bg-base</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-bg-raised</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-card); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-bg-card</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-card-hover); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-bg-card-hover</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-overlay); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-bg-overlay</span>
-            </div>
-          </div>
+          <div class="ds-swatch-grid" id="ds-surfaces" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
         </div>
 
         <!-- 3b. Text hierarchy -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">3b. Text hierarchy</h3>
-          <div class="ds-demo" style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
-            <div><span style="color: var(--dp-text-primary);">Primary text, main content</span><span class="ds-label" style="display: block;">--dp-text-primary</span></div>
-            <div><span style="color: var(--dp-text-secondary);">Secondary text, supporting copy</span><span class="ds-label" style="display: block;">--dp-text-secondary</span></div>
-            <div><span style="color: var(--dp-text-tertiary);">Tertiary text, de-emphasised</span><span class="ds-label" style="display: block;">--dp-text-tertiary</span></div>
-            <div><span style="color: var(--dp-text-ghost);">Ghost text, placeholder / faint</span><span class="ds-label" style="display: block;">--dp-text-ghost</span></div>
-          </div>
+          <div class="ds-demo" id="ds-text-hierarchy" style="display: flex; flex-direction: column; gap: var(--dp-space-2);"></div>
         </div>
 
         <!-- 3c. Borders -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">3c. Borders</h3>
-          <div class="ds-token-row">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-border-default</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-hover); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-border-hover</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-active); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-border-active</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-bg-raised); border: 2px solid var(--dp-border-divider); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-border-divider</span>
-            </div>
-          </div>
+          <div class="ds-token-row" id="ds-borders"></div>
         </div>
 
         <!-- 3d. Accent & glow colors -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">3d. Accent & glow colors</h3>
-          <div class="ds-swatch-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-accent); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-accent</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-accent-hover); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-accent-hover</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-accent-glow); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-accent-glow</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-glow-1); filter: blur(20px); border-radius: 50%;"></div>
-              <span class="ds-label">--dp-glow-1</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-glow-2); filter: blur(20px); border-radius: 50%;"></div>
-              <span class="ds-label">--dp-glow-2</span>
-            </div>
-            <div class="ds-demo" style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 120px; height: 80px; background: var(--dp-glow-3); filter: blur(20px); border-radius: 50%;"></div>
-              <span class="ds-label">--dp-glow-3</span>
-            </div>
-          </div>
+          <div class="ds-swatch-grid" id="ds-accent-glow" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
         </div>
 
         <!-- 3e. Glass -->
@@ -442,6 +295,7 @@
             </div>
           </div>
           <span class="ds-label">--dp-glass-bg (over gradient)</span>
+          <div class="ds-token-row" id="ds-glass-extra" style="margin-top: var(--dp-space-4);"></div>
         </div>
 
         <!-- 3f. On-dark layer -->
@@ -485,162 +339,75 @@
           </div>
         </div>
 
-        <!-- 3h. Gradient text tokens -->
+        <!-- 3h. Hero accent gradient -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">3h. Gradient text tokens</h3>
-          <div class="ds-demo" style="display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-end;">
-            <div style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 80px; height: 48px; background: var(--dp-gradient-text-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-gradient-text-from</span>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width: 80px; height: 48px; background: var(--dp-gradient-text-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">--dp-gradient-text-to</span>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 120px;">
-              <div style="width: 100%; height: 32px; background: linear-gradient(90deg, var(--dp-gradient-text-from) 0%, var(--dp-gradient-text-to) 100%); border-radius: var(--dp-radius-sm);"></div>
-              <span class="ds-label">from → to</span>
-            </div>
+          <h3 class="ds-subsection-title">3h. Hero accent gradient</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Used by .dp-hero-accent (see 5a). The old --dp-hero-line-from/-to and --dp-gradient-text-from/-to tokens were deprecated and unused in production — removed from this page.</p>
+          <div class="ds-demo">
+            <div class="ds-token-row" id="ds-hero-accent" style="margin-bottom: var(--dp-space-4);"></div>
+            <div style="width: 100%; height: 24px; background: linear-gradient(90deg, var(--dp-hero-accent-from) 0%, var(--dp-hero-accent-to) 100%); border-radius: var(--dp-radius-sm);"></div>
+            <span class="ds-label">hero-accent from → to</span>
           </div>
         </div>
 
-        <!-- 3i. Hero line gradients -->
+        <!-- 3i. Noise opacity -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">3i. Hero line gradients</h3>
-          <div class="ds-demo">
-            <div class="ds-token-row" style="margin-bottom: var(--dp-space-4);">
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 40px; background: var(--dp-hero-line-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">--dp-hero-line-from</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 40px; background: var(--dp-hero-line-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">--dp-hero-line-to</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 40px; background: var(--dp-hero-accent-from); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">--dp-hero-accent-from</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 40px; background: var(--dp-hero-accent-to); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">--dp-hero-accent-to</span>
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: var(--dp-space-2);">
-              <div style="display: flex; flex-direction: column;">
-                <div style="width: 100%; height: 24px; background: linear-gradient(90deg, var(--dp-hero-line-from) 0%, var(--dp-hero-line-to) 100%); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">hero-line from → to</span>
-              </div>
-              <div style="display: flex; flex-direction: column;">
-                <div style="width: 100%; height: 24px; background: linear-gradient(90deg, var(--dp-hero-accent-from) 0%, var(--dp-hero-accent-to) 100%); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label">hero-accent from → to</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3j. Noise opacity -->
-        <div class="ds-subsection">
-          <h3 class="ds-subsection-title">3j. Noise opacity</h3>
-          <div class="ds-demo">
-            <span style="font-size: var(--dp-text-sm); color: var(--dp-text-primary);">--dp-noise-opacity</span>
-            <span style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-left: var(--dp-space-2);">(value: <span id="ds-noise-opacity-value"></span>)</span>
-          </div>
+          <h3 class="ds-subsection-title">3i. Noise opacity</h3>
+          <div class="ds-demo" id="ds-noise-opacity"></div>
           <span class="ds-label">Reference value, used by .dp-noise overlay</span>
-          <script>
-            (function() {
-              var el = document.getElementById('ds-noise-opacity-value');
-              if (el) {
-                var val = getComputedStyle(document.documentElement).getPropertyValue('--dp-noise-opacity').trim();
-                el.textContent = val || '—';
-              }
-            })();
-          </script>
         </div>
 
-        <!-- 3k. Paper / resume tokens -->
+        <!-- 3j. Paper / resume tokens -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">3k. Paper / resume tokens</h3>
-          <div class="ds-demo" style="background: var(--dp-paper-surface); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-paper-border); max-width: 400px;">
-            <div class="ds-token-row" style="flex-wrap: wrap; margin-bottom: var(--dp-space-4);">
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; background: var(--dp-paper-surface); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-surface</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; background: transparent; padding: var(--dp-space-2);"><span style="color: var(--dp-paper-text-primary); font-size: var(--dp-text-xs);">Text</span></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-text-primary</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; background: transparent; padding: var(--dp-space-2);"><span style="color: var(--dp-paper-text-secondary); font-size: var(--dp-text-xs);">Text</span></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-text-secondary</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; border: 2px solid var(--dp-paper-border); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-border</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; background: var(--dp-paper-surface); border-radius: var(--dp-radius-sm); box-shadow: var(--dp-paper-shadow);"></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-shadow</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 64px; height: 48px; background: var(--dp-paper-accent); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-text-tertiary);">--dp-paper-accent</span>
-              </div>
-            </div>
+          <h3 class="ds-subsection-title">3j. Paper / resume tokens</h3>
+          <div class="ds-demo" style="background: var(--dp-paper-surface); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-paper-border); max-width: 500px;">
+            <div class="ds-token-row" id="ds-paper" style="flex-wrap: wrap;"></div>
+          </div>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-top: var(--dp-space-4); margin-bottom: var(--dp-space-2);">Contextual "-light" variants — always a light surface regardless of the page's own theme (used for print / light-forced contexts), not swapped by the theme toggle</p>
+          <div class="ds-demo" style="background: var(--dp-paper-surface-light); padding: var(--dp-space-6); border-radius: var(--dp-radius-md); border: 1px solid var(--dp-paper-border-light); max-width: 500px;">
+            <div class="ds-token-row" id="ds-paper-light" style="flex-wrap: wrap;"></div>
           </div>
         </div>
 
-        <!-- 3l. SCP strip tokens -->
+        <!-- 3k. Product strip tokens — default (Fair Share) -->
         <div class="ds-subsection">
-          <h3 class="ds-subsection-title">3l. SCP strip tokens</h3>
-          <div class="ds-demo" style="background: var(--dp-strip-scp-bg); padding: var(--dp-space-6); border-radius: var(--dp-radius-md);">
-            <div style="display: flex; flex-wrap: wrap; gap: var(--dp-space-4); align-items: flex-start;">
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-bg); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-bg</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-1); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-1</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-2); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-2</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 72px; height: 48px; background: var(--dp-strip-scp-orb-dark); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-dark</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <span style="font-size: var(--dp-text-xs); color: var(--dp-strip-scp-text-color);">--dp-strip-scp-orb-opacity</span>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">(opacity value)</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <span style="font-size: var(--dp-text-base); color: var(--dp-strip-scp-title-color);">Title</span>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-title-color</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                <span style="font-size: var(--dp-text-sm); color: var(--dp-strip-scp-text-color);">Body text</span>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-text-color</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="padding: var(--dp-space-1) var(--dp-space-2); background: var(--dp-strip-scp-badge-bg); border-radius: var(--dp-radius-sm);">
-                  <span style="font-size: var(--dp-text-xs); color: var(--dp-strip-scp-badge-text);">Badge</span>
-                </div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-badge-bg · --dp-strip-scp-badge-text</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 48px; background: transparent; border: var(--dp-strip-scp-device-border); border-radius: var(--dp-radius-sm);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-device-border</span>
-              </div>
-              <div style="display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 80px; height: 48px; background: var(--dp-strip-scp-bg); border-radius: var(--dp-radius-sm); box-shadow: var(--dp-strip-scp-device-shadow);"></div>
-                <span class="ds-label" style="color: var(--dp-strip-scp-text-color);">--dp-strip-scp-device-shadow</span>
-              </div>
-            </div>
-          </div>
+          <h3 class="ds-subsection-title">3k. Product strip tokens — default (Fair Share)</h3>
+          <div id="ds-strip-default"></div>
         </div>
+
+        <!-- 3l. Product strip tokens — SCP Reader -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3l. Product strip tokens — SCP Reader</h3>
+          <div id="ds-strip-scp"></div>
+        </div>
+
+        <!-- 3m. Product strip tokens — Flip 7 -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3m. Product strip tokens — Flip 7</h3>
+          <div id="ds-strip-flip7"></div>
+        </div>
+
+        <!-- 3n. Product strip tokens — Kaomoji -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3n. Product strip tokens — Kaomoji</h3>
+          <div id="ds-strip-kaomoji"></div>
+        </div>
+
+        <!-- 3o. Print tokens (resume PDF export) -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3o. Print tokens (resume PDF export)</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">These live inside an <code>@media print</code> block, so <code>getComputedStyle</code> cannot read them on a screen-rendered page — there's no reliable way to force print-media matching from JS without triggering an actual print dialog. Values below are transcribed by hand from <code>assets/css/dev-tokens.css</code> (not live-read) and only apply inside <code>@media print</code>.</p>
+          <div style="max-width: 400px;" id="ds-print-tokens"></div>
+        </div>
+
+        <!-- 3p. Theme-exclusive tokens -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">3p. Theme-exclusive tokens (sun/moon hover)</h3>
+          <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">--dp-theme-sun-* only exists in the dark theme block, --dp-theme-moon-* only in the light theme block. Whichever pair isn't active for the current theme reads empty from <code>getComputedStyle</code> and renders as a placeholder below — toggle the theme (top right) to see it swap.</p>
+          <div class="ds-swatch-grid" id="ds-theme-exclusive" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));"></div>
+        </div>
+
+        <p style="font-size: var(--dp-text-sm); color: var(--dp-text-tertiary); margin-top: var(--dp-space-4);">Not swatched individually above: pure layout/dimension tokens (e.g. --dp-section-gap, --dp-btn-padding, --dp-btn-min-height, --dp-prose-max-width) and component-scoped tokens whose values are already visible in context elsewhere on this page — buttons (5b, 5f), strips (3k–3n, 5d), and nav / drawer / dropdown / banner / TL;DR / prose-kit / testimonials (Organisms, section 6). Documented in context rather than re-swatched here.</p>
       </section>
 
       <!-- 4. Atoms -->
@@ -878,12 +645,895 @@
           </div>
         </div>
       </section>
+      <section class="ds-section">
+        <h2 class="ds-section-title">6. Organisms</h2>
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6a. Site navigation (desktop)</h3>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Hand-transcribed static markup — <code>initNav()</code> is never called on this page (it would inject a second <code>#dp-nav-actions</code> and collide with this page's own theme-toggle mount point). Dropdown shown open by omitting the <code>hidden</code> attribute; scrolled in its own box below since <code>.dp-nav</code> is <code>position: sticky</code> and would otherwise stick to the viewport as you scroll past this section.</p>
+            <div class="ds-demo ds-nav-demo">
+              <nav class="dp-nav" aria-label="Site navigation">
+                <div class="dp-nav-inner">
+                  <a href="/" class="dp-nav-brand" aria-label="Edward Stone, Go to homepage">
+                    <svg class="dp-nav-logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect class="dp-nav-logo-bg" x="40" y="40" width="40" height="40" rx="20" transform="rotate(-180 40 40)"/>
+                      <g clip-path="url(#ds-nav-clip)">
+                        <path d="M17.5356 4.99999C27.6155 2.01097 38.8338 11.6176 33.7466 26.1765C35.0001 19.5588 25.0997 16.3646 16.4009 13.8235C11.1332 12.2847 7.45569 7.98901 17.5356 4.99999Z" fill="url(#ds-nav-paint0)"/>
+                        <path d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z" fill="url(#ds-nav-paint1)" fill-opacity="0.5"/>
+                        <path class="dp-nav-logo-swirl" d="M22.4644 35C12.3845 37.989 1.16624 28.3823 6.25343 13.8235C4.99994 20.4412 14.9003 23.6353 23.5991 26.1765C28.8668 27.7153 32.5443 32.011 22.4644 35Z"/>
+                      </g>
+                      <defs>
+                        <linearGradient id="ds-nav-paint0" x1="11.5176" y1="9.51703" x2="36.2755" y2="24.2457" gradientUnits="userSpaceOnUse">
+                          <stop class="dp-nav-logo-grad-start" />
+                          <stop class="dp-nav-logo-grad-end" offset="1" />
+                        </linearGradient>
+                        <linearGradient id="ds-nav-paint1" x1="16.9063" y1="13.8235" x2="16.9063" y2="35.5455" gradientUnits="userSpaceOnUse">
+                          <stop class="dp-nav-logo-grad-start" />
+                          <stop class="dp-nav-logo-grad-end" offset="1" />
+                        </linearGradient>
+                        <clipPath id="ds-nav-clip">
+                          <rect x="5" y="5" width="30" height="30" rx="15" fill="white"/>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    <span class="dp-nav-name">Edward Stone</span>
+                  </a>
+                  <div class="dp-nav-links">
+                    <div class="dp-nav-dropdown">
+                      <button class="dp-nav-link dp-nav-dropdown-trigger" aria-expanded="true" aria-haspopup="true">
+                        Case Studies
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                      <div class="dp-dropdown-menu dp-nav-dropdown-menu" role="menu">
+                        <a href="/case-studies/planner.html" role="menuitem" class="dp-nav-dropdown-item">Driving weekly engagement for 25,000 teachers</a>
+                        <a href="/case-studies/product-discovery.html" role="menuitem" class="dp-nav-dropdown-item">Changing how an organisation decides what to build</a>
+                        <a href="/case-studies/design-systems.html" role="menuitem" class="dp-nav-dropdown-item">Accelerating team velocity with design systems</a>
+                        <a href="/case-studies/fair-share.html" role="menuitem" class="dp-nav-dropdown-item">Designing the tool therapists recommend</a>
+                      </div>
+                    </div>
+                    <div class="dp-nav-dropdown">
+                      <button class="dp-nav-link dp-nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+                        Projects
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                      <div class="dp-dropdown-menu dp-nav-dropdown-menu" role="menu" hidden>
+                        <a href="/projects/scp-reader.html" role="menuitem" class="dp-nav-dropdown-item">SCP Reader</a>
+                        <a href="/projects/prang-out.html" role="menuitem" class="dp-nav-dropdown-item">Prang Out</a>
+                      </div>
+                    </div>
+                    <a href="/gallery.html" class="dp-nav-link">Gallery</a>
+                    <a href="/resume.html" class="dp-nav-link">Resume</a>
+                    <a href="/about.html" class="dp-nav-link">About</a>
+                  </div>
+                  <div class="dp-nav-actions">
+                    <button class="dp-nav-link dp-nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="ds-drawer-demo">
+                      <span class="dp-nav-hamburger-label">Menu</span>
+                    </button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <span class="ds-label">.dp-nav, .dp-nav-inner, .dp-nav-brand, .dp-nav-logo, .dp-nav-name, .dp-nav-links, .dp-nav-link, .dp-nav-dropdown, .dp-nav-dropdown-trigger, .dp-nav-dropdown-menu, .dp-dropdown-menu, .dp-nav-dropdown-item, .dp-nav-actions, .dp-nav-hamburger</span>
+          </div>
+
+          <!-- 6b. Mobile nav (hamburger + drawer) -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6b. Mobile nav (hamburger + drawer)</h3>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Static snapshot only — no open/close interaction, no focus trap, no scroll lock. The real drawer traps focus and adds <code>body.dp-overlay-active</code> (locking page scroll) while open; see <code>docs/architecture-nav.md</code> and <code>docs/code-review.md</code> for that behaviour.</p>
+
+            <div class="ds-demo ds-hamburger-demo">
+              <button class="dp-nav-link dp-nav-hamburger" aria-label="Open menu" aria-expanded="true" aria-controls="ds-drawer-demo" style="width: fit-content;">
+                <span class="dp-nav-hamburger-label">Menu</span>
+              </button>
+            </div>
+            <span class="ds-label">.dp-nav-hamburger — display: none above 768px in the real CSS, forced visible here for reference</span>
+
+            <div class="ds-demo ds-drawer-viewport">
+              <div class="dp-nav-drawer dp-nav-drawer--open ds-drawer-demo" id="ds-drawer-demo" aria-label="Navigation menu" role="dialog" aria-modal="true">
+                <div class="dp-nav-drawer-backdrop"></div>
+                <div class="dp-nav-drawer-panel">
+                  <button class="dp-nav-drawer-close" aria-label="Close menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                  <nav class="dp-nav-drawer-links" aria-label="Menu">
+                    <span class="dp-nav-drawer-heading">Case Studies</span>
+                    <a href="/case-studies/planner.html" class="dp-nav-drawer-link">Driving weekly engagement for 25,000 teachers</a>
+                    <a href="/case-studies/product-discovery.html" class="dp-nav-drawer-link">Changing how an organisation decides what to build</a>
+                    <a href="/case-studies/design-systems.html" class="dp-nav-drawer-link">Accelerating team velocity with design systems</a>
+                    <a href="/case-studies/fair-share.html" class="dp-nav-drawer-link">Designing the tool therapists recommend</a>
+                    <span class="dp-nav-drawer-heading">Projects</span>
+                    <a href="/projects/scp-reader.html" class="dp-nav-drawer-link">SCP Reader</a>
+                    <a href="/projects/prang-out.html" class="dp-nav-drawer-link">Prang Out</a>
+                    <span class="dp-nav-drawer-heading">More</span>
+                    <a href="/gallery.html" class="dp-nav-drawer-link">Gallery</a>
+                    <a href="/resume.html" class="dp-nav-drawer-link">Resume</a>
+                    <a href="/about.html" class="dp-nav-drawer-link">About</a>
+                  </nav>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-nav-drawer, .dp-nav-drawer-backdrop, .dp-nav-drawer-panel, .dp-nav-drawer-close, .dp-nav-drawer-links, .dp-nav-drawer-heading, .dp-nav-drawer-link — shown in the "open" state; position: fixed rescoped to this box only</span>
+          </div>
+
+          <!-- 6p. Lightbox shell -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6c. Skip link</h3>
+            <div class="ds-demo ds-demo--skiplink">
+              <a href="#main" class="dp-skip-link">Skip to content</a>
+            </div>
+            <span class="ds-label">.dp-skip-link — shown always-visible here for reference; in production it's visually-hidden (position: absolute; top: -100%) until keyboard focus reveals it (:focus { top: var(--dp-space-4); })</span>
+          </div>
+
+          <!-- 6d. Footer + visit counter -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6d. Footer + visit counter</h3>
+            <div class="ds-demo">
+              <footer class="dp-footer">
+                <div class="dp-footer-inner">
+                  <p class="dp-footer-text">© 2026 Edward Stone</p>
+                  <div class="dp-counter" aria-label="Page views: 4,821">
+                    <div class="dp-counter__track">
+                        <div class="dp-counter__digit" data-digit="0">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-0%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                        <div class="dp-counter__digit" data-digit="0">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-0%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                        <div class="dp-counter__digit" data-digit="4">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-40%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                        <div class="dp-counter__digit" data-digit="8">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-80%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                        <div class="dp-counter__digit" data-digit="2">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-20%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                        <div class="dp-counter__digit" data-digit="1">
+                          <div class="dp-counter__reel" style="transition: none; transform: translateY(-10%);">
+                              <span>0</span>
+                              <span>1</span>
+                              <span>2</span>
+                              <span>3</span>
+                              <span>4</span>
+                              <span>5</span>
+                              <span>6</span>
+                              <span>7</span>
+                              <span>8</span>
+                              <span>9</span>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <nav class="dp-footer-links" aria-label="Footer links">
+                    <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+                    <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://surveys.hotjar.com/ff9d31ea-8b61-4bb2-961d-85b3373ccb2a" class="dp-footer-link" target="_blank" rel="noopener noreferrer">Feedback</a>
+                  </nav>
+                </div>
+              </footer>
+            </div>
+            <span class="ds-label">.dp-footer, .dp-footer-inner, .dp-footer-text, .dp-footer-links, .dp-footer-link, .dp-counter, .dp-counter__track, .dp-counter__digit, .dp-counter__reel — static digits (004821) hand-authored per buildCounter()'s digit-reel structure; NOT wired to initPageCounter() (that call hits the live Supabase visit-count RPC and must never run on this page)</span>
+          </div>
+
+          <!-- 6e. Banner ticker -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6e. Banner ticker</h3>
+            <div class="ds-demo">
+              <div class="dp-banner-ticker" role="marquee" aria-label="Site announcement">
+                <div class="dp-banner-ticker__track">
+                  <span class="dp-banner-ticker__content"><span class="dp-banner-ticker__separator">✦</span> Currently open to new opportunities</span>
+                  <span class="dp-banner-ticker__content" aria-hidden="true"><span class="dp-banner-ticker__separator">✦</span> Currently open to new opportunities</span>
+                  <span class="dp-banner-ticker__content" aria-hidden="true"><span class="dp-banner-ticker__separator">✦</span> Currently open to new opportunities</span>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-banner-ticker, .dp-banner-ticker__track, .dp-banner-ticker__content, .dp-banner-ticker__separator — 3 of the real 8 copies (initBannerTicker() uses 8 for seamless ultrawide looping); animation runs live via the existing dp-ticker-scroll keyframe, loop won't be perfectly seamless with only 3 copies but that's a non-issue for a swatch</span>
+          </div>
+
+          <!-- 6f. Back to top -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6f. Back to top button</h3>
+            <div class="ds-demo ds-demo--backtotop">
+              <button type="button" class="dp-back-to-top" aria-label="Back to top">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+              </button>
+            </div>
+            <span class="ds-label">.dp-back-to-top — forced visible here; real button is position: fixed with opacity: 0 until window.scrollY exceeds one viewport height, then fades in (back-to-top.js)</span>
+          </div>
+
+          <!-- 6g. Scroll reveal utility -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6g. Scroll reveal utility</h3>
+            <div class="ds-demo-row">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: var(--dp-space-2);">
+                <div style="border: 1px dashed var(--dp-border-default); border-radius: var(--dp-radius-md); padding: var(--dp-space-2);">
+                  <div class="dp-reveal" style="width: 160px; height: 80px; background: var(--dp-bg-card); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-md); display: flex; align-items: center; justify-content: center; color: var(--dp-text-secondary); font-size: var(--dp-text-sm);">Pre-reveal</div>
+                </div>
+                <span class="ds-label">.dp-reveal</span>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: var(--dp-space-2);">
+                <div style="border: 1px dashed var(--dp-border-default); border-radius: var(--dp-radius-md); padding: var(--dp-space-2);">
+                  <div class="dp-reveal dp-revealed" style="width: 160px; height: 80px; background: var(--dp-bg-card); border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-md); display: flex; align-items: center; justify-content: center; color: var(--dp-text-primary); font-size: var(--dp-text-sm);">Revealed</div>
+                </div>
+                <span class="ds-label">.dp-reveal.dp-revealed</span>
+              </div>
+            </div>
+            <p style="font-size: var(--dp-text-xs); color: var(--dp-text-tertiary); margin-top: var(--dp-space-2); text-align: left;">Static before/after pair — scroll-triggered via IntersectionObserver in production, see assets/js/dev-projects/effects.js. Left box is the genuine .dp-reveal at-rest state (opacity: 0, translateY(20px)); the dashed outline is reference-page-only scaffolding so its bounds are visible even at opacity 0.</p>
+          </div>
+
+          <!-- 6h. Shared dropdown menu -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6h. Shared dropdown menu</h3>
+            <div class="ds-demo ds-demo--dropdown">
+              <div class="dp-resume-download" data-download-widget>
+                <button class="dp-btn dp-btn-primary dp-download-trigger" aria-haspopup="true" aria-expanded="true">
+                  <span>Download Resume</span>
+                  <svg class="dp-download-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M3.5 5.25L7 8.75L10.5 5.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="dp-dropdown-menu dp-download-menu" role="menu">
+                  <button role="menuitem" class="dp-download-menu-item dp-download-print-pdf" data-print-pdf>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M4 14h8M8 2v9M8 11L5 8M8 11l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Print to PDF</span>
+                  </button>
+                  <button role="menuitem" class="dp-download-menu-item" data-copy-resume>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M3 11V3.5A1.5 1.5 0 014.5 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>Copy to clipboard</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-dropdown-menu (as .dp-download-menu), .dp-download-menu-item — shown open (source's `hidden` attribute removed for reference); anchored by .dp-resume-download's own position: relative, no positioning override needed</span>
+          </div>
+
+          <!-- 6i. Snackbar / toast -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6i. Snackbar / toast</h3>
+            <div class="ds-demo ds-demo--snackbar">
+              <div class="dp-snackbar dp-snackbar--visible" role="status" aria-live="polite">Copied to clipboard</div>
+            </div>
+            <span class="ds-label">.dp-snackbar.dp-snackbar--visible — position: fixed overridden to static so it renders inline here; real usage is a viewport-fixed toast built by showSnackbar() in assets/js/dev-projects/snackbar.js</span>
+          </div>
+
+          <!-- 6j. Contact CTA -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6j. Contact CTA</h3>
+            <div class="ds-demo ds-demo--reveal-visible">
+              <section class="dp-contact-cta dp-reveal" aria-label="Contact">
+                <h2 class="dp-contact-cta__heading">Let's talk</h2>
+                <p class="dp-contact-cta__body">I'm currently open to new opportunities.</p>
+                <div class="dp-contact-cta__actions">
+                  <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-primary">Email me</a>
+                  <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </div>
+              </section>
+            </div>
+            <span class="ds-label">.dp-contact-cta, .dp-contact-cta__heading, .dp-contact-cta__body, .dp-contact-cta__actions — hardcoded in index.html (canonical source; contact-cta.js is not the source of this markup)</span>
+          </div>
+
+          <!-- 6k. Read more / related links -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6k. Read more / related links</h3>
+            <div class="ds-demo ds-demo--reveal-visible">
+              <section class="dp-read-more dp-reveal" aria-label="More case studies">
+                <h2 class="dp-read-more__heading">Read another case study</h2>
+                <ul class="dp-read-more__list">
+                  <li><a class="dp-read-more__link" href="/case-studies/planner.html">Driving weekly engagement for 25,000 teachers</a></li>
+                  <li><a class="dp-read-more__link" href="/case-studies/design-systems.html">Accelerating team velocity with design systems</a></li>
+                  <li><a class="dp-read-more__link" href="/case-studies/fair-share.html">Designing the tool therapists recommend</a></li>
+                </ul>
+              </section>
+            </div>
+            <span class="ds-label">.dp-read-more, .dp-read-more__heading, .dp-read-more__list, .dp-read-more__link — always JS-injected (no hardcoded page source), transcribed from the template literal in case-study-read-more.js's initReadMore(); link text is real (case-study-data.js), current-page entry filtered out same as production</span>
+          </div>
+
+          <!-- 6l. Case study prose kit -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6l. Case study prose kit</h3>
+            <div class="ds-demo ds-demo--reveal-visible" style="max-width: 640px;">
+              <article class="dp-prose">
+                <section class="dp-prose-section dp-reveal">
+                  <h2>The problem: five shades of the same grey</h2>
+                  <p>When I joined Inquisitive, design and development had been outsourced to separate companies overseas. The handoff between them had produced exactly what you'd expect: a collection of Sketch files, a few scattered Figma files, and no single source of truth.</p>
+                  <p>Across the product, the same button looked different in three places. Inputs had inconsistent styling depending on who'd built the page. There were five near-identical greys that nobody could explain the distinction between. Every time a developer started building a new feature, they'd message a designer to ask which shade, which spacing, which component variant to use, because there was no system to answer those questions for them.</p>
+                  <p>For a product used by teachers and primary school students, some of whom are pre-literate, this inconsistency wasn't just an aesthetic problem. It eroded trust. When a navigation pattern behaves differently on two pages, an adult notices. A six-year-old gets stuck.</p>
+                  <blockquote class="dp-pullquote">
+                    <p>For a product used by teachers and primary school students, some of whom are pre-literate, this inconsistency wasn't just an aesthetic problem. It eroded trust.</p>
+                  </blockquote>
+                  <p>Inquisitive was bringing design and development in-house. My job was to build the foundation that would make that transition work.</p>
+                </section>
+
+                <!-- Standard captioned figure -->
+                <figure class="dp-prose-figure">
+                  <img
+                    class="dp-prose-image"
+                    src="https://placehold.co/1200x800/1a1a1a/666?text=Brand+Photo"
+                    alt="Prang Out brand photo placeholder"
+                    width="1200"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <figcaption class="dp-prose-caption">Placeholder caption — Prang Out brand photography.</figcaption>
+                </figure>
+
+                <!-- Wide breakout figure -->
+                <figure class="dp-prose-figure dp-prose-figure--wide">
+                  <img
+                    class="dp-prose-image"
+                    src="https://placehold.co/1600x900/1a1a1a/666?text=Wide+Photo"
+                    alt="Prang Out wide brand photo placeholder"
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <figcaption class="dp-prose-caption">Placeholder caption — wide breakout image.</figcaption>
+                </figure>
+
+                <!-- Full-bleed figure -->
+                <figure class="dp-prose-figure dp-prose-figure--full">
+                  <img
+                    class="dp-prose-image"
+                    src="https://placehold.co/1920x800/1a1a1a/666?text=Full+Bleed+Photo"
+                    alt="Prang Out full-bleed brand photo placeholder"
+                    width="1920"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <figcaption class="dp-prose-caption">Placeholder caption — full-bleed Prang Out photography.</figcaption>
+                </figure>
+              </article>
+            </div>
+            <span class="ds-label">.dp-prose, .dp-prose-section, .dp-pullquote, .dp-prose-figure, .dp-prose-figure--wide, .dp-prose-figure--full, .dp-prose-image, .dp-prose-caption — prose/pullquote text from case-studies/design-systems.html; all three figure variants copied verbatim from projects/prang-out.html, which already carries them as placeholder-image references</span>
+          </div>
+
+          <!-- 6m. TL;DR callout -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6m. TL;DR callout</h3>
+            <div class="ds-demo ds-demo--reveal-visible" style="max-width: 480px;">
+              <aside class="dp-tldr dp-reveal" aria-label="Summary">
+                <h2 class="dp-tldr__heading">TL;DR</h2>
+                <ul class="dp-tldr__list">
+                  <li class="dp-tldr__item">Teachers had no way to save, organise or sequence curriculum content, so every planning session started from scratch</li>
+                  <li class="dp-tldr__item">Sole designer end-to-end: 20+ teacher interviews, usability testing, four phased releases built around one key insight, that teachers plan in units, not individual resources</li>
+                  <li class="dp-tldr__item">25,000+ weekly users, 30% free-to-paid conversion lift</li>
+                </ul>
+              </aside>
+            </div>
+            <span class="ds-label">.dp-tldr, .dp-tldr__heading, .dp-tldr__list, .dp-tldr__item — case-studies/planner.html</span>
+          </div>
+
+          <!-- 6n. Impact banner -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6n. Impact banner</h3>
+            <div class="ds-demo ds-demo--reveal-visible">
+              <div class="dp-impact-banner dp-reveal" aria-label="Key outcomes">
+                <div class="dp-impact-banner__item">
+                  <span class="dp-impact-banner__value">1:1</span>
+                  <span class="dp-impact-banner__label">Figma-to-code parity</span>
+                </div>
+                <div class="dp-impact-banner__item">
+                  <span class="dp-impact-banner__value">Near-zero</span>
+                  <span class="dp-impact-banner__label">Developer UI questions</span>
+                </div>
+                <div class="dp-impact-banner__item">
+                  <span class="dp-impact-banner__value">2</span>
+                  <span class="dp-impact-banner__label">Design systems built</span>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-impact-banner, .dp-impact-banner__item, .dp-impact-banner__value, .dp-impact-banner__label — case-studies/design-systems.html</span>
+          </div>
+
+          <!-- 6o. Testimonials layout -->
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6o. Testimonials layout</h3>
+
+            <div class="ds-demo">
+              <div class="dp-testimonials">
+                <div class="dp-testimonials-track" role="region" aria-label="Testimonials" tabindex="0">
+                  <blockquote class="dp-testimonial">
+                    <p class="dp-testimonial-quote" style="margin-bottom: 0;">Such a great tool. I'll be sharing it with some of my relationship counselling clients</p>
+                  </blockquote>
+                  <blockquote class="dp-testimonial">
+                    <p class="dp-testimonial-quote" style="margin-bottom: 0;">We used to bicker every month about who'd paid for what. Now we just open the app and we're on the same page. So much easier.</p>
+                  </blockquote>
+                  <blockquote class="dp-testimonial">
+                    <p class="dp-testimonial-quote" style="margin-bottom: 0;">Set-up took maybe two minutes. We'd been using a shared spreadsheet and this is way simpler. No more chasing each other for numbers.</p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-testimonials, .dp-testimonials-track — case-studies/fair-share.html (all 3 real quotes, horizontal scroll-snap track)</span>
+
+            <div class="ds-demo" style="margin-top: var(--dp-space-6);">
+              <div class="dp-testimonials-masonry dp-testimonials-masonry--full">
+                <blockquote class="dp-testimonial">
+                  <p class="dp-testimonial-quote" style="margin-bottom: 0;">I find the planner a very useful resource to plan.</p>
+                </blockquote>
+                <blockquote class="dp-testimonial">
+                  <p class="dp-testimonial-quote" style="margin-bottom: 0;">Thanks again for all your hard work, we love Inquisitive and the new format for units.</p>
+                </blockquote>
+                <blockquote class="dp-testimonial">
+                  <p class="dp-testimonial-quote" style="margin-bottom: 0;">Easy and efficient interface.</p>
+                </blockquote>
+                <blockquote class="dp-testimonial">
+                  <p class="dp-testimonial-quote" style="margin-bottom: 0;">Loving the easy access to the planned modules. This was a really great idea.</p>
+                </blockquote>
+              </div>
+            </div>
+            <span class="ds-label">.dp-testimonials-masonry.dp-testimonials-masonry--full — case-studies/planner.html (4 of ~20 real quotes from the "wall of love" masonry list)</span>
+          </div>
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6p. Lightbox shell</h3>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Static "open" snapshot only — no open/close interaction, no focus trap, no scroll lock. The real lightbox traps focus and adds <code>body.dp-overlay-active</code> (locking page scroll) while open; see <code>docs/architecture-nav.md</code> and <code>docs/code-review.md</code> for that behaviour.</p>
+            <div class="ds-demo ds-lightbox-demo">
+              <div class="dp-lightbox dp-about-lightbox dp-lightbox-active" role="dialog" aria-modal="true" aria-label="Image viewer" tabindex="-1">
+                <div class="dp-lightbox-backdrop"></div>
+                <button type="button" class="dp-lightbox-close" aria-label="Close" title="Close">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M4.5 4.5l9 9M13.5 4.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="dp-about-lightbox__body">
+                  <button type="button" class="dp-about-lightbox__prev" aria-label="Previous image">&#8592;</button>
+                  <div class="dp-about-lightbox__image">
+                    <img src="https://placehold.co/1200x800/1a1a1a/666?text=Lightbox+Image" alt="Placeholder lightbox image" />
+                  </div>
+                  <button type="button" class="dp-about-lightbox__next" aria-label="Next image">&#8594;</button>
+                  <div class="dp-about-lightbox__panel">
+                    <p class="dp-about-lightbox__description">Placeholder description text — the panel is only present in the DOM when at least one item in the set has a description, and toggled per-item via the hidden attribute.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="ds-label">.dp-lightbox, .dp-about-lightbox, .dp-lightbox-backdrop, .dp-lightbox-close, .dp-about-lightbox__body, .dp-about-lightbox__image, .dp-about-lightbox__prev, .dp-about-lightbox__next, .dp-about-lightbox__panel, .dp-about-lightbox__description — position: fixed rescoped to this box only</span>
+          </div>
+      </section>
     </main>
 
     <script type="module">
       import { initThemeToggle } from '../assets/js/dev-projects/theme-toggle.js';
       initThemeToggle();
     </script>
+
+    <!-- Token-swatch loop: reads live custom-property values via getComputedStyle
+         and renders sections 2 and 3. Re-runs on theme toggle (data-theme mutation)
+         so every swatch stays correct in both themes. -->
+    <script>
+    (function () {
+      'use strict';
+      var root = document.documentElement;
+
+      function readVar(name) {
+        return getComputedStyle(root).getPropertyValue(name).trim();
+      }
+      function esc(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      function render(id, html) {
+        var elm = document.getElementById(id);
+        if (elm) elm.innerHTML = html;
+      }
+
+      // ---- shared placeholder for tokens undefined in the current theme ----
+      function emptySwatch(name) {
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:100px;height:64px;border:1px dashed var(--dp-border-hover);border-radius:var(--dp-radius-sm);' +
+          'display:flex;align-items:center;justify-content:center;color:var(--dp-text-tertiary);font-size:var(--dp-text-xs);' +
+          'text-align:center;padding:var(--dp-space-2);">— toggle theme to preview</div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+
+      // ---- per-type swatch builders ----
+      function colorBox(name, w, h) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:' + (w || 120) + 'px;height:' + (h || 80) + 'px;background:var(' + name + ');' +
+          'border:1px solid var(--dp-border-default);border-radius:var(--dp-radius-sm);"></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function rawColorBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:100%;min-height:64px;background:var(' + name + ');border:1px solid var(--dp-border-default);' +
+          'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function rawGlowBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:100%;min-height:64px;background:rgba(var(' + name + '),1);border:1px solid var(--dp-border-default);' +
+          'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function glowCircle(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:120px;height:80px;background:var(' + name + ');filter:blur(20px);border-radius:50%;"></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function onAccentText(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:120px;height:80px;background:var(--dp-accent);border-radius:var(--dp-radius-sm);' +
+          'display:flex;align-items:center;justify-content:center;">' +
+          '<span style="color:var(' + name + ');font-size:var(--dp-text-sm);">Text</span></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function spacingBox(name) {
+        var val = readVar(name);
+        if (!val) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:var(' + name + ');height:var(' + name + ');background:var(--dp-bg-card-hover);' +
+          'border:1px solid var(--dp-border-default);"></div>' +
+          '<span class="ds-label">' + esc(name) + ' · ' + esc(val) + '</span></div>';
+      }
+      function radiusBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:64px;height:64px;background:var(--dp-accent);border-radius:var(' + name + ');"></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      var animId = 0;
+      function durationBox(name, easeVar) {
+        if (!readVar(name)) return emptySwatch(name);
+        var id = 'ds-anim-' + (animId++);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div class="ds-anim-box" id="' + id + '" style="width:48px;height:48px;background:var(--dp-bg-card-hover);' +
+          'border:1px solid var(--dp-border-default);border-radius:var(--dp-radius-sm);' +
+          'transition:transform var(' + name + ') var(' + (easeVar || '--dp-ease-out') + ');"></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function easingBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        var id = 'ds-anim-' + (animId++);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div class="ds-anim-box" id="' + id + '" style="width:48px;height:48px;background:var(--dp-bg-card-hover);' +
+          'border:1px solid var(--dp-border-default);border-radius:var(--dp-radius-sm);' +
+          'transition:transform var(--dp-duration-base) var(' + name + ');"></div>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function fontFamilyRow(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div><span style="font-family:var(' + name + ');font-size:var(--dp-text-lg);color:var(--dp-text-primary);">' +
+          'The quick brown fox. Display</span><span class="ds-label" style="display:block;">' + esc(name) + '</span></div>';
+      }
+      function fontSizeRow(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div><span style="font-size:var(' + name + ');color:var(--dp-text-primary);">The quick brown fox</span>' +
+          '<span class="ds-label" style="display:block;">' + esc(name) + '</span></div>';
+      }
+      function leadingRow(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div><span style="font-size:var(--dp-text-base);line-height:var(' + name + ');color:var(--dp-text-primary);' +
+          'display:block;">Line one. Line two. Line three.</span>' +
+          '<span class="ds-label" style="display:block;">' + esc(name) + '</span></div>';
+      }
+      function trackingBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:flex-start;">' +
+          '<span style="font-size:var(--dp-text-base);letter-spacing:var(' + name + ');color:var(--dp-text-primary);">Tracking sample</span>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function weightSpan(name, sample) {
+        if (!readVar(name)) return '<span>' + esc(name) + ' —</span>';
+        return '<span style="font-weight:var(' + name + ');">' + esc(sample) + '</span>';
+      }
+      function shadowBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;padding:var(--dp-space-8);">' +
+          '<div style="width:100px;height:64px;background:var(--dp-bg-raised);border-radius:var(--dp-radius-md);' +
+          'box-shadow:var(' + name + ');"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function opacityRow(name, note) {
+        var val = readVar(name);
+        return '<div><span style="font-size:var(--dp-text-sm);color:var(--dp-text-primary);">' + esc(name) + '</span>' +
+          '<span style="font-size:var(--dp-text-sm);color:var(--dp-text-secondary);margin-left:var(--dp-space-2);">' +
+          '(value: ' + esc(val || '—') + ')</span></div>' +
+          (note ? '<span class="ds-label">' + esc(note) + '</span>' : '');
+      }
+      function borderBox(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:80px;height:48px;background:transparent;border:var(' + name + ');' +
+          'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function textSample(name, sample) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div><span style="color:var(' + name + ');">' + esc(sample) + '</span>' +
+          '<span class="ds-label" style="display:block;">' + esc(name) + '</span></div>';
+      }
+
+      // ---- strip-family helpers (shared across default / SCP / Flip7 / Kaomoji) ----
+      function stripColor(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:72px;height:48px;background:var(' + name + ');border:1px solid rgba(255,255,255,0.2);' +
+          'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function stripOpacity(name) {
+        var val = readVar(name);
+        return '<div style="display:flex;flex-direction:column;align-items:flex-start;">' +
+          '<span style="font-size:var(--dp-text-xs);">' + esc(name) + '</span>' +
+          '<span class="ds-label">(value: ' + esc(val || '—') + ')</span></div>';
+      }
+      function stripTitle(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div style="display:flex;flex-direction:column;align-items:flex-start;">' +
+          '<span style="font-size:var(--dp-text-base);color:var(' + name + ');">Title</span>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function stripText(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div style="display:flex;flex-direction:column;align-items:flex-start;">' +
+          '<span style="font-size:var(--dp-text-sm);color:var(' + name + ');">Body text</span>' +
+          '<span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function stripBadge(bgName, textName) {
+        if (!readVar(bgName) && !readVar(textName)) return emptySwatch(bgName + ' / ' + textName);
+        return '<div style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="padding:var(--dp-space-1) var(--dp-space-2);background:var(' + bgName + ');border-radius:var(--dp-radius-sm);">' +
+          '<span style="font-size:var(--dp-text-xs);color:var(' + textName + ');">Badge</span></div>' +
+          '<span class="ds-label">' + esc(bgName) + ' · ' + esc(textName) + '</span></div>';
+      }
+      function stripBorder(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:80px;height:48px;background:transparent;border:var(' + name + ');' +
+          'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function stripShadow(name) {
+        if (!readVar(name)) return emptySwatch(name);
+        return '<div style="display:flex;flex-direction:column;align-items:center;">' +
+          '<div style="width:80px;height:48px;background:var(--dp-bg-raised);border-radius:var(--dp-radius-sm);' +
+          'box-shadow:var(' + name + ');"></div><span class="ds-label">' + esc(name) + '</span></div>';
+      }
+      function stripFamily(containerId, bgVar, textColorVar, parts) {
+        var html = '<div class="ds-demo" style="background:var(' + bgVar + ');padding:var(--dp-space-6);border-radius:var(--dp-radius-md);">' +
+          '<div style="display:flex;flex-wrap:wrap;gap:var(--dp-space-4);align-items:flex-start;color:var(' + textColorVar + ');">' +
+          parts.join('') + '</div></div>';
+        render(containerId, html);
+      }
+
+      function wireAnimBoxes() {
+        var boxes = document.querySelectorAll('.ds-anim-box');
+        for (var i = 0; i < boxes.length; i++) {
+          (function (box) {
+            box.addEventListener('mouseover', function () { box.style.transform = 'translateX(24px)'; });
+            box.addEventListener('mouseout', function () { box.style.transform = 'translateX(0)'; });
+          })(boxes[i]);
+        }
+      }
+
+      var PRINT_TOKENS = [
+        ['--dp-print-name', '22px'],
+        ['--dp-print-tagline', '12px'],
+        ['--dp-print-body', '11px'],
+        ['--dp-print-body-sm', '11px'],
+        ['--dp-print-role-title', '13px'],
+        ['--dp-print-meta', '10px'],
+        ['--dp-print-section-title', '11px'],
+        ['--dp-print-leading', '1.35'],
+        ['--dp-print-leading-tight', '1.2'],
+        ['--dp-print-section-gap', '16px'],
+        ['--dp-print-role-gap', '12px'],
+        ['--dp-print-column-gap', '16px'],
+        ['--dp-print-li-gap', '2px'],
+        ['--dp-print-page-v', '15mm'],
+        ['--dp-print-page-h', '15mm']
+      ];
+
+      function renderAll() {
+        // ===== Section 2: Primitives =====
+        render('ds-spacing', ['--dp-space-1', '--dp-space-2', '--dp-space-3', '--dp-space-4', '--dp-space-5',
+          '--dp-space-6', '--dp-space-8', '--dp-space-10', '--dp-space-12', '--dp-space-16', '--dp-space-20',
+          '--dp-space-24', '--dp-space-30', '--dp-space-40'].map(spacingBox).join(''));
+
+        render('ds-radii', ['--dp-radius-sm', '--dp-radius-md', '--dp-radius-lg', '--dp-radius-xl', '--dp-radius-full']
+          .map(radiusBox).join(''));
+
+        render('ds-fontsize', ['--dp-text-xs', '--dp-text-sm', '--dp-text-base', '--dp-text-md', '--dp-text-lg',
+          '--dp-text-xl', '--dp-text-2xl', '--dp-text-3xl', '--dp-text-4xl'].map(fontSizeRow).join(''));
+
+        render('ds-weights', [
+          ['--dp-weight-normal', 'Inter 400'], ['--dp-weight-medium', '500'], ['--dp-weight-semibold', '600'],
+          ['--dp-weight-bold', '700'], ['--dp-weight-extrabold', '800']
+        ].map(function (w) { return weightSpan(w[0], w[1]); }).join(' <span style="margin: 0 var(--dp-space-2);">·</span> '));
+
+        render('ds-duration', ['--dp-duration-fast', '--dp-duration-base', '--dp-duration-slow', '--dp-duration-entrance',
+          '--dp-ticker-speed', '--dp-banner-speed'].map(function (n) { return durationBox(n); }).join(''));
+
+        render('ds-fontfamily', ['--dp-font-display', '--dp-font-body', '--dp-font-serif'].map(fontFamilyRow).join(''));
+
+        render('ds-leading', ['--dp-leading-none', '--dp-leading-tight', '--dp-leading-snug', '--dp-leading-normal',
+          '--dp-leading-relaxed'].map(leadingRow).join(''));
+
+        render('ds-tracking', ['--dp-tracking-tight', '--dp-tracking-normal', '--dp-tracking-wide', '--dp-tracking-wider']
+          .map(trackingBox).join(''));
+
+        render('ds-easing', ['--dp-ease-out', '--dp-ease-in-out'].map(easingBox).join(''));
+
+        render('ds-rawcolors',
+          ['--dp-raw-white', '--dp-raw-black', '--dp-raw-grey-50', '--dp-raw-grey-100', '--dp-raw-grey-200',
+            '--dp-raw-grey-400', '--dp-raw-grey-500', '--dp-raw-grey-800', '--dp-raw-grey-900', '--dp-raw-grey-950',
+            '--dp-raw-accent', '--dp-raw-accent-light', '--dp-raw-brand', '--dp-raw-brand-on-dark', '--dp-raw-brand-on-light']
+            .map(rawColorBox).join('') +
+          ['--dp-raw-glow-purple', '--dp-raw-glow-blue', '--dp-raw-glow-teal', '--dp-raw-glow-amber', '--dp-raw-glow-green']
+            .map(rawGlowBox).join(''));
+
+        render('ds-shadows', ['--dp-shadow-card', '--dp-shadow-card-sm', '--dp-shadow-showcase-image'].map(shadowBox).join(''));
+
+        // ===== Section 3: Semantic Tokens =====
+        render('ds-surfaces', ['--dp-bg-base', '--dp-bg-raised', '--dp-bg-elevated', '--dp-bg-card', '--dp-bg-card-hover', '--dp-bg-overlay']
+          .map(function (n) { return colorBox(n, 120, 80); }).join(''));
+
+        render('ds-text-hierarchy', [
+          ['--dp-text-primary', 'Primary text, main content'],
+          ['--dp-text-secondary', 'Secondary text, supporting copy'],
+          ['--dp-text-tertiary', 'Tertiary text, de-emphasised'],
+          ['--dp-text-ghost', 'Ghost text, placeholder / faint'],
+          ['--dp-brand-text', 'Brand text colour']
+        ].map(function (p) { return textSample(p[0], p[1]); }).join(''));
+
+        render('ds-borders', ['--dp-border-default', '--dp-border-hover', '--dp-border-active', '--dp-border-divider']
+          .map(function (n) {
+            if (!readVar(n)) return emptySwatch(n);
+            return '<div class="ds-demo" style="display:flex;flex-direction:column;align-items:center;">' +
+              '<div style="width:120px;height:80px;background:var(--dp-bg-raised);border:2px solid var(' + n + ');' +
+              'border-radius:var(--dp-radius-sm);"></div><span class="ds-label">' + esc(n) + '</span></div>';
+          }).join(''));
+
+        render('ds-accent-glow',
+          colorBox('--dp-accent', 120, 80) + colorBox('--dp-accent-hover', 120, 80) + colorBox('--dp-accent-glow', 120, 80) +
+          onAccentText('--dp-brand-on-brand') +
+          glowCircle('--dp-glow-1') + glowCircle('--dp-glow-2') + glowCircle('--dp-glow-3'));
+
+        render('ds-glass-extra', colorBox('--dp-glass-bg-mid', 100, 60) + colorBox('--dp-glass-bg-elevated', 100, 60) +
+          '<div style="display:flex;flex-direction:column;justify-content:center;">' +
+          '<span style="font-size:var(--dp-text-sm);color:var(--dp-text-primary);">--dp-glass-blur</span>' +
+          '<span style="font-size:var(--dp-text-sm);color:var(--dp-text-secondary);">(value: ' + esc(readVar('--dp-glass-blur') || '—') + ')</span></div>');
+
+        render('ds-hero-accent', colorBox('--dp-hero-accent-from', 80, 40) + colorBox('--dp-hero-accent-to', 80, 40));
+
+        render('ds-noise-opacity', opacityRow('--dp-noise-opacity'));
+
+        render('ds-paper', [
+          '--dp-paper-surface', '--dp-paper-text-primary', '--dp-paper-text-secondary',
+          '--dp-paper-border', '--dp-paper-shadow', '--dp-paper-accent'
+        ].map(function (n) {
+          if (n.indexOf('text') !== -1) return textSample(n, 'Text');
+          if (n === '--dp-paper-border') return borderBox(n);
+          if (n === '--dp-paper-shadow') return shadowBox(n);
+          return colorBox(n, 64, 48);
+        }).join(''));
+
+        render('ds-paper-light', [
+          '--dp-paper-surface-light', '--dp-paper-text-primary-light', '--dp-paper-text-secondary-light',
+          '--dp-paper-border-light', '--dp-paper-shadow-light', '--dp-paper-accent-light'
+        ].map(function (n) {
+          if (n.indexOf('text') !== -1) return textSample(n, 'Text');
+          if (n === '--dp-paper-border-light') return borderBox(n);
+          if (n === '--dp-paper-shadow-light') return shadowBox(n);
+          return colorBox(n, 64, 48);
+        }).join(''));
+
+        stripFamily('ds-strip-default', '--dp-strip-bg', '--dp-strip-text-color', [
+          stripColor('--dp-strip-bg'), stripColor('--dp-strip-orb-1'), stripColor('--dp-strip-orb-2'),
+          stripColor('--dp-strip-orb-dark'), stripOpacity('--dp-strip-orb-opacity'),
+          stripTitle('--dp-strip-title-color'), stripText('--dp-strip-text-color'),
+          stripBadge('--dp-strip-badge-bg', '--dp-strip-badge-text'),
+          stripTitle('--dp-strip-title-from'), stripTitle('--dp-strip-title-to'),
+          stripBorder('--dp-strip-border'), stripBorder('--dp-device-border'), stripShadow('--dp-device-shadow')
+        ]);
+
+        stripFamily('ds-strip-scp', '--dp-strip-scp-bg', '--dp-strip-scp-text-color', [
+          stripColor('--dp-strip-scp-bg'), stripColor('--dp-strip-scp-orb-1'), stripColor('--dp-strip-scp-orb-2'),
+          stripColor('--dp-strip-scp-orb-dark'), stripOpacity('--dp-strip-scp-orb-opacity'),
+          stripTitle('--dp-strip-scp-title-color'), stripText('--dp-strip-scp-text-color'),
+          stripBadge('--dp-strip-scp-badge-bg', '--dp-strip-scp-badge-text'),
+          stripBorder('--dp-strip-scp-device-border'), stripShadow('--dp-strip-scp-device-shadow')
+        ]);
+
+        stripFamily('ds-strip-flip7', '--dp-strip-flip7-bg', '--dp-strip-flip7-text-color', [
+          stripColor('--dp-strip-flip7-bg'), stripTitle('--dp-strip-flip7-title-from'), stripTitle('--dp-strip-flip7-title-to'),
+          stripBorder('--dp-strip-flip7-border'), stripColor('--dp-strip-flip7-orb-1'), stripColor('--dp-strip-flip7-orb-2'),
+          stripColor('--dp-strip-flip7-orb-dark'), stripOpacity('--dp-strip-flip7-orb-opacity'),
+          stripTitle('--dp-strip-flip7-title-color'), stripText('--dp-strip-flip7-text-color'),
+          stripBadge('--dp-strip-flip7-badge-bg', '--dp-strip-flip7-badge-text'),
+          stripBorder('--dp-strip-flip7-device-border'), stripShadow('--dp-strip-flip7-device-shadow')
+        ]);
+
+        stripFamily('ds-strip-kaomoji', '--dp-strip-kaomoji-bg', '--dp-strip-kaomoji-text-color', [
+          stripColor('--dp-strip-kaomoji-bg'), stripColor('--dp-strip-kaomoji-orb-1'), stripColor('--dp-strip-kaomoji-orb-2'),
+          stripColor('--dp-strip-kaomoji-orb-dark'), stripOpacity('--dp-strip-kaomoji-orb-opacity'),
+          stripTitle('--dp-strip-kaomoji-title-color'), stripText('--dp-strip-kaomoji-text-color'),
+          stripBadge('--dp-strip-kaomoji-badge-bg', '--dp-strip-kaomoji-badge-text'),
+          stripBorder('--dp-strip-kaomoji-device-border'), stripShadow('--dp-strip-kaomoji-device-shadow')
+        ]);
+
+        render('ds-print-tokens', PRINT_TOKENS.map(function (p) {
+          return '<div style="display:flex;justify-content:space-between;gap:var(--dp-space-4);padding:var(--dp-space-1) 0;' +
+            'border-bottom:1px solid var(--dp-border-divider);font-size:var(--dp-text-sm);">' +
+            '<span style="font-family:monospace;color:var(--dp-text-primary);">' + esc(p[0]) + '</span>' +
+            '<span style="color:var(--dp-text-secondary);">' + esc(p[1]) + '</span></div>';
+        }).join(''));
+
+        render('ds-theme-exclusive', ['--dp-theme-sun-icon-hover', '--dp-theme-sun-bg-hover',
+          '--dp-theme-moon-icon-hover', '--dp-theme-moon-bg-hover'].map(function (n) { return colorBox(n, 100, 64); }).join(''));
+
+        wireAnimBoxes();
+      }
+
+      renderAll();
+
+      // Re-render on theme toggle so swatches (and the theme-exclusive placeholders)
+      // stay correct after switching light/dark, without needing a page reload.
+      var themeObserver = new MutationObserver(renderAll);
+      themeObserver.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    })();
+    </script>
+
     <script>
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
