@@ -35,6 +35,14 @@
  * OS doesn't hand subsequent move events to text selection; both are
  * undone in `cleanupPointerDrag()`. Cards also carry
  * `-webkit-user-select: none` unconditionally (CSS).
+ *
+ * Both that `<body>` class AND the floating drag clone (`.pl-card-clone`,
+ * also appended to `<body>`) are styled by rules scoped
+ * `[data-project="planner"] ...` — which only reaches `<body>` when the
+ * attribute sits on `<html>`. `beginDrag()`/`cleanupPointerDrag()`
+ * temporarily add/restore it there for the gesture's duration so this
+ * still works when a page instead scopes the widget on a nested mount
+ * element (see index.html's compact embed) rather than `<html>` itself.
  */
 
 import { captureRects, playFlip, settleClone } from './flip.js';
@@ -159,7 +167,8 @@ export function attachDragging(config) {
    *   id: string, sourceLi: HTMLElement, startX: number, startY: number,
    *   dragging: boolean, cloneEl: HTMLElement|null, offsetX: number,
    *   offsetY: number, originColumnId: string, originIndex: number,
-   *   lastResolved: { columnId: string|number, index: number }
+   *   lastResolved: { columnId: string|number, index: number },
+   *   addedProjectAttr: boolean, priorProjectAttr: string|null
    * }} */
   let ptr = null;
 
@@ -188,6 +197,8 @@ export function attachDragging(config) {
       originColumnId: resolveColumnId(card.parentElement.dataset.columnId),
       originIndex: getRealCards(card.parentElement).indexOf(card),
       lastResolved: null,
+      addedProjectAttr: false,
+      priorProjectAttr: null,
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: false });
@@ -202,6 +213,31 @@ export function attachDragging(config) {
     ptr.offsetX = ptr.startX - rect.left;
     ptr.offsetY = ptr.startY - rect.top;
     ptr.dragging = true;
+
+    // The clone below is appended to <body> — OUTSIDE `root`'s own subtree
+    // — and `document.body.classList.add('pl-board-dragging')` further
+    // down styles <body> itself. Both rely on `[data-project="planner"]`
+    // (project-planner.css) being reachable as an ANCESTOR of <body>, which
+    // is only true when the attribute sits on <html> (as on the full-size
+    // prototype page, projects/planner.html). A compact embed can instead
+    // put the attribute on a nested mount div (see index.html's M3 embed)
+    // — NOT an ancestor of <body> — so without this, the clone renders
+    // completely unstyled (`position: static`, wherever it lands in
+    // <body>'s normal flow, no cursor/pointer-events/z-index) and the
+    // whole-page user-select/cursor guard never applies either. Temporarily
+    // add the attribute to <html> for the gesture's duration so both rules
+    // always reach their targets regardless of where the page scopes the
+    // widget; idempotent when it's already the right value, and restored
+    // (not just removed) in cleanupPointerDrag() below so a page that
+    // already carries it permanently (projects/planner.html) — or, in
+    // principle, some other value entirely — is never left wrong after a
+    // drag.
+    const existingProjectAttr = document.documentElement.getAttribute('data-project');
+    ptr.addedProjectAttr = existingProjectAttr !== 'planner';
+    ptr.priorProjectAttr = existingProjectAttr;
+    if (ptr.addedProjectAttr) {
+      document.documentElement.setAttribute('data-project', 'planner');
+    }
 
     const clone = sourceLi.cloneNode(true);
     clone.classList.add('pl-card-clone');
@@ -322,6 +358,17 @@ export function attachDragging(config) {
     if (ptr && ptr.cloneEl) ptr.cloneEl.remove();
     if (ptr && ptr.sourceLi) ptr.sourceLi.classList.remove('pl-card--dragging');
     document.body.classList.remove('pl-board-dragging');
+    // Restore <html>'s data-project attribute to whatever it was before
+    // beginDrag() touched it — only if THIS gesture is the one that
+    // changed it (see beginDrag()'s comment above); a page that already
+    // carried it permanently is never left without it after a drag.
+    if (ptr && ptr.addedProjectAttr) {
+      if (ptr.priorProjectAttr == null) {
+        document.documentElement.removeAttribute('data-project');
+      } else {
+        document.documentElement.setAttribute('data-project', ptr.priorProjectAttr);
+      }
+    }
   }
 
   function onPointerUp() {

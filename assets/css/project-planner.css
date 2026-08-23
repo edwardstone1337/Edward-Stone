@@ -94,6 +94,37 @@
 }
 
 /* --------------------------------------------
+   Compact variant (M3 — homepage embed, index.html's `.dp-case-promo`).
+   Overrides ONLY size/geometry tokens (column width, column/card gaps, the
+   frame's max-height cap) — every colour/radius/typography token above is
+   untouched, so the compact widget reads as the exact same product, just
+   smaller. Applied directly on the mount container alongside
+   `[data-project="planner"]` (see index.html) rather than forking any
+   component CSS. Never `transform: scale()` (see .pl-frame's own comment
+   below) — these are real token overrides, so drag.js's pointer math and
+   the frame's own layout stay correct at the smaller size.
+   -------------------------------------------- */
+/* Compound selector (no descendant combinator): the homepage mount div
+   carries both `data-project="planner"` and `.pl-compact` on the SAME
+   element (see index.html), not on an ancestor/descendant pair. */
+[data-project="planner"].pl-compact,
+[data-project="planner"] .pl-compact {
+  --pl-column-width: 220px;
+  --pl-column-gap: 12px;
+  --pl-card-gap: 8px;
+  --pl-frame-max-height: 660px; /* fits every tab's default-seed content with zero internal scroll — see the round 7 changelog entry, which tuned the SAME term-view content (empty state + pinned recommendations) to this exact frame-body budget at full size; verified again here at compact column widths below */
+}
+
+/* No demo chrome above the frame in the compact embed (chrome: false — see
+   planner.js), so .pl-planner's own top margin (meant to separate it from
+   that chrome) would just be unused whitespace here; the homepage section
+   already spaces the widget from the heading above it. */
+[data-project="planner"].pl-compact .pl-planner,
+[data-project="planner"] .pl-compact .pl-planner {
+  margin-top: 0;
+}
+
+/* --------------------------------------------
    Layout shell
    -------------------------------------------- */
 [data-project="planner"] .pl-planner {

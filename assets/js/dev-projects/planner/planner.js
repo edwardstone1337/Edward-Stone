@@ -279,10 +279,20 @@ function buildTabBar() {
 }
 
 /**
- * @param {HTMLElement} rootEl - The page's #main element.
+ * @param {HTMLElement} rootEl - The mount point (projects/planner.html's
+ *   #main; the homepage embed instead mounts into a plain
+ *   `[data-project="planner"]` container — see index.html).
+ * @param {Object} [options]
+ * @param {boolean} [options.chrome=true] - Whether to render the demo-only
+ *   chrome row (Reset button) above the product window frame. The
+ *   full-size prototype page (projects/planner.html) keeps it on by
+ *   default; the homepage's compact embed (M3) passes `{ chrome: false }`
+ *   to omit it — the embed is a showcase, not a demo someone resets.
  */
-export function initPlanner(rootEl) {
+export function initPlanner(rootEl, options = {}) {
   if (!rootEl) return;
+
+  const { chrome = true } = options;
 
   const section = document.createElement('section');
   section.className = 'pl-planner';
@@ -295,19 +305,26 @@ export function initPlanner(rootEl) {
   // re-seeds the 6-unit starting fixture (Term 4 empty by design — see
   // planner-data.js). No Filled/Empty toggle: the fixture itself now shows
   // the zero state naturally via Term 4's empty tab / empty board column.
+  // Omitted entirely when `chrome: false` (homepage embed) — see the
+  // `resetBtn` guard below, where its click listener is only wired if it
+  // was created here.
   // ------------------------------------------------------------------
-  const demoRow = document.createElement('div');
-  demoRow.className = 'pl-demo-row';
+  let resetBtn = null;
+  if (chrome) {
+    const demoRow = document.createElement('div');
+    demoRow.className = 'pl-demo-row';
 
-  // Reuses the shared .dp-btn component (portfolio chrome), not a
-  // planner-scoped .pl-btn — this button isn't part of the simulated
-  // product either.
-  const resetBtn = document.createElement('button');
-  resetBtn.type = 'button';
-  resetBtn.className = 'dp-btn dp-btn-secondary';
-  resetBtn.textContent = 'Reset demo';
+    // Reuses the shared .dp-btn component (portfolio chrome), not a
+    // planner-scoped .pl-btn — this button isn't part of the simulated
+    // product either.
+    resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'dp-btn dp-btn-secondary';
+    resetBtn.textContent = 'Reset demo';
 
-  demoRow.appendChild(resetBtn);
+    demoRow.appendChild(resetBtn);
+    section.appendChild(demoRow);
+  }
 
   // ------------------------------------------------------------------
   // Product window frame — the simulated app screen. Everything that
@@ -354,7 +371,6 @@ export function initPlanner(rootEl) {
   frameBody.appendChild(liveRegion);
   frame.appendChild(frameBody);
 
-  section.appendChild(demoRow);
   section.appendChild(frame);
   rootEl.appendChild(section);
 
@@ -573,8 +589,10 @@ export function initPlanner(rootEl) {
   });
 
   // Reset always re-seeds the 6-unit starting fixture (Term 4 empty by
-  // design — see planner-data.js).
-  resetBtn.addEventListener('click', () => {
+  // design — see planner-data.js). Only wired when the demo chrome exists
+  // (`chrome: true` — see resetBtn's guard above); the homepage embed has
+  // no Reset control to wire.
+  if (resetBtn) resetBtn.addEventListener('click', () => {
     closeAllMenus(boardRootEl);
     closeAllMenus(termPanelEl);
     reset();
