@@ -2059,18 +2059,13 @@ img { display: block; max-width: 100%; }
   width: 100%;
 }
 
-/* `.dp-strip-inner` becomes the cream card sitting on the band — the app's
-   own figure/ground, and the reason every pairing here clears AAA: the type
-   is on cream at 10.50:1 rather than on teal at 3.16:1. */
+/* No card. The heading and CTA sit directly on the teal band, and the only
+   cream surface is the phone in the media column. */
 .dp-strip--flip7 .dp-strip-inner {
-  background: var(--dp-strip-flip7-bg);
-  border: var(--dp-strip-flip7-border);
-  border-radius: var(--dp-strip-flip7-card-radius);
-  padding: var(--dp-strip-flip7-card-padding);
-  /* The preview is a narrow 9:16 phone, so an even split gave the media half
-     the card to render a sliver in, and squeezed the heading into a bad rag.
-     Weight the columns toward the copy. */
-  grid-template-columns: 0.85fr 1.15fr;
+  /* The phone is a narrow handset, so an even split would strand it in half
+     the width. Weight the columns toward the copy. */
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
 }
 
 /* Scaled with the heading — at the base 36px it read as a stray artifact
@@ -2110,11 +2105,16 @@ img { display: block; max-width: 100%; }
   align-self: start;
 }
 
+/* The phone: the one cream surface on the band, holding the live game. */
 .dp-strip--flip7 .dp-strip-media {
-  aspect-ratio: 9 / 16;
-  max-height: 400px;
-  border-radius: var(--dp-device-radius);
+  aspect-ratio: var(--dp-strip-flip7-media-ratio);
+  max-height: var(--dp-strip-flip7-media-max-h);
+  border-radius: var(--dp-strip-flip7-phone-radius);
   overflow: hidden;
+  background: var(--dp-strip-flip7-bg);
+  justify-self: center;
+  width: auto;
+  height: 100%;
 }
 
 

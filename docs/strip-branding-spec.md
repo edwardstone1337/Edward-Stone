@@ -166,18 +166,22 @@ modifiers land on — so a strip that sets only `title-color` gets it. Setting
 
 ### Documented exception: `.dp-strip--flip7`
 
-Flip 7 is the one strip that does **not** meet the 7:1 bar, by explicit design decision. It carries flip7scorecard.com's brand teal `#1d9995` verbatim as the strip bed, with the app's cream `#fff4d2` as type:
+Flip 7 is the one strip that does **not** meet the 7:1 bar throughout, by explicit design decision. It is a full-bleed band of flip7scorecard.com's brand teal `#1d9995`, with the heading set in the app's cream `#fff4d2` directly on that teal:
 
-| Pair | Ratio | AA body (4.5) | AAA body (7) |
-|------|-------|---------------|--------------|
-| cream `#fff4d2` on teal `#1d9995` | **3.16:1** | fail | fail |
-| white `#ffffff` on teal | 3.48:1 | fail | fail |
-| navy `#2b3276` on teal | 3.32:1 | fail | fail |
-| cream on navy `#2b3276` (badges, CTA) | 10.50:1 | pass | pass |
+| Pair | Where | Ratio | AA body (4.5) | AAA body (7) |
+|------|-------|-------|---------------|--------------|
+| cream `#fff4d2` on teal `#1d9995` | **heading** | **3.16:1** | fail | fail |
+| white `#ffffff` on teal | (rejected) | 3.48:1 | fail | fail |
+| navy `#2b3276` on teal | (rejected) | 3.32:1 | fail | fail |
+| navy on cream | CTA label, phone UI | 10.50:1 | pass | pass |
 
-Nothing legible sits on this teal — it is a mid-tone, so every candidate foreground lands in the 3.1–3.5 dead zone. Darkening the same hue to `#115c59` reaches 7.09:1 with cream and preserves the teal reading; that option was offered and declined in favour of exact brand fidelity. If the bar is ever reinstated for this strip, `#115c59` is the drop-in value — change `--dp-strip-flip7-bg` and nothing else.
+Nothing legible sits on this teal — it is a mid-tone, so every candidate foreground lands in the 3.1–3.5 dead zone. Darkening the same hue to `#115c59` reaches 7.09:1 with cream and still reads as the brand teal; that option was offered and declined in favour of exact brand fidelity. If the bar is ever reinstated, `#115c59` is the drop-in value — change `--dp-strip-flip7-band` and nothing else.
 
-Everything on this strip that *can* pass does: badges and the CTA use navy fills carrying cream at 10.50:1, and the embedded preview is a cream surface with navy type at 10.50:1. The failure is confined to title, overline, and description on the teal bed.
+**The failure is confined to the heading.** Everything else on the strip clears AAA, deliberately:
+
+- The CTA takes a **cream fill with navy text** (10.50:1) rather than cream text on teal. A cream-filled button still reads as "the cream button" without inheriting the heading's ratio.
+- The preview is a cream phone whose entire UI is navy-on-cream at 10.50:1. Inside it, the Bank and Bust cards use darkened `#115c59` and `#952828` rather than the app's `#1d9995` and `#e53e3e`, because cream glyphs on the brand values are only 3.16:1 and 3.76:1 — the darkened pair reach 7.09:1 and 7.32:1.
+- Orange `#fbb03a` is never used as text anywhere (1.68:1 on cream). Fills, borders and glows only.
 
 **Do not copy this exception to a new strip.** It is a one-off tied to this specific brand colour, not a relaxation of the standard.
 

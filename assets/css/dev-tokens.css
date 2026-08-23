@@ -277,16 +277,17 @@
      AAA. Nothing legible sits directly on brand teal (cream 3.16:1, white
      3.48:1, navy 3.32:1); the teal is a frame here, never a text bed. */
   --dp-strip-flip7-band: #1d9995;               /* app --color-teal, the <body> */
-  --dp-strip-flip7-bg: #fff4d2;                 /* app --color-cream, the card */
-  /* Navy (app --color-navy) is the type and every border, below. */
-  /* Title: solid navy, no gradient fade — the app's type is flat. */
-  --dp-strip-flip7-title-from: #2b3276;
-  --dp-strip-flip7-title-to: #2b3276;
-  --dp-strip-flip7-title-color: #2b3276;
-  --dp-strip-flip7-text-color: #2b3276;
-  /* The card's 1px navy outline — the app's signature on every surface. */
-  --dp-strip-flip7-border: 1px solid #2b3276;
-  /* The band runs edge to edge, so it takes no border of its own. */
+  --dp-strip-flip7-bg: #fff4d2;                 /* app --color-cream, the phone */
+  /* Title: solid cream, no gradient fade — a fade would push one endpoint
+     lower still, and the app's type is flat anyway. */
+  --dp-strip-flip7-title-from: #fff4d2;
+  --dp-strip-flip7-title-to: #fff4d2;
+  --dp-strip-flip7-title-color: #fff4d2;
+  /* Full-opacity cream — the base strip token fades text to 0.85 alpha, which
+     would drop the ratio further. Do not reintroduce alpha here. */
+  --dp-strip-flip7-text-color: #fff4d2;
+  /* The band runs edge to edge, so it takes no border of its own, and the
+     content now sits directly on it rather than inside a card. */
   --dp-strip-flip7-band-border: none;
   /* Orbs stay defined and mapped so the strip remains re-brandable, but the
      modifier hides them: the product has no gradients anywhere in its CSS. */
@@ -298,13 +299,25 @@
      stays re-brandable if they return. Navy on cream = 10.50:1. */
   --dp-strip-flip7-badge-bg: #2b3276;
   --dp-strip-flip7-badge-text: #fff4d2;
-  --dp-strip-flip7-device-border: 1px solid #2b3276;
-  --dp-strip-flip7-device-shadow: 0 4px 12px rgba(43, 50, 118, 0.15);
-  /* CTA: navy fill + cream text = 10.50:1 AAA, the app's own primary button.
-     .dp-btn-primary-on-dark is white-on-dark and vanishes on a cream card. */
-  --dp-strip-flip7-accent: #2b3276;
-  --dp-strip-flip7-accent-text: #fff4d2;
-  --dp-strip-flip7-accent-hover: #222a5f;
+  /* The preview is a cream PHONE standing on the teal — flip7scorecard.com is
+     a mobile-first app (max-width 400px), so a handset is what it actually
+     looks like. No border: cream on teal is already a hard edge, and the
+     game's own navy card outlines supply the internal structure. The shadow
+     does the lifting instead, so the phone sits on the band rather than being
+     cut into it. */
+  --dp-strip-flip7-device-border: none;
+  --dp-strip-flip7-device-shadow: 0 24px 48px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
+  --dp-strip-flip7-media-ratio: 9 / 16;
+  --dp-strip-flip7-media-max-h: 620px;
+  /* Handset corner radius — larger than a card's, which is what makes the
+     silhouette read as a phone rather than a portrait panel. */
+  --dp-strip-flip7-phone-radius: 36px;
+  /* CTA: a CREAM fill carrying navy text. Reads as the cream button asked for,
+     and unlike cream-on-teal type it clears AAA at 10.50:1 — the button is the
+     one element on the teal that does not have to accept 3.16:1. */
+  --dp-strip-flip7-accent: #fff4d2;
+  --dp-strip-flip7-accent-text: #2b3276;
+  --dp-strip-flip7-accent-hover: #f5e6b8;
   /* Bebas Neue is the app's display face — its single most recognisable
      element. Scoped to the strip title only; the rest of the page stays Inter.
      It is condensed and caps-only, so it carries a much larger size than Inter
@@ -315,9 +328,6 @@
      in the content column, and Bebas at 60px overflowed it. */
   --dp-strip-flip7-title-size: clamp(2rem, 3.4vw, 3rem);
   --dp-strip-flip7-emoji-size: 52px;
-  /* 16px — the app's own container radius (--radius-container). */
-  --dp-strip-flip7-card-radius: var(--dp-radius-lg);
-  --dp-strip-flip7-card-padding: var(--dp-space-10);
 
   /* Strip theme — Kaomoji (warm neutral, LIGHT).
      The only light strip: it carries kaomoji.click's own light theme end to
