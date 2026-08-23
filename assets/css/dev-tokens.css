@@ -496,6 +496,14 @@
    -------------------------------------------- */
 @media print {
   :root {
+    /* Static Inter override — self-hosted (assets/css/print-fonts.css) so
+       Chrome embeds CID TrueType instead of Type 3 for the variable Google
+       Fonts Inter, which breaks ATS text extraction. "Inter Print" comes
+       first so resume.html (which loads print-fonts.css) uses it; it simply
+       won't resolve on any other public page, which prints as before. */
+    --dp-font-display: "Inter Print", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --dp-font-body: "Inter Print", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
     /* Print type scale */
     --dp-print-name: 22px;
     --dp-print-tagline: 12px;

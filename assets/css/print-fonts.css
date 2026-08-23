@@ -1,0 +1,48 @@
+/*
+  Print-only static Inter faces.
+
+  Chrome's "Print to PDF" embeds variable-font instances as Type 3 fonts,
+  which breaks text extraction in ATS parsers (glyphs come out as
+  "E d w a r d  S t o n e"). Google Fonts serves Inter as a variable font
+  even when static weights are requested, so we self-host truly static
+  instances here — used ONLY on resume.html's print stylesheet — to force
+  Chrome into CID TrueType embedding, which extracts cleanly.
+
+  Source: rsms/inter v4.1 official release (web/ folder, static "Inter"
+  family, not "InterDisplay"). License: SIL OFL 1.1, see assets/fonts/OFL.txt.
+
+  Family name "Inter Print" is deliberately distinct from "Inter" so this
+  file has zero effect on any page that doesn't load it.
+*/
+
+@font-face {
+  font-family: "Inter Print";
+  src: url("../fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Print";
+  src: url("../fonts/Inter-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Print";
+  src: url("../fonts/Inter-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Print";
+  src: url("../fonts/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

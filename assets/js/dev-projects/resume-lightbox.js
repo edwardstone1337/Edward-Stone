@@ -52,7 +52,7 @@ function handleEscape(e) {
 
 /**
  * Build lightbox inner HTML (backdrop, body with content + sidebar, close button).
- * Shared by openLightbox() and printResume() so the template is not duplicated.
+ * Used by openLightbox() to populate the on-screen lightbox.
  */
 function buildLightboxHTML(resumeContent) {
   return `
@@ -223,32 +223,13 @@ function openLightbox() {
 }
 
 /**
- * Silent print: build lightbox DOM (hidden), call window.print(), remove on afterprint.
- * No overlay, focus trap, or UI listeners. For use by in-page download menu.
+ * Print the resume. The static .dp-resume-section markup is what prints —
+ * the @media print rules in dev-styles.css hide everything else (including
+ * any open lightbox) and lay it out single-column. No DOM injection needed:
+ * this makes printing work even without JS ever having run.
  */
 export function printResume() {
-  if (document.querySelector('.dp-lightbox--print-only')) return;
-
-  const resumePage = document.querySelector('.dp-resume-page');
-  const resumeContainer = document.querySelector('.dp-resume-container');
-  if (!resumePage || !resumeContainer) return;
-
-  // TRUST: Content is extracted from .dp-resume-page, which is static same-origin HTML hardcoded in resume.html. No user input is injected.
-  const header = resumePage.querySelector('header');
-  const body = resumePage.querySelector('.dp-resume-body');
-  const resumeContent = [header, body].filter(Boolean).map(el => el.outerHTML).join('') || resumePage.innerHTML;
-
-  let printNode = document.createElement('div');
-  printNode.className = 'dp-lightbox dp-lightbox--print-only';
-  printNode.innerHTML = buildLightboxHTML(resumeContent);
-
-  document.body.appendChild(printNode);
   window.print();
-
-  window.addEventListener('afterprint', function cleanup() {
-    printNode.remove();
-    printNode = null;
-  }, { once: true });
 }
 
 /**
@@ -262,23 +243,6 @@ export function initResumeLightbox() {
   if (!container) return;
 
   container.addEventListener('click', openLightbox, { signal: controller.signal });
-
-  // Auto-inject print layout for headless PDF generation (e.g. Puppeteer)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('print') === '1') {
-    const resumePage = document.querySelector('.dp-resume-page');
-    if (resumePage) {
-      const header = resumePage.querySelector('header');
-      const body = resumePage.querySelector('.dp-resume-body');
-      const resumeContent = [header, body].filter(Boolean).map(el => el.outerHTML).join('')
-        || resumePage.innerHTML;
-
-      const printNode = document.createElement('div');
-      printNode.className = 'dp-lightbox dp-lightbox--print-only';
-      printNode.innerHTML = buildLightboxHTML(resumeContent);
-      document.body.appendChild(printNode);
-    }
-  }
 }
 
 /**

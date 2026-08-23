@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -18,6 +18,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
     />
+    <!-- Print-only static Inter faces: prevents Chrome from embedding the variable font as Type 3 (breaks ATS text extraction) -->
+    <link rel="stylesheet" href="assets/css/print-fonts.css">
 
     <!-- Design system -->
     <link rel="stylesheet" href="assets/css/dev-tokens.css">
@@ -44,7 +46,7 @@
       <section class="dp-resume-section dp-page-content" id="resume" aria-label="Resume">
         <div class="dp-resume-layout">
           <!-- Centered heading -->
-          <h1 class="dp-resume-heading">My career so far</h1>
+          <p class="dp-resume-heading">My career so far</p>
 
           <!-- Download button (top) -->
           <div class="dp-resume-download-row">
@@ -79,7 +81,7 @@
               <div class="dp-resume-page" aria-label="Resume page 1">
               <header class="dp-resume-header">
                 <div class="dp-resume-header-main">
-                  <h2 class="dp-resume-name">Edward Stone</h2>
+                  <h1 class="dp-resume-name">Edward Stone</h1>
                   <p class="dp-resume-tagline">Senior Product Designer</p>
                   <p class="dp-resume-summary">Senior Product Designer with 10+ years across ed-tech and sports technology. Founding designer at two startups, I built the research infrastructure, design systems, and feedback loops that shaped how each organisation understands its users and decides what to build. Now leading design at Inquisitive, collaborating across product, engineering, and content to ship meaningful outcomes for teachers.</p>
                 </div>
@@ -92,12 +94,12 @@
               </header>
 
               <div class="dp-resume-body">
-                <main class="dp-resume-main">
+                <div class="dp-resume-main">
                   <section class="dp-resume-section-group" aria-label="Experience">
-                    <h3 class="dp-resume-section-title">Experience</h3>
+                    <h2 class="dp-resume-section-title">Experience</h2>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Senior Product Designer (UX/UI), <em>Inquisitive</em></h4>
+                      <h3 class="dp-resume-role-title">Senior Product Designer (UX/UI), <em>Inquisitive</em></h3>
                       <span class="dp-resume-role-meta">2020 – Present · Sydney, Australia</span>
                       <p class="dp-resume-role-desc">Founding designer at an ed-tech platform used by 50,000+ primary school teachers across Australia and the United States.</p>
                       <ul class="dp-resume-role-achievements">
@@ -112,7 +114,7 @@
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Product Designer (UX/UI), <em>PlaySport</em></h4>
+                      <h3 class="dp-resume-role-title">Product Designer (UX/UI), <em>PlaySport</em></h3>
                       <span class="dp-resume-role-meta">Apr 2019 – Mar 2020 · Sydney, Australia</span>
                       <p class="dp-resume-role-desc">Sports discovery platform connecting organisers and players across hundreds of sports via web and mobile.</p>
                       <ul class="dp-resume-role-achievements">
@@ -123,7 +125,7 @@
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Senior Digital Designer, <em>PlaySport</em></h4>
+                      <h3 class="dp-resume-role-title">Senior Digital Designer, <em>PlaySport</em></h3>
                       <span class="dp-resume-role-meta">Mar 2018 – Apr 2019 · Sydney, Australia</span>
                       <p class="dp-resume-role-desc">Sports discovery platform connecting organisers and players across hundreds of sports.</p>
                       <ul class="dp-resume-role-achievements">
@@ -135,13 +137,13 @@
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Freelance Graphic Designer, <em>Insignia Worldwide</em></h4>
+                      <h3 class="dp-resume-role-title">Freelance Graphic Designer, <em>Insignia Worldwide</em></h3>
                       <span class="dp-resume-role-meta">Jul 2017 – Feb 2018 · Sydney, Australia</span>
                       <p class="dp-resume-role-desc">International design agency specialising in property branding. Led print, digital, POS, and signage design across multiple clients.</p>
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Graphic Designer, <em>Rocket Entertainment & The Elton John AIDS Foundation</em></h4>
+                      <h3 class="dp-resume-role-title">Graphic Designer, <em>Rocket Entertainment & The Elton John AIDS Foundation</em></h3>
                       <span class="dp-resume-role-meta">Jul 2013 – Oct 2016 · London, UK</span>
                       <p class="dp-resume-role-desc">Graphic designer for Sir Elton John's private office, Rocket Sports (sports management), and Rocket Music (music management). Designed for Olympic-level athletes and entertainment industry clients.</p>
                       <ul class="dp-resume-role-achievements">
@@ -153,7 +155,7 @@
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Co-Owner & Designer, <em>Prang Out</em></h4>
+                      <h3 class="dp-resume-role-title">Co-Owner & Designer, <em>Prang Out</em></h3>
                       <span class="dp-resume-role-meta">Jan 2011 – Oct 2016 · London, UK</span>
                       <p class="dp-resume-role-desc">Co-founded and operated clothing startup, managing end-to-end product lifecycle from design to sales. Closed when relocating to Australia.</p>
                       <ul class="dp-resume-role-achievements">
@@ -164,16 +166,16 @@
                     </article>
 
                     <article class="dp-resume-role">
-                      <h4 class="dp-resume-role-title">Assistant Archivist, <em>The Office of Sir Elton John and David Furnish</em></h4>
+                      <h3 class="dp-resume-role-title">Assistant Archivist, <em>The Office of Sir Elton John and David Furnish</em></h3>
                       <span class="dp-resume-role-meta">Nov 2011 – Jul 2013 · London, UK</span>
                       <p class="dp-resume-role-desc">Catalogued and maintained the personal and professional archive for Sir Elton John and David Furnish.</p>
                     </article>
                   </section>
-                </main>
+                </div>
 
                 <aside class="dp-resume-sidebar">
                   <section class="dp-resume-section-group" aria-label="Design">
-                    <h3 class="dp-resume-section-title">Design</h3>
+                    <h2 class="dp-resume-section-title">Design</h2>
                     <ul class="dp-resume-skill-list">
                       <li>Product Design</li>
                       <li>UX Design</li>
@@ -187,7 +189,7 @@
                   </section>
 
                   <section class="dp-resume-section-group" aria-label="Research & Analysis">
-                    <h3 class="dp-resume-section-title">Research & Analysis</h3>
+                    <h2 class="dp-resume-section-title">Research & Analysis</h2>
                     <ul class="dp-resume-skill-list">
                       <li>User Interviews</li>
                       <li>Usability Testing</li>
@@ -199,7 +201,7 @@
                   </section>
 
                   <section class="dp-resume-section-group" aria-label="Tools">
-                    <h3 class="dp-resume-section-title">Tools</h3>
+                    <h2 class="dp-resume-section-title">Tools</h2>
                     <ul class="dp-resume-skill-list">
                       <li>Figma</li>
                       <li>Jira</li>
@@ -212,7 +214,7 @@
                   </section>
 
                   <section class="dp-resume-section-group" aria-label="Strategy & Delivery">
-                    <h3 class="dp-resume-section-title">Strategy & Delivery</h3>
+                    <h2 class="dp-resume-section-title">Strategy & Delivery</h2>
                     <ul class="dp-resume-skill-list">
                       <li>OKRs</li>
                       <li>Evidence-based Prioritisation</li>
@@ -223,7 +225,7 @@
                   </section>
 
                   <section class="dp-resume-section-group" aria-label="Education">
-                    <h3 class="dp-resume-section-title">Education</h3>
+                    <h2 class="dp-resume-section-title">Education</h2>
                     <ul class="dp-resume-skill-list">
                       <li><strong>Ravensbourne University</strong><br/>Foundation Diploma in Graphic Design</li>
                       <li><strong>Esher College (A Levels)</strong><br/>ICT · Media Studies · English Language</li>
@@ -291,6 +293,10 @@
       initResumeLightbox();
       initResumeDownload();
       initContactCta();
+      // Warm the static print faces at page load — print/PDF capture must never
+      // race the font fetch, or Chrome falls back to the variable Inter (Type 3).
+      ['400 1em "Inter Print"', 'italic 400 1em "Inter Print"', '600 1em "Inter Print"', '700 1em "Inter Print"']
+        .forEach((face) => document.fonts.load(face));
     </script>
 
     <!-- Page view counter -->

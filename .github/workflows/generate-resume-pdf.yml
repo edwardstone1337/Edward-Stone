@@ -8,6 +8,8 @@ on:
       - 'resume.html'
       - 'assets/css/dev-tokens.css'
       - 'assets/css/dev-styles.css'
+      - 'assets/css/print-fonts.css'
+      - 'assets/fonts/**'
       - 'assets/js/dev-projects/resume-lightbox.js'
       - 'assets/js/dev-projects/resume-download.js'
 
@@ -26,8 +28,87 @@ jobs:
       - name: Generate PDF from live URL
         uses: imbhargav5/puppeteer-pdf-action@master
         with:
-          url: https://edwardstone.design/resume.html?print=1
+          url: https://edwardstone.design/resume.html
           output-file-path: ./files/Edward Stone Resume.pdf
+
+      - name: Set PDF metadata
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libimage-exiftool-perl
+          exiftool -overwrite_original -Author="Edward Stone" "files/Edward Stone Resume.pdf"
+
+      - name: Validate PDF
+        run: |
+          set -uo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+
+          PDF="files/Edward Stone Resume.pdf"
+          FAIL=0
+
+          # (a) pdfinfo: must be tagged (also re-verifies exiftool didn't strip
+          # the structure tree), and must have at least one page.
+          INFO=$(pdfinfo "$PDF")
+          TAGGED=$(echo "$INFO" | grep "^Tagged:" | awk '{print $2}')
+          PAGES=$(echo "$INFO" | grep "^Pages:" | awk '{print $2}')
+
+          if [ "$TAGGED" != "yes" ]; then
+            echo "FAIL: PDF is not tagged (Tagged: $TAGGED). exiftool may have stripped the structure tree, or Chrome failed to tag the output."
+            FAIL=1
+          fi
+
+          if [ -z "$PAGES" ] || [ "$PAGES" -lt 1 ]; then
+            echo "FAIL: PDF has no pages (Pages: $PAGES)."
+            FAIL=1
+          fi
+
+          # (b) pdffonts: no Type 3 fonts. Variable webfonts embed as Type 3,
+          # which makes extracted text come out as "E d w a r d  S t o n e" in
+          # common ATS parsers. The type column can itself contain a space
+          # (e.g. "CID TrueType"), so match /Type 3/ on the whole line rather
+          # than splitting on whitespace.
+          FONTS=$(pdffonts "$PDF")
+          TYPE3_LINES=$(echo "$FONTS" | tail -n +3 | grep "Type 3" || true)
+          if [ -n "$TYPE3_LINES" ]; then
+            echo "FAIL: PDF embeds Type 3 fonts (variable font fallback). Extracted text will likely be broken (e.g. 'E d w a r d')."
+            echo "$TYPE3_LINES"
+            FAIL=1
+          fi
+
+          # (c)/(d)/(e) pdftotext: required content present, no spaced-letter
+          # pathology, and enough text to prove the page wasn't blank.
+          TEXT=$(pdftotext "$PDF" -)
+          CHARCOUNT=$(echo -n "$TEXT" | wc -c | tr -d ' ')
+
+          for STR in "edwardstone1337@gmail.com" "0401 068 837" "Inquisitive" "PlaySport" "linkedin.com/in/edwardstone1337" "EXPERIENCE" "EDUCATION"; do
+            if ! echo "$TEXT" | grep -qF "$STR"; then
+              echo "FAIL: extracted text is missing required string: $STR"
+              FAIL=1
+            fi
+          done
+
+          if echo "$TEXT" | grep -qF "E d w a r d"; then
+            echo "FAIL: extracted text shows the spaced-letter pathology (e.g. 'E d w a r d') - fonts are not extracting cleanly."
+            FAIL=1
+          fi
+
+          if [ "$CHARCOUNT" -lt 3000 ]; then
+            echo "FAIL: extracted text is only $CHARCOUNT characters (< 3000). PDF may be blank or page JS did not run before capture."
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "---"
+            echo "PDF validation failed - see FAIL lines above."
+            exit 1
+          fi
+
+          echo "PDF validation passed."
+          echo "  Pages: $PAGES"
+          echo "  Tagged: $TAGGED"
+          echo "  Extracted text: $CHARCOUNT characters"
+          echo "  Font types:"
+          echo "$FONTS" | tail -n +3
 
       - name: Check if PDF changed
         id: check_changes
