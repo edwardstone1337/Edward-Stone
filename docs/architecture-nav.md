@@ -26,16 +26,20 @@ const NAV_LINKS = [
     { text: 'Driving weekly engagement for 25,000 teachers', href: '/case-studies/planner.html' },
     { text: 'Changing how an organisation decides what to build', href: '/case-studies/product-discovery.html' },
     { text: 'Accelerating team velocity with design systems', href: '/case-studies/design-systems.html' },
-    { text: 'Designing the tool therapists recommend to their clients', href: '/case-studies/fair-share.html' }
+    { text: 'Designing the tool therapists recommend', href: '/case-studies/fair-share.html' }
   ]},
   { text: 'Projects', prodHide: true, children: [
-    { text: 'SCP Reader', href: '/projects/scp-reader.html' }
+    { text: 'SCP Reader', href: '/projects/scp-reader.html' },
+    { text: 'Prang Out', href: '/projects/prang-out.html' }
   ]},
+  { text: 'Personal', href: '/personal.html' },
   { text: 'Gallery', href: '/gallery.html', prodHide: true },
   { text: 'Resume', href: '/resume.html' },
   { text: 'About', href: '/about.html', prodHide: true }
 ];
 ```
+
+The `Case Studies` children come from `CASE_STUDIES` in `case-study-data.js` (imported, not inlined, in the real file — reproduced above for reference). `Prang Out` is a real nav entry despite redirecting to `/404.html` on prod via its own inline gate (see `CLAUDE.md`'s Page Inventory) — the link itself carries no `prodHide`, only `Projects` as a whole does.
 
 - **Top-level items with `href`** render as direct links
 - **Top-level items with `children`** render as dropdown triggers with a chevron icon
@@ -43,20 +47,28 @@ const NAV_LINKS = [
 
 To add a new page to the nav, add an entry to `NAV_LINKS`.
 
+### Footgun: drawer "More" heading ordering
+
+`generateDrawerLinksHTML()` renders a synthetic `<span class="dp-nav-drawer-heading">More</span>` exactly once, immediately before the **first** flat (non-`children`) link it encounters in array order (see `moreHeadingRendered` in `nav-component.js`). Every flat link before that point gets no heading (there isn't one yet), and every flat link after it visually falls under the same "More" heading — right up until the next dropdown's own heading is rendered, which silently supersedes it for anything that follows.
+
+**Consequence:** a flat link inserted *between* two dropdown entries consumes the "More" heading early. Any flat link placed after the next dropdown then renders with no heading of its own and reads, in the drawer, as if it belongs to that dropdown's group — even though it's a top-level link. Concretely, `[Case Studies (children), Personal (flat), Projects (children), Gallery (flat)]` would render `Personal` correctly under "More", but `Gallery` would land directly under the `Projects` heading's children with no heading break, reading as a fifth Projects child in the drawer.
+
+This is why `Personal` sits **after both dropdowns** (`Case Studies`, `Projects`) **and before the run of flat links** (`Gallery`, `Resume`, `About`) in the array above — it's the first flat link, so it triggers "More" exactly once and correctly, and every flat link after it shares that same heading with no dropdown in between to hijack it. When adding a new flat link, keep it in that same block (after all dropdowns, among the other flat links) rather than between two dropdown entries.
+
 ## Desktop Layout
 
 On production (`is-prod`), only items without `prodHide: true` are rendered:
 
 ```
-[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Resume ]    [ actions: hamburger hidden ]
-        brand                  links (centre)                   #dp-nav-actions
+[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Personal ] [ Resume ]    [ actions: hamburger hidden ]
+        brand                       links (centre)                          #dp-nav-actions
 ```
 
 On non-production hostnames, all items are rendered:
 
 ```
-[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Projects ▾ ] [ Gallery ] [ Resume ] [ About ]    [ actions ]
-        brand                                    links (centre)                                   #dp-nav-actions
+[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Projects ▾ ] [ Personal ] [ Gallery ] [ Resume ] [ About ]    [ actions ]
+        brand                                       links (centre)                                             #dp-nav-actions
 ```
 
 - **Brand** (`.dp-nav-brand`): Logo SVG + "Edward Stone" text, links to `/index.html`

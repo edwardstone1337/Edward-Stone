@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Personal Projects, Edward Stone</title>
+    <link rel="icon" href="assets/images/Logo.svg" type="image/svg+xml">
+    <meta name="description" content="The things I build outside work. Side projects, small tools, and products I wanted to exist, starting with kaomoji.click.">
+    <link rel="canonical" href="https://edwardstone.design/personal.html">
+    <meta property="og:title" content="Personal Projects, Edward Stone">
+    <meta property="og:description" content="The things I build outside work. Side projects, small tools, and products I wanted to exist, starting with kaomoji.click.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://edwardstone.design/personal.html" />
+    <meta property="og:image" content="https://edwardstone.design/assets/images/ogimage.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Edward Stone — Product Designer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://edwardstone.design/assets/images/ogimage.jpg" />
+
+    <script src="/assets/js/env.js"></script>
+    <script src="/assets/js/third-party.js"></script>
+
+    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    />
+
+    <link rel="stylesheet" href="assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="assets/css/dev-styles.css">
+    <!-- Needed by the kaomoji strip's hover bubble -->
+    <link rel="stylesheet" href="assets/css/cursor-chat.css">
+
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
+
+    <script>document.documentElement.setAttribute('data-theme','light')</script>
+  </head>
+  <body>
+    <a href="#main" class="dp-skip-link">Skip to content</a>
+    <div id="nav-container"></div>
+    <script type="module">
+      import { initNav } from './assets/js/dev-projects/nav-component.js';
+      import { initKaomojiStrip } from './assets/js/dev-projects/kaomoji-strip.js';
+      initNav();
+
+      // Mounted before initCursorChat below, because cursor-chat resolves each
+      // trigger's selector once at init and silently skips ones matching nothing.
+      const kaomoji = initKaomojiStrip('#kaomoji-mount');
+
+      // Banner ticker — visible on dev only
+      const isProd = document.documentElement.classList.contains('is-prod');
+      if (!isProd) {
+        import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
+      }
+
+      if (kaomoji) {
+        import('./assets/js/dev-projects/cursor-chat.js').then(m => {
+          m.initCursorChat({ triggers: [kaomoji.cursorTrigger] });
+        });
+      }
+    </script>
+
+    <main id="main" class="dp-page">
+
+      <section class="dp-hero dp-reveal">
+        <span class="dp-overline">outside of work</span>
+        <h1 class="dp-hero-heading">
+          <span class="dp-hero-line">Personal projects,</span>
+          <span class="dp-hero-line">and things I wanted to exist</span>
+        </h1>
+      </section>
+
+      <!-- Kaomoji strip - markup and behaviour live in
+           assets/js/dev-projects/kaomoji-strip.js so index.html and
+           personal.html share one copy. This placeholder is REPLACED by the
+           strip, so no extra wrapper survives in the layout. The <noscript>
+           fallback drops the iframe preview (which needs JS regardless) and
+           uses --compact for a single-column, media-free strip. -->
+      <div id="kaomoji-mount"></div>
+      <noscript>
+        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+          <div class="dp-strip-inner">
+            <div class="dp-strip-content">
+              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
+            </div>
+            <div class="dp-strip-actions">
+              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
+            </div>
+          </div>
+        </section>
+      </noscript>
+
+      <footer class="dp-footer dp-reveal" aria-label="Footer">
+        <div class="dp-footer-inner">
+          <p class="dp-footer-text">&copy; 2026 Edward Stone</p>
+          <nav class="dp-footer-links" aria-label="Footer links">
+            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://surveys.hotjar.com/ff9d31ea-8b61-4bb2-961d-85b3373ccb2a" class="dp-footer-link" target="_blank" rel="noopener noreferrer">Feedback</a>
+          </nav>
+        </div>
+      </footer>
+    </main>
+
+    <script src="assets/js/dev-projects/back-to-top.js"></script>
+    <script src="assets/js/dev-projects/effects.js"></script>
+    <!-- Page view counter -->
+    <script type="module">
+      import { initPageCounter } from './assets/js/dev-projects/page-counter.js';
+      initPageCounter();
+    </script>
+  </body>
+</html>
