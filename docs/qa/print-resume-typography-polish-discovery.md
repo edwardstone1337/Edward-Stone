@@ -3,6 +3,8 @@
 **Date:** 2025-02-08  
 **Purpose:** Report screen vs print typography, content volume, A4 area, font loading, two-column layout, and hierarchy ratios to inform a polish pass.
 
+> **Historical — superseded.** This snapshot predates the resume print pipeline rework (self-hosted static "Inter Print" fonts via `assets/css/print-fonts.css`, single-column print layout with a 2-column CSS multicol skills block, `printResume()` now a plain `window.print()`). §4 (Font rendering) and §5 (Two-column split) below describe the *old* pipeline and no longer reflect current code — see the `CHANGELOG.md` "Resume PDF/print pipeline" entry and `docs/architecture-tokens.md`'s Print section for current behaviour. Kept for historical record only; do not use as a source of truth for the print pipeline.
+
 ---
 
 ## 1. Screen typography for comparison

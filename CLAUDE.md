@@ -87,6 +87,7 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - `docs/strip-branding-spec.md` — Product strip token contract
 - `docs/gallery-workflow.md` — Adding images to gallery (script usage, metadata format)
 - `docs/release-playbook.md` — Pre-release checklist
+- `docs/resume-docx.md` — Word resume companion: how files/Edward Stone Resume.docx is generated, when to regenerate
 
 ## Rules
 
