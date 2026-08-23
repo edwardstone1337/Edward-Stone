@@ -1,17 +1,19 @@
 /**
- * Planner prototype — entry point (Milestone 1: All Terms Kanban board).
+ * Planner prototype — entry point (Milestone 1: All Terms Kanban board;
+ * Milestone 2: Add Units drawer).
  *
  * Composes the store (planner-state.js), the generic board renderer
- * (board.js), the card (card.js) and the drag core (drag.js) into the
- * existing #main of projects/planner.html. No tabs, no drawer, no compact
- * variant yet — those are later milestones (see
+ * (board.js), the card (card.js), the drag core (drag.js) and the Add Units
+ * drawer (drawer.js) into the existing #main of projects/planner.html. No
+ * term tabs or compact variant yet — those are later milestones (see
  * docs/superpowers/specs/2026-08-23-planner-prototype-design.md).
  */
 
-import { getUnits, subscribe, move, remove, reset, clearAll } from './planner-state.js';
+import { getUnits, subscribe, move, remove, add, reset, clearAll } from './planner-state.js';
 import { createBoard } from './board.js';
 import { renderCard } from './card.js';
 import { attachDragging, shouldSuppressClick } from './drag.js';
+import { createAddUnitsDrawer } from './drawer.js';
 import { showSnackbar } from '../snackbar.js';
 
 /** Column definitions — fixed four terms, in display order (brief §2). */
@@ -157,8 +159,18 @@ export function initPlanner(rootEl) {
   resetBtn.className = 'pl-btn pl-btn-ghost';
   resetBtn.textContent = 'Reset demo';
 
+  const addUnitsBtn = document.createElement('button');
+  addUnitsBtn.type = 'button';
+  addUnitsBtn.className = 'pl-btn pl-btn-primary';
+  addUnitsBtn.textContent = '+ Add Units';
+
+  const toolbarActions = document.createElement('div');
+  toolbarActions.className = 'pl-toolbar-actions';
+  toolbarActions.appendChild(resetBtn);
+  toolbarActions.appendChild(addUnitsBtn);
+
   toolbar.appendChild(demoToggle);
-  toolbar.appendChild(resetBtn);
+  toolbar.appendChild(toolbarActions);
 
   const boardRootEl = document.createElement('div');
   boardRootEl.id = 'pl-board-root';
@@ -175,6 +187,13 @@ export function initPlanner(rootEl) {
 
   const announce = createAnnouncer(liveRegion);
 
+  const drawer = createAddUnitsDrawer({
+    getUnits,
+    add,
+    announce,
+    fallbackFocusEl: addUnitsBtn,
+  });
+
   const board = createBoard({
     root: boardRootEl,
     columns: COLUMNS,
@@ -188,8 +207,11 @@ export function initPlanner(rootEl) {
       title: 'No units yet',
       description: 'Add units to plan what your class will learn each term.',
       actionLabel: 'Add Units',
+      onAction: (e) => drawer.open(e.currentTarget),
     },
   });
+
+  addUnitsBtn.addEventListener('click', () => drawer.open(addUnitsBtn));
 
   attachDragging({
     root: boardRootEl,

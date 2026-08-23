@@ -78,6 +78,35 @@ export function playFlip(els, beforeRects, excludeEl) {
 }
 
 /**
+ * Play a subtle fade/rise-in for elements that have no entry in `beforeRects`
+ * — i.e. they didn't exist in the previous render, so `playFlip` (which only
+ * moves elements that DID exist) has nothing to do for them. Used by
+ * board.js so a unit added via the drawer (brief §6: "animate the new card
+ * in so the landing spot is obvious") gets a visible entrance instead of
+ * just appearing. No-ops entirely under prefers-reduced-motion.
+ *
+ * @param {HTMLElement[]} els - elements in their FINAL DOM position.
+ * @param {Map<string, DOMRect>} beforeRects
+ */
+export function playEnter(els, beforeRects) {
+  if (prefersReducedMotion()) return;
+
+  els.forEach((el) => {
+    const id = el.dataset && el.dataset.itemId;
+    if (id && beforeRects.has(id)) return; // existed before — playFlip's concern
+
+    el.getAnimations().forEach((anim) => anim.cancel());
+    el.animate(
+      [
+        { opacity: 0, transform: 'translateY(6px) scale(0.98)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' },
+      ],
+      { duration: DURATION, easing: EASING }
+    );
+  });
+}
+
+/**
  * Animate the floating drag clone from its current fixed position to a
  * target rect (the dropped card's resting slot), then call `onDone`.
  * Under prefers-reduced-motion — or if there's no clone — `onDone` runs

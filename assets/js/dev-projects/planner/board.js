@@ -16,7 +16,7 @@
  * prefers-reduced-motion (flip.js's concern, not this module's).
  */
 
-import { captureRects, playFlip } from './flip.js';
+import { captureRects, playFlip, playEnter } from './flip.js';
 
 /**
  * @typedef {Object} BoardColumn
@@ -34,8 +34,10 @@ import { captureRects, playFlip } from './flip.js';
  * @property {(item: any) => HTMLElement} renderCard - Returns an <li>.
  * @property {string} [boardLabel]
  * @property {string} [columnEmptyText]
- * @property {{ title: string, description: string, actionLabel: string }} [emptyState]
- *   Shown instead of the columns when getItems() is empty.
+ * @property {{ title: string, description: string, actionLabel: string, onAction?: () => void }} [emptyState]
+ *   Shown instead of the columns when getItems() is empty. `onAction`, if
+ *   given, makes the action button live (click handler); omitted, it stays
+ *   disabled as before — board.js has no opinion on what the action does.
  */
 
 /**
@@ -56,6 +58,10 @@ export function createBoard(options) {
 
   /** Render is suppressed while a drag gesture owns the DOM directly. */
   let renderSuspended = false;
+
+  /** Skip the entrance animation on the very first render (initial page
+   * load) — everything after that is a real change worth animating in. */
+  let hasRenderedOnce = false;
 
   function setRenderSuspended(value) {
     renderSuspended = value;
@@ -95,7 +101,14 @@ export function createBoard(options) {
       btn.type = 'button';
       btn.className = 'pl-btn pl-btn-primary';
       btn.textContent = cfg.actionLabel;
-      btn.disabled = true;
+      // Board stays generic (brief §9): it knows nothing about a drawer,
+      // just an optional callback the caller supplies. No callback means
+      // the empty-state action stays inert (disabled), same as before.
+      if (typeof cfg.onAction === 'function') {
+        btn.addEventListener('click', cfg.onAction);
+      } else {
+        btn.disabled = true;
+      }
       wrap.appendChild(btn);
     }
 
@@ -140,6 +153,8 @@ export function createBoard(options) {
 
   function render() {
     const beforeRects = captureRects(Array.from(root.querySelectorAll('.pl-card')));
+    const isFirstRender = !hasRenderedOnce;
+    hasRenderedOnce = true;
 
     const items = getItems();
     root.textContent = '';
@@ -159,7 +174,11 @@ export function createBoard(options) {
     });
 
     root.appendChild(boardEl);
-    playFlip(Array.from(root.querySelectorAll('.pl-card')), beforeRects);
+    const cardEls = Array.from(root.querySelectorAll('.pl-card'));
+    playFlip(cardEls, beforeRects);
+    // Not on the very first paint — nothing to animate "in" against yet,
+    // and it would just replay every fixture card as a fade-in on load.
+    if (!isFirstRender) playEnter(cardEls, beforeRects);
   }
 
   return {
