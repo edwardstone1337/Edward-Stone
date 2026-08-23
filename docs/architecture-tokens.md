@@ -17,7 +17,7 @@ All tokens use the `dp-` prefix and follow a three-layer atomic model:
 Two files may carry raw token **values**:
 
 - **`dev-tokens.css`** — the primary source of truth.
-- **`assets/css/project-*.css`** — a per-project theme layer, scoped to `[data-project="…"]`, re-skinning semantic tokens for one page. `project-scp-reader.css` is the reference example. Structurally this is the same idea as `[data-theme="light"]`, scoped to a project rather than a theme.
+- **`assets/css/project-*.css`** — a per-project theme layer, scoped to `[data-project="…"]`, re-skinning semantic tokens for one page. `project-scp-reader.css` is the reference example; `project-planner.css` (Planner prototype, `--pl-*` token sheet) follows the same pattern — see below. Structurally this is the same idea as `[data-theme="light"]`, scoped to a project rather than a theme.
 
 **`dev-styles.css` may not carry values.** It's the shared component layer. It may define *scoped* tokens on a class, but only ones that reference existing tokens — `.dp-counter` and `.dp-strip--scp` are the reference examples. Pointing an existing token at a raw literal there (e.g. `.dp-strip--kaomoji { --dp-strip-bg: #141414; }`) is the drift this rule exists to prevent, and `./scripts/check-token-hygiene.sh` fails the build on it.
 
@@ -93,6 +93,16 @@ Each product has its own strip token set for branded sections on the homepage:
 - **Flip 7**: `--dp-strip-flip7-bg`, `--dp-strip-flip7-orb-1`, `--dp-strip-flip7-orb-2`, `--dp-strip-flip7-title-from`, `--dp-strip-flip7-title-to` (uses LCh colour model for perceptual uniformity)
 
 Full token contract: `docs/strip-branding-spec.md`.
+
+### Planner Token Sheet (`project-planner.css`)
+
+The Planner prototype's per-project theme file — `--pl-*` tokens scoped to `[data-project="planner"]`, the reference example of a project theme file (alongside `project-scp-reader.css`). Planner components (`assets/js/dev-projects/planner/*`) consume only `--pl-*` tokens — this file is the single place a future prototype re-skins by overriding the token sheet, never by forking the components.
+
+Values are sourced from the real `@inquisitive/ui` design system rather than invented: `--pl-line-strong` (resting card/row border) is grey-5 `#d9d9d9`; `--pl-good` (progress fill) is success green-6 `#52c41a`; `--pl-progress-height` is 8px (`ProgressBar size="sm"`); `--pl-canvas` / `--pl-canvas-strong` (`#fdfdfe` / `#f8f9fa`) are that system's cool-grey surface tiers, used for the frame body's ground and the Kanban columns / recommendation tray respectively — a three-tier canvas → tray/column → bordered-card stack. Brand accent is `--pl-accent: #531DAB` (purple-7, Edward's brand colour, 9.85:1 on white — AAA for normal text).
+
+`.pl-compact` is a size-variant class (applied alongside `[data-project="planner"]` on the homepage's `.dp-case-promo__widget` mount) that shrinks only geometry tokens (`--pl-column-width`, `--pl-column-gap`, `--pl-card-gap`) for the compact embed — colour/radius/typography tokens are untouched, so the compact widget and the full `projects/planner.html` page share one visual identity at two densities.
+
+The simulated product window (`.pl-frame` — titlebar, body, tab bar) is Planner-internal today; its CSS lives in this same file rather than a shared `dev-styles.css` component, but is intended for extraction once a second embedded-prototype consumer needs it.
 
 ## Shared CSS Components (in `dev-styles.css`)
 
