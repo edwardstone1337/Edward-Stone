@@ -701,6 +701,7 @@
                         <a href="/projects/prang-out.html" role="menuitem" class="dp-nav-dropdown-item">Prang Out</a>
                       </div>
                     </div>
+                    <a href="/personal.html" class="dp-nav-link">Personal</a>
                     <a href="/gallery.html" class="dp-nav-link">Gallery</a>
                     <a href="/resume.html" class="dp-nav-link">Resume</a>
                     <a href="/about.html" class="dp-nav-link">About</a>
@@ -713,7 +714,7 @@
                 </div>
               </nav>
             </div>
-            <span class="ds-label">.dp-nav, .dp-nav-inner, .dp-nav-brand, .dp-nav-logo, .dp-nav-name, .dp-nav-links, .dp-nav-link, .dp-nav-dropdown, .dp-nav-dropdown-trigger, .dp-nav-dropdown-menu, .dp-dropdown-menu, .dp-nav-dropdown-item, .dp-nav-actions, .dp-nav-hamburger</span>
+            <span class="ds-label">.dp-nav, .dp-nav-inner, .dp-nav-brand, .dp-nav-logo, .dp-nav-name, .dp-nav-links, .dp-nav-link, .dp-nav-dropdown, .dp-nav-dropdown-trigger, .dp-nav-dropdown-menu, .dp-dropdown-menu, .dp-nav-dropdown-item, .dp-nav-actions, .dp-nav-hamburger — one nav breakpoint only: <code>@media (max-width: 768px)</code> (dev-styles.css:3842, rules at :3947–3949 and :3950–3952) sets <code>.dp-nav-links { display: none }</code> and <code>.dp-nav-hamburger { display: flex }</code>. There is no separate tablet layout — 769px and up always renders this full desktop nav shown above. A second <code>@media (max-width: 480px)</code> (dev-styles.css:3967) only shrinks chrome — <code>.dp-nav-inner</code> height 64px → 56px (:4022–4025), logo 32px → 28px (:4026–4029), <code>.dp-nav-name</code> font-size (:4030–4032) — it does not change layout.</span>
           </div>
 
           <!-- 6b. Mobile nav (hamburger + drawer) -->
@@ -726,7 +727,7 @@
                 <span class="dp-nav-hamburger-label">Menu</span>
               </button>
             </div>
-            <span class="ds-label">.dp-nav-hamburger — display: none above 768px in the real CSS, forced visible here for reference</span>
+            <span class="ds-label">.dp-nav-hamburger — hidden by default, shown via <code>display: flex</code> only inside <code>@media (max-width: 768px)</code> (dev-styles.css:3950–3952); forced visible here for reference. This is the only nav breakpoint — there is no distinct tablet state, 769px and up always shows the 6a desktop nav instead.</span>
 
             <div class="ds-demo ds-drawer-viewport">
               <div class="dp-nav-drawer dp-nav-drawer--open ds-drawer-demo" id="ds-drawer-demo" aria-label="Navigation menu" role="dialog" aria-modal="true">
@@ -745,6 +746,7 @@
                     <a href="/projects/scp-reader.html" class="dp-nav-drawer-link">SCP Reader</a>
                     <a href="/projects/prang-out.html" class="dp-nav-drawer-link">Prang Out</a>
                     <span class="dp-nav-drawer-heading">More</span>
+                    <a href="/personal.html" class="dp-nav-drawer-link">Personal</a>
                     <a href="/gallery.html" class="dp-nav-drawer-link">Gallery</a>
                     <a href="/resume.html" class="dp-nav-drawer-link">Resume</a>
                     <a href="/about.html" class="dp-nav-drawer-link">About</a>
@@ -752,7 +754,7 @@
                 </div>
               </div>
             </div>
-            <span class="ds-label">.dp-nav-drawer, .dp-nav-drawer-backdrop, .dp-nav-drawer-panel, .dp-nav-drawer-close, .dp-nav-drawer-links, .dp-nav-drawer-heading, .dp-nav-drawer-link — shown in the "open" state; position: fixed rescoped to this box only</span>
+            <span class="ds-label">.dp-nav-drawer, .dp-nav-drawer-backdrop, .dp-nav-drawer-panel, .dp-nav-drawer-close, .dp-nav-drawer-links, .dp-nav-drawer-heading, .dp-nav-drawer-link — shown in the "open" state; position: fixed rescoped to this box only. Drawer link order mirrors <code>generateDrawerLinksHTML()</code> (assets/js/dev-projects/nav-component.js:82–103): dropdown parents become a heading + their children, in <code>NAV_LINKS</code> array order (Case Studies, then Projects), and the synthetic "More" heading is inserted exactly once — at the position of the <em>first</em> flat link encountered, here Personal — after which Gallery, Resume and About fall in under that same "More" heading without repeating it. <strong>Ordering constraint:</strong> because "More" only fires once, any flat link placed <em>between</em> two dropdown groups in <code>NAV_LINKS</code> strands every later flat link without a heading of its own (this bit us when Personal was briefly ordered before Projects — it forced "More" to fire early and left Gallery/Resume/About headingless). Keep all flat top-level links contiguous, after the last dropdown group, if you want them to land together under one "More".</span>
           </div>
 
           <!-- 6p. Lightbox shell -->
