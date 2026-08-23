@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Resume copy: verb variety** (`resume.html`, `files/Edward Stone Resume.docx`): "designed" appeared 8× across experience bullets (flagged by ATS checker content analysis). Six instances replaced with verbs matched to each bullet's actual substance — Launched (adoption-driven planning feature), Introduced (new review system), Streamlined (friction-reduction onboarding), Reworked (conversion-lift EDM campaigns), Delivered work for (agency clients), Created (online store) — keeping "Designed" only where interface/product design craft is the point (lesson builder, near-me feature, websites). Docx regenerated to match.
+
+
 ### Added
 - **Word (.docx) in the resume download menu** (`resume.html`, `assets/js/dev-projects/resume-lightbox.js`, `assets/js/analytics.js`): all three download menus (top/bottom rows and the lightbox) now offer the Word companion as a direct download link alongside Print to PDF and Copy to clipboard; tracked in GA4 as `resume_download` with `method: docx`. Docs: new `docs/resume-docx.md` documents how the file is generated and when to regenerate; the old print-typography discovery doc is marked historical.
 - **Word (.docx) resume companion** (`files/Edward Stone Resume.docx`): generated from `resume.html` (same single source of truth) as a plain single-column document — Heading 1 name, Heading 2 sections, Heading 3 roles, native bullet lists, no tables or text boxes — for older ATS parsers (Taleo-era, some Workday configs) that handle .docx more reliably than any PDF. Core properties (title/author/language) set.
