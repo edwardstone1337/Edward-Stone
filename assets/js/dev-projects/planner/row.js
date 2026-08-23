@@ -1,11 +1,13 @@
 /**
  * Planner prototype — term-view unit row renderer (round 4 redesign,
- * matching Edward's reference "epic row" layout).
+ * matching Edward's reference "epic row" layout; round 5 adds a
+ * `variant: 'recommendation'` option, see below).
  *
  * A horizontal counterpart to card.js's vertical Kanban card: same unit,
  * laid out left-to-right as, in order: a decorative grab pad, a small
  * subject-tinted thumbnail, the unit name, a subject/year stack, a
- * lessons/assessment content stack, a segmented progress bar, and a
+ * lessons/assessment content stack, a single continuous progress bar (same
+ * mechanic as the Kanban card's — round 5 reverted the segmented bar), and a
  * trailing horizontal "meatballs" menu (kebab.js, same Open/—/Remove menu
  * as the card).
  *
@@ -22,6 +24,17 @@
  * — that's the click target planner.js's delegated `setupCardInteractions()`
  * opens the unit-detail drawer from (same class/attribute contract card.js
  * uses, including the post-drag click-suppression check).
+ *
+ * `variant: 'recommendation'` (round 5, term-view.js's "Recommended this
+ * term" section): same anatomy (thumbnail/name/subject-year/counts/
+ * progress) MINUS the grab pad and kebab, PLUS a trailing "Add" button
+ * (`data-action="add"`, reuses the Add Units drawer's `.pl-drawer-add-btn`
+ * look). These rows are NOT draggable — the `<li>` carries
+ * `data-no-drag="true"` (drag.js's onPointerDown bails on it) instead of a
+ * tabIndex/"Move {title}" accessible name, and the hit area is a real
+ * `<button>` (rather than the planned row's plain `<div>`) so keyboard users
+ * can still reach "open" without the kebab's "Open" menu item that planned
+ * rows rely on.
  */
 
 import { buildKebab } from './kebab.js';
@@ -44,19 +57,19 @@ function pluralizeLabel(count, word) {
 }
 
 /**
- * Segmented progress bar: one segment per lesson, plus a visually distinct
- * final segment for the assessment (if any) — wider gap + its own
- * outlined shape, rather than just another bar segment, so it reads as a
- * different KIND of item, not just one more lesson. Filled = done (success
- * green); unfilled = --pl-surface-2. The wrapper alone carries the
- * `progressbar` semantics (individual segments are presentation only) so
- * assistive tech gets one number, not N.
+ * Continuous progress bar — one fill on a track, same mechanic as the
+ * Kanban card's `.pl-card-progress` (round 5: reverted the round-4 segmented
+ * bar, which read as more precise than the data warranted). Fill width is
+ * the derived completion fraction; aria semantics stay counted (not a
+ * percentage) so assistive tech gets "{x} of {y} complete", matching the
+ * unit-detail drawer's progress summary (unit-drawer.js reuses these same
+ * classes verbatim).
  *
  * @param {import('./planner-data.js').CatalogueUnit} unit
  * @returns {HTMLDivElement}
  */
-function buildSegmentedProgress(unit) {
-  const { completed, total } = unitProgress(unit);
+function buildProgress(unit) {
+  const { completed, total, fraction } = unitProgress(unit);
 
   const wrap = document.createElement('div');
   wrap.className = 'pl-row-progress';
@@ -66,19 +79,10 @@ function buildSegmentedProgress(unit) {
   wrap.setAttribute('aria-valuenow', String(completed));
   wrap.setAttribute('aria-label', unit.title + ': ' + completed + ' of ' + total + ' complete');
 
-  unit.lessons.forEach((lessonItem) => {
-    const seg = document.createElement('span');
-    seg.className = 'pl-row-progress-seg' + (lessonItem.done ? ' pl-row-progress-seg--filled' : '');
-    wrap.appendChild(seg);
-  });
-
-  if (unit.assessment) {
-    const seg = document.createElement('span');
-    seg.className =
-      'pl-row-progress-seg pl-row-progress-seg--assessment' +
-      (unit.assessment.done ? ' pl-row-progress-seg--filled' : '');
-    wrap.appendChild(seg);
-  }
+  const fill = document.createElement('div');
+  fill.className = 'pl-row-progress-fill';
+  fill.style.width = Math.round(fraction * 100) + '%';
+  wrap.appendChild(fill);
 
   return wrap;
 }
@@ -86,28 +90,50 @@ function buildSegmentedProgress(unit) {
 /**
  * Render one term-view unit row.
  *
- * @param {import('./planner-data.js').CatalogueUnit & { term: 1|2|3|4 }} unit
+ * @param {import('./planner-data.js').CatalogueUnit & { term?: 1|2|3|4 }} unit
+ * @param {{ variant?: 'planned'|'recommendation' }} [options] - `variant:
+ *   'recommendation'` (round 5) renders term-view.js's "Recommended this
+ *   term" flavour: no grab pad, no kebab, a trailing "Add" button, and no
+ *   drag affordance/semantics at all (see module doc above).
  * @returns {HTMLLIElement}
  */
-export function renderRow(unit) {
+export function renderRow(unit, options) {
+  const isRecommendation = !!(options && options.variant === 'recommendation');
+
   const li = document.createElement('li');
-  li.className = 'pl-card pl-row';
-  li.tabIndex = 0;
-  li.setAttribute('aria-label', 'Move ' + unit.title);
+  li.className = 'pl-card pl-row' + (isRecommendation ? ' pl-row--recommendation' : '');
   li.dataset.itemId = unit.id;
+
+  if (isRecommendation) {
+    // Not draggable: drag.js's onPointerDown bails out on this attribute
+    // before it ever picks the row up. No tabIndex/"Move {title}" name
+    // either — the hit button below (not the <li>) is the keyboard target.
+    li.setAttribute('data-no-drag', 'true');
+  } else {
+    li.tabIndex = 0;
+    li.setAttribute('aria-label', 'Move ' + unit.title);
+  }
 
   // Grab pad — decorative drag affordance at the row's far left edge.
   // aria-hidden: the row itself already carries the "Move {title}"
   // accessible name and is the real drag target (see module doc above).
-  const grabPad = document.createElement('span');
-  grabPad.className = 'pl-row-grab';
-  grabPad.setAttribute('aria-hidden', 'true');
-  grabPad.innerHTML = GRAB_SVG;
+  // Recommendation rows have no grab pad (nothing to drag).
+  let grabPad = null;
+  if (!isRecommendation) {
+    grabPad = document.createElement('span');
+    grabPad.className = 'pl-row-grab';
+    grabPad.setAttribute('aria-hidden', 'true');
+    grabPad.innerHTML = GRAB_SVG;
+  }
 
   // Hit target: everything a click should open the unit from (thumbnail
-  // through the progress bar) — kebab and grab pad are deliberately
-  // outside this wrapper, matching card.js's body/kebab split.
-  const hit = document.createElement('div');
+  // through the progress bar) — kebab/Add and grab pad are deliberately
+  // outside this wrapper, matching card.js's body/kebab split. Planned rows
+  // keep a plain <div> (the <li> itself is the focusable/draggable target);
+  // recommendation rows use a real <button> so the open action stays
+  // keyboard-reachable without a kebab.
+  const hit = document.createElement(isRecommendation ? 'button' : 'div');
+  if (isRecommendation) hit.type = 'button';
   hit.className = 'pl-card-body pl-row-hit';
   hit.dataset.action = 'open';
 
@@ -144,7 +170,7 @@ export function renderRow(unit) {
     content.appendChild(assessmentLine);
   }
 
-  const progress = buildSegmentedProgress(unit);
+  const progress = buildProgress(unit);
 
   hit.appendChild(thumb);
   hit.appendChild(name);
@@ -152,13 +178,27 @@ export function renderRow(unit) {
   hit.appendChild(content);
   hit.appendChild(progress);
 
-  // Trailing meatballs menu — same Open/—/Remove menu as the card's kebab
-  // (kebab.js), horizontal glyph per Edward's reference row.
-  const kebabWrap = buildKebab({ orientation: 'horizontal' });
+  // Trailing control: planned rows get the meatballs menu (same Open/—/
+  // Remove menu as the card's kebab, kebab.js, horizontal glyph per
+  // Edward's reference row); recommendation rows get an "Add" button
+  // instead (reuses the Add Units drawer's `.pl-drawer-add-btn` look —
+  // Edward's feedback: "like the drawer's Add"), wired generically via the
+  // same `data-action` delegation planner.js already uses for open/remove.
+  let trailing;
+  if (isRecommendation) {
+    trailing = document.createElement('button');
+    trailing.type = 'button';
+    trailing.className = 'pl-drawer-add-btn pl-row-add-btn';
+    trailing.dataset.action = 'add';
+    trailing.textContent = 'Add';
+    trailing.setAttribute('aria-label', 'Add ' + unit.title + ' to this term');
+  } else {
+    trailing = buildKebab({ orientation: 'horizontal' });
+  }
 
-  li.appendChild(grabPad);
+  if (grabPad) li.appendChild(grabPad);
   li.appendChild(hit);
-  li.appendChild(kebabWrap);
+  li.appendChild(trailing);
 
   return li;
 }

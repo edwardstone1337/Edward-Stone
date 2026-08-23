@@ -168,6 +168,11 @@ export function attachDragging(config) {
     if (ptr) return; // a previous gesture's drop-settle animation is still in flight
     const card = e.target.closest('.pl-card');
     if (!card || !root.contains(card)) return;
+    // Generic opt-out (round 5: term-view's non-draggable "Recommended this
+    // term" rows share `root` with the draggable planned rows, so class
+    // alone can't distinguish them — a `.pl-card` with this attribute never
+    // activates a drag, no matter where the pointer lands on it).
+    if (card.hasAttribute('data-no-drag')) return;
     if (e.target.closest('.pl-kebab')) return; // kebab stays independently clickable
 
     ptr = {
@@ -421,6 +426,7 @@ export function attachDragging(config) {
   function onKeydown(e) {
     const card = e.target.closest('.pl-card');
     if (!card || card !== e.target) return; // ignore kebab's own Enter/Space etc.
+    if (card.hasAttribute('data-no-drag')) return; // see onPointerDown's same guard
 
     const id = card.dataset.itemId;
     const title = card.getAttribute('aria-label').replace(/^Move /, '');

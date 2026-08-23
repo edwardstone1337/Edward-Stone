@@ -19,6 +19,14 @@
  * all just appeared — only a render caused by an actual data change (add /
  * remove / move / reorder while this term is already the active tab) should
  * animate. The caller tells us which is which via `skipAnimation`.
+ *
+ * "Recommended this term" (round 5): when `getRecommendations` is supplied,
+ * every render additionally appends up to 3 recommendation rows below the
+ * planned list (or below the empty state, if the term has no planned units
+ * yet — both coexist) using `renderRow(unit, { variant: 'recommendation' })`.
+ * The section is omitted entirely when there's nothing left to recommend.
+ * Eligibility/ordering is entirely the caller's concern (planner.js) — this
+ * module just renders whatever list it's handed.
  */
 
 import { captureRects, playFlip, playEnter } from './flip.js';
@@ -34,6 +42,10 @@ import { captureRects, playFlip, playEnter } from './flip.js';
  *   Text-only (Edward's feedback: the persistent "+ Add Units" action-row
  *   button is the ONLY Add Units entry point now) — `title` should point at
  *   it rather than duplicate it as a second button here.
+ * @property {(term: 1|2|3|4) => any[]} [getRecommendations] - (round 5)
+ *   Returns up to 3 catalogue units to recommend for this term (already
+ *   filtered/ordered by the caller). Omit to skip the section entirely.
+ * @property {string} [recommendationsLabel]
  */
 
 /**
@@ -47,6 +59,8 @@ export function createTermView(options) {
     renderRow,
     listLabel = (term) => 'Term ' + term + ' units',
     emptyState = null,
+    getRecommendations = null,
+    recommendationsLabel = 'Recommended this term',
   } = options;
 
   let renderSuspended = false;
@@ -77,6 +91,42 @@ export function createTermView(options) {
   }
 
   /**
+   * "Recommended this term" — up to 3 recommendation-variant rows, or
+   * `null` when there's nothing eligible left to recommend (caller omits
+   * the whole section in that case, per Edward's feedback).
+   * @param {1|2|3|4} term
+   * @returns {HTMLElement|null}
+   */
+  function buildRecommendations(term) {
+    if (typeof getRecommendations !== 'function') return null;
+    const recs = getRecommendations(term);
+    if (!recs || recs.length === 0) return null;
+
+    const section = document.createElement('div');
+    section.className = 'pl-term-reco';
+
+    const heading = document.createElement('h3');
+    heading.className = 'pl-term-reco-heading';
+    heading.id = 'pl-term-reco-heading';
+    heading.tabIndex = -1;
+    heading.textContent = recommendationsLabel;
+    section.appendChild(heading);
+
+    const list = document.createElement('ul');
+    list.className = 'pl-term-reco-list';
+    list.setAttribute('aria-label', recommendationsLabel);
+
+    recs.forEach((unit) => {
+      const rowEl = renderRow(unit, { variant: 'recommendation' });
+      rowEl.dataset.itemId = getItemId(unit);
+      list.appendChild(rowEl);
+    });
+
+    section.appendChild(list);
+    return section;
+  }
+
+  /**
    * @param {1|2|3|4} term
    * @param {{ skipAnimation?: boolean }} [opts] - skipAnimation: true for a
    *   render triggered by activating this tab (no "before" state worth
@@ -94,6 +144,15 @@ export function createTermView(options) {
 
     if (items.length === 0 && emptyState) {
       root.appendChild(buildEmptyState(emptyState));
+      // Empty state and recommendations coexist (Edward's feedback): an
+      // empty term still gets its recommendations below the empty-state text.
+      const reco = buildRecommendations(term);
+      if (reco) root.appendChild(reco);
+      if (!skipAnimation) {
+        const rowEls = Array.from(root.querySelectorAll('.pl-card'));
+        playFlip(rowEls, beforeRects);
+        playEnter(rowEls, beforeRects);
+      }
       return;
     }
 
@@ -110,6 +169,9 @@ export function createTermView(options) {
     });
 
     root.appendChild(listEl);
+
+    const reco = buildRecommendations(term);
+    if (reco) root.appendChild(reco);
 
     if (!skipAnimation) {
       const rowEls = Array.from(root.querySelectorAll('.pl-card'));

@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Planner: "Recommended this term" section at the bottom of each term tab — up to three catalogue units not on the board, shown as an Add-variant unit row (no grab pad/meatballs); adding targets that term and the next eligible unit backfills
+
+### Changed
+
+- Planner: reverted segmented progress bars to a single continuous bar (derived completion fraction retained) in term rows and the unit drawer
+- Planner: row spacing rebalanced — grab pad inset from the left edge, name column capped instead of flex-greedy, progress bar fixed-width in rows and the unit drawer
+- Planner: tokens retuned to @inquisitive/ui design-system values — resting borders lightened to grey-5 `#d9d9d9` with grey-4 `#e8e8e8` dividers, success green brightened to `#52c41a`, progress bars thickened to 8px with grey-3 `#f5f5f5` track, subtle gradient overlays, and the system's 200ms width easing; accent-soft aligned to purple-1 `#f9f0ff`
+
 ### Fixed
 - **Planner: term-view row's unit name was invisible at phone widths** (`assets/css/project-planner.css`): The two existing `@container pl-frame` breakpoints (760px, 560px) shrink the row's fixed thumbnail/progress columns as the frame narrows, but stopped at a 140px-wide progress column — at a 390px viewport (frame body ~340px wide) that left the flexible `minmax(0, 1fr)` name column only ~2px, rendering the unit name invisible (ellipsized to nothing) while the segmented progress bar stayed full width. Added a third breakpoint (`max-width: 420px`) that shrinks the progress column further (140px → 64px) and tightens the column gap (12px → 8px), giving the name column its space back (~86px at 390px, enough for a legible truncated title) without affecting the 560–760px tier. Verified: name renders correctly at 390/600/900/1280px, no regression at any existing breakpoint, `check-token-hygiene.sh` still passes (per-project files may carry raw values).
 

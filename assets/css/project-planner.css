@@ -18,8 +18,11 @@
   --pl-ink: #23262e;
   --pl-ink-2: #5a5e6a;
   --pl-ink-3: #8a8e99;
-  --pl-line: #dddcd6;
-  --pl-line-strong: #c9c8c1;
+  /* Borders retuned to @inquisitive/ui semantic.css: one resting border
+     tier (grey-5) for cards/rows, a lighter divider (grey-4) for internal
+     hairlines; anything darker is hover-only in the real system. */
+  --pl-line: #e8e8e8;
+  --pl-line-strong: #d9d9d9;
   /* Brand accent (Edward's feedback) — #531DAB gives 9.85:1 contrast on
      white (AAA for normal text needs 7:1) and the same ratio for white
      text on the accent fill, so it works directly as text-on-white,
@@ -29,8 +32,9 @@
      rather than drifting toward the old colour's blue-violet. */
   --pl-accent: #531DAB;
   --pl-accent-ink: #ffffff;
-  --pl-accent-soft: #f0e8fd;
-  --pl-good: #2e7d54;
+  --pl-accent-soft: #f9f0ff; /* purple-1, the system's active/selected tint */
+  /* Success = green-6, the real ProgressBar/status fill (semantic.css). */
+  --pl-good: #52c41a;
 
   /* ---------- subject tints (bg + ink pairs) ---------- */
   --pl-tint-maths-bg: #dbe7f4;      --pl-tint-maths-ink: #2d5c8f;
@@ -50,16 +54,17 @@
   --pl-card-internal-gap: 8px;
   --pl-card-body-right-padding: 40px;
   --pl-kebab-inset: 8px;
-  --pl-progress-height: 4px;
+  --pl-progress-height: 8px; /* ProgressBar size="sm" — the real card bar */
+  --pl-progress-track: #f5f5f5; /* grey-3 track */
   --pl-dropzone-min-height: 44px;
 
-  /* ---------- Term-view row (round 4 redesign) ---------- */
+  /* ---------- Term-view row (round 4 redesign; round 5 rebalance) ---------- */
+  --pl-row-inset: 14px; /* left edge -> grab pad, matches the widget's spacing rhythm */
   --pl-row-thumb-size: 46px;
+  --pl-row-name-width: 200px; /* max-content-ish cap, was minmax(0, 1fr) (flex-greedy) */
   --pl-row-subject-year-width: 130px;
   --pl-row-content-width: 150px;
-  --pl-row-progress-width: 190px;
-  --pl-row-progress-seg-height: 8px;
-  --pl-row-progress-seg-gap: 3px;
+  --pl-row-progress-width: 190px; /* also caps the unit drawer's progress bar (round 5) */
   --pl-focus-ring: var(--pl-accent);
   --pl-shadow-card: 0 2px 6px rgba(35, 38, 46, 0.08), 0 8px 20px rgba(35, 38, 46, 0.06);
   --pl-duration: 150ms;
@@ -452,16 +457,20 @@
 [data-project="planner"] .pl-card-progress {
   height: var(--pl-progress-height);
   border-radius: 99px;
-  background: var(--pl-surface-2);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0)),
+    var(--pl-progress-track);
   overflow: hidden;
 }
 
 [data-project="planner"] .pl-card-progress-fill {
   display: block;
   height: 100%;
-  background: var(--pl-good);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)),
+    var(--pl-good);
   border-radius: 99px;
-  transition: width var(--pl-duration) ease;
+  transition: width 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -568,21 +577,31 @@
 
 /* --------------------------------------------
    Term view — unit row (round 4 redesign, matching Edward's reference
-   "epic row" layout). `.pl-row` is a layout-only modifier on top of the
+   "epic row" layout; round 5 rebalanced the column widths and inset — see
+   the two comments below). `.pl-row` is a layout-only modifier on top of the
    base `.pl-card` (kept via .pl-card so drag.js, its dragging/picked
    states, and the drag clone all apply completely unchanged — see row.js).
    `.pl-row-list` reuses `.pl-column-list` verbatim for the same reason
    (drag.js's column-list selector, empty-state placeholder class).
 
    Left to right: grab pad | thumbnail | name | subject/year | content |
-   segmented progress (all five inside .pl-row-hit, a nested grid) | trailing
-   meatballs menu (.pl-kebab, a sibling of .pl-row-hit, not part of the
-   grid — same "own trailing column" idea as the old image-panel layout).
+   progress (all five inside .pl-row-hit, a nested grid) | trailing meatballs
+   menu (.pl-kebab, a sibling of .pl-row-hit, not part of the grid — same
+   "own trailing column" idea as the old image-panel layout). The
+   recommendation variant (row.js) omits the grab pad and swaps the kebab
+   for an Add button (.pl-row-add-btn, styled with the drawer's shared
+   .pl-drawer-add-btn) — everything else in this block applies to it
+   unchanged.
    -------------------------------------------- */
 [data-project="planner"] .pl-row {
   flex-direction: row;
   align-items: stretch;
-  padding: 0;
+  /* Round 5 (Edward's feedback): the grab pad used to sit flush against the
+     row's left edge — add comfortable space before it, matching the
+     widget's spacing rhythm. Padding lives on the row itself (not the grab
+     pad alone) so the whole inset stays part of the draggable `.pl-card`
+     hit area, not a dead zone. */
+  padding: 0 0 0 var(--pl-row-inset);
   gap: 0;
 }
 
@@ -594,13 +613,21 @@
   color: var(--pl-ink-3);
 }
 
+/* Round 5 (Edward's feedback): the name column was `minmax(0, 1fr)` —
+   flex-greedy, so it ate every pixel of leftover space and pushed
+   subject/year, content and progress apart from it with a large dead gap.
+   Capped to --pl-row-name-width (max-content-ish: a non-fr `minmax(0, Npx)`
+   track sizes to its content up to that cap, still shrinking to 0 for
+   ellipsis truncation on a very long name) so the columns huddle together
+   right after the thumbnail; any leftover space now falls after the
+   progress column, before the kebab, instead of after the name. */
 [data-project="planner"] .pl-row-hit {
   flex: 1;
   min-width: 0;
   display: grid;
   grid-template-columns:
     var(--pl-row-thumb-size)
-    minmax(0, 1fr)
+    minmax(0, var(--pl-row-name-width))
     var(--pl-row-subject-year-width)
     var(--pl-row-content-width)
     var(--pl-row-progress-width);
@@ -660,45 +687,37 @@
   white-space: nowrap;
 }
 
-/* Segmented progress bar — one flexible segment per lesson (filled =
-   success green, unfilled = --pl-surface-2), plus a visually distinct final
-   segment for the assessment when the unit has one: a wider leading gap and
-   its own small outlined shape instead of just another bar segment, so it
-   reads as a different KIND of item at a glance. Small gaps throughout keep
-   the whole thing reading as one bar, per role="progressbar" on the
-   wrapper. Reused verbatim (not forked) by the unit-detail drawer's
-   progress summary — see unit-drawer.js. */
+/* Continuous progress bar (round 5: reverted the round-4 segmented bar —
+   Edward's feedback was that one-segment-per-lesson read as more precise
+   than the data warranted). Same mechanic as the Kanban card's
+   .pl-card-progress/-fill: a single fill on a track, width = the derived
+   completion fraction, success green on --pl-surface-2. role="progressbar"
+   with aria-valuenow/valuemax still counted (not a percentage) — see
+   row.js's buildProgress(). Reused verbatim (not forked) by the
+   unit-detail drawer's progress summary — see unit-drawer.js. */
 [data-project="planner"] .pl-row-progress {
-  display: flex;
-  align-items: center;
-  gap: var(--pl-row-progress-seg-gap);
-  height: var(--pl-row-progress-seg-height);
+  height: var(--pl-progress-height);
+  border-radius: 99px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0)),
+    var(--pl-progress-track);
+  overflow: hidden;
 }
 
-[data-project="planner"] .pl-row-progress-seg {
-  flex: 1 1 0;
-  min-width: 3px;
-  height: var(--pl-row-progress-seg-height);
-  border-radius: 2px;
-  background: var(--pl-surface-2);
+[data-project="planner"] .pl-row-progress-fill {
+  display: block;
+  height: 100%;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)),
+    var(--pl-good);
+  border-radius: 99px;
+  transition: width 200ms cubic-bezier(0.2, 0, 0, 1);
 }
 
-[data-project="planner"] .pl-row-progress-seg--filled {
-  background: var(--pl-good);
-}
-
-[data-project="planner"] .pl-row-progress-seg--assessment {
-  flex: 0 0 10px;
-  height: 10px;
-  margin-left: 4px;
-  border-radius: 3px;
-  border: 1.5px solid var(--pl-line-strong);
-  background: var(--pl-surface);
-}
-
-[data-project="planner"] .pl-row-progress-seg--assessment.pl-row-progress-seg--filled {
-  background: var(--pl-good);
-  border-color: var(--pl-good);
+@media (prefers-reduced-motion: reduce) {
+  [data-project="planner"] .pl-row-progress-fill {
+    transition: none;
+  }
 }
 
 [data-project="planner"] .pl-row .pl-kebab {
@@ -714,12 +733,14 @@
 }
 
 /* Narrow frame: the content stack (lessons/assessment counts) is the least
-   essential column, so it's the first to go. */
+   essential column, so it's the first to go. Name stays capped (round 5,
+   same reasoning as the base rule above) — subject/year is still visible
+   here, so there's still a middle stack for a flex-greedy name to crowd. */
 @container pl-frame (max-width: 760px) {
   [data-project="planner"] .pl-row-hit {
     grid-template-columns:
       var(--pl-row-thumb-size)
-      minmax(0, 1fr)
+      minmax(0, var(--pl-row-name-width))
       var(--pl-row-subject-year-width)
       var(--pl-row-progress-width);
   }
@@ -730,7 +751,10 @@
 }
 
 /* Narrower still: drop the subject/year stack too, keeping thumbnail, name,
-   and the segmented progress bar — the row's core identity + status. */
+   and the progress bar — the row's core identity + status. Name reverts to
+   flexible (1fr) here: with only two content columns left, letting name
+   fill the remaining space is the more legible choice, not a "far more
+   than it needs" problem the way it was at the wider tiers above. */
 @container pl-frame (max-width: 560px) {
   [data-project="planner"] .pl-row-hit {
     grid-template-columns: var(--pl-row-thumb-size) minmax(0, 1fr) 140px;
@@ -1127,8 +1151,8 @@
    Unit-detail drawer (round 4) — read-only view of a single unit's lessons/
    assessment. Reuses the Add Units drawer's shell classes verbatim
    (.pl-drawer, .pl-drawer-header, .pl-drawer-icon-btn, .pl-drawer-title,
-   .pl-drawer-body — see drawer-shell.js) and the term-row's segmented
-   progress bar classes verbatim (.pl-row-progress / .pl-row-progress-seg —
+   .pl-drawer-body — see drawer-shell.js) and the term-row's continuous
+   progress bar classes verbatim (.pl-row-progress / .pl-row-progress-fill —
    see above) for the progress summary; only the content below is new.
    -------------------------------------------- */
 [data-project="planner"] .pl-unit-drawer-hero {
@@ -1171,11 +1195,15 @@
   margin-bottom: 24px;
 }
 
-/* Wider/taller than the row's own bar (this is the drawer's headline
-   summary, not a compact list column) — the shared .pl-row-progress-seg
-   flex children stretch to fill whatever width this wrapper gives them. */
+/* Taller than the row's own bar (this is the drawer's headline summary, not
+   a compact list column), but capped to the same moderate width as the row
+   version (round 5: Edward's feedback — it previously stretched the full
+   drawer width) via --pl-row-progress-width, with max-width as a safety
+   net for a narrow mobile drawer (.pl-drawer's own min(560px, 100%)). */
 [data-project="planner"] .pl-unit-drawer-progress .pl-row-progress {
   height: 10px;
+  width: var(--pl-row-progress-width);
+  max-width: 100%;
 }
 
 [data-project="planner"] .pl-unit-drawer-progress-label {
@@ -1232,4 +1260,85 @@
 
 [data-project="planner"] .pl-unit-drawer-item-title {
   min-width: 0;
+}
+
+/* --------------------------------------------
+   Term view — "Recommended this term" section (round 5). Up to 3 catalogue
+   units not yet on the board, rendered with row.js's `variant:
+   'recommendation'` (same thumbnail/name/subject-year/counts/progress
+   anatomy as a planned row, minus the grab pad/kebab, plus a trailing Add
+   button) below the term's planned list (or below its empty state — both
+   coexist, see term-view.js). Hidden entirely when there's nothing left to
+   recommend (term-view.js never renders the section in that case).
+   -------------------------------------------- */
+[data-project="planner"] .pl-term-reco {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: var(--pl-border-width) solid var(--pl-line);
+}
+
+/* Same small-caps eyebrow treatment as the Add Units drawer's year-group
+   headings (.pl-drawer-group-heading) — kept as its own rule since it's a
+   different section, not literally the same element. tabIndex -1 in
+   row.js/planner.js: not in the Tab order on its own, but a stable focus
+   target after an Add click removes the row/button focus was on. */
+[data-project="planner"] .pl-term-reco-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pl-ink-3);
+  margin: 0 0 10px;
+}
+
+[data-project="planner"] .pl-term-reco-heading:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--pl-radius-sm);
+}
+
+[data-project="planner"] .pl-term-reco-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pl-card-gap);
+}
+
+/* Recommendation row — same .pl-card/.pl-row look, just not draggable
+   (default cursor instead of the base .pl-card's grab/grabbing; drag.js
+   itself is blocked via the row's own `data-no-drag` attribute, see
+   row.js/drag.js). */
+[data-project="planner"] .pl-row--recommendation {
+  cursor: default;
+}
+
+/* The recommendation variant's hit area is a real <button> (row.js), not
+   the planned row's plain <div> — reset the UA button chrome so it reads
+   identically to the planned row's grid, then give it its own inset focus
+   ring since (unlike the planned row) it's the row's actual keyboard
+   target. */
+[data-project="planner"] button.pl-row-hit {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+[data-project="planner"] button.pl-row-hit:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: -2px;
+}
+
+/* Add button — reuses .pl-drawer-add-btn's look verbatim (Edward's
+   feedback: "like the drawer's Add") in the row's trailing slot, in place
+   of the planned row's kebab. */
+[data-project="planner"] .pl-row-add-btn {
+  align-self: center;
+  flex: 0 0 auto;
+  margin-right: 16px;
 }

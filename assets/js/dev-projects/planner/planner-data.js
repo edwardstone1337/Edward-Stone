@@ -364,6 +364,16 @@ export function findCatalogueUnit(id) {
 }
 
 /**
+ * Flattened catalogue in a fixed, deterministic order (subject groups in
+ * their declared order above, units in their declared order within each
+ * group) — the pool the "Recommended this term" section (round 5) draws
+ * from. Never reordered at runtime, so the same board state always yields
+ * the same recommendations (Reset reproduces them exactly).
+ * @type {CatalogueUnit[]}
+ */
+export const flatCatalogue = drawerCatalogue.flatMap((group) => group.units);
+
+/**
  * Board seed: which catalogue units start on the board, and in which term.
  * This is a placement list only — no content lives here (see module doc
  * above). Term 4 is deliberately left empty (Edward's feedback): "Night and

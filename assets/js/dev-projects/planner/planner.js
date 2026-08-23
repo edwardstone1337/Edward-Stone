@@ -34,6 +34,7 @@
  */
 
 import { getUnits, subscribe, move, remove, add, reset } from './planner-state.js';
+import { flatCatalogue, findCatalogueUnit } from './planner-data.js';
 import { createBoard } from './board.js';
 import { createTermView } from './term-view.js';
 import { renderCard } from './card.js';
@@ -60,6 +61,32 @@ const TAB_DEFS = [
 ];
 
 const COLUMN_EMPTY_TEXT = 'Drop a unit here';
+
+/** Up to 3 recommendations. */
+const RECOMMENDATION_LIMIT = 3;
+
+/**
+ * "Recommended this term" pool (round 5): catalogue units NOT currently on
+ * the board (any term — the whole board, not just the term being viewed),
+ * in `flatCatalogue`'s fixed order, capped at 3. Deterministic and
+ * board-state-only — no per-term filtering beyond "not on the board" and no
+ * randomness — so every term tab draws from the identical shared pool (an
+ * add on ANY term removes that unit from every tab's recommendations, and
+ * Reset always reproduces the same starting set). The `term` argument isn't
+ * used for eligibility, only passed through for a stable call shape with
+ * term-view.js's `getRecommendations(term)` option.
+ * @returns {import('./planner-data.js').CatalogueUnit[]}
+ */
+function getRecommendations() {
+  const onBoardIds = new Set(getUnits().map((u) => u.id));
+  const eligible = [];
+  for (const unit of flatCatalogue) {
+    if (onBoardIds.has(unit.id)) continue;
+    eligible.push(unit);
+    if (eligible.length === RECOMMENDATION_LIMIT) break;
+  }
+  return eligible;
+}
 
 function createAnnouncer(liveRegionEl) {
   return function announce(message) {
@@ -92,8 +119,12 @@ function closeAllMenus(rootEl) {
  * @param {(msg: string) => void} announce
  * @param {(id: string, triggerEl: HTMLElement) => void} openUnit - Opens the
  *   unit-detail drawer (round 4: replaces the old no-op "opening" toast).
+ * @param {(id: string, triggerEl: HTMLElement) => void} [onAdd] - (round 5)
+ *   Handles a "Recommended this term" row's Add button
+ *   (`data-action="add"`). Board root never renders recommendation rows, so
+ *   its call site simply omits this.
  */
-function setupCardInteractions(rootEl, announce, openUnit) {
+function setupCardInteractions(rootEl, announce, openUnit, onAdd) {
   rootEl.addEventListener('click', (e) => {
     const kebabBtn = e.target.closest('.pl-kebab-btn');
     if (kebabBtn) {
@@ -130,6 +161,11 @@ function setupCardInteractions(rootEl, announce, openUnit) {
         const unit = getUnits().find((u) => u.id === id);
         remove(id);
         if (unit) announce('Removed ' + unit.title + '.');
+        return;
+      }
+
+      if (actionEl.dataset.action === 'add') {
+        if (typeof onAdd === 'function') onAdd(id, card);
         return;
       }
       return;
@@ -368,7 +404,51 @@ export function initPlanner(rootEl) {
     emptyState: {
       title: 'Nothing planned for this term yet. Use Add Units to plan this term.',
     },
+    getRecommendations,
   });
+
+  /**
+   * After a recommendation row's Add button adds its unit (and the term
+   * panel has already re-rendered — see addRecommendation() below), move
+   * focus somewhere still inside the panel rather than letting it fall to
+   * <body> (the clicked button's row, and possibly the whole section, is
+   * gone from the DOM by the time this runs). Prefers the next remaining
+   * recommendation's Add button (keeps the user's place in the list);
+   * falls back to the section heading if the list re-ordered under them;
+   * falls back to the active tab if the section is now hidden entirely
+   * (nothing left to recommend).
+   */
+  function focusAfterRecommendationAdd() {
+    const nextAddBtn = termPanelEl.querySelector('.pl-term-reco [data-action="add"]');
+    if (nextAddBtn) {
+      nextAddBtn.focus({ preventScroll: true });
+      return;
+    }
+    const heading = termPanelEl.querySelector('.pl-term-reco-heading');
+    if (heading) {
+      heading.focus({ preventScroll: true });
+      return;
+    }
+    const activeTabEl = tabEls.find((t) => tabKeyFromEl(t) === activeTab);
+    if (activeTabEl) activeTabEl.focus({ preventScroll: true });
+  }
+
+  /**
+   * @param {string} id - Catalogue id of the recommended unit.
+   */
+  function addRecommendation(id) {
+    // Recommendations only render on a term tab (never "All Terms" — see
+    // term-view.js's wiring above), so activeTab is always a real term
+    // number here; the guard is defensive only.
+    if (typeof activeTab !== 'number') return;
+    const unit = findCatalogueUnit(id);
+    // add()'s notify() synchronously re-renders the term panel (see the
+    // subscribe() callback below) before this call returns, so DOM queries
+    // in focusAfterRecommendationAdd() below already see the new state.
+    add({ id }, activeTab);
+    if (unit) announce('Added ' + unit.title + ' to Term ' + activeTab + '.');
+    focusAfterRecommendationAdd();
+  }
 
   addUnitsBtn.addEventListener('click', () => {
     if (unitDrawer.isOpen()) unitDrawer.close({ animate: false });
@@ -406,7 +486,7 @@ export function initPlanner(rootEl) {
   });
 
   setupCardInteractions(boardRootEl, announce, openUnit);
-  setupCardInteractions(termPanelEl, announce, openUnit);
+  setupCardInteractions(termPanelEl, announce, openUnit, addRecommendation);
 
   // ------------------------------------------------------------------
   // Tab bar wiring — accessible tablist pattern: roving tabindex,

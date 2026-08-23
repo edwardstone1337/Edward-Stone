@@ -17,8 +17,8 @@
  * Content, top to bottom:
  *  - Header: ✕ + unit title (no back button — this drawer has one view).
  *  - Hero strip: subject tint + big initial, subject/year meta.
- *  - Progress summary: the SAME segmented-bar classes as the term-view row
- *    (.pl-row-progress / .pl-row-progress-seg — see row.js) plus an
+ *  - Progress summary: the SAME continuous-bar classes as the term-view row
+ *    (.pl-row-progress / .pl-row-progress-fill — see row.js) plus an
  *    "{x} of {y} complete" label, so the mechanic isn't duplicated.
  *  - "Lessons" list — each lesson with a done indicator (filled check circle
  *    vs empty circle). The icon is aria-hidden; a visually-hidden text
@@ -35,7 +35,7 @@
 
 import { createDrawerShell } from './drawer-shell.js';
 import { EMBLEM_GLYPH, tintClass } from './drawer.js';
-import { unitProgress } from './planner-data.js';
+import { unitProgress, findCatalogueUnit } from './planner-data.js';
 
 const CLOSE_SVG =
   '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
@@ -119,12 +119,14 @@ function buildHero(unit) {
 }
 
 /**
- * Progress summary — reuses row.js's segmented-bar classes verbatim (see
- * module doc) so the "one segment per lesson + a distinct assessment
- * segment" mechanic lives in exactly one place in the CSS.
+ * Progress summary — reuses row.js's continuous-bar classes verbatim (see
+ * module doc) so the fill mechanic lives in exactly one place in the CSS.
+ * Capped to a moderate width (round 5: it previously stretched the full
+ * drawer width) via the `.pl-unit-drawer-progress .pl-row-progress` CSS
+ * override — see project-planner.css.
  */
 function buildProgressSummary(unit) {
-  const { completed, total } = unitProgress(unit);
+  const { completed, total, fraction } = unitProgress(unit);
 
   const wrap = document.createElement('div');
   wrap.className = 'pl-unit-drawer-progress';
@@ -137,19 +139,10 @@ function buildProgressSummary(unit) {
   bar.setAttribute('aria-valuenow', String(completed));
   bar.setAttribute('aria-label', unit.title + ': ' + completed + ' of ' + total + ' complete');
 
-  unit.lessons.forEach((lessonItem) => {
-    const seg = document.createElement('span');
-    seg.className = 'pl-row-progress-seg' + (lessonItem.done ? ' pl-row-progress-seg--filled' : '');
-    bar.appendChild(seg);
-  });
-
-  if (unit.assessment) {
-    const seg = document.createElement('span');
-    seg.className =
-      'pl-row-progress-seg pl-row-progress-seg--assessment' +
-      (unit.assessment.done ? ' pl-row-progress-seg--filled' : '');
-    bar.appendChild(seg);
-  }
+  const fill = document.createElement('div');
+  fill.className = 'pl-row-progress-fill';
+  fill.style.width = Math.round(fraction * 100) + '%';
+  bar.appendChild(fill);
 
   const label = document.createElement('p');
   label.className = 'pl-unit-drawer-progress-label';
@@ -241,7 +234,11 @@ export function createUnitDrawer(config) {
    * @param {HTMLElement} [triggerEl]
    */
   function open(unitId, triggerEl) {
-    const unit = getUnits().find((u) => u.id === unitId);
+    // On-board units first (carries `.term`, though renderContent never
+    // reads it); falls back to the catalogue directly for a unit that
+    // isn't on the board yet — round 5's "Recommended this term" rows open
+    // this same drawer for a unit `getUnits()` doesn't know about yet.
+    const unit = getUnits().find((u) => u.id === unitId) || findCatalogueUnit(unitId);
     if (!unit) return;
     shell.open(triggerEl, () => renderContent(unit));
   }
