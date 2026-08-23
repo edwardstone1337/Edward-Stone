@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" data-project="planner">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner Prototype — Edward Stone</title>
+  <!-- PROD-HIDE: Remove when page is ready for production -->
+  <meta name="robots" content="noindex, nofollow">
+  <!-- END PROD-HIDE -->
+  <script src="/assets/js/env.js"></script>
+  <!-- PROD-HIDE: Planner prototype gate — remove when page is ready for production -->
+  <script>
+    if (document.documentElement.classList.contains('is-prod')) {
+      location.replace('/404.html');
+    }
+  </script>
+  <!-- END PROD-HIDE -->
+  <script src="/assets/js/third-party.js"></script>
+  <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+  <link rel="stylesheet" href="../assets/css/dev-styles.css">
+  <link rel="stylesheet" href="../assets/css/project-planner.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
+
+  <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+
+  <noscript><link rel="stylesheet" href="../assets/css/noscript.css"></noscript>
+
+</head>
+<body>
+  <a href="#main" class="dp-skip-link">Skip to content</a>
+  <div id="nav-container"></div>
+
+  <main id="main" class="dp-page">
+
+    <!-- Hero -->
+    <section class="dp-hero dp-reveal">
+      <span class="dp-overline">Prototype</span>
+      <h1 class="dp-hero-heading">
+        <span class="dp-hero-line">Planner</span>
+      </h1>
+      <p class="dp-hero-body">Prototype in progress — the working build lands here once the brief is ready.</p>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { initNav } from '../assets/js/dev-projects/nav-component.js';
+    import { initPlanner } from '../assets/js/dev-projects/planner/planner.js';
+    initNav();
+    initPlanner();
+  </script>
+</body>
+</html>

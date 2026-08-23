@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Planner prototype shell** (`projects/planner.html`, `assets/css/project-planner.css`, `assets/js/dev-projects/planner/planner.js`, `assets/js/dev-projects/planner/planner-data.js`): Scaffolded a hidden, prod-gated page for an upcoming interactive Planner prototype — same `env.js`/inline gate pattern as `projects/prang-out.html` (redirects to `/404.html` on prod), `noindex, nofollow`, pinned `data-theme="light"`, dev-system CSS with an empty per-project theme file, and a placeholder hero. `initPlanner()` and the mock-data module are deliberate no-ops until the brief defines the entity model (units/lessons/weeks). Not linked from nav, not in `sitemap.xml` — mirrors `prang-out.html`'s treatment exactly.
+
+### Added
 - **Word (.docx) in the resume download menu** (`resume.html`, `assets/js/dev-projects/resume-lightbox.js`, `assets/js/analytics.js`): all three download menus (top/bottom rows and the lightbox) now offer the Word companion as a direct download link alongside Print to PDF and Copy to clipboard; tracked in GA4 as `resume_download` with `method: docx`. Docs: new `docs/resume-docx.md` documents how the file is generated and when to regenerate; the old print-typography discovery doc is marked historical.
 - **Word (.docx) resume companion** (`files/Edward Stone Resume.docx`): generated from `resume.html` (same single source of truth) as a plain single-column document — Heading 1 name, Heading 2 sections, Heading 3 roles, native bullet lists, no tables or text boxes — for older ATS parsers (Taleo-era, some Workday configs) that handle .docx more reliably than any PDF. Core properties (title/author/language) set.
 

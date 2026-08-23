@@ -1,0 +1,9 @@
+/* Planner Prototype — project theme overrides
+   Load after dev-tokens.css and dev-styles.css.
+   Only semantic token overrides and layout under [data-project="planner"].
+   Shell only — no values yet. Brief will define the entity model
+   (units/lessons/weeks) and visual language before this file gains rules. */
+
+[data-project="planner"] {
+  /* Inquisitive brand token overrides land here */
+}
