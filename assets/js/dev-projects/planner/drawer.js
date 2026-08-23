@@ -3,36 +3,51 @@
  *
  * Built on `drawer-shell.js`'s shared in-frame drawer shell (round 4:
  * extracted once unit-drawer.js needed the identical mechanics) — this
- * module owns only the Add Units CONTENT: the two-step header (✕ / ←) and
- * body (subject list, then a subject's unit list). See drawer-shell.js for
- * the shell itself (slide-from-right, scrim, inert background, manual focus
- * trap, Escape/scrim/✕ close, focus return, animation).
+ * module owns only the Add Units CONTENT: the three-step header (✕ / ←) and
+ * body (subject list, then a subject's unit list, then round 8's unit
+ * detail). See drawer-shell.js for the shell itself (slide-from-right,
+ * scrim, inert background, manual focus trap, Escape/scrim/✕ close, focus
+ * return, animation).
  *
- * Two steps:
+ * Three steps:
  *   1. "Add units" — a vertical list of subject cards.
- *   2. {Subject name} — units grouped by year, each with a per-unit Add
- *      button. Adding a unit calls the caller's `add(unit, term)`, flips
- *      the button to "Added ✓", and leaves the drawer open.
+ *   2. {Subject name} — units grouped by year, each row a two-target
+ *      pattern (round 8, matching the term row's own convention): a
+ *      `.pl-drawer-unit-hit` button (thumbnail + name/meta) drills into
+ *      step 3 for that unit; a separate `.pl-drawer-add-btn` sibling adds it
+ *      to the planner as a shortcut WITHOUT drilling in, flips to
+ *      "Added ✓", and leaves the drawer open on this step.
+ *   3. (round 8) Unit detail — the SAME shared renderer as the standalone
+ *      unit-detail drawer (unit-detail.js's `buildUnitDetail()`, via
+ *      `createUnitDetailController()`), rendered into this drawer's own
+ *      body instead of a second `<dialog>`. One template, two hosts — no
+ *      forked markup or CSS. Reached by clicking a step-2 row's hit button;
+ *      the header shows ONLY "←" (never both ✕ and ←, same rule as step 2's
+ *      ✕-less header), which returns to step 2 on the SAME subject, restored
+ *      to the scroll position it was at when the user drilled in.
  *
- * "Added" is derived from the current board state every time step 2 is
- * rendered (`getUnits().some(u => u.id === unit.id)`) rather than cached, so
- * removing a unit from the board makes its catalogue entry addable again
- * the next time the drawer opens (or re-opens on the same subject).
+ * "Added" (step 2) and in-planner state (step 3) are both derived from the
+ * current board state every time they render (`getUnits().some(u => u.id
+ * === unit.id)`) rather than cached, so an Add from step 3 is reflected in
+ * step 2's "Added ✓" button the moment the user goes back, and removing a
+ * unit from the board makes its catalogue entry addable again the next time
+ * either step renders.
  *
  * XSS: every dynamic string goes through textContent, never innerHTML.
  * The two innerHTML assignments below are static, hand-authored icon
  * markup — no interpolation — same pattern as card.js's kebab icon.
+ * unit-detail.js's own doc covers step 3's content.
  */
 
 import { drawerCatalogue } from './planner-data.js';
 import { createDrawerShell } from './drawer-shell.js';
+import { createUnitDetailController } from './unit-detail.js';
 
 /**
  * Two-letter subject emblem glyphs (brief §6 mockup: En / Ma / Sc / Te / HA).
- * Exported: row.js (brief §4's term-view unit row) and unit-drawer.js
- * (round 4's unit-detail drawer) reuse the same glyphs for their own
- * subject-tinted elements, so a subject shows one consistent abbreviation
- * everywhere it appears.
+ * Exported: row.js (brief §4's term-view unit row) and unit-detail.js's
+ * consumers reuse the same glyphs for their own subject-tinted elements, so
+ * a subject shows one consistent abbreviation everywhere it appears.
  */
 export const EMBLEM_GLYPH = {
   english: 'En',
@@ -66,6 +81,12 @@ const BACK_SVG =
   '<path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
   '</svg>';
 
+/** id for step 3's title heading (unit-detail.js's title block) — distinct
+ * from the standalone unit drawer's `pl-unit-drawer-title` (unit-drawer.js)
+ * since both drawers' `<dialog>` elements exist in the DOM at once and a
+ * duplicate `id` would break `aria-labelledby` resolution. */
+const UNIT_DETAIL_TITLE_ID = 'pl-drawer-unit-title';
+
 function pluralize(count, word) {
   return count + ' ' + word + (count === 1 ? '' : 's');
 }
@@ -73,9 +94,9 @@ function pluralize(count, word) {
 /**
  * Term with the fewest units currently on the board; ties resolve to the
  * lowest term number (brief §6 "Term targeting"). On an empty board every
- * count is 0, so this always returns Term 1. Exported (round 6): the
- * unit-detail drawer's "Add to planner" action (unit-drawer.js) uses the
- * exact same fallback rule as this drawer's own Add button.
+ * count is 0, so this always returns Term 1. Exported: unit-detail.js's
+ * "Add to planner" action uses the exact same fallback rule as this
+ * drawer's own Add button.
  *
  * @param {() => object[]} getUnits
  * @returns {1|2|3|4}
@@ -98,6 +119,10 @@ export function termWithFewestUnits(getUnits) {
  * @param {Object} config
  * @param {() => object[]} config.getUnits
  * @param {(unit: { id: string }, term: 1|2|3|4) => void} config.add
+ * @param {(id: string) => void} config.remove - (round 8) Step 3's "Remove
+ *   from planner" — same store call the standalone unit drawer uses.
+ * @param {(unitId: string, lessonId: string) => (boolean|null)} config.toggleLesson - (round 8)
+ * @param {(unitId: string) => (boolean|null)} config.toggleAssessment - (round 8)
  * @param {(msg: string) => void} config.announce
  * @param {HTMLElement} [config.fallbackFocusEl] - Focus target used when the
  *   button that opened the drawer no longer exists when it closes (e.g. the
@@ -113,7 +138,18 @@ export function termWithFewestUnits(getUnits) {
  *   it falls back to the term with the fewest units.
  */
 export function createAddUnitsDrawer(config) {
-  const { getUnits, add, announce, fallbackFocusEl, frameEl, inertEl, getActiveTerm } = config;
+  const {
+    getUnits,
+    add,
+    remove,
+    toggleLesson,
+    toggleAssessment,
+    announce,
+    fallbackFocusEl,
+    frameEl,
+    inertEl,
+    getActiveTerm,
+  } = config;
 
   const shell = createDrawerShell({
     frameEl,
@@ -162,16 +198,61 @@ export function createAddUnitsDrawer(config) {
   dialog.appendChild(body);
 
   // ------------------------------------------------------------------
+  // Step tracking (round 8) — which step is showing and, for step
+  // 2<->3, which subject/scroll position to return to. `currentStep` also
+  // drives the header's one-control-only rule (renderSubjectStep/
+  // renderUnitStep/renderUnitDetailStep below each set the full header
+  // state themselves) and backBtn's routing (see its click handler below).
+  // ------------------------------------------------------------------
+  let currentStep = 'subject'; // 'subject' | 'unit-list' | 'unit-detail'
+  let currentSubject = null;
+  let unitListScrollTop = 0;
+
+  // Step 3's content engine — the SAME shared renderer the standalone unit
+  // drawer uses (unit-detail.js), rendering into this drawer's own `body`
+  // instead of a second dialog. In-planner state is derived live on every
+  // render, so an Add from here is reflected the moment the user goes back
+  // to step 2 (that step's own render also derives "Added" live — see
+  // renderUnitStep below).
+  const unitDetail = createUnitDetailController({
+    getUnits,
+    add,
+    remove,
+    toggleLesson,
+    toggleAssessment,
+    announce,
+    getActiveTerm,
+    container: body,
+    titleId: UNIT_DETAIL_TITLE_ID,
+    // "Remove from planner" from step 3: unlike the standalone drawer
+    // (which closes — nothing else to show once the unit's gone), this
+    // drawer still has somewhere useful to send the user back to.
+    onRemoved: () => renderUnitStep(currentSubject, { scrollTop: unitListScrollTop }),
+    // Shouldn't happen in this prototype, but don't render stale/empty
+    // content — fall back to the unit list (or subjects, if that's gone
+    // too).
+    onMissingUnit: () => renderUnitStep(currentSubject, { scrollTop: unitListScrollTop }),
+  });
+
+  // ------------------------------------------------------------------
   // Step rendering
   // ------------------------------------------------------------------
 
   function renderSubjectStep() {
+    currentStep = 'subject';
+    currentSubject = null;
+    unitListScrollTop = 0;
+    unitDetail.clear();
+
     // Leading header control is ✕ at the root, ← once drilled into a
-    // subject — never both at once (brief §6 mockup shows only one).
+    // subject or a unit — never both at once (brief §6 mockup shows only
+    // one).
     closeBtn.hidden = false;
     backBtn.hidden = true;
     headerEmblem.hidden = true;
+    title.hidden = false;
     title.textContent = 'Add units';
+    dialog.setAttribute('aria-labelledby', 'pl-drawer-title');
 
     body.textContent = '';
     const list = document.createElement('div');
@@ -212,10 +293,26 @@ export function createAddUnitsDrawer(config) {
     btn.textContent = added ? 'Added ✓' : 'Add';
   }
 
-  function buildUnitRow(unit, added) {
+  /**
+   * Round 8: two-target pattern (same idea as row.js's recommendation
+   * row) — `.pl-drawer-unit-hit` is a real `<button>` covering the
+   * thumbnail/name/meta and drills into step 3 for this unit;
+   * `.pl-drawer-add-btn` is a separate sibling button, not nested inside
+   * it, so the add-as-shortcut action keeps its own hit target with no
+   * nested-button DOM.
+   * @param {import('./planner-data.js').CatalogueUnit} unit
+   * @param {boolean} added
+   * @param {(unitId: string) => void} onOpen
+   */
+  function buildUnitRow(unit, added, onOpen) {
     const row = document.createElement('div');
     row.className = 'pl-drawer-unit';
     row.dataset.unitId = unit.id;
+
+    const hit = document.createElement('button');
+    hit.type = 'button';
+    hit.className = 'pl-drawer-unit-hit';
+    hit.dataset.action = 'open';
 
     const thumb = document.createElement('span');
     thumb.className = 'pl-drawer-unit-thumb ' + tintClass(unit.subject);
@@ -238,6 +335,10 @@ export function createAddUnitsDrawer(config) {
 
     unitBody.appendChild(unitTitle);
     unitBody.appendChild(meta);
+
+    hit.appendChild(thumb);
+    hit.appendChild(unitBody);
+    hit.addEventListener('click', () => onOpen(unit.id));
 
     const addBtn = document.createElement('button');
     addBtn.type = 'button';
@@ -268,29 +369,45 @@ export function createAddUnitsDrawer(config) {
       announce('Added ' + unit.title + ' to Term ' + term + '.');
     });
 
-    row.appendChild(thumb);
-    row.appendChild(unitBody);
+    row.appendChild(hit);
     row.appendChild(addBtn);
     return row;
   }
 
-  function renderUnitStep(subjectKey) {
+  /**
+   * @param {string} subjectKey
+   * @param {{ scrollTop?: number, focus?: boolean }} [opts] - `scrollTop`
+   *   restores the list's scroll position (used when returning from step 3
+   *   — either via backBtn or a Reset-triggered refresh); `focus: false`
+   *   (used only by the Reset-triggered refresh) skips the usual
+   *   backBtn.focus() so an in-place data refresh doesn't steal focus from
+   *   wherever it currently is.
+   */
+  function renderUnitStep(subjectKey, opts) {
     const group = drawerCatalogue.find((g) => g.subject === subjectKey);
     if (!group) return;
 
+    const options = opts || {};
+    currentStep = 'unit-list';
+    currentSubject = subjectKey;
+    unitDetail.clear();
+
     closeBtn.hidden = true;
     backBtn.hidden = false;
+    backBtn.setAttribute('aria-label', 'Back to subjects');
     headerEmblem.hidden = false;
     headerEmblem.className = 'pl-emblem pl-emblem-sm ' + tintClass(subjectKey);
     headerEmblem.textContent = EMBLEM_GLYPH[subjectKey] || '';
+    title.hidden = false;
     title.textContent = group.subjectLabel;
+    dialog.setAttribute('aria-labelledby', 'pl-drawer-title');
 
     body.textContent = '';
     const list = document.createElement('div');
     list.className = 'pl-drawer-unit-list';
 
     // Derived fresh every render — never cached — so a unit removed from
-    // the board earlier in the session shows as addable again here.
+    // the board (from here or from step 3) shows as addable again here.
     const boardUnits = getUnits();
     const isAdded = (id) => boardUnits.some((u) => u.id === id);
 
@@ -307,15 +424,61 @@ export function createAddUnitsDrawer(config) {
 
       group.units
         .filter((unit) => unit.yearLabel === yearLabel)
-        .forEach((unit) => list.appendChild(buildUnitRow(unit, isAdded(unit.id))));
+        .forEach((unit) =>
+          list.appendChild(
+            buildUnitRow(unit, isAdded(unit.id), (unitId) => {
+              unitListScrollTop = body.scrollTop;
+              renderUnitDetailStep(unitId);
+            })
+          )
+        );
     });
 
     body.appendChild(list);
-    backBtn.focus({ preventScroll: true });
+    if (typeof options.scrollTop === 'number') body.scrollTop = options.scrollTop;
+    if (options.focus !== false) backBtn.focus({ preventScroll: true });
+  }
+
+  /**
+   * Step 3 (round 8) — drills into the shared unit-detail renderer for one
+   * unit, in place inside this same drawer. Header shows ONLY "←" (back to
+   * the unit list on the same subject); the dialog's `aria-labelledby` is
+   * repointed at the detail's own title heading (unit-detail.js) for the
+   * duration of this step.
+   * @param {string} unitId
+   */
+  function renderUnitDetailStep(unitId) {
+    if (!unitDetail.resolveUnit(unitId)) return;
+
+    currentStep = 'unit-detail';
+
+    closeBtn.hidden = true;
+    headerEmblem.hidden = true;
+    title.hidden = true;
+    title.textContent = '';
+    backBtn.hidden = false;
+    backBtn.setAttribute('aria-label', 'Back to unit list');
+    dialog.setAttribute('aria-labelledby', UNIT_DETAIL_TITLE_ID);
+
+    unitDetail.render(unitId);
+
+    // preventScroll: true — see the note in drawer-shell.js's open().
+    const heading = body.querySelector('#' + UNIT_DETAIL_TITLE_ID);
+    if (heading) heading.focus({ preventScroll: true });
   }
 
   closeBtn.addEventListener('click', () => shell.requestClose());
-  backBtn.addEventListener('click', renderSubjectStep);
+
+  // One control only (never both ✕ and ←): step 2's back returns to the
+  // subject list; step 3's back returns to step 2 on the SAME subject,
+  // restored to the scroll position captured when the user drilled in.
+  backBtn.addEventListener('click', () => {
+    if (currentStep === 'unit-detail') {
+      renderUnitStep(currentSubject, { scrollTop: unitListScrollTop });
+    } else {
+      renderSubjectStep();
+    }
+  });
 
   /**
    * Open the drawer at step 1.
@@ -325,5 +488,20 @@ export function createAddUnitsDrawer(config) {
     shell.open(triggerEl, renderSubjectStep);
   }
 
-  return { open, close: shell.requestClose, isOpen: shell.isOpen };
+  /**
+   * Re-render whichever step is currently showing from fresh store data
+   * (Reset while this drawer is open) — a no-op-safe alternative to closing
+   * it out from under the user. Step 1 (subjects) never varies with store
+   * state, so there's nothing to refresh there.
+   */
+  function refresh() {
+    if (currentStep === 'unit-list' && currentSubject) {
+      const preservedScrollTop = body.scrollTop;
+      renderUnitStep(currentSubject, { scrollTop: preservedScrollTop, focus: false });
+    } else if (currentStep === 'unit-detail') {
+      unitDetail.refresh();
+    }
+  }
+
+  return { open, close: shell.requestClose, isOpen: shell.isOpen, refresh };
 }

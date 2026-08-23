@@ -1213,13 +1213,54 @@
   gap: 8px;
 }
 
+/* Round 8: two-target pattern (same idea as the term row's grab-area/kebab
+   split, or the recommendation row's hit-button/Add split — see row.js) —
+   the outer `.pl-drawer-unit` just supplies the border/radius; the whole
+   thumbnail+name+meta area is now a real button (`.pl-drawer-unit-hit`,
+   drawer.js) that drills into step 3, and `.pl-drawer-add-btn` stays a
+   separate sibling hit target, never nested inside it. */
 [data-project="planner"] .pl-drawer-unit {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   border: var(--pl-border-width) solid var(--pl-line);
   border-radius: var(--pl-radius-sm);
-  padding: 8px 10px;
+  padding: 4px;
+}
+
+/* Hover state matches the step-1 subject cards (`.pl-drawer-subject-card`)
+   for a consistent "this is clickable" affordance across the drawer. */
+[data-project="planner"] .pl-drawer-unit-hit {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: var(--pl-radius-sm);
+  background: transparent;
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--pl-duration) ease;
+}
+
+[data-project="planner"] .pl-drawer-unit-hit:hover {
+  background: var(--pl-surface-2);
+}
+
+[data-project="planner"] .pl-drawer-unit-hit:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-project="planner"] .pl-drawer-unit-hit {
+    transition: none;
+  }
 }
 
 [data-project="planner"] .pl-drawer-unit-thumb {

@@ -370,6 +370,9 @@ export function initPlanner(rootEl) {
   const drawer = createAddUnitsDrawer({
     getUnits,
     add,
+    remove,
+    toggleLesson,
+    toggleAssessment,
     announce,
     fallbackFocusEl: addUnitsBtn,
     frameEl: frame,
@@ -575,11 +578,14 @@ export function initPlanner(rootEl) {
     closeAllMenus(boardRootEl);
     closeAllMenus(termPanelEl);
     reset();
-    // If the unit drawer is open on a unit whose placement or completion
-    // state just got reseeded, refresh its content in place (round 6: Reset
-    // must restore original done flags everywhere they're visible,
-    // including an already-open drawer) rather than leaving it stale.
+    // If a drawer is open on a unit (or a unit list) whose placement or
+    // completion state just got reseeded, refresh its content in place
+    // (round 6: Reset must restore original done flags everywhere they're
+    // visible, including an already-open drawer; round 8: the Add Units
+    // drawer's own step 2/3 need the same treatment) rather than leaving it
+    // stale.
     if (unitDrawer.isOpen()) unitDrawer.refresh();
+    if (drawer.isOpen()) drawer.refresh();
     announce('Demo reset to the starting units.');
   });
 
