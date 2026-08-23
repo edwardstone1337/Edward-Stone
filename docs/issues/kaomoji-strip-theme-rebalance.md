@@ -1,8 +1,16 @@
 # Kaomoji strip theme rebalance
 
+**Status:** ✅ Resolved — see the Kaomoji entry in `CHANGELOG.md` (unreleased).  
 **Type:** improvement  
 **Priority:** normal  
 **Effort:** small  
+
+> **Outcome.** The strip now tracks kaomoji.click's redesigned warm-neutral
+> palette via the existing `--dp-strip-kaomoji-*` tokens, the preview iframe was
+> rebuilt against the product's own two-tier token system (running its light
+> theme, so the panel reads as a product shot against the always-dark strip), and
+> every text pairing clears WCAG AAA. The hardcoded `#141414` / `#5a5a5a` noted
+> below are gone — the media frame inherits from tokens. Kept for the record.
 
 ---
 

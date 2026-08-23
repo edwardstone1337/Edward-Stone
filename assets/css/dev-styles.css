@@ -1698,6 +1698,17 @@ img { display: block; max-width: 100%; }
   padding: var(--dp-strip-padding);
   background: var(--dp-strip-bg);
   color-scheme: dark;
+  /* The gradient-title fallback has to be re-declared here, on the same
+     element the strip modifiers land on. Custom properties resolve where
+     they are DECLARED, not where they are used, so the `:root` defaults
+     (`--dp-strip-title-from: var(--dp-strip-title-color)`) freeze against
+     the DEFAULT title colour — a modifier setting only `--dp-strip-title-color`
+     never reached the title, which silently painted Fair Share's mint on
+     every strip. Declaring the fallback here resolves it per-strip.
+     A modifier that sets title-from/-to explicitly (Flip 7) still wins on
+     source order. */
+  --dp-strip-title-from: var(--dp-strip-title-color);
+  --dp-strip-title-to: var(--dp-strip-title-color);
 }
 
 .dp-strip::before,
@@ -1937,6 +1948,17 @@ img { display: block; max-width: 100%; }
   --dp-strip-badge-text: var(--dp-strip-kaomoji-badge-text);
   --dp-device-border: var(--dp-strip-kaomoji-device-border);
   --dp-device-shadow: var(--dp-strip-kaomoji-device-shadow);
+  --dp-strip-padding: var(--dp-strip-kaomoji-padding);
+  --dp-strip-border: var(--dp-strip-kaomoji-border);
+  /* The one light strip. Base .dp-strip forces color-scheme: dark so strips
+     stay dark on light pages; this one carries the product's light theme
+     instead, so it has to opt back out. */
+  color-scheme: light;
+  /* Retheme the primary button in place rather than adding a strip-only
+     button class: .dp-btn-primary already reads these three. */
+  --dp-btn-bg-primary: var(--dp-strip-kaomoji-accent);
+  --dp-btn-text-primary: var(--dp-strip-kaomoji-accent-text);
+  --dp-btn-hover-bg-primary: var(--dp-strip-kaomoji-accent-hover);
 }
 .dp-strip--kaomoji::before,
 .dp-strip--kaomoji::after {
@@ -1945,15 +1967,37 @@ img { display: block; max-width: 100%; }
 .dp-strip--kaomoji .dp-strip-emoji {
   color: var(--dp-strip-title-color);
 }
+/* The square is sized from the COLUMN, not the content. `align-self: stretch`
+   would hand it the row height instead, which is set by the text column and
+   left the preview about 300px on a 534px column — small and cramped. Taking
+   the full column width makes it a true half of the strip, and the
+   1100px `.dp-strip-inner` cap keeps it from running away on wide screens. */
 .dp-strip--kaomoji .dp-strip-media {
-  align-self: stretch;
   justify-self: center;
+  width: 100%;
   max-width: 100%;
   aspect-ratio: 1 / 1;
-  max-height: 400px;
-  background: #141414;
-  border: 1px solid #5a5a5a;
-  box-shadow: none;
+  /* Base .dp-strip-media caps height at 480px, which would letterbox the
+     square against the widget's 100vmin canvas. The 1100px inner cap already
+     bounds this to roughly a 534px square. */
+  max-height: none;
+  /* Base .dp-strip-media paints --dp-strip-bg; the preview inside runs the
+     product's light theme, so the frame has to match it, not the dark strip. */
+  background: var(--dp-strip-kaomoji-panel-bg);
+}
+/* The square is now taller than the text beside it, and the grid hands the
+   slack to both auto rows — which strands the button a long way below the
+   description. Meeting the two in the middle, over a tighter row gap than the
+   strip default, keeps the bear, the copy and the button reading as one block
+   against the tall preview. */
+.dp-strip--kaomoji .dp-strip-inner {
+  row-gap: var(--dp-space-5);
+}
+.dp-strip--kaomoji .dp-strip-content {
+  align-self: end;
+}
+.dp-strip--kaomoji .dp-strip-actions {
+  align-self: start;
 }
 
 /* Split row — side-by-side strips (e.g. 2/3 + 1/3) */
@@ -4140,6 +4184,27 @@ body.dp-overlay-active {
     display: none !important;
   }
 
+  /* The section's vertical padding sits below the last line of the resume,
+     where @page margins already provide the breathing room. Left in, that
+     trailing dead height pushes a nearly-full final page over the boundary
+     and Chrome emits an extra, entirely blank page — the same failure mode
+     the #contact-cta-container fix addressed. */
+  .dp-resume-section {
+    padding-block: 0 !important;
+  }
+
+  /* Defence in depth for the same failure: strip the trailing margin from
+     whatever element happens to end each print column, so a future block
+     added at the end cannot reintroduce dead height via its own margin.
+     Does not cover a new element carrying bottom *padding* — the blank-page
+     check in generate-resume-pdf.yml is the actual backstop for that. */
+  .dp-resume-page > *:last-child,
+  .dp-resume-body > *:last-child,
+  .dp-resume-sidebar > *:last-child,
+  .dp-resume-main > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
   /* Flatten the decorative "photo frame" chrome around the page — plain
      white, full-width, no border/shadow/radius/cursor in print. */
   .dp-resume-container {
@@ -4287,10 +4352,15 @@ body.dp-overlay-active {
     font-size: var(--dp-print-body-sm) !important;
   }
 
-  /* A4 page setup — tokens --dp-print-page-v 15mm, --dp-print-page-h 15mm; @page does not resolve var() in most browsers */
+  /* A4 page setup — tokens --dp-print-page-v 12mm, --dp-print-page-h 15mm; @page does not resolve var() in most browsers.
+     Vertical is 12mm rather than 15mm: at 15mm the final page had 8.41pt of
+     headroom (0.76 lines of body text), so any addition tipped the resume onto
+     an extra page. 12mm (~0.47in) is still a conventional resume margin and
+     buys ~17.5pt, taking headroom to 25.91pt (2.33 lines). Horizontal stays at
+     15mm deliberately — narrowing it changes measure and re-wraps every line. */
   @page {
     size: A4;
-    margin: 15mm 15mm; /* --dp-print-page-v, --dp-print-page-h */
+    margin: 12mm 15mm; /* --dp-print-page-v, --dp-print-page-h */
   }
 
   body {
