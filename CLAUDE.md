@@ -45,7 +45,7 @@ Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="ligh
 
 **Theme toggle** (`assets/js/dev-projects/theme-toggle.js`) is **dev-only** — loaded on `dev/design-system.html`. Injects sun/moon into `#dp-nav-actions`, persists to `localStorage`.
 
-**Strips** (`.dp-strip`) default to dark via `color-scheme: dark` regardless of page theme. **Exception:** `.dp-strip--kaomoji` opts back to `color-scheme: light` and carries kaomoji.click's light palette, so the section and its embedded preview read as one product surface. Any other strip going light needs the same opt-out plus light values for every `--dp-strip-*` token it maps. Preview iframes receive theme via `postMessage`.
+**Strips** (`.dp-strip`) default to dark via `color-scheme: dark` regardless of page theme. **Exception:** `.dp-strip--kaomoji` opts back to `color-scheme: light` and carries kaomoji.click's light palette, so the section and its embedded preview read as one product surface. Any other strip going light needs the same opt-out plus light values for every `--dp-strip-*` token it maps. `theme-toggle.js` broadcasts `{ type: 'theme-change' }` to preview iframes via `postMessage`, but no preview iframe has ever listened for it — a broadcast with no consumer. The one exception is unrelated to theming: the Kaomoji preview posts `{ type: 'kaomoji-copy' }` (no display text) to its parent after a successful clipboard copy; `index.html` validates `event.origin` before swapping its own cursor-chat wording — the iframe never supplies the text that gets rendered.
 
 ## Key Patterns
 

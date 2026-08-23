@@ -1955,27 +1955,14 @@ img { display: block; max-width: 100%; }
    description. Meeting the two in the middle, over a tighter row gap than the
    strip default, keeps the bear, the copy and the button reading as one block
    against the tall preview. */
-/* Row gap moved inside the actions row as padding, so the copy and the button
-   are contiguous and the whole column is one unbroken hover target. As a grid
-   gap it left a 28px dead band that flickered the cursor-chat bubble off and
-   on as the pointer crossed it. Same spacing either way. */
 .dp-strip--kaomoji .dp-strip-inner {
-  row-gap: 0;
+  row-gap: var(--dp-space-5);
 }
-/* Stretched to fill their grid rows, then aligned internally, rather than
-   sized to their text and pushed together with align-self. Visually identical
-   — the copy still meets the button in the middle — but the two elements now
-   cover the full height of the column instead of 172px of a 527px row. That
-   matters because the cursor-chat trigger is bound to them: with the old
-   content-sized boxes, most of the column was dead to hover. */
 .dp-strip--kaomoji .dp-strip-content {
-  align-self: stretch;
-  justify-content: flex-end;
+  align-self: end;
 }
 .dp-strip--kaomoji .dp-strip-actions {
-  align-self: stretch;
-  align-items: flex-start;
-  padding-top: var(--dp-space-5);
+  align-self: start;
 }
 
 /* Split row — side-by-side strips (e.g. 2/3 + 1/3) */

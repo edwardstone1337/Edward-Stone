@@ -1,10 +1,20 @@
 # Strips: Differentiate SCP and Kaomoji visually
 
+**Status:** ✅ Resolved — see the Kaomoji entry in `CHANGELOG.md` (unreleased).  
 **TL;DR** — SCP and Kaomoji strips look too similar (both dark strips, light text, same component). Make one or both stand out so they feel distinct.
 
 **Type:** improvement  
 **Priority:** normal  
 **Effort:** medium
+
+> **Outcome.** Resolved as a side effect of the Kaomoji theme rebalance
+> (`kaomoji-strip-theme-rebalance.md`), not a dedicated pass on this ticket.
+> `.dp-strip--kaomoji` now opts into `color-scheme: light` with kaomoji.click's
+> warm-neutral palette — the only light strip on the page — while SCP stays on
+> the dark base. The two no longer read as interchangeable dark blocks; the
+> "Options" below (stronger SCP identity, or push Kaomoji further from SCP)
+> were superseded by Kaomoji going light rather than picking one. Kept for the
+> record.
 
 ---
 

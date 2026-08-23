@@ -584,28 +584,21 @@
         <!-- 5d-2. Product strip — Kaomoji variant -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">5d. Product strip, Kaomoji variant</h3>
-          <p class="ds-label" style="margin-top: 0; text-align: left;">.dp-strip--kaomoji, component-level token overrides</p>
+          <p class="ds-label" style="margin-top: 0; text-align: left;">.dp-strip--kaomoji, component-level token overrides — the one <strong>light</strong> strip (opts out of the base <code>color-scheme: dark</code>), no orbs, no badges, and a primary button rethemed in place via scoped <code>--dp-btn-*-primary</code></p>
           <div class="ds-demo">
             <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click, side project">
-              <div class="dp-strip-orbs">
-                <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
-                <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
-              </div>
+              <!-- No .dp-strip-orbs: this variant hides them, and the live strip
+                   omits the markup entirely. -->
               <div class="dp-strip-inner">
                 <div class="dp-strip-content">
                   <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-                  <h2 class="dp-strip-title">Kaomoji.click</h2>
-                  <span class="dp-strip-overline">kaomoji.click</span>
-                  <div class="dp-strip-badges">
-                    <span class="dp-strip-badge">Vanilla JS</span>
-                  </div>
-                  <p class="dp-strip-description">A simple Japanese emoticon picker with a twist.</p>
+                  <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
                 </div>
                 <div class="dp-strip-media">
                   <iframe src="../assets/previews/kaomoji/index.html" class="dp-card-media-iframe" loading="lazy" sandbox="allow-scripts allow-same-origin" style="width: 100%; height: 100%; border: none; border-radius: inherit; display: block;" title="Kaomoji.click preview"></iframe>
                 </div>
                 <div class="dp-strip-actions">
-                  <button type="button" class="dp-btn dp-btn-primary-on-dark">Visit Site</button>
+                  <button type="button" class="dp-btn dp-btn-primary">Visit Site</button>
                 </div>
               </div>
             </section>

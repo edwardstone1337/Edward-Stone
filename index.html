@@ -72,15 +72,12 @@
         // hover handler reads trigger.message when the event fires, not at
         // init, so mutating this object changes what the next hover shows —
         // no change needed inside cursor-chat.js.
+        const KAOMOJI_PROMPT = 'Try clicking one';
+        const KAOMOJI_THANKS = 'Great choice';
         const kaomojiTrigger = {
           type: 'hover',
-          // Scoped to the strip's text column, not the whole section: the
-          // preview is an iframe, and pointer moves inside it never reach this
-          // document, so a section-wide trigger left the bubble parked at the
-          // iframe's edge, hundreds of px adrift of the real cursor. Leaving
-          // the column fires mouseleave and hides it cleanly.
-          selector: '.dp-strip--kaomoji .dp-strip-content, .dp-strip--kaomoji .dp-strip-actions',
-          message: 'Try clicking one',
+          selector: '#strip-kaomoji',
+          message: KAOMOJI_PROMPT,
         };
         m.initCursorChat({
           triggers: [
@@ -93,10 +90,6 @@
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
             { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
             { type: 'hover', selector: '.dp-counter', message: 'Such a throwback' },
-            // Scoped to the text column, not the whole strip: the preview is an
-            // iframe, and pointer moves inside it never reach this document, so
-            // a strip-wide trigger would park the bubble at the iframe edge and
-            // leave it hanging there. Leaving the column hides it cleanly.
             kaomojiTrigger,
           ]
         });
@@ -109,8 +102,35 @@
         window.addEventListener('message', (event) => {
           if (event.origin !== window.location.origin) return;
           if (!event.data || event.data.type !== 'kaomoji-copy') return;
-          kaomojiTrigger.message = 'Great choice';
+          kaomojiTrigger.message = KAOMOJI_THANKS;
         });
+
+        // The trigger covers the whole section, padding included, but the
+        // preview is an iframe and pointer events inside it never reach this
+        // document — so the bubble would hang at the boundary while the cursor
+        // moved on. mouseenter/mouseleave on the iframe element DO fire here,
+        // so they bridge the gap: entering the preview fakes a leave, exiting
+        // it fakes an enter. `bridging` marks those synthetic events so the
+        // reset below ignores them and only fires on a real exit.
+        const kaomojiStrip = document.getElementById('strip-kaomoji');
+        const kaomojiFrame = kaomojiStrip && kaomojiStrip.querySelector('iframe');
+        let bridging = false;
+
+        if (kaomojiFrame) {
+          const bridge = (type) => {
+            bridging = true;
+            kaomojiStrip.dispatchEvent(new MouseEvent(type));
+            bridging = false;
+          };
+          kaomojiFrame.addEventListener('mouseenter', () => bridge('mouseleave'));
+          kaomojiFrame.addEventListener('mouseleave', () => bridge('mouseenter'));
+        }
+
+        if (kaomojiStrip) {
+          kaomojiStrip.addEventListener('mouseleave', () => {
+            if (!bridging) kaomojiTrigger.message = KAOMOJI_PROMPT;
+          });
+        }
       });
       initImageLightbox({
         selector: '.dp-ticker__item',
