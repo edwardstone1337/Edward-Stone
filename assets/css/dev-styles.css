@@ -4273,10 +4273,15 @@ body.dp-overlay-active {
     font-size: var(--dp-print-body-sm) !important;
   }
 
-  /* A4 page setup — tokens --dp-print-page-v 15mm, --dp-print-page-h 15mm; @page does not resolve var() in most browsers */
+  /* A4 page setup — tokens --dp-print-page-v 12mm, --dp-print-page-h 15mm; @page does not resolve var() in most browsers.
+     Vertical is 12mm rather than 15mm: at 15mm the final page had 8.41pt of
+     headroom (0.76 lines of body text), so any addition tipped the resume onto
+     an extra page. 12mm (~0.47in) is still a conventional resume margin and
+     buys ~17.5pt, taking headroom to 25.91pt (2.33 lines). Horizontal stays at
+     15mm deliberately — narrowing it changes measure and re-wraps every line. */
   @page {
     size: A4;
-    margin: 15mm 15mm; /* --dp-print-page-v, --dp-print-page-h */
+    margin: 12mm 15mm; /* --dp-print-page-v, --dp-print-page-h */
   }
 
   body {

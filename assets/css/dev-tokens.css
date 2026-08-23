@@ -523,8 +523,9 @@
     --dp-print-column-gap: 16px;
     --dp-print-li-gap: 2px;
 
-    /* Page margins (matched in web container) */
-    --dp-print-page-v: 15mm;
+    /* Page margins (matched in web container). @page cannot resolve var(), so
+       dev-styles.css restates these literally — keep the two in sync. */
+    --dp-print-page-v: 12mm;
     --dp-print-page-h: 15mm;
 
     /* Force light values for print — print can't rely on the runtime
