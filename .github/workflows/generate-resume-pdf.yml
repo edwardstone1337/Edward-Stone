@@ -97,6 +97,24 @@ jobs:
             FAIL=1
           fi
 
+          # (f) No blank page. Trailing dead height (an element whose padding or
+          # margin extends past the last line) tips a nearly-full final page over
+          # the boundary and Chrome emits an extra, entirely empty page. This has
+          # happened twice from different causes (#contact-cta-container, then
+          # .dp-resume-section's vertical padding) and checks (a)-(e) all pass
+          # regardless, since the real pages still satisfy them.
+          # Loops over the actual page count rather than asserting one, so the
+          # resume is still free to legitimately grow to 3+ pages.
+          MIN_CHARS_PER_PAGE=150
+          for i in $(seq 1 "$PAGES"); do
+            PAGE_CHARS=$(pdftotext -f "$i" -l "$i" "$PDF" - | tr -d '[:space:]' | wc -c | tr -d ' ')
+            echo "page $i: $PAGE_CHARS non-whitespace characters"
+            if [ "$PAGE_CHARS" -lt "$MIN_CHARS_PER_PAGE" ]; then
+              echo "FAIL: page $i has only $PAGE_CHARS non-whitespace characters (< $MIN_CHARS_PER_PAGE) - it looks blank. Check for trailing padding/margin below the last line of the resume."
+              FAIL=1
+            fi
+          done
+
           if [ "$FAIL" -ne 0 ]; then
             echo "---"
             echo "PDF validation failed - see FAIL lines above."

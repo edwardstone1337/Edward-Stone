@@ -4114,6 +4114,18 @@ body.dp-overlay-active {
     padding-block: 0 !important;
   }
 
+  /* Defence in depth for the same failure: strip the trailing margin from
+     whatever element happens to end each print column, so a future block
+     added at the end cannot reintroduce dead height via its own margin.
+     Does not cover a new element carrying bottom *padding* — the blank-page
+     check in generate-resume-pdf.yml is the actual backstop for that. */
+  .dp-resume-page > *:last-child,
+  .dp-resume-body > *:last-child,
+  .dp-resume-sidebar > *:last-child,
+  .dp-resume-main > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
   /* Flatten the decorative "photo frame" chrome around the page — plain
      white, full-width, no border/shadow/radius/cursor in print. */
   .dp-resume-container {
