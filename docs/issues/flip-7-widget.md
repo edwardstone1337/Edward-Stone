@@ -1,5 +1,18 @@
 # Flip 7 Widget — Playable Mini-Game
 
+**Status:** ✅ Resolved — see the Flip 7 entries in `CHANGELOG.md` (unreleased).
+
+> **Outcome.** Built as `assets/previews/flip-7/index.html`, embedded in the Flip 7 homepage strip (`#strip-flip-7`, still `data-prod-hide`). Every expected outcome below is met: tapping draws one random card from a full 0–12 deck, a duplicate ends the round, seven unique cards wins, and one action resets. Two decisions differ from the sketch below and are deliberate:
+>
+> - **Placement is settled:** it lives in the homepage strip, in a cream phone beside the copy, not in `dev-projects` or the nav.
+> - **The rules question is settled the way the notes asked for:** seven unique cards is the win, and it awards the real game's +15 Flip 7 bonus rather than being a pure survival high-score.
+>
+> The presentation went further than "widget": it recreates the real app's screen — a banked-score numeral over the 5×3 card grid — so it reads as the product rather than an abstract game. Accessibility asks in the notes are all covered: full keyboard play via real `<button>`s, `aria-live` on the score and status, focus-visible rings, and a `prefers-reduced-motion` path that drops the flips and the count-up.
+
+---
+
+## Original issue
+
 **TL;DR** — A tappable widget that opens a real Flip 7–style game: each tap reveals one random card from a deck. Duplicate = game over and reset; no duplicate = continue. Goal is to reach 7 unique cards (or “see how far you can get”).
 
 **Type:** feature  

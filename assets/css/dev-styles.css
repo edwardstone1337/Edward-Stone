@@ -2010,9 +2010,11 @@ img { display: block; max-width: 100%; }
   --dp-device-shadow: var(--dp-strip-scp-device-shadow);
 }
 
-/* Strip theme — Flip 7 (brand teal bed, cream type; orbs visible).
-   Carries flip7scorecard.com's palette. Documented contrast exception —
-   see the token block in dev-tokens.css and docs/strip-branding-spec.md §5. */
+/* Strip theme — Flip 7: full-bleed brand-teal band, cream phone, navy UI.
+   The second LIGHT strip after kaomoji, and the only full-bleed one; orbs are
+   hidden (see below). Carries flip7scorecard.com's palette verbatim.
+   Documented contrast exception — the heading is cream on teal at 3.16:1; see
+   the token block in dev-tokens.css and docs/strip-branding-spec.md §5. */
 .dp-strip--flip7 {
   /* The section is the TEAL BAND, not the card. */
   --dp-strip-bg: var(--dp-strip-flip7-band);

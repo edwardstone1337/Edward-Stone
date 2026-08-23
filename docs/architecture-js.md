@@ -21,7 +21,7 @@ This project has two JS component directories with different conventions. **New 
 | `product-strip.js` | ES6 module | Featured project strips with orb backgrounds and action buttons |
 | `project-card.js` | ES6 module | Glass-style project cards with image/iframe media |
 | `projects-grid.js` | ES6 module | Fetches `projects.json`, renders cards via `project-card.js` |
-| `strip-effects.js` | ES6 module | Cursor-reactive orb drift on `.dp-strip` elements |
+| `strip-effects.js` | ES6 module | Cursor-reactive orb drift on `.dp-strip` elements. Initialised with the selector `.dp-strip:has(.dp-strip-orbs)`, so it only drives strips that actually render orbs — Kaomoji and Flip 7 both omit that div and are not touched by it |
 | `bears-creator.js` | ES6 module | Renderer-only engine for the "Build my bear" character creator — composites SVG parts into a live canvas via `initBearsCreator(selector)`, plus `setPart()`/`setColor()`/`getColors()`/`getCurrentParts()`/`getManifest()`/`exportBearPNG()`. Fetches `assets/images/bears/bears-manifest.json`. No UI controls of its own. Imported by `bears-modal.js` |
 | `bears-controls.js` | ES6 module | Builds the bear creator's UI controls — prev/next stepper rows per part category, colour swatches, randomise button — wired to the `bears-creator.js` API object passed into `initBearsControls(selector, creatorAPI)`. Imported by `bears-modal.js` only |
 | `bears-modal.js` | ES6 module | Opens the bear creator in a lightbox modal (`initBearsModal()`), following the `dp-lightbox` pattern (dialog role, scroll lock, focus trap, Escape-to-close, focus restore). Imports `bears-creator.js` and `bears-controls.js`. Loaded on `index.html` (triggered by `#bears-modal-trigger`) |
@@ -65,7 +65,7 @@ All 8 files follow the same pattern: IIFE wrapper, config object input, global `
 | File | Type | Purpose |
 |------|------|---------|
 | `contrast-audit-calc.js` | Node.js | WCAG contrast calculation (sRGB compositing, relative luminance) |
-| `flip7-contrast.js` | Node.js | Flip 7 strip gradient contrast validation (LCh to sRGB to WCAG) |
+| `flip7-contrast.js` | Node.js | Flip 7 strip contrast audit over every pair the strip ships (sRGB to WCAG). Exits non-zero only on an **undocumented** failure — the three deliberate ones in `docs/strip-branding-spec.md` §5 are allowlisted, so it catches regressions without failing on the known exception. Was an LCh-based gradient check before the strip moved to hex |
 
 ## Conventions
 

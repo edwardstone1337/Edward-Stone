@@ -584,7 +584,7 @@
         <!-- 5d-2. Product strip — Kaomoji variant -->
         <div class="ds-subsection">
           <h3 class="ds-subsection-title">5d. Product strip, Kaomoji variant</h3>
-          <p class="ds-label" style="margin-top: 0; text-align: left;">.dp-strip--kaomoji, component-level token overrides — the one <strong>light</strong> strip (opts out of the base <code>color-scheme: dark</code>), no orbs, no badges, and a primary button rethemed in place via scoped <code>--dp-btn-*-primary</code></p>
+          <p class="ds-label" style="margin-top: 0; text-align: left;">.dp-strip--kaomoji, component-level token overrides — one of the two <strong>light</strong> strips (both opt out of the base <code>color-scheme: dark</code>; the other is <code>.dp-strip--flip7</code>), no orbs, no badges, and a primary button rethemed in place via scoped <code>--dp-btn-*-primary</code></p>
           <div class="ds-demo">
             <section class="dp-strip dp-strip--flipped dp-strip--kaomoji" aria-label="Kaomoji.click, side project">
               <!-- No .dp-strip-orbs: this variant hides them, and the live strip
@@ -1498,13 +1498,20 @@
           stripBorder('--dp-strip-scp-device-border'), stripShadow('--dp-strip-scp-device-shadow')
         ]);
 
-        stripFamily('ds-strip-flip7', '--dp-strip-flip7-bg', '--dp-strip-flip7-text-color', [
-          stripColor('--dp-strip-flip7-bg'), stripTitle('--dp-strip-flip7-title-from'), stripTitle('--dp-strip-flip7-title-to'),
-          stripBorder('--dp-strip-flip7-border'), stripColor('--dp-strip-flip7-orb-1'), stripColor('--dp-strip-flip7-orb-2'),
-          stripColor('--dp-strip-flip7-orb-dark'), stripOpacity('--dp-strip-flip7-orb-opacity'),
+        // Flip 7 is the second LIGHT strip. The band is the teal surface and
+        // -bg is the cream phone sitting on it, so the demo panel is painted
+        // with -band, not -bg. Orb tokens stay defined and mapped per the strip
+        // spec, but this strip hides its orbs, so they are listed last.
+        stripFamily('ds-strip-flip7', '--dp-strip-flip7-band', '--dp-strip-flip7-text-color', [
+          stripColor('--dp-strip-flip7-band'), stripColor('--dp-strip-flip7-bg'),
+          stripTitle('--dp-strip-flip7-title-from'), stripTitle('--dp-strip-flip7-title-to'),
           stripTitle('--dp-strip-flip7-title-color'), stripText('--dp-strip-flip7-text-color'),
+          stripBadge('--dp-strip-flip7-accent', '--dp-strip-flip7-accent-text'),
+          stripBorder('--dp-strip-flip7-band-border'),
           stripBadge('--dp-strip-flip7-badge-bg', '--dp-strip-flip7-badge-text'),
-          stripBorder('--dp-strip-flip7-device-border'), stripShadow('--dp-strip-flip7-device-shadow')
+          stripBorder('--dp-strip-flip7-device-border'), stripShadow('--dp-strip-flip7-device-shadow'),
+          stripColor('--dp-strip-flip7-orb-1'), stripColor('--dp-strip-flip7-orb-2'),
+          stripColor('--dp-strip-flip7-orb-dark'), stripOpacity('--dp-strip-flip7-orb-opacity')
         ]);
 
         stripFamily('ds-strip-kaomoji', '--dp-strip-kaomoji-bg', '--dp-strip-kaomoji-text-color', [

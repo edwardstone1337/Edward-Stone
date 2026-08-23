@@ -53,10 +53,10 @@ Inventory of every background-related token in `dev-tokens.css` (bg, background,
 | `--dp-btn-secondary-on-light-hover-bg` | `rgba(0, 0, 0, 0.12)` | (primitive) |
 | `--dp-strip-bg` | `#0a2020` | (primitive) |
 | `--dp-strip-scp-bg` | `#141414` | (primitive) |
-| `--dp-strip-flip7-bg` | `lch(25 18 275)` | (primitive) |
+| `--dp-strip-flip7-bg` | `#fff4d2` | (primitive) — **re-audit:** was `lch(25 18 275)` and meant the strip background; since the Flip 7 rewrite it means the cream *phone*, and the strip surface is the new `--dp-strip-flip7-band` `#1d9995` |
 | `--dp-strip-badge-bg` | `rgba(255, 255, 255, 0.15)` | (primitive) |
 | `--dp-strip-scp-badge-bg` | `rgba(255, 255, 255, 0.08)` | (primitive) |
-| `--dp-strip-flip7-badge-bg` | `lch(35 10 185 / 0.55)` | (primitive) |
+| `--dp-strip-flip7-badge-bg` | `#2b3276` | (primitive) — defined and mapped, but Flip 7 renders no badges |
 | `--dp-theme-sun-bg-hover` | `linear-gradient(...)` | (primitive) |
 | `--dp-theme-moon-bg-hover` | `#1e293b` | (primitive) |
 
