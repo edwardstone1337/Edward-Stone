@@ -261,51 +261,63 @@
   --dp-strip-scp-device-border: 1px solid #303030;
   --dp-strip-scp-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 
-  /* Strip theme — Flip 7 (brand teal bed, cream type).
-     Carries flip7scorecard.com's own palette verbatim: the teal that is the
-     app's <body> background, the cream that is its card surface, and the navy
-     that is its text and 1px-border-on-everything signature.
+  /* Strip theme — Flip 7 (full-bleed teal band, cream card, navy type).
+     Reproduces flip7scorecard.com's actual structure rather than just its
+     colours: in the app a cream card floats on a teal <body>, and every
+     surface is outlined in 1px navy. Here the strip section IS the teal band
+     (edge to edge) and `.dp-strip-inner` IS the cream card — no extra markup
+     and no new shared component, just the two elements the strip already has.
 
-     CONTRAST EXCEPTION — this is the one strip that does not meet the AAA 7:1
-     bar, by explicit design decision. Cream #fff4d2 on brand teal #1d9995 is
-     3.16:1. Nothing legible sits on this teal: white is 3.48:1 and navy is
-     3.32:1, because #1d9995 is a mid-tone and every candidate lands in the
-     3.1–3.5 dead zone. Darkening the same hue to #115c59 would reach 7.09:1
-     and was offered and declined — exact brand fidelity was chosen over the
-     contrast bar for this strip. Recorded in docs/strip-branding-spec.md §5.
-     Everything that CAN pass here does: badges and the CTA use navy fills,
-     which carry cream at 10.50:1. */
-  --dp-strip-flip7-bg: #1d9995;                 /* app --color-teal, verbatim */
-  /* Title: solid cream, no gradient fade — a fade would push one endpoint even
-     lower than 3.16:1, so both endpoints are pinned to the same value. */
-  --dp-strip-flip7-title-from: #fff4d2;         /* app --color-cream */
-  --dp-strip-flip7-title-to: #fff4d2;
-  --dp-strip-flip7-title-color: #fff4d2;
-  /* Full-opacity cream — the base strip token fades text to 0.85 alpha, which
-     would drop 3.16:1 further. Do not reintroduce alpha here. */
-  --dp-strip-flip7-text-color: #fff4d2;
-  /* Navy border: the app outlines every surface in 1px navy. */
-  --dp-strip-flip7-border: 1px solid rgba(43, 50, 118, 0.35);
-  --dp-strip-flip7-orb-1: #2b3276;              /* app --color-navy */
-  --dp-strip-flip7-orb-2: #fbb03a;              /* app --color-orange */
+     This is the SECOND light strip after `.dp-strip--kaomoji`, so it takes the
+     same `color-scheme: light` opt-out and supplies light values for every
+     mapped token. See docs/strip-branding-spec.md.
+
+     Contrast: putting the type on the cream card instead of the teal is what
+     makes this work — navy on cream is 10.50:1, so the whole strip clears
+     AAA. Nothing legible sits directly on brand teal (cream 3.16:1, white
+     3.48:1, navy 3.32:1); the teal is a frame here, never a text bed. */
+  --dp-strip-flip7-band: #1d9995;               /* app --color-teal, the <body> */
+  --dp-strip-flip7-bg: #fff4d2;                 /* app --color-cream, the card */
+  /* Navy (app --color-navy) is the type and every border, below. */
+  /* Title: solid navy, no gradient fade — the app's type is flat. */
+  --dp-strip-flip7-title-from: #2b3276;
+  --dp-strip-flip7-title-to: #2b3276;
+  --dp-strip-flip7-title-color: #2b3276;
+  --dp-strip-flip7-text-color: #2b3276;
+  /* The card's 1px navy outline — the app's signature on every surface. */
+  --dp-strip-flip7-border: 1px solid #2b3276;
+  /* The band runs edge to edge, so it takes no border of its own. */
+  --dp-strip-flip7-band-border: none;
+  /* Orbs stay defined and mapped so the strip remains re-brandable, but the
+     modifier hides them: the product has no gradients anywhere in its CSS. */
+  --dp-strip-flip7-orb-1: #2b3276;
+  --dp-strip-flip7-orb-2: #fbb03a;
   --dp-strip-flip7-orb-dark: rgba(43, 50, 118, 0.22);
-  /* Held at 0.3 (base is 0.4): orbs blur across the text bed, and on a mid-tone
-     teal a brighter orange orb would erode the already-thin cream contrast. */
   --dp-strip-flip7-orb-opacity: 0.3;
-  /* Navy pills, cream text = 10.50:1 AAA. Mirrors the app's active nav pill. */
+  /* Badges are not rendered on this strip; tokens kept per the spec so it
+     stays re-brandable if they return. Navy on cream = 10.50:1. */
   --dp-strip-flip7-badge-bg: #2b3276;
   --dp-strip-flip7-badge-text: #fff4d2;
   --dp-strip-flip7-device-border: 1px solid #2b3276;
-  --dp-strip-flip7-device-shadow: 0 4px 24px rgba(43, 50, 118, 0.3);
-  /* CTA retheme: navy fill + cream text = 10.50:1 AAA. The default
-     .dp-btn-primary-on-dark is white-on-dark and reads as a hole on teal. */
+  --dp-strip-flip7-device-shadow: 0 4px 12px rgba(43, 50, 118, 0.15);
+  /* CTA: navy fill + cream text = 10.50:1 AAA, the app's own primary button.
+     .dp-btn-primary-on-dark is white-on-dark and vanishes on a cream card. */
   --dp-strip-flip7-accent: #2b3276;
   --dp-strip-flip7-accent-text: #fff4d2;
   --dp-strip-flip7-accent-hover: #222a5f;
   /* Bebas Neue is the app's display face — its single most recognisable
-     element. Scoped to the strip title only; the rest of the page stays Inter. */
+     element. Scoped to the strip title only; the rest of the page stays Inter.
+     It is condensed and caps-only, so it carries a much larger size than Inter
+     would at the same measure. */
   --dp-strip-flip7-title-font: "Bebas Neue", var(--dp-font-display);
-  --dp-strip-flip7-title-tracking: 0.02em;
+  --dp-strip-flip7-title-tracking: 0.01em;
+  /* Capped at 48px: each sentence of the heading has to survive on one line
+     in the content column, and Bebas at 60px overflowed it. */
+  --dp-strip-flip7-title-size: clamp(2rem, 3.4vw, 3rem);
+  --dp-strip-flip7-emoji-size: 52px;
+  /* 16px — the app's own container radius (--radius-container). */
+  --dp-strip-flip7-card-radius: var(--dp-radius-lg);
+  --dp-strip-flip7-card-padding: var(--dp-space-10);
 
   /* Strip theme — Kaomoji (warm neutral, LIGHT).
      The only light strip: it carries kaomoji.click's own light theme end to

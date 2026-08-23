@@ -2014,10 +2014,11 @@ img { display: block; max-width: 100%; }
    Carries flip7scorecard.com's palette. Documented contrast exception —
    see the token block in dev-tokens.css and docs/strip-branding-spec.md §5. */
 .dp-strip--flip7 {
-  --dp-strip-bg: var(--dp-strip-flip7-bg);
+  /* The section is the TEAL BAND, not the card. */
+  --dp-strip-bg: var(--dp-strip-flip7-band);
   --dp-strip-title-from: var(--dp-strip-flip7-title-from);
   --dp-strip-title-to: var(--dp-strip-flip7-title-to);
-  --dp-strip-border: var(--dp-strip-flip7-border);
+  --dp-strip-border: var(--dp-strip-flip7-band-border);
   --dp-strip-orb-1: var(--dp-strip-flip7-orb-1);
   --dp-strip-orb-2: var(--dp-strip-flip7-orb-2);
   --dp-strip-orb-dark: var(--dp-strip-flip7-orb-dark);
@@ -2028,17 +2029,49 @@ img { display: block; max-width: 100%; }
   --dp-strip-badge-text: var(--dp-strip-flip7-badge-text);
   --dp-device-border: var(--dp-strip-flip7-device-border);
   --dp-device-shadow: var(--dp-strip-flip7-device-shadow);
-  /* Retheme .dp-btn-primary in place rather than adding a strip-only button
-     class — same approach as .dp-strip--kaomoji. */
+  /* Second light strip after kaomoji: the card is cream, so the on-dark
+     defaults would invert. Retheme .dp-btn-primary in place rather than
+     adding a strip-only button class — same approach as .dp-strip--kaomoji. */
+  color-scheme: light;
   --dp-btn-bg-primary: var(--dp-strip-flip7-accent);
   --dp-btn-text-primary: var(--dp-strip-flip7-accent-text);
   --dp-btn-hover-bg-primary: var(--dp-strip-flip7-accent-hover);
+  /* Full-bleed teal, edge to edge. House idiom, same as .dp-ticker and
+     .dp-prose-figure--full. The strip is a direct child of <main class="dp-page">,
+     so 50% of the parent is the page centre. */
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(-50vw + 50%);
+  border-radius: 0;
 }
 
-/* The app's display face, scoped to this strip's title only. */
+/* `.dp-strip-inner` becomes the cream card sitting on the band — the app's
+   own figure/ground, and the reason every pairing here clears AAA: the type
+   is on cream at 10.50:1 rather than on teal at 3.16:1. */
+.dp-strip--flip7 .dp-strip-inner {
+  background: var(--dp-strip-flip7-bg);
+  border: var(--dp-strip-flip7-border);
+  border-radius: var(--dp-strip-flip7-card-radius);
+  padding: var(--dp-strip-flip7-card-padding);
+  /* The preview is a narrow 9:16 phone, so an even split gave the media half
+     the card to render a sliver in, and squeezed the heading into a bad rag.
+     Weight the columns toward the copy. */
+  grid-template-columns: 0.85fr 1.15fr;
+}
+
+/* Scaled with the heading — at the base 36px it read as a stray artifact
+   floating above 48px display type. */
+.dp-strip--flip7 .dp-strip-emoji {
+  font-size: var(--dp-strip-flip7-emoji-size);
+}
+
+/* The app's display face, scoped to this strip's title only. Bebas is
+   condensed and caps-only, so it carries a much larger size than Inter. */
 .dp-strip--flip7 .dp-strip-title {
   font-family: var(--dp-strip-flip7-title-font);
   letter-spacing: var(--dp-strip-flip7-title-tracking);
+  font-size: var(--dp-strip-flip7-title-size);
+  line-height: 0.95;
 }
 
 /* No orbs. flip7scorecard.com is flat — no gradients anywhere in its CSS — so
