@@ -3298,13 +3298,6 @@ body.dp-overlay-active {
   background: rgba(255, 255, 255, 0.8);
 }
 
-/* Print-only lightbox: hidden on screen, visible when printing */
-.dp-lightbox--print-only {
-  position: fixed;
-  left: -9999px;
-  visibility: hidden;
-}
-
 /* --- About lightbox (image + description panel) --- */
 .dp-about-lightbox__body {
   position: relative;
@@ -4076,13 +4069,25 @@ body.dp-overlay-active {
 @media print {
   /* Print type/rhythm/spacing scale lives in dev-tokens.css (@media print block) */
 
+  /* Kerning off in print: GPOS kern pairs become TJ offsets in the PDF text
+     stream, which some ATS extractors misread as word breaks ("Edw ar d"). */
+  .dp-resume-page {
+    font-kerning: none !important;
+    /* Ligature/contextual-alternate glyphs can carry private-use ToUnicode
+       mappings ("MCP)" extracting as "MCP\ue082") — plain glyphs only. */
+    font-variant-ligatures: none !important;
+    font-feature-settings: "calt" 0 !important;
+  }
+
   /* Force light theme for print. The token values this relies on live in
      dev-tokens.css (@media print block) — values belong in the token file. */
   :root {
     color-scheme: light !important;
   }
 
-  /* Hide everything except resume content */
+  /* Hide everything except the static resume markup. The lightbox (all
+     variants — it may be open when the user hits Cmd+P) is hidden too: the
+     static .dp-resume-section is what prints now, JS-free. */
   .dp-skip-link,
   .dp-banner-ticker,
   .dp-nav,
@@ -4090,37 +4095,38 @@ body.dp-overlay-active {
   .dp-section-label,
   .dp-side-quests,
   .dp-strip,
-  .dp-resume-section,
+  .dp-resume-heading,
+  .dp-resume-download-row,
+  .dp-contact-cta,
   .dp-footer,
   .dp-split-row,
-  .dp-lightbox-backdrop,
-  .dp-lightbox-close,
-  .dp-lightbox-sidebar,
+  .dp-lightbox,
   .dp-back-to-top {
     display: none !important;
   }
 
-  /* Reset lightbox to flat page */
-  .dp-lightbox {
-    display: block !important;
-    position: static !important;
-    inset: auto !important;
-    z-index: auto !important;
+  /* Flatten the decorative "photo frame" chrome around the page — plain
+     white, full-width, no border/shadow/radius/cursor in print. */
+  .dp-resume-container {
+    aspect-ratio: auto !important;
     padding: 0 !important;
     background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    cursor: default !important;
   }
 
-  .dp-lightbox-content {
-    position: static !important;
-    max-height: none !important;
-    max-width: none !important;
+  .dp-resume-page-wrapper .dp-resume-container::before {
+    display: none !important;
   }
 
-  .dp-lightbox-page {
+  .dp-resume-page {
     overflow: visible !important;
     aspect-ratio: auto !important;
     box-shadow: none !important;
     border: none !important;
+    border-radius: 0 !important;
     padding: 0 !important;
     width: 100% !important;
     background: white !important;
@@ -4134,32 +4140,41 @@ body.dp-overlay-active {
     break-inside: avoid;
   }
 
-  .dp-lightbox--print-only {
-    position: static !important;
-    left: auto !important;
-    visibility: visible !important;
-  }
-
-  /* Force two-column layout (counteract @media (max-width: 1080px) which stacks columns) */
+  /* Single-column flow: main experience column first, then the sidebar —
+     both already in that DOM order, so the PDF text stream reads
+     top-to-bottom with no interleaving. */
   .dp-resume-body {
-    display: grid !important;
-    grid-template-columns: 1fr 200px !important;
-    gap: var(--dp-print-column-gap) !important;
+    display: block !important;
   }
 
+  /* Stack the header: contact block prints under the summary, so the PDF
+     text stream is fully linear (a side-by-side header makes geometric
+     extractors bisect the summary sentence with the contact lines). */
   .dp-resume-header {
-    flex-direction: row !important;
+    flex-direction: column !important;
+    gap: 6px !important;
   }
 
   .dp-resume-sidebar {
-    padding-left: var(--dp-space-4) !important;
-    border-left: 1px solid var(--dp-paper-border) !important;
+    margin-top: var(--dp-print-section-gap) !important;
+    padding-left: 0 !important;
+    border-left: none !important;
     padding-top: 0 !important;
     border-top: none !important;
+    /* Compact 2-column flow for the sidebar's skill groups. CSS multicol
+       preserves DOM order in the tagged PDF structure; 2 columns (not 3)
+       keeps each column's height close enough that poppler's plain-text
+       reading-order heuristic doesn't interleave adjacent columns. */
+    columns: 2;
+    column-gap: var(--dp-print-column-gap) !important;
+  }
+
+  .dp-resume-sidebar .dp-resume-section-group {
+    break-inside: avoid;
   }
 
   /* Print typography — tighten to fit A4 */
-  .dp-lightbox-page {
+  .dp-resume-page {
     font-size: var(--dp-print-body) !important;
     line-height: var(--dp-print-leading) !important;
   }
@@ -4186,6 +4201,9 @@ body.dp-overlay-active {
     font-size: var(--dp-print-section-title) !important;
     margin-top: var(--dp-print-section-gap) !important;
     margin-bottom: 4px !important;
+    /* Wide tracking becomes per-letter TJ offsets — extractors read
+       "E X P E R I E N C E". Normal tracking in print only. */
+    letter-spacing: normal !important;
   }
 
   .dp-resume-section-title:first-child {
@@ -4219,10 +4237,6 @@ body.dp-overlay-active {
 
   .dp-resume-role-achievements li {
     margin-bottom: var(--dp-print-li-gap) !important;
-  }
-
-  .dp-resume-body {
-    gap: var(--dp-print-column-gap) !important;
   }
 
   .dp-resume-contact-item {

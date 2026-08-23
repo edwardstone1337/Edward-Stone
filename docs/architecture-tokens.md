@@ -10,7 +10,7 @@ All tokens use the `dp-` prefix and follow a three-layer atomic model:
 
 **Light theme:** `[data-theme="light"] { … }` in the same file remaps semantic/component tokens for full light pages. On **`main`**, most public HTML sets `data-theme="light"` on `<html>`. **`dev/design-system.html`** can switch themes via pre-init + toggle. Contextual light tokens (e.g. `--dp-paper-surface-light`) still support light-in-dark pockets where needed.
 
-**Print:** an `@media print { :root { … } }` block at the end of the file holds the `--dp-print-*` scale for the resume PDF export, plus the light values print needs (print can't rely on the runtime `data-theme` attribute). `getComputedStyle` cannot read these outside an actual print context — the design system page shows them as a transcribed table for that reason.
+**Print:** an `@media print { :root { … } }` block at the end of the file holds the `--dp-print-*` scale for the resume PDF export, plus the light values print needs (print can't rely on the runtime `data-theme` attribute). It also overrides `--dp-font-display`/`--dp-font-body` to a self-hosted static `"Inter Print"` family (`assets/css/print-fonts.css`, loaded only by `resume.html`) ahead of the Google Fonts variable `Inter` — Chrome embeds a variable font as Type 3 when printing to PDF, which breaks ATS text extraction, so print gets true static font files instead. `getComputedStyle` cannot read any of this outside an actual print context — the design system page shows it as a transcribed table for that reason.
 
 ### Where values may live
 
