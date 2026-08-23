@@ -4,16 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kaomoji - Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Only the body face is requested. kaomoji.click also loads Bricolage
+       Grotesque for display type, which this widget never renders. -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
     :root {
-      --km-bg: #141414;
-      --km-text: #f0f0f0;
-      --km-border: #5a5a5a;
-      --km-border-hover: #808080;
-      --km-tooltip: #f0f0f0;
-      --km-hint: #a0a0a0;
-      --km-glow: rgba(255, 255, 255, 0.08);
-      --km-tooltip-bg: #2a2a2a;
+      /* ============================================================
+         1. PRIMITIVES (kaomoji.click --n-*)
+         Colour primitives exist only to build the semantic tier below -
+         component rules must never reference --km-n-* directly.
+         ============================================================ */
+      --km-n-0: #FFFFFF;
+      --km-n-50: #FAF9F8;
+      --km-n-200: #E5E2DF;
+      --km-n-300: #D2CECA;
+      --km-n-600: #5F5A55;
+      --km-n-700: #403C38;
+      --km-n-800: #2B2825;
+
+      /* ============================================================
+         2. SEMANTICS (kaomoji.click :root[data-theme="light"])
+         The only colour tier component rules may reference.
+
+         The preview deliberately runs the product's LIGHT theme: a bright
+         panel reads as a product shot against the always-dark strip, where a
+         dark one merged into it. The strip's --dp-strip-kaomoji-panel-bg is
+         matched to --km-bg below, so swapping themes means changing both.
+         ============================================================ */
+      --km-bg: var(--km-n-50);
+      --km-surface: var(--km-n-0);
+      --km-surface-hover: var(--km-n-50);
+      --km-surface-active: var(--km-n-200);
+      --km-border-strong: var(--km-n-300);
+      --km-text: var(--km-n-800);
+      /* kaomoji.click pairs --text-soft with --n-600, which is 6.82:1 on
+         --surface. This site targets WCAG AAA (7:1), so the semantic is
+         pinned one step darker at --n-700 (10.93:1). Primitives stay faithful
+         to the product; only this mapping deviates. */
+      --km-text-soft: var(--km-n-700);
+      --km-accent: var(--km-n-800);
+      --km-accent-text: var(--km-n-0);
+      --km-focus: var(--km-n-600);
+      --km-shadow: 0 1px 2px rgba(26, 24, 23, .05), 0 4px 12px rgba(26, 24, 23, .05);
+      --km-shadow-hi: 0 2px 4px rgba(26, 24, 23, .07), 0 10px 24px rgba(26, 24, 23, .08);
+
+      /* ============================================================
+         3. STRUCTURAL (kaomoji.click --r-*, --dur-*, --ease, --font-*)
+         ============================================================ */
+      --km-r-sm: 8px;
+      --km-r-md: 14px;
+      --km-r-pill: 999px;
+      /* One spacing unit drives the row gap, the card gap and the container's
+         inset, so the breathing room reads the same in both directions. */
+      --km-gap: 2.4vmin;
+      /* How far the rows dissolve at each end. Roughly one card wide, so a card
+         is well faded before it reaches the boundary. */
+      --km-fade: 14%;
+      --km-dur-fast: .13s;
+      --km-dur: .2s;
+      --km-ease: cubic-bezier(.22, 1, .36, 1);
+      /* No --font-display counterpart: this widget renders no display type,
+         so Bricolage Grotesque is deliberately not requested. */
+      --km-font-body: "Hanken Grotesk", system-ui, sans-serif;
+      --km-font-moji: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, "Apple Symbols", "Hanken Grotesk", sans-serif;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -23,7 +81,7 @@
       height: 100%;
       overflow: hidden;
       background: var(--km-bg);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: var(--km-font-body);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -41,29 +99,46 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 1.5vmin;
+      justify-content: center;
+      gap: var(--km-gap);
+      padding: var(--km-gap) 0;
     }
+    /* Rows size to their cards rather than stretching to fill. Stretching made
+       the visible vertical gap a leftover of the row height instead of the gap
+       value, so it never matched the horizontal spacing between cards. */
     .km-row {
-      flex: 1;
-      min-height: 0;
+      flex: 0 0 auto;
       display: flex;
       align-items: center;
       overflow: visible;
+      /* The panel has no visible frame any more, so a card reaching the embed
+         boundary would otherwise be sliced at an unmarked edge. Fading each row
+         out at both ends turns that cut into a dissolve. Masked per row, not on
+         the container, so the snackbar stays fully opaque. */
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--km-fade), #000 calc(100% - var(--km-fade)), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, #000 var(--km-fade), #000 calc(100% - var(--km-fade)), transparent 100%);
     }
     .km-row-inner {
       display: inline-flex;
       flex-wrap: nowrap;
       align-items: center;
-      gap: 2vmin;
+      gap: var(--km-gap);
       animation: km-scroll 180s linear infinite;
-      animation-play-state: paused;
+      animation-play-state: running;
     }
     .km-row-1 .km-row-inner { animation-duration: 180s; animation-direction: normal; animation-delay: -135s; }
     .km-row-2 .km-row-inner { animation-duration: 220s; animation-direction: reverse; animation-delay: -27s; }
     .km-row-3 .km-row-inner { animation-duration: 160s; animation-direction: normal; animation-delay: -80s; }
     .km-row-4 .km-row-inner { animation-duration: 200s; animation-direction: reverse; animation-delay: -52s; }
-    .km-container:hover .km-row-inner { animation-play-state: running; }
-    .km-row:focus-within .km-row-inner { animation-play-state: paused; }
+    .km-row-5 .km-row-inner { animation-duration: 240s; animation-direction: normal; animation-delay: -190s; }
+    .km-row-6 .km-row-inner { animation-duration: 170s; animation-direction: reverse; animation-delay: -95s; }
+    /* Rows drift on their own and stop the moment a kaomoji is hovered or
+       focused, so nothing has to be chased to be clicked. Every row freezes
+       together, not just the hovered one — stopping one lane while the rest
+       slide past is more distracting than stopping the lot. `km-paused` is
+       set from JS rather than `:has()` so the behaviour does not depend on
+       selector support. */
+    .km-container.km-paused .km-row-inner { animation-play-state: paused; }
     @keyframes km-scroll {
       from { transform: translateX(0); }
       to { transform: translateX(-50%); }
@@ -73,48 +148,64 @@
       align-items: center;
       justify-content: center;
       white-space: nowrap;
-      padding: 2vmin 4vmin;
-      font-size: clamp(0.7rem, 2.8vmin, 1rem);
-      background: transparent;
-      border: 1px solid var(--km-border);
+      /* Tracks kaomoji.click's .moji, which is 16px/24px padding at a 1.5rem
+         face. Expressed in vmin so the card keeps those proportions as the
+         embedding square scales from 240px to ~534px. */
+      padding: 3.5vmin 4.6vmin;
+      font-size: clamp(0.8rem, 4.4vmin, 1.5rem);
+      line-height: 1.4;
+      font-family: var(--km-font-moji);
       color: var(--km-text);
+      background: var(--km-surface);
+      /* kaomoji.click's .moji uses --border here; we deliberately use
+         --border-strong instead for clearer boundary definition against
+         the card surface at this widget's small sizes. */
+      border: 1px solid var(--km-border-strong);
+      border-radius: var(--km-r-md);
+      box-shadow: var(--km-shadow);
       cursor: pointer;
-      border-radius: 1vmin;
       flex-shrink: 0;
-      font-family: inherit;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background-color var(--km-dur-fast), border-color var(--km-dur-fast), transform var(--km-dur-fast), box-shadow var(--km-dur-fast);
     }
     .km-item:hover,
     .km-item:focus-visible {
-      background: var(--km-glow);
-      transform: scale(1.1);
+      background: var(--km-surface-hover);
+      border-color: var(--km-border-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--km-shadow-hi);
+    }
+    .km-item:active {
+      transform: translateY(0);
+      background: var(--km-surface-active);
     }
     .km-item:focus {
       outline: none;
     }
     .km-item:focus-visible {
-      outline: 2px solid var(--km-border-hover);
+      outline: 2px solid var(--km-focus);
       outline-offset: 2px;
     }
     .km-tooltip {
       position: fixed;
       pointer-events: none;
+      font-family: var(--km-font-body);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.01em;
       padding: 6px 12px;
-      border-radius: 8px;
+      border-radius: var(--km-r-sm);
       opacity: 0;
       transform: translateY(4px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity var(--km-dur-fast), transform var(--km-dur-fast);
       z-index: 1000;
       white-space: nowrap;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      background: var(--km-accent);
+      color: var(--km-accent-text);
+    }
+    /* Flipped below the card when there is no room above it (see showTooltip).
+       Only the entry direction inverts, so it still animates away from the card. */
+    .km-tooltip-below {
+      transform: translateY(-4px);
     }
     .km-tooltip.visible {
       opacity: 1;
@@ -140,7 +231,8 @@
       align-items: center;
       gap: 1.5vmin;
       padding: 1.5vmin 2.5vmin;
-      border-radius: 1.5vmin;
+      border-radius: var(--km-r-pill);
+      font-family: var(--km-font-body);
       font-size: clamp(0.7rem, 2.2vmin, 0.9rem);
       font-weight: 500;
       letter-spacing: 0.01em;
@@ -148,17 +240,23 @@
       opacity: 0;
       z-index: 20;
       white-space: nowrap;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: opacity var(--km-dur) var(--km-ease), transform var(--km-dur) var(--km-ease);
+      background: var(--km-surface);
+      color: var(--km-text);
+      border: 1px solid var(--km-border-strong);
+      box-shadow: var(--km-shadow-hi);
     }
-    .km-snackbar-icon {
-      flex-shrink: 0;
-      color: #22c55e;
+    .km-snackbar-said {
+      color: var(--km-text-soft);
+    }
+    .km-snackbar-what {
+      font-family: var(--km-font-moji);
+      background: var(--km-surface-active);
+      border-radius: var(--km-r-sm);
+      padding: 0.5vmin 1.5vmin;
+    }
+    .km-snackbar-what[hidden] {
+      display: none;
     }
     .km-snackbar.km-snackbar-visible {
       opacity: 1;
@@ -167,12 +265,15 @@
     .km-snackbar.km-snackbar-exit {
       opacity: 0;
       transform: translateX(-50%) translateY(-4px);
-      transition: opacity 0.15s ease, transform 0.15s ease;
+      transition: opacity var(--km-dur-fast) var(--km-ease), transform var(--km-dur-fast) var(--km-ease);
     }
-    @media (max-width: 400px) {
+    /* Below roughly 300px the font clamp bottoms out, so the cards stop
+       shrinking with the square and six rows would overflow. Trimming the
+       vertical padding buys back the space, which keeps the row count the same
+       at every size rather than dropping rows only on small screens. */
+    @media (max-width: 300px) {
       .km-item {
-        padding: 3vmin 5vmin;
-        font-size: clamp(0.85rem, 4vmin, 1.1rem);
+        padding: 2.8vmin 4.6vmin;
       }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -182,6 +283,12 @@
         justify-content: center;
       }
       .km-duplicate {
+        display: none;
+      }
+      /* Wrapped static rows are far taller than a scrolling one, so the extra
+         two rows would only be clipped. */
+      .km-row-5,
+      .km-row-6 {
         display: none;
       }
       .km-tooltip {
@@ -199,10 +306,8 @@
   <div class="km-wrap">
   <div class="km-container" id="km-container">
     <div class="km-snackbar" id="km-snackbar" aria-hidden="true">
-      <svg class="km-snackbar-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="km-snackbar-text">Copied to clipboard</span>
+      <span class="km-snackbar-said">Copied</span>
+      <span class="km-snackbar-what" hidden></span>
     </div>
   </div>
   </div>
@@ -211,34 +316,115 @@
 
   <script>
     (function () {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      // The strip is always dark; the preview inside it runs the product's
+      // light theme so the panel reads as a product shot rather than blending
+      // into the strip. Kept in sync with the light token block above.
+      document.documentElement.setAttribute('data-theme', 'light');
 
-      var kaomoji = [
-        '(╯°□°)╯︵ ┻━┻', '(づ￣ ³￣)づ', '¯\\_(ツ)_/¯', '(^_^)', '(T_T)',
-        'ʕ•ᴥ•ʔ', '(ಥ﹏ಥ)', '(¬_¬)', '(o_O)', '(x_x)',
-        '(♥ω♥*)', 'ヽ(・∀・)ﾉ', 'm(_ _)m', '(=^･ω･^=)', '(-.-)Zzz...',
-        'ヾ(＾-＾)ノ', '(⁄ ⁄•⁄ω⁄•⁄ ⁄)', '(╬ಠ益ಠ)', 'ε=ε=ε=┌(;￣▽￣)┘',
-        '( ͡° ͜ʖ ͡°)', '(☞ﾟヮﾟ)☞', '(｡◕‿◕｡)', '(◕‿◕✿)', '(•̀ᴗ•́)و',
-        '٩(˘◡˘)۶', 'ヾ(⌐■_■)ノ♪', 'ヽ(≧Д≦)ノ', '(´・ω・`)', '(´ ▽ ` )ﾉ'
+      // 96 kaomoji dealt one row at a time, taken from kaomoji.click's own
+      // kaomojis.json: all 22 of its `popular` entries plus a round-robin
+      // sweep across the remaining categories, capped at 15 characters so no
+      // single card dominates the square. Every row gets a different slice --
+      // previously all rows rendered the same array, so the same face showed
+      // up six times.
+      var KAOMOJI_ROWS = [
+        ["( ͡° ʖ̯ ͡°)", "(╬ಠ益ಠ)", "(ಥ﹏ಥ)", "ε=ε=ε=┌(;￣▽￣)┘", "ʕ ´•ᴥ•`ʔ", "( •ө• )", "(/_・)ノ", "(•ิ_•ิ)/", "!(;ﾟoﾟ)ｏ=3=3=3", "___〆(・∀・)", "(＃￣0￣)", "(/;◇;)/", "(*≧ω≦)", "( ´(ｴ)｀)", "(*0*;)", "ʕ·ᴥ·ʔ"],
+        ["(-.-)Zzz...", "(♥ω♥*)", "¯\\_(ツ)_/¯", "(╯°□°)╯︵ ┻━┻", "(^-人-^)", "(￣(エ)￣)", "(.づσ▿σ)づ", "(   ⊙ Θ ⊙)", "｡･ﾟﾟ*(>д<)*ﾟﾟ･｡", "( ╬◣ 益◢)", "(❍ᴥ❍ʋ)", "(＾ᵔᴥᵔ＾)", "(*♡∀♡)", "(´(00)ˋ)", "(｡╯︵╰｡)", "(=；ェ；=)"],
+        ["(^_^)", "(o_O)", "ヽ(・∀・)ﾉ", "( ͡° ͜ʖ ͡°)", "( •́ .̫ •̀ )", "(⸝⸝⸝°⁻̫° ⸝⸝⸝)", "〜(￣▽￣〜)", "(*_*)", "(￣o￣) zzZZzzZZ", "(〒︿〒)", "(-_-?)", "(￣▽￣)ノ", "⊂(・(ェ)・)⊃", "／(･ × ･)＼", "(*^ー^)", "(・_・ヾ"],
+        ["(=^･ω･^=)", "(T_T)", "ヾ(＾-＾)ノ", "ಠ_ಠ", "(－‸ლ)", "(((φ(◎ロ◎;)φ)))", "(*^‿^*)", "(￣(ｴ)￣)ﾉ", "( ﾟoﾟ)", "ʕ º ᴥ ºʔ", "(._.)", "(/ω＼)", "(=⌒‿‿⌒=)", "。。。(((((º∀º)屮", "___φ(°-°=)", "(￢_￢)"],
+        ["(¬_¬)", "(x_x)", "m(_ _)m", "( `ε´ )", "(●｀･(ｴ)･´●)", "( ͒ ु•·̫• ू ͒)", "(｡♥‿♥｡)", "( ´(00)ˋ )", "(｡•́︿•̀｡)", "（＾・ω・＾✿）", "(¬(エ)¬)", "(⊃｡•́‿•̀｡)⊃", "(]ΦωΦ[)", "｡ﾟ(ﾟ´Д｀ﾟ)ﾟ｡", "(*￣m￣)", "(〓￣(∵エ∵)￣〓)"],
+        ["(⁄ ⁄•⁄ω⁄•⁄ ⁄)", "(づ￣ ³￣)づ", "ʕ•ᴥ•ʔ", "_(_^_)_", "(￣_￣|||)", "( ´ ▽ ` )ﾉ", "@(o･ｪ･o)@", "(/･ω･(-ω-)", "(;^_~)", "(￣ω￣;)", "(⸝⸝>_<⸝⸝)", "(ー_ー)!!", "(*>_<*)ﾉ", "(＿ ＿*) Z z z", "(シ_ _)シ", "(。ヘ°)"]
       ];
 
       var tooltip = document.getElementById('km-tooltip');
       var statusEl = document.getElementById('km-status');
+      var container = document.getElementById('km-container');
+
+      // This widget renders inside an iframe, so a tooltip cannot paint
+      // outside the frame the way it can on the full-page site — anything
+      // placed past an edge is simply cropped. Position is therefore flipped
+      // below the card when there is no room above, and clamped on both axes
+      // so the tooltip is always fully inside the square.
+      var TOOLTIP_GAP = 6;
+      var TOOLTIP_EDGE = 4;
 
       function showTooltip(btn) {
         tooltip.textContent = 'Click to copy';
+        tooltip.classList.remove('km-tooltip-below');
+
         var tw = tooltip.offsetWidth;
         var th = tooltip.offsetHeight;
         var rect = btn.getBoundingClientRect();
-        var x = rect.left + rect.width / 2;
-        var y = rect.top;
-        tooltip.style.left = (x - tw / 2) + 'px';
-        tooltip.style.top = (y - th - 6) + 'px';
+        var vw = document.documentElement.clientWidth;
+        var vh = document.documentElement.clientHeight;
+
+        var top = rect.top - th - TOOLTIP_GAP;
+        if (top < TOOLTIP_EDGE) {
+          // Not enough room above — flip below the card.
+          top = rect.bottom + TOOLTIP_GAP;
+          tooltip.classList.add('km-tooltip-below');
+        }
+        // Clamp vertically in case the card is taller than the frame.
+        top = Math.max(TOOLTIP_EDGE, Math.min(top, vh - th - TOOLTIP_EDGE));
+
+        var left = rect.left + rect.width / 2 - tw / 2;
+        left = Math.max(TOOLTIP_EDGE, Math.min(left, vw - tw - TOOLTIP_EDGE));
+
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
         tooltip.classList.add('visible');
       }
 
       function hideTooltip() {
         tooltip.classList.remove('visible');
+      }
+
+      // Hover and keyboard focus each pause the rows, and each has to release
+      // its own hold — a single flag let a click (which focuses the card) leave
+      // the marquee frozen after the pointer had already left.
+      var hoverHold = false;
+      var focusHold = false;
+
+      function syncPaused() {
+        if (container) container.classList.toggle('km-paused', hoverHold || focusHold);
+      }
+
+      // Only a keyboard focus should hold the pause. A click focuses the card
+      // too, and blur will not fire while it keeps focus, so treating that as a
+      // hold is what stuck the animation after a copy.
+      //
+      // Input modality is tracked explicitly rather than read off
+      // `:focus-visible`, which is a browser heuristic: after any earlier key
+      // press it can still report true for a pointer-driven focus, which would
+      // bring the stuck pause straight back.
+      var lastInputWasPointer = false;
+      document.addEventListener('pointerdown', function () { lastInputWasPointer = true; }, true);
+      document.addEventListener('mousedown', function () { lastInputWasPointer = true; }, true);
+      document.addEventListener('keydown', function () { lastInputWasPointer = false; }, true);
+
+      function onItemEnter(btn) {
+        hoverHold = true;
+        showTooltip(btn);
+        syncPaused();
+      }
+
+      function onItemLeave() {
+        hoverHold = false;
+        hideTooltip();
+        syncPaused();
+      }
+
+      function onItemFocus(btn) {
+        if (lastInputWasPointer) return;
+        focusHold = true;
+        showTooltip(btn);
+        syncPaused();
+      }
+
+      function onItemBlur() {
+        focusHold = false;
+        if (!hoverHold) hideTooltip();
+        syncPaused();
       }
 
       function announceCopy(text) {
@@ -249,10 +435,18 @@
       var snackbarShowTimeout;
       var snackbarExitTimeout;
 
-      var snackbarTextEl = snackbarEl.querySelector('.km-snackbar-text');
+      var snackbarSaidEl = snackbarEl.querySelector('.km-snackbar-said');
+      var snackbarWhatEl = snackbarEl.querySelector('.km-snackbar-what');
 
-      function showSnackbar(message) {
-        snackbarTextEl.textContent = message || 'Copied to clipboard';
+      function showSnackbar(verb, moji) {
+        snackbarSaidEl.textContent = verb || 'Copied';
+        if (moji) {
+          snackbarWhatEl.textContent = moji;
+          snackbarWhatEl.hidden = false;
+        } else {
+          snackbarWhatEl.textContent = '';
+          snackbarWhatEl.hidden = true;
+        }
         hideTooltip();
         clearTimeout(snackbarShowTimeout);
         clearTimeout(snackbarExitTimeout);
@@ -270,20 +464,36 @@
         }, 3000);
       }
 
+      // Tells the embedding page a copy happened, so it can react (it swaps its
+      // cursor-chat message). Deliberately signals only THAT a copy occurred —
+      // no kaomoji text, nothing the parent might render. The parent owns any
+      // wording, so nothing crossing this boundary is ever displayed.
+      function notifyParentOfCopy() {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'kaomoji-copy' }, window.location.origin);
+          }
+        } catch (e) {
+          // Parent unreachable (cross-origin embed); the widget still works.
+        }
+      }
+
       function handleCopy(btn, text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
             announceCopy(text);
-            showSnackbar('Copied');
+            showSnackbar('Copied', text);
+            notifyParentOfCopy();
           }).catch(function (err) {
             // Defensive console check for iframe environments where console may be unavailable
             if (typeof console !== 'undefined' && console.error) console.error('Clipboard copy failed:', err);
             statusEl.textContent = 'Copy failed';
-            showSnackbar('Copy failed');
+            showSnackbar('Copy failed', null);
           });
         } else {
           announceCopy(text);
-          showSnackbar('Copied');
+          showSnackbar('Copied', text);
+          notifyParentOfCopy();
         }
       }
 
@@ -294,10 +504,10 @@
         btn.textContent = text;
         btn.setAttribute('aria-label', 'Copy ' + text);
         btn.dataset.kaomoji = text;
-        btn.addEventListener('mouseenter', showTooltip.bind(null, btn));
-        btn.addEventListener('mouseleave', hideTooltip);
-        btn.addEventListener('focus', showTooltip.bind(null, btn));
-        btn.addEventListener('blur', hideTooltip);
+        btn.addEventListener('mouseenter', onItemEnter.bind(null, btn));
+        btn.addEventListener('mouseleave', onItemLeave);
+        btn.addEventListener('focus', onItemFocus.bind(null, btn));
+        btn.addEventListener('blur', onItemBlur);
         return btn;
       }
 
@@ -306,17 +516,19 @@
         row.className = 'km-row km-row-' + rowIndex;
         var inner = document.createElement('div');
         inner.className = 'km-row-inner';
+        var set = KAOMOJI_ROWS[(rowIndex - 1) % KAOMOJI_ROWS.length];
+        // Rendered twice: the scroll translates -50%, so the second copy is what
+        // makes the loop seamless. It is aria-hidden via .km-duplicate handling.
         for (var i = 0; i < 2; i++) {
-          for (var j = 0; j < kaomoji.length; j++) {
-            inner.appendChild(createButton(kaomoji[j], i === 1));
+          for (var j = 0; j < set.length; j++) {
+            inner.appendChild(createButton(set[j], i === 1));
           }
         }
         row.appendChild(inner);
         return row;
       }
 
-      var container = document.getElementById('km-container');
-      for (var r = 1; r <= 4; r++) {
+      for (var r = 1; r <= 6; r++) {
         container.appendChild(createRow(r));
       }
 
