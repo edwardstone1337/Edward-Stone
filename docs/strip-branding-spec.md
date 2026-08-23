@@ -181,6 +181,77 @@ Kaomoji's colours previously lived inline in `dev-styles.css`; they now follow t
 
 ---
 
-## 7. Future: cross-page reuse
+## 7. Cross-page reuse
 
-Strips currently live on the main dev projects page (`index.html`). To reuse the same strip styling on **case study pages**, the strip CSS (tokens + layout + modifier mappings) must be **extracted** or otherwise made available to those pages so that adding a class like `dp-strip dp-strip--scp` works there too. That extraction is a prerequisite before strips can appear on case study pages. See the product-strips backlog and case-study positioning in `docs/issues/dev-projects-product-strips.md`.
+Strip CSS (tokens + layout + modifier mappings) already lives page-agnostically in `dev-tokens.css` / `dev-styles.css`, so any page that loads those two files can use a strip's classes. The Kaomoji strip goes further: its **markup and behaviour** are also extracted into a shared module, so a page doesn't need its own copy of either.
+
+### `kaomoji-strip.js`
+
+`assets/js/dev-projects/kaomoji-strip.js` is an ES6 module exporting one function:
+
+```js
+import { initKaomojiStrip } from './assets/js/dev-projects/kaomoji-strip.js';
+const kaomoji = initKaomojiStrip('#kaomoji-mount');
+```
+
+It owns everything about the strip in one place — its markup (`.dp-strip--flipped.dp-strip--kaomoji`, including the preview `<iframe>`), the `kaomoji-copy` `postMessage` listener (with `event.origin` validation), and the iframe `mouseenter`/`mouseleave` bridge that keeps the cursor-chat hover bubble from hanging at the iframe boundary. It is currently live on two pages, `index.html` and `personal.html`, each of which contributes only a placeholder element and a `<noscript>` fallback — no strip markup or wiring of its own.
+
+**Mount contract:**
+- `initKaomojiStrip(mountSelector)` finds the element matching `mountSelector` and **replaces** it with the rendered `<section>` (not fill-in-place), so no extra wrapper `<div>` survives into the layout.
+- Returns `{ section, cursorTrigger }` on success, or `null` if `mountSelector` matches nothing — this lets a page drop the strip entirely just by deleting its placeholder, no JS branch required on the caller's side.
+- `cursorTrigger` is a plain object (`{ type: 'hover', selector: '#strip-kaomoji', message }`) held by reference. The module mutates `cursorTrigger.message` in place when the preview reports a successful copy (`'Try clicking one'` → `'Great choice'`, resetting on `mouseleave`), and `cursor-chat.js` reads `trigger.message` at fire time rather than at init, so the caller doesn't need to do anything to pick up the change.
+
+**Ordering requirement:** the module deliberately does **not** call `initCursorChat` itself — `index.html` composes ten hover triggers into one `initCursorChat()` call (avatar, logo bar, testimonials, hero wave, counter, plus this strip) and `cursor-chat.js` builds one bubble per call, so only the page can own that call. But `initCursorChat` resolves every trigger's `selector` once, at init, and silently skips any selector matching nothing — so **`initKaomojiStrip()` must run, and the strip element must exist in the DOM, before the page's `initCursorChat()` call**, or the hover trigger for the strip is silently dropped. Both `index.html` and `personal.html` mount the strip first and comment this ordering inline.
+
+Composing the trigger in looks like this on a page with other triggers (`index.html`):
+
+```js
+const kaomoji = initKaomojiStrip('#kaomoji-mount');
+// ...
+import('./assets/js/dev-projects/cursor-chat.js').then(m => {
+  m.initCursorChat({
+    triggers: [
+      /* ...other triggers... */
+      kaomoji && kaomoji.cursorTrigger,
+    ].filter(Boolean)
+  });
+});
+```
+
+or, on a page with no other triggers (`personal.html`):
+
+```js
+const kaomoji = initKaomojiStrip('#kaomoji-mount');
+if (kaomoji) {
+  import('./assets/js/dev-projects/cursor-chat.js').then(m => {
+    m.initCursorChat({ triggers: [kaomoji.cursorTrigger] });
+  });
+}
+```
+
+### Noscript fallback
+
+Every page that mounts the strip pairs its `<div id="kaomoji-mount"></div>` placeholder with a `<noscript>` block, since `initKaomojiStrip()` never runs without JS:
+
+```html
+<div id="kaomoji-mount"></div>
+<noscript>
+  <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+    <div class="dp-strip-inner">
+      <div class="dp-strip-content">
+        <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+        <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
+      </div>
+      <div class="dp-strip-actions">
+        <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
+      </div>
+    </div>
+  </section>
+</noscript>
+```
+
+This drops the `.dp-strip-media` iframe entirely (the preview needs JS regardless of the strip module) and uses the `.dp-strip--compact` layout modifier for a single-column, media-free strip — content and a CTA only. It duplicates the strip's heading copy by hand rather than pulling from the module, since the module has no server-side or noscript rendering path; keep the two in sync if the copy changes.
+
+### Extending this to other strips
+
+Only Kaomoji has been extracted this way so far. SCP Reader and Flip 7 still live as inline markup on `index.html` — moving one of them into its own module would follow the same shape (a module owning markup + behaviour, exporting an `init*(mountSelector)` that replaces a placeholder and returns whatever the page needs to compose elsewhere, e.g. a cursor-chat trigger). See the product-strips backlog and case-study positioning in `docs/issues/dev-projects-product-strips.md` for where that's tracked.
