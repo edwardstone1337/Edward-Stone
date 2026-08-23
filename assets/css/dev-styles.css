@@ -4105,6 +4105,15 @@ body.dp-overlay-active {
     display: none !important;
   }
 
+  /* The section's vertical padding sits below the last line of the resume,
+     where @page margins already provide the breathing room. Left in, that
+     trailing dead height pushes a nearly-full final page over the boundary
+     and Chrome emits an extra, entirely blank page — the same failure mode
+     the #contact-cta-container fix addressed. */
+  .dp-resume-section {
+    padding-block: 0 !important;
+  }
+
   /* Flatten the decorative "photo frame" chrome around the page — plain
      white, full-width, no border/shadow/radius/cursor in print. */
   .dp-resume-container {
