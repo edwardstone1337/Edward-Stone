@@ -464,11 +464,26 @@
         }, 3000);
       }
 
+      // Tells the embedding page a copy happened, so it can react (it swaps its
+      // cursor-chat message). Deliberately signals only THAT a copy occurred —
+      // no kaomoji text, nothing the parent might render. The parent owns any
+      // wording, so nothing crossing this boundary is ever displayed.
+      function notifyParentOfCopy() {
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'kaomoji-copy' }, window.location.origin);
+          }
+        } catch (e) {
+          // Parent unreachable (cross-origin embed); the widget still works.
+        }
+      }
+
       function handleCopy(btn, text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function () {
             announceCopy(text);
             showSnackbar('Copied', text);
+            notifyParentOfCopy();
           }).catch(function (err) {
             // Defensive console check for iframe environments where console may be unavailable
             if (typeof console !== 'undefined' && console.error) console.error('Clipboard copy failed:', err);
@@ -478,6 +493,7 @@
         } else {
           announceCopy(text);
           showSnackbar('Copied', text);
+          notifyParentOfCopy();
         }
       }
 

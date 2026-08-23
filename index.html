@@ -68,6 +68,20 @@
         import('./assets/js/dev-projects/banner-ticker.js').then(m => m.initBannerTicker({ text: 'Currently open to new opportunities', separator: '✦' }));
       }
       import('./assets/js/dev-projects/cursor-chat.js').then(m => {
+        // Held by reference so its message can be swapped after a copy. The
+        // hover handler reads trigger.message when the event fires, not at
+        // init, so mutating this object changes what the next hover shows —
+        // no change needed inside cursor-chat.js.
+        const kaomojiTrigger = {
+          type: 'hover',
+          // Scoped to the strip's text column, not the whole section: the
+          // preview is an iframe, and pointer moves inside it never reach this
+          // document, so a section-wide trigger left the bubble parked at the
+          // iframe's edge, hundreds of px adrift of the real cursor. Leaving
+          // the column fires mouseleave and hides it cleanly.
+          selector: '.dp-strip--kaomoji .dp-strip-content, .dp-strip--kaomoji .dp-strip-actions',
+          message: 'Try clicking one',
+        };
         m.initCursorChat({
           triggers: [
             { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable 🙄' },
@@ -83,13 +97,19 @@
             // iframe, and pointer moves inside it never reach this document, so
             // a strip-wide trigger would park the bubble at the iframe edge and
             // leave it hanging there. Leaving the column hides it cleanly.
-            // Scoped to the strip's text column, not the whole section: the
-            // preview is an iframe, and pointer moves inside it never reach this
-            // document, so a section-wide trigger left the bubble parked at the
-            // iframe's edge, up to 500px adrift of the real cursor. Leaving the
-            // column fires mouseleave and hides it cleanly.
-            { type: 'hover', selector: '.dp-strip--kaomoji .dp-strip-content, .dp-strip--kaomoji .dp-strip-actions', message: 'Take one with you' },
+            kaomojiTrigger,
           ]
+        });
+
+        // First receiver of a postMessage in this codebase — theme-toggle.js
+        // broadcasts but nothing has ever listened. The iframe signals only
+        // that a copy happened; the wording below is ours, so nothing from the
+        // iframe is ever rendered. Origin is checked because the embed is
+        // same-origin by construction (relative src + allow-same-origin).
+        window.addEventListener('message', (event) => {
+          if (event.origin !== window.location.origin) return;
+          if (!event.data || event.data.type !== 'kaomoji-copy') return;
+          kaomojiTrigger.message = 'Great choice';
         });
       });
       initImageLightbox({
@@ -579,7 +599,7 @@
         <div class="dp-strip-inner">
           <div class="dp-strip-content">
             <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-            <h2 class="dp-strip-title">There are hundreds of Japanese kaomoji.<br>I built a home to find the one you need.</h2>
+            <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
           </div>
           <div class="dp-strip-media">
             <iframe
