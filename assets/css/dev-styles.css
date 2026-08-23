@@ -2010,7 +2010,9 @@ img { display: block; max-width: 100%; }
   --dp-device-shadow: var(--dp-strip-scp-device-shadow);
 }
 
-/* Strip theme — Flip 7 (full-width with media, tall card; orbs visible) */
+/* Strip theme — Flip 7 (brand teal bed, cream type; orbs visible).
+   Carries flip7scorecard.com's palette. Documented contrast exception —
+   see the token block in dev-tokens.css and docs/strip-branding-spec.md §5. */
 .dp-strip--flip7 {
   --dp-strip-bg: var(--dp-strip-flip7-bg);
   --dp-strip-title-from: var(--dp-strip-flip7-title-from);
@@ -2026,7 +2028,41 @@ img { display: block; max-width: 100%; }
   --dp-strip-badge-text: var(--dp-strip-flip7-badge-text);
   --dp-device-border: var(--dp-strip-flip7-device-border);
   --dp-device-shadow: var(--dp-strip-flip7-device-shadow);
+  /* Retheme .dp-btn-primary in place rather than adding a strip-only button
+     class — same approach as .dp-strip--kaomoji. */
+  --dp-btn-bg-primary: var(--dp-strip-flip7-accent);
+  --dp-btn-text-primary: var(--dp-strip-flip7-accent-text);
+  --dp-btn-hover-bg-primary: var(--dp-strip-flip7-accent-hover);
 }
+
+/* The app's display face, scoped to this strip's title only. */
+.dp-strip--flip7 .dp-strip-title {
+  font-family: var(--dp-strip-flip7-title-font);
+  letter-spacing: var(--dp-strip-flip7-title-tracking);
+}
+
+/* No orbs. flip7scorecard.com is flat — no gradients anywhere in its CSS — so
+   drifting blurred orbs read as someone else's styling laid over the brand.
+   They also varied the effective background under the cream type, which this
+   strip can least afford. Same opt-out as .dp-strip--kaomoji. The orb tokens
+   stay defined and mapped above so the strip remains re-brandable. */
+.dp-strip--flip7::before,
+.dp-strip--flip7::after {
+  display: none;
+}
+
+/* Heading-only strip: with no description, the default `align-items: start`
+   grid leaves a dead gap between the badges and the CTA. Collapse it the same
+   way .dp-strip--kaomoji does — content settles to the bottom of its row, the
+   action button sits at the top of the next. */
+.dp-strip--flip7 .dp-strip-content {
+  align-self: end;
+}
+
+.dp-strip--flip7 .dp-strip-actions {
+  align-self: start;
+}
+
 .dp-strip--flip7 .dp-strip-media {
   aspect-ratio: 9 / 16;
   max-height: 400px;

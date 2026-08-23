@@ -21,12 +21,14 @@
     <script src="/assets/js/env.js"></script>
     <script src="/assets/js/third-party.js"></script>
 
-    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
+    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes).
+         Bebas Neue (single weight) is flip7scorecard.com's display face, used
+         only by the Flip 7 strip title so that strip reads as the product. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Bebas+Neue&display=swap"
     />
 
     <!-- Design system (independent from main site) -->
@@ -551,20 +553,15 @@
       </div>
 
       <section class="dp-strip dp-strip--flip7" id="strip-flip-7" data-prod-hide aria-label="Flip 7 Scorecard, featured project">
-        <div class="dp-strip-orbs">
-          <div class="dp-strip-orb-dark dp-strip-orb-dark--1"></div>
-          <div class="dp-strip-orb-dark dp-strip-orb-dark--2"></div>
-        </div>
         <div class="dp-strip-inner">
           <div class="dp-strip-content">
             <span class="dp-strip-emoji" aria-hidden="true">🃏</span>
-            <h2 class="dp-strip-title">I'm bad at maths, so I built an app</h2>
+            <h2 class="dp-strip-title">Nobody wanted to keep score.<br>So I built something that does.</h2>
             <span class="dp-strip-overline">flip7scorecard.com</span>
             <div class="dp-strip-badges">
               <span class="dp-strip-badge">Scorecard</span>
               <span class="dp-strip-badge">Card game</span>
             </div>
-            <p class="dp-strip-description">A digital scorecard for the card game Flip 7. Tracks scores, modifiers, and running totals so you can focus on the game instead of the arithmetic. I built it because keeping score in my head was going badly for everyone.</p>
           </div>
           <div class="dp-strip-media">
             <iframe
@@ -572,11 +569,11 @@
               title="Flip 7 Scorecard preview"
               loading="lazy"
               sandbox="allow-scripts allow-same-origin"
-              style="width: 100%; height: 100%; border: none; border-radius: inherit; display: block; visibility: hidden;"
+              style="width: 100%; height: 100%; border: none; border-radius: inherit; display: block;"
             ></iframe>
           </div>
           <div class="dp-strip-actions">
-            <a href="https://www.flip7scorecard.com/" class="dp-btn dp-btn-primary-on-dark" target="_blank" rel="noopener noreferrer" aria-label="Go to Flip 7 Scorecard (opens in new tab)">Go to Flip 7 <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
+            <a href="https://www.flip7scorecard.com/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Flip 7 Scorecard (opens in new tab)">Go to Flip 7 <span class="dp-btn-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span></a>
           </div>
         </div>
       </section>

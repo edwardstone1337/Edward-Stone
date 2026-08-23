@@ -11,26 +11,31 @@
     * { box-sizing: border-box; }
 
     :root {
-      --f7-border-width: 2px;
-      --f7-bg: #0f0f0f;
-      --f7-text: #f0f0f0;
-      --f7-text-muted: #a0a0a0;
-      --f7-border: rgba(255, 255, 255, 0.08);
-      --f7-border-hover: rgba(255, 255, 255, 0.15);
-      --f7-glow: rgba(255, 255, 255, 0.06);
-      --f7-card-back: var(--f7-bg);
-      --f7-card-back-border: rgba(255, 255, 255, 0.22);
-      --f7-card-face: #1d9995;
-      --f7-card-face-text: #000000;
-      --f7-card-face-border: rgba(255, 255, 255, 0.22);
-      --f7-dot-empty-border: rgba(255, 255, 255, 0.22);
-      --f7-dot-filled-bg: rgba(255, 255, 255, 0.06);
-      --f7-dot-filled-border: rgba(255, 255, 255, 0.22);
-      --f7-dot-filled-text: rgba(255, 255, 255, 0.6);
-      --f7-accent-bust: rgba(229, 62, 62, 0.8);
-      --f7-accent-win: rgba(29, 153, 149, 0.8);
+      --f7-border-width: 1px;
+      --f7-bg: #fff4d2;
+      --f7-text: #2b3276;
+      --f7-text-muted: rgba(43, 50, 118, 0.9);
+      --f7-border: #2b3276;
+      --f7-border-hover: #1d9995;
+      --f7-glow: rgba(43, 50, 118, 0.12);
+      /* Navy card back. Cream-on-cream left the card invisible against the
+         page, so the back takes the app's structural navy — the card reads as
+         an object on the cream field, and flipping to the teal face is a real
+         change of state rather than a border appearing. */
+      --f7-card-back: #2b3276;
+      --f7-card-back-border: #2b3276;
+      --f7-card-back-text: #fff4d2;
+      --f7-card-face: #105452;
+      --f7-card-face-text: #fff4d2;
+      --f7-card-face-border: #2b3276;
+      --f7-dot-empty-border: rgba(43, 50, 118, 0.8);
+      --f7-dot-filled-bg: rgba(43, 50, 118, 0.08);
+      --f7-dot-filled-border: #2b3276;
+      --f7-dot-filled-text: #2b3276;
+      --f7-accent-bust: #e53e3e;
+      --f7-accent-win: #fbb03a;
       --f7-accent-focus: #1d9995;
-      --f7-restart-icon: rgba(255, 255, 255, 0.5);
+      --f7-restart-icon: rgba(43, 50, 118, 0.65);
     }
 
     html, body {
@@ -70,7 +75,11 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      opacity: 0;
+      /* Visible at rest, not hidden. The seven empty slots ARE the explanation
+         of the game — someone who never clicks still reads "flip seven, fill
+         seven". Held back to 0.55 so the card stays the focal point; the JS
+         adds .f7-orbit--revealed on first draw to bring them to full. */
+      opacity: 0.55;
       transition: opacity 300ms ease-out;
     }
     .f7-orbit.f7-orbit--revealed {
@@ -110,14 +119,14 @@
     }
     .f7-orbit-dot.bust-highlight {
       border-color: var(--f7-accent-bust) !important;
-      color: var(--f7-accent-bust) !important;
+      color: var(--f7-text) !important;
       background: rgba(229, 62, 62, 0.1) !important;
       animation: f7-bust-pulse 600ms ease-out;
     }
     .f7-orbit-dot.f7-win-highlight {
-      background: #1d9995 !important;
-      border-color: #1d9995 !important;
-      color: #000000 !important;
+      background: var(--f7-accent-win) !important;
+      border-color: var(--f7-text) !important;
+      color: var(--f7-text) !important;
     }
     @keyframes f7-bust-pulse {
       0% { transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.2); }
@@ -238,7 +247,7 @@
     }
     .f7-card-back .f7-restart-icon {
       font-size: 1.5rem;
-      color: var(--f7-restart-icon);
+      color: var(--f7-card-back-text);
       line-height: 1;
     }
 
@@ -264,8 +273,8 @@
       min-height: 1.2em;
       text-align: center;
     }
-    .f7-status.bust { color: var(--f7-accent-bust); }
-    .f7-status.win { color: var(--f7-accent-win); }
+    .f7-status.bust { color: var(--f7-text); }
+    .f7-status.win { color: var(--f7-text); }
     .f7-hint { opacity: 0.6; }
 
     .f7-snackbar {
@@ -287,16 +296,16 @@
       z-index: 20;
       white-space: nowrap;
       transition: opacity 0.25s ease, transform 0.25s ease;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--f7-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--f7-text);
+      border: var(--f7-border-width, 1px) solid var(--f7-border);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
     }
     .f7-snackbar-icon {
       flex-shrink: 0;
-      color: var(--f7-accent-focus);
+      color: var(--f7-text);
     }
     .f7-snackbar.f7-snackbar-visible {
       opacity: 1;

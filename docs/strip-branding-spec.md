@@ -164,6 +164,23 @@ modifiers land on — so a strip that sets only `title-color` gets it. Setting
 - **Gradient title:** Check contrast at **both** gradient endpoints (title-from on strip bg, title-to on strip bg). Both must meet 7:1.
 - Strips render dark on every page via `color-scheme: dark`, so validate against the dark strip surface — not the (light) page around it. The exception is `.dp-strip--kaomoji`, which is light: validate that one against its own `#FFFFFF` surface, and its preview panel against `#FAF9F8`.
 
+### Documented exception: `.dp-strip--flip7`
+
+Flip 7 is the one strip that does **not** meet the 7:1 bar, by explicit design decision. It carries flip7scorecard.com's brand teal `#1d9995` verbatim as the strip bed, with the app's cream `#fff4d2` as type:
+
+| Pair | Ratio | AA body (4.5) | AAA body (7) |
+|------|-------|---------------|--------------|
+| cream `#fff4d2` on teal `#1d9995` | **3.16:1** | fail | fail |
+| white `#ffffff` on teal | 3.48:1 | fail | fail |
+| navy `#2b3276` on teal | 3.32:1 | fail | fail |
+| cream on navy `#2b3276` (badges, CTA) | 10.50:1 | pass | pass |
+
+Nothing legible sits on this teal — it is a mid-tone, so every candidate foreground lands in the 3.1–3.5 dead zone. Darkening the same hue to `#115c59` reaches 7.09:1 with cream and preserves the teal reading; that option was offered and declined in favour of exact brand fidelity. If the bar is ever reinstated for this strip, `#115c59` is the drop-in value — change `--dp-strip-flip7-bg` and nothing else.
+
+Everything on this strip that *can* pass does: badges and the CTA use navy fills carrying cream at 10.50:1, and the embedded preview is a cream surface with navy type at 10.50:1. The failure is confined to title, overline, and description on the teal bed.
+
+**Do not copy this exception to a new strip.** It is a one-off tied to this specific brand colour, not a relaxation of the standard.
+
 ---
 
 ## 6. Current strip inventory
@@ -172,7 +189,7 @@ modifiers land on — so a strip that sets only `title-color` gets it. Setting
 |-------|----------------|---------------|------------------------|
 | Fair Share (default) | *(none)* | Teal / pink | — |
 | SCP Reader | `.dp-strip--scp` | Dark red / maroon | `device-border`, `device-shadow` |
-| Flip 7 | `.dp-strip--flip7` | Navy / teal + amber | `title-from`, `title-to`, `border`, `device-border`, `device-shadow` |
+| Flip 7 | `.dp-strip--flip7` | Brand teal + cream / navy | `title-from`, `title-to`, `border`, `device-border`, `device-shadow`, `accent`, `title-font` |
 | Kaomoji | `.dp-strip--kaomoji` | Warm neutral (**light**) | `border`, `device-border`, `device-shadow`, `padding`, `panel-bg`, `accent` |
 
 **Note:** Kaomoji hides its orbs via extra CSS in the modifier block, and renders no badges — its `badge-bg` / `badge-text` tokens stay defined and mapped so the strip remains re-brandable if badges return. Its colours track kaomoji.click's own palette: `bg` is that site's `--n-900`, `title-color` its `--n-100`, and `device-shadow` its `--shadow-hi`. When the product's palette changes, update these eleven tokens and the preview widget (`assets/previews/kaomoji/index.html`) together — nothing else needs to move.
