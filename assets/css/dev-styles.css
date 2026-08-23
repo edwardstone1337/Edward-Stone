@@ -2043,6 +2043,20 @@ img { display: block; max-width: 100%; }
   max-width: 100vw;
   margin-inline: calc(-50vw + 50%);
   border-radius: 0;
+  /* Full-viewport band, so the teal is a place the page arrives at rather
+     than a stripe it passes. svh (not vh) so mobile browser chrome doesn't
+     push the card off-screen; vh first as the fallback for older engines. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The inner grid is a flex child now, so it needs its own width back — the
+   `margin: 0 auto` that centred it in the block layout no longer applies. */
+.dp-strip--flip7 .dp-strip-inner {
+  width: 100%;
 }
 
 /* `.dp-strip-inner` becomes the cream card sitting on the band — the app's
