@@ -45,6 +45,30 @@
   --pl-danger-hover-bg: #fff1f0; /* red-1 */
   --pl-danger-hover-ink: #a8071a; /* red-8 */
 
+  /* Surface layering below the tab divider (Edward's feedback, round 10):
+     a faint backmost canvas so white cards pop, with the "Recommended this
+     term" tray one step stronger so it reads as a distinct system surface.
+     Sourced from @inquisitive/ui's design-system repo's cool-grey primitive
+     scale (src/tokens/primitives.css:18-28) rather than invented — Edward
+     asked for "cool-grey-0.1"/"cool-grey-0.5" specifically, which are Figma
+     decimal step names, not CSS token names; the repo documents ONE such
+     mapping in a comment (src/prototypes/Inquisitive4/Inquisitive4.module.css:189-199):
+     Figma's "Cool Grey 0.5" flattens on export to `--primitive-cool-grey-0`
+     (#fdfdfe), a step lighter than `--color-background-default-off-white`
+     (semantic.css:99, = cool-grey-1 #f8f9fa). "Cool Grey 0.1" has no
+     corresponding entry anywhere in that repo (no primitive, no generated
+     token, no comment) — given the confirmed direction (smaller decimal =
+     lighter, and 0.5 already sits at the scale's lightest defined step),
+     a hypothetical 0.1 would round to indistinguishable-from-white. Using
+     the two nearest REAL, confirmed values instead, in the same direction
+     Edward asked for (canvas fainter than tray): cool-grey-0 for the
+     canvas, cool-grey-1 for the tray — which is also that exact primitive's
+     documented production role ("Recessed panels / app chrome"), i.e.
+     already the system's own answer to "a distinct system surface." */
+  --pl-canvas: #fdfdfe; /* cool-grey-0 (primitives.css:28; dark-mode value #16181c, unused here — planner is light-locked) */
+  --pl-canvas-strong: #f8f9fa; /* cool-grey-1 (primitives.css:18) = --color-background-default-off-white */
+  --pl-frame-padding: 24px;
+
   /* ---------- subject tints (bg + ink pairs) ---------- */
   --pl-tint-maths-bg: #dbe7f4;      --pl-tint-maths-ink: #2d5c8f;
   --pl-tint-science-bg: #dcefe3;    --pl-tint-science-ink: #2e6e4b;
@@ -55,7 +79,7 @@
   /* ---------- size / geometry tokens ---------- */
   --pl-column-width: 260px;
   --pl-column-gap: 16px;
-  --pl-card-gap: 12px;
+  --pl-card-gap: 8px; /* round 10 (Edward's feedback): tightened from 12px for a denser read, alongside the border removal below; governs both the board's card stack AND term row lists (.pl-column-list, shared — see its own comment) */
   --pl-radius: 12px;
   --pl-radius-sm: 8px;
   --pl-border-width: 1px;
@@ -95,14 +119,16 @@
 
 /* --------------------------------------------
    Compact variant (M3 — homepage embed, index.html's `.dp-case-promo`).
-   Overrides ONLY size/geometry tokens (column width, column/card gaps, the
+   Overrides ONLY size/geometry tokens (column width, column gap, the
    frame's max-height cap) — every colour/radius/typography token above is
    untouched, so the compact widget reads as the exact same product, just
-   smaller. Applied directly on the mount container alongside
-   `[data-project="planner"]` (see index.html) rather than forking any
-   component CSS. Never `transform: scale()` (see .pl-frame's own comment
-   below) — these are real token overrides, so drag.js's pointer math and
-   the frame's own layout stay correct at the smaller size.
+   smaller. `--pl-card-gap` needs no override here since round 10 tightened
+   the BASE value to the same 8px this variant already used. Applied
+   directly on the mount container alongside `[data-project="planner"]`
+   (see index.html) rather than forking any component CSS. Never
+   `transform: scale()` (see .pl-frame's own comment below) — these are
+   real token overrides, so drag.js's pointer math and the frame's own
+   layout stay correct at the smaller size.
    -------------------------------------------- */
 /* Compound selector (no descendant combinator): the homepage mount div
    carries both `data-project="planner"` and `.pl-compact` on the SAME
@@ -111,7 +137,6 @@
 [data-project="planner"] .pl-compact {
   --pl-column-width: 220px;
   --pl-column-gap: 12px;
-  --pl-card-gap: 8px;
   --pl-frame-max-height: 660px; /* fits every tab's default-seed content with zero internal scroll — see the round 7 changelog entry, which tuned the SAME term-view content (empty state + pinned recommendations) to this exact frame-body budget at full size; verified again here at compact column widths below */
 }
 
@@ -153,6 +178,23 @@
   gap: 16px;
   flex-wrap: wrap;
   border-bottom: var(--pl-border-width) solid var(--pl-line);
+}
+
+/* Round 10 (Edward's feedback): keeps the tab bar (and, above it, the
+   titlebar) on white even though .pl-frame-body's ground is now the
+   --pl-canvas tint. Bleeds an opaque white box over the frame body's own
+   top/left/right padding (negative margins the exact inverse of
+   --pl-frame-padding), then restores that same padding on itself so
+   nothing visually shifts — only the BOTTOM edge is left untouched, which
+   is this element's own border-bottom divider above. Net effect: white is
+   painted from the frame's top edge down to the divider; --pl-frame-body's
+   canvas tint only shows from the divider down, exactly the "canvas starts
+   at the divider" boundary Edward asked for. No JS/DOM change needed —
+   .pl-tabbar is always .pl-frame-body's first child (see planner.js). */
+[data-project="planner"] .pl-frame-body > .pl-tabbar {
+  background: var(--pl-surface);
+  margin: calc(-1 * var(--pl-frame-padding)) calc(-1 * var(--pl-frame-padding)) 0;
+  padding: var(--pl-frame-padding) var(--pl-frame-padding) 0;
 }
 
 /* Breathing room below the "+ Add Units" action row so it doesn't sit
@@ -373,10 +415,19 @@
 
 /* Scrollable product surface: hosts the tab bar + board/term panel +
    drawer's inert sibling content. Padding here is the board's "internal
-   padding" — the board itself carries none. White (Edward's feedback: the
-   product ground reads as WHITE, not the Inquisitive off-white --pl-paper)
-   — cards/rows regain distinctness against it via a border alone (round 6:
-   no resting shadow, see .pl-card below) instead of a tinted ground. */
+   padding" — the board itself carries none.
+
+   Round 10 (Edward's feedback): the ground below the tab divider is now
+   the faint --pl-canvas tint (was flat white) — white cards/rows pop
+   against it, and it gives the pinned "Recommended this term" tray
+   (--pl-canvas-strong, see .pl-term-reco) a visible step to sit above. The
+   tab bar and titlebar stay white — see the .pl-frame-body > .pl-tabbar
+   rule directly below, which bleeds an opaque white box over this
+   background from the frame's top edge down to the tab divider, so the
+   tint only ever shows from the divider down. Cards/rows keep their
+   border-only distinctness (round 6: no resting shadow, see .pl-card
+   below) — the canvas just makes that border-and-white-fill read
+   more clearly than it did against a flat white ground. */
 [data-project="planner"] .pl-frame-body {
   flex: 1;
   min-height: 0;
@@ -384,8 +435,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 24px;
-  background: var(--pl-surface);
+  padding: var(--pl-frame-padding);
+  background: var(--pl-canvas);
   /* The row's responsive collapse (below) reads THIS box's width, not the
      viewport's — .pl-frame keeps a fixed aspect ratio independent of the
      browser window (see .pl-frame above), so a row that's genuinely
@@ -433,9 +484,22 @@
   padding-bottom: 8px;
 }
 
+/* Round 10 (Edward's feedback): each Kanban column is now a surfaced tray
+   — the SAME --pl-canvas-strong tint as the "Recommended this term" tray
+   (both are "cool-grey-0.5 tier" surfaces one step up from the
+   --pl-canvas backmost ground), with its own padding/radius so the
+   header + card stack + dropzone read as one contained tray, bordered
+   white cards sitting on top (Trello/Linear-style column trays). `width`/
+   `flex-basis` stay on --pl-column-width unchanged (border-box — see
+   dev-styles.css's global reset — so this padding narrows the cards
+   inside slightly rather than widening the column itself or the board's
+   total width; verified no horizontal scroll at 1280px/compact). */
 [data-project="planner"] .pl-column {
   flex: 0 0 var(--pl-column-width);
   width: var(--pl-column-width);
+  background: var(--pl-canvas-strong);
+  border-radius: var(--pl-radius);
+  padding: 12px;
 }
 
 [data-project="planner"] .pl-column-header {
@@ -496,7 +560,12 @@
      is border-only at rest — no resting shadow on cards or rows (this base
      class is shared by .pl-row, see below). Elevation is reserved for an
      actively-dragged/picked card (.pl-card--picked below) and the floating
-     drag clone (.pl-card-clone), which still use --pl-shadow-card. */
+     drag clone (.pl-card-clone), which still use --pl-shadow-card.
+     (Round 10: Edward briefly tried a borderless-card treatment leaning on
+     the new canvas/tray tints instead — reverted; cards/rows keep their
+     border. The canvas/tray tints (below) now do their surface-separation
+     work at the COLUMN/TRAY level instead — see .pl-column and
+     .pl-term-reco.) */
   padding: var(--pl-card-padding);
   display: flex;
   flex-direction: column;
@@ -1518,26 +1587,18 @@
   border-color: transparent;
 }
 
-[data-project="planner"] .pl-unit-drawer-remove-btn {
-  margin-left: auto;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--pl-danger-hover-ink);
-  background: transparent;
-  border: none;
-  padding: 10px 12px;
-  border-radius: var(--pl-radius-sm);
-  cursor: pointer;
-}
-
-[data-project="planner"] .pl-unit-drawer-remove-btn:hover {
+/* Round 10 (Edward's feedback): "Added to planner" is now a real toggle —
+   clicking it removes the unit (see unit-detail.js's buildActionsRow) — so
+   it needs its own interactive affordance. Reuses the SAME "identical at
+   rest, danger-styled only on hover/focus" pattern the kebab menus'
+   "Remove unit"/"Remove from planner" items already use elsewhere in this
+   product (--pl-danger-hover-bg/--pl-danger-hover-ink — see
+   .pl-kebab-menu-item--destructive:hover above) rather than inventing a
+   second removal treatment. */
+[data-project="planner"] .pl-unit-drawer-save-btn--saved:hover,
+[data-project="planner"] .pl-unit-drawer-save-btn--saved:focus-visible {
   background: var(--pl-danger-hover-bg);
-}
-
-[data-project="planner"] .pl-unit-drawer-remove-btn:focus-visible {
-  outline: 2px solid var(--pl-focus-ring);
-  outline-offset: 2px;
+  color: var(--pl-danger-hover-ink);
 }
 
 /* --------------------------------------------
@@ -1563,7 +1624,12 @@
    -------------------------------------------- */
 [data-project="planner"] .pl-term-reco {
   margin-top: auto;
-  border: var(--pl-border-width) solid var(--pl-line-strong);
+  /* Round 10 (Edward's feedback): the tray tint alone separates this
+     section from the canvas above/around it — no border needed (unlike
+     round 10's first pass, which kept one; dropped once the same
+     --pl-canvas-strong tint went on Kanban columns too and read clearly
+     enough there without one). */
+  background: var(--pl-canvas-strong);
   border-radius: var(--pl-radius);
   padding: 12px;
   display: flex;
@@ -1576,6 +1642,19 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
+}
+
+/* Fix: collapsed state (Hide clicked) renders ONLY the header row — no
+   .pl-term-reco-list follows it (see term-view.js's buildRecommendations()),
+   so the header's own margin-bottom above became unmatched bottom-only
+   space inside .pl-term-reco's otherwise-symmetric 12px padding, pushing
+   the heading/toggle visually above center in the collapsed box. `:last-
+   child` is true exactly when collapsed (no list sibling after it) and
+   false when expanded (the list follows), so this needs no JS/markup
+   change — zeroing the margin there restores the section's padding
+   symmetry, which is what actually centers the header row. */
+[data-project="planner"] .pl-term-reco-header:last-child {
+  margin-bottom: 0;
 }
 
 /* Same small-caps eyebrow treatment as the Add Units drawer's year-group

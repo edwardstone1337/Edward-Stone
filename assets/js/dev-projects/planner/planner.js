@@ -302,10 +302,11 @@ export function initPlanner(rootEl, options = {}) {
   // Demo chrome (Edward's feedback: this controls the DEMO, not the
   // simulated product — it sits above the window frame, styled as
   // portfolio-page UI, not product UI). Reset alone, right-aligned:
-  // re-seeds the 6-unit starting fixture (Term 4 empty by design — see
-  // planner-data.js). No Filled/Empty toggle: the fixture itself now shows
-  // the zero state naturally via Term 4's empty tab / empty board column.
-  // Omitted entirely when `chrome: false` (homepage embed) — see the
+  // re-seeds the 8-unit starting fixture (round 10: a teacher late in the
+  // school year, Term 4 still ahead — Term 1 has the most units, all
+  // complete, tapering down to Term 4's single not-yet-started unit; no
+  // term starts empty. See planner-data.js's `boardSeed` doc for the exact
+  // shape). Omitted entirely when `chrome: false` (homepage embed) — see the
   // `resetBtn` guard below, where its click listener is only wired if it
   // was created here.
   // ------------------------------------------------------------------

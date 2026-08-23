@@ -114,9 +114,9 @@ export function createUnitDrawer(config) {
     getActiveTerm,
     container: body,
     titleId: TITLE_ID,
-    // In-planner "Remove from planner": nothing else useful to show once
-    // the unit is gone, so close the drawer (round 6 behaviour, preserved).
-    onRemoved: () => shell.requestClose(),
+    // Round 10: Remove (the "Added to planner" bookmark toggle) now
+    // re-renders in place inside unit-detail.js itself rather than closing
+    // this drawer — nothing to wire here for it any more.
     // Shouldn't happen in this prototype, but close rather than render
     // stale/empty content.
     onMissingUnit: () => shell.requestClose(),

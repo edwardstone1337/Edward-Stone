@@ -66,9 +66,14 @@ function assessment(unitId, title, done) {
  * truth for every unit's content — the board seed below only references
  * these ids. All names are placeholders — no real curriculum codes.
  *
- * Seeded completion (Edward's brief for this round): Patterns and Algebra
- * (u1) mostly done, Poetry Out Loud (u2) about half, Forces and Friction
- * (u3) one lesson done, every other unit untouched (nothing done yet).
+ * Seeded completion (round 10 reseed, Edward's brief): simulates a teacher
+ * late in the school year, Term 4 still ahead. Term 1 (u1 Patterns and
+ * Algebra, u2 Poetry Out Loud, u7 Night and Day) and Term 2 (u3 Forces and
+ * Friction, u5 Digital Systems All Around Us) are fully complete. Term 3
+ * has one unit ~75% done (de-tec-4-2 Coding Our First Game, 6 of 8 items)
+ * and one ~25% done (de-has-4-2 Australia's Neighbours, 2 of 8 items).
+ * Term 4 (de-mat-3-1 Fractions and Sharing) hasn't started. Every other
+ * catalogue unit is untouched (nothing done yet).
  *
  * @type {DrawerSubjectGroup[]}
  */
@@ -79,15 +84,15 @@ export const drawerCatalogue = [
     units: [
       {
         id: 'u2', subject: 'english', subjectLabel: 'English', title: 'Poetry Out Loud', yearLabel: 'Year 3',
-        // About half (3 of 6 items) — Edward's feedback.
+        // Fully complete (round 10 reseed: Term 1) — Edward's brief.
         lessons: [
           lesson('u2', 1, 'What makes a poem a poem?', true),
           lesson('u2', 2, 'Rhyme and rhythm scavenger hunt', true),
           lesson('u2', 3, 'Choosing performance poems', true),
-          lesson('u2', 4, 'Reading aloud with expression', false),
-          lesson('u2', 5, 'Poetry Out Loud showcase', false),
+          lesson('u2', 4, 'Reading aloud with expression', true),
+          lesson('u2', 5, 'Poetry Out Loud showcase', true),
         ],
-        assessment: assessment('u2', 'Poetry recitation performance', false),
+        assessment: assessment('u2', 'Poetry recitation performance', true),
       },
       {
         id: 'de-eng-3-2', subject: 'english', subjectLabel: 'English', title: 'Tall Tales and Tellers', yearLabel: 'Year 3',
@@ -134,6 +139,8 @@ export const drawerCatalogue = [
     units: [
       {
         id: 'de-mat-3-1', subject: 'maths', subjectLabel: 'Mathematics', title: 'Fractions and Sharing', yearLabel: 'Year 3',
+        // 0% complete (round 10 reseed: Term 4, not yet started) — Edward's
+        // brief. Already all-false, nothing to change.
         lessons: [
           lesson('de-mat-3-1', 1, 'Sharing equally, sharing fairly'),
           lesson('de-mat-3-1', 2, 'What is a fraction?'),
@@ -157,7 +164,7 @@ export const drawerCatalogue = [
       },
       {
         id: 'u1', subject: 'maths', subjectLabel: 'Mathematics', title: 'Patterns and Algebra', yearLabel: 'Year 4',
-        // Mostly done (6 of 7 lessons + the assessment) — Edward's feedback.
+        // Fully complete (round 10 reseed: Term 1) — Edward's brief.
         lessons: [
           lesson('u1', 1, 'Describing number patterns', true),
           lesson('u1', 2, 'Growing and shrinking patterns', true),
@@ -165,7 +172,7 @@ export const drawerCatalogue = [
           lesson('u1', 4, 'Function machines', true),
           lesson('u1', 5, 'Finding the rule', true),
           lesson('u1', 6, 'Creating our own patterns', true),
-          lesson('u1', 7, 'Patterns and algebra challenge', false),
+          lesson('u1', 7, 'Patterns and algebra challenge', true),
         ],
         assessment: assessment('u1', 'Patterns and algebra test', true),
       },
@@ -189,17 +196,18 @@ export const drawerCatalogue = [
     units: [
       {
         id: 'u7', subject: 'science', subjectLabel: 'Science', title: 'Night and Day', yearLabel: 'Year 3',
+        // Fully complete (round 10 reseed: Term 1) — Edward's brief.
         lessons: [
-          lesson('u7', 1, 'Why do we have day and night?'),
-          lesson('u7', 2, "Earth's rotation"),
-          lesson('u7', 3, 'Shadows through the day'),
-          lesson('u7', 4, 'The Sun, Earth and Moon'),
-          lesson('u7', 5, 'Day and night around the world'),
-          lesson('u7', 6, 'Nocturnal vs diurnal animals'),
-          lesson('u7', 7, 'Modelling the day/night cycle'),
-          lesson('u7', 8, 'Night and Day showcase'),
+          lesson('u7', 1, 'Why do we have day and night?', true),
+          lesson('u7', 2, "Earth's rotation", true),
+          lesson('u7', 3, 'Shadows through the day', true),
+          lesson('u7', 4, 'The Sun, Earth and Moon', true),
+          lesson('u7', 5, 'Day and night around the world', true),
+          lesson('u7', 6, 'Nocturnal vs diurnal animals', true),
+          lesson('u7', 7, 'Modelling the day/night cycle', true),
+          lesson('u7', 8, 'Night and Day showcase', true),
         ],
-        assessment: assessment('u7', 'Day and night model presentation', false),
+        assessment: assessment('u7', 'Day and night model presentation', true),
       },
       {
         id: 'de-sci-3-2', subject: 'science', subjectLabel: 'Science', title: 'Living Things Grow', yearLabel: 'Year 3',
@@ -215,17 +223,17 @@ export const drawerCatalogue = [
       },
       {
         id: 'u3', subject: 'science', subjectLabel: 'Science', title: 'Forces and Friction', yearLabel: 'Year 4',
-        // One lesson done — Edward's feedback.
+        // Fully complete (round 10 reseed: Term 2) — Edward's brief.
         lessons: [
           lesson('u3', 1, 'What makes things move?', true),
-          lesson('u3', 2, 'Friction in everyday life', false),
-          lesson('u3', 3, 'Push and pull investigations', false),
-          lesson('u3', 4, 'Friction on different surfaces', false),
-          lesson('u3', 5, 'Reducing and increasing friction', false),
-          lesson('u3', 6, 'Designing a fair test', false),
-          lesson('u3', 7, 'Forces and friction showcase', false),
+          lesson('u3', 2, 'Friction in everyday life', true),
+          lesson('u3', 3, 'Push and pull investigations', true),
+          lesson('u3', 4, 'Friction on different surfaces', true),
+          lesson('u3', 5, 'Reducing and increasing friction', true),
+          lesson('u3', 6, 'Designing a fair test', true),
+          lesson('u3', 7, 'Forces and friction showcase', true),
         ],
-        assessment: assessment('u3', 'Forces and friction investigation', false),
+        assessment: assessment('u3', 'Forces and friction investigation', true),
       },
       {
         id: 'de-sci-4-2', subject: 'science', subjectLabel: 'Science', title: 'Water in Our World', yearLabel: 'Year 4',
@@ -268,26 +276,29 @@ export const drawerCatalogue = [
       },
       {
         id: 'u5', subject: 'technologies', subjectLabel: 'Technologies', title: 'Digital Systems All Around Us', yearLabel: 'Year 4',
+        // Fully complete (round 10 reseed: Term 2) — Edward's brief.
         lessons: [
-          lesson('u5', 1, 'What is a digital system?'),
-          lesson('u5', 2, 'Input, process, output'),
-          lesson('u5', 3, 'Digital systems at school'),
-          lesson('u5', 4, 'Digital systems at home'),
-          lesson('u5', 5, 'How computers store information'),
-          lesson('u5', 6, 'Digital Systems — wrap-up'),
+          lesson('u5', 1, 'What is a digital system?', true),
+          lesson('u5', 2, 'Input, process, output', true),
+          lesson('u5', 3, 'Digital systems at school', true),
+          lesson('u5', 4, 'Digital systems at home', true),
+          lesson('u5', 5, 'How computers store information', true),
+          lesson('u5', 6, 'Digital Systems — wrap-up', true),
         ],
-        assessment: assessment('u5', 'Digital systems poster', false),
+        assessment: assessment('u5', 'Digital systems poster', true),
       },
       {
         id: 'de-tec-4-2', subject: 'technologies', subjectLabel: 'Technologies', title: 'Coding Our First Game', yearLabel: 'Year 4',
+        // ~75% complete (6 of 8 items: 6 of 7 lessons, exactly 75% — round 10
+        // reseed: Term 3) — Edward's brief.
         lessons: [
-          lesson('de-tec-4-2', 1, 'What is an algorithm?'),
-          lesson('de-tec-4-2', 2, 'Sequencing instructions'),
-          lesson('de-tec-4-2', 3, 'Introducing loops'),
-          lesson('de-tec-4-2', 4, 'Using conditionals'),
-          lesson('de-tec-4-2', 5, 'Designing our game'),
-          lesson('de-tec-4-2', 6, 'Building our game'),
-          lesson('de-tec-4-2', 7, 'Coding showcase'),
+          lesson('de-tec-4-2', 1, 'What is an algorithm?', true),
+          lesson('de-tec-4-2', 2, 'Sequencing instructions', true),
+          lesson('de-tec-4-2', 3, 'Introducing loops', true),
+          lesson('de-tec-4-2', 4, 'Using conditionals', true),
+          lesson('de-tec-4-2', 5, 'Designing our game', true),
+          lesson('de-tec-4-2', 6, 'Building our game', true),
+          lesson('de-tec-4-2', 7, 'Coding showcase', false),
         ],
         assessment: assessment('de-tec-4-2', 'Coding project', false),
       },
@@ -334,14 +345,16 @@ export const drawerCatalogue = [
       },
       {
         id: 'de-has-4-2', subject: 'hass', subjectLabel: 'HASS', title: "Australia's Neighbours", yearLabel: 'Year 4',
+        // ~25% complete (2 of 8 items: 2 of 7 lessons, exactly 25% — round 10
+        // reseed: Term 3) — Edward's brief.
         lessons: [
-          lesson('de-has-4-2', 1, 'Where is Australia?'),
-          lesson('de-has-4-2', 2, "Australia's nearest neighbours"),
-          lesson('de-has-4-2', 3, 'Comparing cultures'),
-          lesson('de-has-4-2', 4, 'Trade and connections'),
-          lesson('de-has-4-2', 5, 'Similarities and differences'),
-          lesson('de-has-4-2', 6, 'Researching a neighbouring country'),
-          lesson('de-has-4-2', 7, "Australia's Neighbours showcase"),
+          lesson('de-has-4-2', 1, 'Where is Australia?', true),
+          lesson('de-has-4-2', 2, "Australia's nearest neighbours", true),
+          lesson('de-has-4-2', 3, 'Comparing cultures', false),
+          lesson('de-has-4-2', 4, 'Trade and connections', false),
+          lesson('de-has-4-2', 5, 'Similarities and differences', false),
+          lesson('de-has-4-2', 6, 'Researching a neighbouring country', false),
+          lesson('de-has-4-2', 7, "Australia's Neighbours showcase", false),
         ],
         assessment: assessment('de-has-4-2', 'Country research presentation', false),
       },
@@ -452,23 +465,28 @@ export const flatCatalogue = drawerCatalogue.flatMap((group) => group.units);
 /**
  * Board seed: which catalogue units start on the board, and in which term.
  * This is a placement list only — no content lives here (see module doc
- * above). Term 1 is deliberately left empty (round 6, Edward's feedback):
- * it's the first tab a visitor lands on, so its empty state + pinned
- * "Recommended this term" section funnel straight into the primary Add
- * Units action. "Night and Day" (id `u7`) is seeded nowhere at all, but
- * still addable from the drawer under the same id — visiting Term 1 (or its
- * empty column on All Terms) shows the real zero state on first load, same
- * idea as `u7` for whichever term is left empty.
+ * above).
+ *
+ * Round 10 reseed (Edward's feedback, reversing round 6's "Term 1 empty"
+ * decision): simulates a teacher late in the school year, Term 4 still
+ * ahead — no term starts empty any more. Unit counts taper across the year
+ * (Term 1 >= Term 2 >= Term 3 >= Term 4: 3/2/2/1) and completion tapers
+ * with it (see the `drawerCatalogue` doc above for the exact fractions).
+ * `u4` (Mapping Our Place) and `u6` (Stories of the Past), seeded in prior
+ * rounds, are unseeded again this round — still addable from the drawer
+ * under the same ids, now part of the recommendations pool instead.
  *
  * @type {Array<{ id: string, term: 1|2|3|4 }>}
  */
 export const boardSeed = [
-  { id: 'u1', term: 2 },
-  { id: 'u2', term: 2 },
-  { id: 'u3', term: 3 },
-  { id: 'u4', term: 3 },
-  { id: 'u5', term: 4 },
-  { id: 'u6', term: 4 },
+  { id: 'u1', term: 1 },
+  { id: 'u2', term: 1 },
+  { id: 'u7', term: 1 },
+  { id: 'u3', term: 2 },
+  { id: 'u5', term: 2 },
+  { id: 'de-tec-4-2', term: 3 },
+  { id: 'de-has-4-2', term: 3 },
+  { id: 'de-mat-3-1', term: 4 },
 ];
 
 /**

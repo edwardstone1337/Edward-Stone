@@ -24,12 +24,15 @@
  *    state LIVE from the store on every render/refresh (never cached — an
  *    Add/Remove/toggle elsewhere in the same session must be reflected the
  *    next time this unit's detail is shown), and the re-render-in-place +
- *    refocus plumbing after an action. Hosts differ only in which container
- *    they render into, what id the title heading should carry (each host's
- *    `<dialog>` needs its own unique `aria-labelledby` target — see the
- *    note in drawer.js), and what "the unit vanished" / "removed" should do
- *    afterward (the standalone drawer closes; drawer.js's step 3 returns to
- *    the unit list) — both supplied via `config.onMissingUnit`/`onRemoved`.
+ *    refocus plumbing after an action — including Remove (round 10: the
+ *    bookmark toggle's "Added to planner" click now removes AND re-renders
+ *    in place, same as a lesson toggle, rather than closing/navigating
+ *    away — see buildActionsRow's doc). Hosts differ only in which
+ *    container they render into, what id the title heading should carry
+ *    (each host's `<dialog>` needs its own unique `aria-labelledby` target
+ *    — see the note in drawer.js), and what "the unit vanished" (NOT the
+ *    same thing as removed, see above) should do — supplied via
+ *    `config.onMissingUnit`.
  *
  * XSS: every dynamic string goes through textContent; the only innerHTML
  * assignments below are static, hand-authored icon markup with no
@@ -260,9 +263,16 @@ function buildSection(headingText, items, inPlanner, onToggleItem) {
 
 /**
  * State-dependent actions row: NOT-in-planner shows a single primary "Add
- * to planner" button (unfilled bookmark). IN-planner shows an inert "Added
- * to planner" indicator (filled bookmark), "Download unit" (demo toast) and
- * "Remove from planner" (danger text, pushed to the far side).
+ * to planner" button (unfilled bookmark, `aria-pressed="false"`). IN-planner
+ * shows "Added to planner" (filled bookmark) as a TRUE TOGGLE — clicking it
+ * removes the unit (round 10, Edward's feedback: the old separate "Remove
+ * from planner" text action is gone; the bookmark itself now does both
+ * jobs) — plus "Download unit" (demo toast). Both bookmark states carry
+ * `aria-pressed` AND, in the added state, an `aria-label` override
+ * ("Remove {title} from planner") since the VISIBLE label describes state
+ * ("Added to planner") while the accessible name needs to describe the
+ * action a click performs — the not-in-planner label ("Add to planner")
+ * already IS the action, so it needs no override.
  * @param {object} unit
  * @param {UnitDetailOpts} opts
  */
@@ -278,7 +288,9 @@ function buildActionsRow(unit, opts) {
       buildBookmarkIcon(true),
       'Added to planner'
     );
-    addedBtn.disabled = true;
+    addedBtn.setAttribute('aria-pressed', 'true');
+    addedBtn.setAttribute('aria-label', 'Remove ' + unit.title + ' from planner');
+    addedBtn.addEventListener('click', () => onRemove());
     row.appendChild(addedBtn);
 
     const downloadBtn = buildIconButton('pl-btn pl-btn-secondary', DOWNLOAD_SVG, 'Download unit');
@@ -286,19 +298,13 @@ function buildActionsRow(unit, opts) {
       showSnackbar("Downloads aren't part of this demo");
     });
     row.appendChild(downloadBtn);
-
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.className = 'pl-unit-drawer-remove-btn';
-    removeBtn.textContent = 'Remove from planner';
-    removeBtn.addEventListener('click', () => onRemove());
-    row.appendChild(removeBtn);
   } else {
     const addBtn = buildIconButton(
       'pl-btn pl-btn-primary pl-unit-drawer-save-btn',
       buildBookmarkIcon(false),
       'Add to planner'
     );
+    addBtn.setAttribute('aria-pressed', 'false');
     addBtn.addEventListener('click', () => onAdd());
     row.appendChild(addBtn);
   }
@@ -312,8 +318,9 @@ function buildActionsRow(unit, opts) {
  * @property {string} titleId - see buildTitleBlock()'s doc.
  * @property {() => void} onAdd - "Add to planner" clicked (not-in-planner
  *   state only).
- * @property {() => void} onRemove - "Remove from planner" clicked
- *   (in-planner state only).
+ * @property {() => void} onRemove - "Added to planner" bookmark toggle
+ *   clicked in the IN-planner state (round 10: this is now the only remove
+ *   path in the detail view — see buildActionsRow's doc).
  * @property {(lesson: { id: string, title: string, done: boolean }) => void} onToggleLesson
  * @property {(assessment: { id: string, title: string, done: boolean }) => void} onToggleAssessment
  */
@@ -375,10 +382,6 @@ export function buildUnitDetail(unit, opts) {
  *   content into (cleared and rebuilt on every render/refresh).
  * @param {string} config.titleId - see buildTitleBlock()'s doc; each host
  *   passes its own unique id.
- * @param {() => void} [config.onRemoved] - Called after a successful
- *   "Remove from planner" (store mutation + announce already done). The
- *   standalone drawer closes itself here; drawer.js's step 3 returns to the
- *   unit list.
  * @param {() => void} [config.onMissingUnit] - Called from `refresh()` when
  *   the currently-shown unit id no longer resolves against either the board
  *   or the catalogue (shouldn't happen in this prototype, but closes/
@@ -395,7 +398,6 @@ export function createUnitDetailController(config) {
     getActiveTerm,
     container,
     titleId,
-    onRemoved,
     onMissingUnit,
   } = config;
 
@@ -435,9 +437,16 @@ export function createUnitDetailController(config) {
           if (heading) heading.focus({ preventScroll: true });
         },
         onRemove: () => {
+          // Round 10 (Edward's feedback): the bookmark toggle's remove click
+          // re-renders in place (same pattern as onAdd/onToggleLesson below)
+          // instead of closing/navigating away — the detail flips to the
+          // not-in-planner state and stays open, focus staying on the same
+          // toggle (now "Add to planner") through the re-render.
           remove(unit.id);
-          announce('Removed ' + unit.title + '.');
-          if (typeof onRemoved === 'function') onRemoved();
+          announce('Removed ' + unit.title + ' from your planner.');
+          refresh();
+          const btn = container.querySelector('.pl-unit-drawer-save-btn');
+          if (btn) btn.focus({ preventScroll: true });
         },
         onToggleLesson: (lesson) => {
           const done = toggleLesson(unit.id, lesson.id);

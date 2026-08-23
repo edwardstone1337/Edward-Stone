@@ -224,10 +224,10 @@ export function createAddUnitsDrawer(config) {
     getActiveTerm,
     container: body,
     titleId: UNIT_DETAIL_TITLE_ID,
-    // "Remove from planner" from step 3: unlike the standalone drawer
-    // (which closes — nothing else to show once the unit's gone), this
-    // drawer still has somewhere useful to send the user back to.
-    onRemoved: () => renderUnitStep(currentSubject, { scrollTop: unitListScrollTop }),
+    // Round 10: Remove (the "Added to planner" bookmark toggle) now
+    // re-renders in place inside unit-detail.js itself rather than
+    // navigating back to the unit list — nothing to wire here for it any
+    // more; step 2 still derives "Added ✓" live the next time it's shown.
     // Shouldn't happen in this prototype, but don't render stale/empty
     // content — fall back to the unit list (or subjects, if that's gone
     // too).
