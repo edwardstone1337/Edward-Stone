@@ -62,7 +62,9 @@
 
 [data-project="planner"] .pl-toolbar {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 [data-project="planner"] .pl-visually-hidden {
@@ -129,6 +131,61 @@
   filter: none;
 }
 
+/* Reset demo only makes sense against the Filled fixture — disabled (not
+   hidden) on Empty so the toolbar layout doesn't shift when switching. */
+[data-project="planner"] .pl-btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --------------------------------------------
+   Demo-state segmented control (Filled / Empty)
+   -------------------------------------------- */
+[data-project="planner"] .pl-segmented {
+  display: inline-flex;
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+  border-radius: var(--pl-radius-sm);
+  padding: 2px;
+  gap: 2px;
+  background: var(--pl-surface-2);
+}
+
+[data-project="planner"] .pl-segmented-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 7px 14px;
+  border: none;
+  border-radius: calc(var(--pl-radius-sm) - 2px);
+  background: transparent;
+  color: var(--pl-ink-2);
+  cursor: pointer;
+  transition: background var(--pl-duration) ease, color var(--pl-duration) ease, box-shadow var(--pl-duration) ease;
+}
+
+[data-project="planner"] .pl-segmented-btn:hover {
+  color: var(--pl-ink);
+}
+
+[data-project="planner"] .pl-segmented-btn[aria-checked="true"] {
+  background: var(--pl-surface);
+  color: var(--pl-ink);
+  box-shadow: 0 1px 3px rgba(35, 38, 46, 0.12);
+}
+
+[data-project="planner"] .pl-segmented-btn:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-project="planner"] .pl-segmented-btn {
+    transition: none;
+  }
+}
+
 /* --------------------------------------------
    Board + columns (brief §2)
    -------------------------------------------- */
@@ -177,11 +234,18 @@
   width: 100%;
 }
 
-/* Whole-page cursor feedback while a pointer drag is active. html carries
+/* Whole-page cursor feedback while a pointer drag is active, and a
+   selection guard for the gesture's duration only — added/removed by
+   drag.js in beginDrag()/cleanupPointerDrag() (see drag.js). Without this,
+   moving the pointer over the board's text nodes during a drag starts a
+   native text selection alongside the drag. html carries
    [data-project="planner"] (see projects/planner.html), so this still
    reaches body without an unscoped selector. */
 [data-project="planner"] body.pl-board-dragging {
   cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 /* --------------------------------------------
@@ -199,6 +263,9 @@
   cursor: grab;
   touch-action: none;
   list-style: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 [data-project="planner"] .pl-card:focus-visible {

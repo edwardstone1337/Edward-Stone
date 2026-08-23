@@ -8,7 +8,7 @@
  * docs/superpowers/specs/2026-08-23-planner-prototype-design.md).
  */
 
-import { getUnits, subscribe, move, remove, reset } from './planner-state.js';
+import { getUnits, subscribe, move, remove, reset, clearAll } from './planner-state.js';
 import { createBoard } from './board.js';
 import { renderCard } from './card.js';
 import { attachDragging, shouldSuppressClick } from './drag.js';
@@ -125,10 +125,39 @@ export function initPlanner(rootEl) {
   const toolbar = document.createElement('div');
   toolbar.className = 'pl-toolbar';
 
+  // Demo-state segmented control (Filled / Empty) — accessible two-option
+  // radiogroup, roving tabindex, arrow-key operable. "Filled" is the
+  // fixture; "Empty" swaps to the zero-units state so visitors can see it
+  // without editing the board down to nothing by hand.
+  const demoToggle = document.createElement('div');
+  demoToggle.className = 'pl-segmented';
+  demoToggle.setAttribute('role', 'radiogroup');
+  demoToggle.setAttribute('aria-label', 'Demo data');
+
+  const filledBtn = document.createElement('button');
+  filledBtn.type = 'button';
+  filledBtn.className = 'pl-segmented-btn';
+  filledBtn.setAttribute('role', 'radio');
+  filledBtn.setAttribute('aria-checked', 'true');
+  filledBtn.textContent = 'Filled';
+
+  const emptyBtn = document.createElement('button');
+  emptyBtn.type = 'button';
+  emptyBtn.className = 'pl-segmented-btn';
+  emptyBtn.setAttribute('role', 'radio');
+  emptyBtn.setAttribute('aria-checked', 'false');
+  emptyBtn.tabIndex = -1;
+  emptyBtn.textContent = 'Empty';
+
+  demoToggle.appendChild(filledBtn);
+  demoToggle.appendChild(emptyBtn);
+
   const resetBtn = document.createElement('button');
   resetBtn.type = 'button';
   resetBtn.className = 'pl-btn pl-btn-ghost';
   resetBtn.textContent = 'Reset demo';
+
+  toolbar.appendChild(demoToggle);
   toolbar.appendChild(resetBtn);
 
   const boardRootEl = document.createElement('div');
@@ -179,6 +208,48 @@ export function initPlanner(rootEl) {
     closeAllMenus(boardRootEl);
     reset();
     announce('Demo reset to the starting units.');
+  });
+
+  // 'filled' | 'empty' — which demo state is currently selected. Reset only
+  // makes sense against the fixture, so it's disabled (not hidden, so the
+  // toolbar doesn't reflow) whenever Empty is selected.
+  let demoState = 'filled';
+
+  function setDemoState(next) {
+    if (next === demoState) return;
+    demoState = next;
+
+    filledBtn.setAttribute('aria-checked', String(next === 'filled'));
+    filledBtn.tabIndex = next === 'filled' ? 0 : -1;
+    emptyBtn.setAttribute('aria-checked', String(next === 'empty'));
+    emptyBtn.tabIndex = next === 'empty' ? 0 : -1;
+    resetBtn.disabled = next === 'empty';
+
+    closeAllMenus(boardRootEl);
+    if (next === 'empty') {
+      clearAll();
+      announce('Switched to the empty demo state.');
+    } else {
+      reset();
+      announce('Switched to the filled demo state.');
+    }
+  }
+
+  filledBtn.addEventListener('click', () => {
+    setDemoState('filled');
+    filledBtn.focus();
+  });
+  emptyBtn.addEventListener('click', () => {
+    setDemoState('empty');
+    emptyBtn.focus();
+  });
+
+  demoToggle.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const next = demoState === 'filled' ? 'empty' : 'filled';
+    setDemoState(next);
+    (next === 'filled' ? filledBtn : emptyBtn).focus();
   });
 
   subscribe(() => {

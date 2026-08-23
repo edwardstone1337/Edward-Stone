@@ -8,7 +8,15 @@
  *
  * Semantic markup: each column is a labelled group; each column's cards
  * are a <ul>/<li> list so assistive tech gets real list semantics.
+ *
+ * Every `render()` also plays a FLIP transition (see flip.js) for any card
+ * whose position moved between the previous render and this one — keyboard
+ * moves, remove/add/reset, and the authoritative re-render after a pointer
+ * drop all get a smooth "make room" settle for free. Disabled under
+ * prefers-reduced-motion (flip.js's concern, not this module's).
  */
+
+import { captureRects, playFlip } from './flip.js';
 
 /**
  * @typedef {Object} BoardColumn
@@ -131,6 +139,8 @@ export function createBoard(options) {
   }
 
   function render() {
+    const beforeRects = captureRects(Array.from(root.querySelectorAll('.pl-card')));
+
     const items = getItems();
     root.textContent = '';
 
@@ -149,6 +159,7 @@ export function createBoard(options) {
     });
 
     root.appendChild(boardEl);
+    playFlip(Array.from(root.querySelectorAll('.pl-card')), beforeRects);
   }
 
   return {

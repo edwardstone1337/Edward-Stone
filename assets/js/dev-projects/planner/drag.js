@@ -24,8 +24,20 @@
  *    columns, Enter/Space drops, Escape cancels. aria-live announcements
  *    throughout.
  *  - prefers-reduced-motion: no drop animation or progress transition
- *    (handled in CSS — this module never animates a snap-back itself).
+ *    (the FLIP reflow + clone settle below both route through flip.js,
+ *    which no-ops to an instant snap when the media query matches).
+ *
+ * Text-selection guard: dragging used to highlight page text because a
+ * pointer gesture over text-bearing elements starts a native selection.
+ * `beginDrag()` adds `pl-board-dragging` to <body> (CSS sets
+ * `user-select: none` for the gesture's duration only — see
+ * project-planner.css) and captures the pointer on the source card so the
+ * OS doesn't hand subsequent move events to text selection; both are
+ * undone in `cleanupPointerDrag()`. Cards also carry
+ * `-webkit-user-select: none` unconditionally (CSS).
  */
+
+import { captureRects, playFlip, settleClone } from './flip.js';
 
 let suppressClickUntil = 0;
 
@@ -153,6 +165,7 @@ export function attachDragging(config) {
 
   function onPointerDown(e) {
     if (e.button !== undefined && e.button !== 0) return;
+    if (ptr) return; // a previous gesture's drop-settle animation is still in flight
     const card = e.target.closest('.pl-card');
     if (!card || !root.contains(card)) return;
     if (e.target.closest('.pl-kebab')) return; // kebab stays independently clickable
@@ -160,6 +173,7 @@ export function attachDragging(config) {
     ptr = {
       id: card.dataset.itemId,
       sourceLi: card,
+      pointerId: e.pointerId,
       startX: e.clientX,
       startY: e.clientY,
       dragging: false,
@@ -171,7 +185,7 @@ export function attachDragging(config) {
       lastResolved: null,
     };
 
-    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerCancel);
     window.addEventListener('keydown', onPointerDragKeydown, true);
@@ -194,6 +208,19 @@ export function attachDragging(config) {
     sourceLi.classList.add('pl-card--dragging');
     document.body.classList.add('pl-board-dragging');
 
+    // Pointer capture keeps subsequent pointer events targeted at the card
+    // (window listeners still receive them via bubbling) regardless of
+    // where the cursor wanders — belt-and-braces alongside the CSS
+    // user-select guard against the browser starting a text selection.
+    try {
+      if (!sourceLi.hasPointerCapture(ptr.pointerId)) {
+        sourceLi.setPointerCapture(ptr.pointerId);
+      }
+    } catch (err) {
+      // Progressive enhancement only — pointer capture failing (e.g. an
+      // invalid/expired pointerId) shouldn't block the drag.
+    }
+
     if (config.setRenderSuspended) config.setRenderSuspended(true);
 
     positionClone(e.clientX, e.clientY);
@@ -213,7 +240,12 @@ export function attachDragging(config) {
       const dx = e.clientX - ptr.startX;
       const dy = e.clientY - ptr.startY;
       if (Math.hypot(dx, dy) < 8) return;
+      // Past activation distance: this is now a drag, not a text/scroll
+      // gesture — stop the browser starting a native selection from here on.
+      e.preventDefault();
       beginDrag(e);
+    } else {
+      e.preventDefault();
     }
 
     positionClone(e.clientX, e.clientY);
@@ -231,6 +263,21 @@ export function attachDragging(config) {
     const before = siblings[resolved.index] || null;
 
     const crossingColumn = String(currentColumnId) !== String(resolved.columnId);
+    const originListEl = ptr.sourceLi.parentElement;
+
+    // FLIP: capture the pre-mutation position of every sibling that might
+    // be displaced by re-inserting the dragged card (both the origin and
+    // destination lists on a cross-column move; just the one list on a
+    // within-column reorder), so the "make room" reflow below settles
+    // instead of jumping.
+    const affectedLists = crossingColumn && originListEl !== destListEl
+      ? [originListEl, destListEl]
+      : [destListEl];
+    const affectedCards = () =>
+      affectedLists
+        .flatMap((listEl) => getRealCards(listEl))
+        .filter((el) => el !== ptr.sourceLi);
+    const beforeRects = captureRects(affectedCards());
 
     // Live-position the actual dragged element so the preview always
     // matches where a drop would land.
@@ -240,6 +287,7 @@ export function attachDragging(config) {
       destListEl.appendChild(ptr.sourceLi);
     }
     refreshAllPlaceholders();
+    playFlip(affectedCards(), beforeRects);
 
     if (crossingColumn) {
       // Cross-column moves commit live (brief §5).
@@ -257,6 +305,15 @@ export function attachDragging(config) {
   function cleanupPointerDrag() {
     detachPointerWindowListeners();
 
+    if (ptr && ptr.sourceLi && ptr.pointerId != null) {
+      try {
+        if (ptr.sourceLi.hasPointerCapture(ptr.pointerId)) {
+          ptr.sourceLi.releasePointerCapture(ptr.pointerId);
+        }
+      } catch (err) {
+        // Element may already be detached/recreated by a render — fine.
+      }
+    }
     if (ptr && ptr.cloneEl) ptr.cloneEl.remove();
     if (ptr && ptr.sourceLi) ptr.sourceLi.classList.remove('pl-card--dragging');
     document.body.classList.remove('pl-board-dragging');
@@ -277,12 +334,28 @@ export function attachDragging(config) {
     // live during a cross-column drag-over.
     move(ptr.id, final.columnId, final.index);
 
-    cleanupPointerDrag();
-    if (config.setRenderSuspended) config.setRenderSuspended(false);
-    render();
-    announce('Moved ' + title + ' to ' + columnLabel(final.columnId) + '.');
+    // ptr.sourceLi was already live-positioned into its final slot by every
+    // drag-over tick, so its current rect IS the drop target — animate the
+    // floating clone from wherever the pointer released it into that slot,
+    // then reveal the real card underneath (settleClone no-ops to instant
+    // under prefers-reduced-motion, matching the previous behaviour).
+    const targetRect = ptr.sourceLi.getBoundingClientRect();
+    const cloneEl = ptr.cloneEl;
+    ptr.cloneEl = null; // cleanupPointerDrag below no longer owns it
+
+    // Set synchronously (not inside the settle callback below): the
+    // browser fires the synthetic trailing click right after this pointerup
+    // handler returns, well before the ~180ms settle animation finishes.
     suppressClickBriefly();
-    ptr = null;
+
+    settleClone(cloneEl, targetRect, () => {
+      if (cloneEl) cloneEl.remove();
+      cleanupPointerDrag();
+      if (config.setRenderSuspended) config.setRenderSuspended(false);
+      render();
+      announce('Moved ' + title + ' to ' + columnLabel(final.columnId) + '.');
+      ptr = null;
+    });
   }
 
   function onPointerCancel() {
