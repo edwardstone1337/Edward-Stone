@@ -130,6 +130,21 @@ Use this list when adding a new strip theme.
 
 If an optional token is omitted, the base strip token (or its default) is used.
 
+### Gotcha: `title-from` / `title-to` and where custom properties resolve
+
+`.dp-strip-title` never reads `--dp-strip-title-color` directly — it paints
+`linear-gradient(--dp-strip-title-from → --dp-strip-title-to)` and clips it to the
+text. Those two default to `var(--dp-strip-title-color)`, but a custom property is
+substituted **where it is declared, not where it is used**. While that default lived
+in `:root`, it resolved against the *default* title colour and froze there, so a
+modifier setting only `--dp-strip-title-color` was silently ignored: SCP Reader
+declared `#ffffff` and Kaomoji `#F2F0EE`, and both painted Fair Share's mint.
+
+The fallback pair is now re-declared on `.dp-strip` itself — the same element the
+modifiers land on — so a strip that sets only `title-color` gets it. Setting
+`title-from` / `title-to` explicitly still wins on source order (Flip 7 does this).
+**If you move that pair back to `:root`, every strip silently goes mint again.**
+
 ---
 
 ## 4. Design guidelines
@@ -156,9 +171,11 @@ If an optional token is omitted, the base strip token (or its default) is used.
 | Fair Share (default) | *(none)* | Teal / pink | — |
 | SCP Reader | `.dp-strip--scp` | Dark red / maroon | `device-border`, `device-shadow` |
 | Flip 7 | `.dp-strip--flip7` | Navy / teal + amber | `title-from`, `title-to`, `border`, `device-border`, `device-shadow` |
-| Kaomoji | `.dp-strip--kaomoji` | Monochrome (grey) | `title-color`, `text-color`, `badge-bg`, `badge-text`, `device-border`, `device-shadow` |
+| Kaomoji | `.dp-strip--kaomoji` | Warm neutral | `device-border`, `device-shadow`, `padding`, `panel-bg` |
 
-**Note:** Kaomoji hides its orbs via extra CSS in the modifier block. Its colours previously lived inline in `dev-styles.css`; they now follow this spec as `--dp-strip-kaomoji-*` tokens in `dev-tokens.css`, so all three strips are consistent. `./scripts/check-token-hygiene.sh` fails the build if a strip regresses to inline values.
+**Note:** Kaomoji hides its orbs via extra CSS in the modifier block, and renders no badges — its `badge-bg` / `badge-text` tokens stay defined and mapped so the strip remains re-brandable if badges return. Its colours track kaomoji.click's own palette: `bg` is that site's `--n-900`, `title-color` its `--n-100`, and `device-shadow` its `--shadow-hi`. When the product's palette changes, update these eleven tokens and the preview widget (`assets/previews/kaomoji/index.html`) together — nothing else needs to move.
+
+Kaomoji's colours previously lived inline in `dev-styles.css`; they now follow this spec as `--dp-strip-kaomoji-*` tokens in `dev-tokens.css`, so all four strips are consistent. `./scripts/check-token-hygiene.sh` fails the build if a strip regresses to inline values.
 
 ---
 
