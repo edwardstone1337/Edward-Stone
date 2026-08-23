@@ -284,10 +284,11 @@
      end, so the section and the preview inside it read as one product surface
      rather than a bright panel punched into a dark band. Every other strip is
      dark — see the exception noted in docs/strip-branding-spec.md.
-     Page background is pure #FFFFFF, so the strip takes the site's --n-0 plus
-     a real border to read as a section, and the preview panel takes --n-50 so
-     the white kaomoji cards inside it still have something to sit on. */
-  --dp-strip-kaomoji-bg: #FFFFFF;
+     Strip and preview panel share the product's --n-50, so the embed dissolves
+     into the section and the white kaomoji cards float on one continuous
+     surface. That leaves the strip only 1.04:1 against the pure-white page, so
+     the border below is what makes it read as a section at all. */
+  --dp-strip-kaomoji-bg: #FAF9F8;
   --dp-strip-kaomoji-orb-1: #E5E2DF;
   --dp-strip-kaomoji-orb-2: #F2F0EE;
   --dp-strip-kaomoji-orb-dark: rgba(26, 24, 23, 0.06);
@@ -303,9 +304,11 @@
   --dp-strip-kaomoji-accent: #2B2825;
   --dp-strip-kaomoji-accent-text: #FFFFFF;
   --dp-strip-kaomoji-accent-hover: #403C38;
-  --dp-strip-kaomoji-device-border: 1px solid rgba(26, 24, 23, 0.12);
-  /* kaomoji.click's light --shadow-hi. */
-  --dp-strip-kaomoji-device-shadow: 0 2px 4px rgba(26, 24, 23, 0.07), 0 10px 24px rgba(26, 24, 23, 0.08);
+  /* The panel shares the strip's background, so a border or shadow would only
+     draw a box around a surface that is already continuous. The kaomoji cards
+     carry their own edges; the embed itself stays invisible. */
+  --dp-strip-kaomoji-device-border: 1px solid transparent;
+  --dp-strip-kaomoji-device-shadow: none;
   /* Even inset on all four sides, against the 64/32 strip default. */
   --dp-strip-kaomoji-padding: var(--dp-space-8);
   /* The preview runs kaomoji.click's LIGHT theme, so the frame behind the
