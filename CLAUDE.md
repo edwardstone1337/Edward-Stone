@@ -12,8 +12,9 @@ Public pages are the HTML files at the repo root, `projects/`, and `case-studies
 - `dev/*` — design system reference, legacy component preview, archived homepage
 - `assets/previews/*` — iframe preview widgets
 - `projects/prang-out.html` — redirects to `/404.html` on prod via an inline gate
+- `projects/planner.html` — same prod-gate pattern as `prang-out.html` (redirects to `/404.html` on prod via an inline gate)
 - `about.html` — live and indexable, but deliberately **not** linked from the prod nav
-- On `index.html`, several strips/toolbox/testimonials carry `data-prod-hide` and are hidden on prod by the `env.js` feature gate
+- On `index.html`, several strips/toolbox/testimonials carry `data-prod-hide` and are hidden on prod by the `env.js` feature gate. The `.dp-case-promo__widget` live Planner embed is gated the same way (`data-prod-hide` plus a script-level `isProd` guard that skips mounting it entirely) — a static PNG (`.dp-case-promo__media`) shows in its place on prod
 
 **CSS systems**: "dev" = `dev-tokens.css` + `dev-styles.css` (`dp-` prefix, primary). "legacy" = `tokens.css` + `style.css` (no prefix, being phased out). Never mix them.
 
@@ -88,6 +89,7 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - `docs/gallery-workflow.md` — Adding images to gallery (script usage, metadata format)
 - `docs/release-playbook.md` — Pre-release checklist
 - `docs/resume-docx.md` — Word resume companion: how files/Edward Stone Resume.docx is generated, when to regenerate
+- `docs/superpowers/specs/2026-08-23-planner-prototype-design.md` — Planner prototype's decision log (tech choices, token strategy, revision history)
 
 ## Rules
 

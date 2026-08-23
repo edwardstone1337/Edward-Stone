@@ -404,20 +404,69 @@ img { display: block; max-width: 100%; }
 }
 
 /* ------------------------------------------------
-   Case study promo — image + text split
+   Case study promo — centered heading + live widget (or, on prod, the
+   fallback screenshot — see the PROD-HIDE comments in index.html and the
+   `.dp-case-promo__widget` / `.dp-case-promo__media` gate rules below)
    ------------------------------------------------ */
 .dp-case-promo {
   margin-top: var(--dp-section-gap);           /* 96px — matches section rhythm */
 }
 
 .dp-case-promo__inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--dp-space-16);                     /* 64px */
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: var(--dp-space-8);                      /* 32px */
   max-width: 1200px;                           /* no --dp-max-width token exists; raw value flagged */
   margin-inline: auto;
   padding-inline: var(--dp-space-8);           /* 32px — page gutter */
+}
+
+.dp-case-promo__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;                            /* keeps both lines from stretching the full section width */
+}
+
+.dp-case-promo__title {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: var(--dp-weight-bold);          /* 700 */
+  line-height: 1.35;                           /* no token between --dp-leading-snug (1.25) and --dp-leading-normal (1.5) */
+  color: var(--dp-text-primary);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.dp-case-promo__subtitle {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  color: var(--dp-text-secondary);
+  text-wrap: balance;
+  margin: var(--dp-space-3) 0 0;               /* 12px — separates the two lines without the old bottom-margin gap */
+}
+
+/* Live widget mount (dev/local — see index.html's PROD-HIDE comments and
+   the mount script). `.pl-compact` (project-planner.css) overrides ONLY
+   the widget's size tokens; this rule just sizes/centers the container
+   itself within the section. */
+.dp-case-promo__widget {
+  width: 100%;
+  max-width: 1040px;
+}
+
+/* Fallback screenshot (prod — the widget above is [data-prod-hide]).
+   Hidden by default (dev/local shows the live widget instead); shown only
+   once `.is-prod` is set on <html> by env.js. See index.html's PROD-HIDE
+   comments for the pairing with `.dp-case-promo__widget`. */
+.dp-case-promo__media {
+  display: none;
+  width: 100%;
+  max-width: 800px;
+}
+
+.is-prod .dp-case-promo__media {
+  display: block;
 }
 
 .dp-case-promo__media img {
@@ -432,22 +481,8 @@ img { display: block; max-width: 100%; }
   box-shadow: var(--dp-shadow-showcase-image);
 }
 
-.dp-case-promo__title {
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
-  font-weight: var(--dp-weight-bold);          /* 700 */
-  line-height: 1.35;                           /* no token between --dp-leading-snug (1.25) and --dp-leading-normal (1.5) */
-  color: var(--dp-text-primary);
-  margin: 0 0 var(--dp-space-8) 0;            /* 32px bottom */
-}
-
-.dp-case-promo__subtitle {
-  color: var(--dp-text-secondary);
-}
-
 @media (max-width: 768px) {
   .dp-case-promo__inner {
-    grid-template-columns: 1fr;
-    gap: var(--dp-space-8);                    /* 32px */
     padding-inline: 0;
   }
   .dp-case-promo__media .dp-case-promo__planner-image {
