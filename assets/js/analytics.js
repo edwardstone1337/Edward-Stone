@@ -8,7 +8,7 @@
  * - project_click: clicks on project strip buttons (learn more / visit)
  * - snake_opened: snake game overlay opened
  * - resume_lightbox: resume lightbox opened
- * - resume_download: resume download actions (pdf, print, clipboard, hero)
+ * - resume_download: resume download actions (pdf, print, clipboard, docx, hero)
  * - easter_egg: avatar easter egg triggered
  */
 (function () {
@@ -101,7 +101,7 @@
   /**
    * 4. resume_download
    * Listen for clicks on download widget buttons
-   * Methods: print, clipboard
+   * Methods: print, clipboard, docx
    */
   function initResumeDownloadTracking() {
     document.addEventListener('click', function (e) {
@@ -112,6 +112,8 @@
         method = 'print';
       } else if (e.target.closest('[data-copy-resume]')) {
         method = 'clipboard';
+      } else if (e.target.closest('[data-docx-download]')) {
+        method = 'docx';
       }
 
       if (!method) return;
