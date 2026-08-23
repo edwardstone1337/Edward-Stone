@@ -62,6 +62,9 @@
       /* One spacing unit drives the row gap, the card gap and the container's
          inset, so the breathing room reads the same in both directions. */
       --km-gap: 2.4vmin;
+      /* How far the rows dissolve at each end. Roughly one card wide, so a card
+         is well faded before it reaches the boundary. */
+      --km-fade: 14%;
       --km-dur-fast: .13s;
       --km-dur: .2s;
       --km-ease: cubic-bezier(.22, 1, .36, 1);
@@ -108,6 +111,12 @@
       display: flex;
       align-items: center;
       overflow: visible;
+      /* The panel has no visible frame any more, so a card reaching the embed
+         boundary would otherwise be sliced at an unmarked edge. Fading each row
+         out at both ends turns that cut into a dissolve. Masked per row, not on
+         the container, so the snackbar stays fully opaque. */
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--km-fade), #000 calc(100% - var(--km-fade)), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, #000 var(--km-fade), #000 calc(100% - var(--km-fade)), transparent 100%);
     }
     .km-row-inner {
       display: inline-flex;

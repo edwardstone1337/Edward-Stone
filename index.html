@@ -79,6 +79,16 @@
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
             { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
             { type: 'hover', selector: '.dp-counter', message: 'Such a throwback' },
+            // Scoped to the text column, not the whole strip: the preview is an
+            // iframe, and pointer moves inside it never reach this document, so
+            // a strip-wide trigger would park the bubble at the iframe edge and
+            // leave it hanging there. Leaving the column hides it cleanly.
+            // Scoped to the strip's text column, not the whole section: the
+            // preview is an iframe, and pointer moves inside it never reach this
+            // document, so a section-wide trigger left the bubble parked at the
+            // iframe's edge, up to 500px adrift of the real cursor. Leaving the
+            // column fires mouseleave and hides it cleanly.
+            { type: 'hover', selector: '.dp-strip--kaomoji .dp-strip-content, .dp-strip--kaomoji .dp-strip-actions', message: 'Take one with you' },
           ]
         });
       });
@@ -569,7 +579,7 @@
         <div class="dp-strip-inner">
           <div class="dp-strip-content">
             <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-            <h2 class="dp-strip-title">There are hundreds of Japanese kaomoji. I built a home to find the one you need.</h2>
+            <h2 class="dp-strip-title">There are hundreds of Japanese kaomoji.<br>I built a home to find the one you need.</h2>
           </div>
           <div class="dp-strip-media">
             <iframe
