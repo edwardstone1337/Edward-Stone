@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- **Resume copy: verb variety** (`resume.html`, `files/Edward Stone Resume.docx`): "designed" appeared 8× across experience bullets (flagged by ATS checker content analysis). Six instances replaced with verbs matched to each bullet's actual substance — Launched (adoption-driven planning feature), Introduced (new review system), Streamlined (friction-reduction onboarding), Reworked (conversion-lift EDM campaigns), Delivered work for (agency clients), Created (online store) — keeping "Designed" only where interface/product design craft is the point (lesson builder, near-me feature, websites). Docx regenerated to match.
+
+
 ### Added
 - **Planner prototype shell** (`projects/planner.html`, `assets/css/project-planner.css`, `assets/js/dev-projects/planner/planner.js`, `assets/js/dev-projects/planner/planner-data.js`): Scaffolded a hidden, prod-gated page for an upcoming interactive Planner prototype — same `env.js`/inline gate pattern as `projects/prang-out.html` (redirects to `/404.html` on prod), `noindex, nofollow`, pinned `data-theme="light"`, dev-system CSS with an empty per-project theme file, and a placeholder hero. `initPlanner()` and the mock-data module are deliberate no-ops until the brief defines the entity model (units/lessons/weeks). Not linked from nav, not in `sitemap.xml` — mirrors `prang-out.html`'s treatment exactly.
 
