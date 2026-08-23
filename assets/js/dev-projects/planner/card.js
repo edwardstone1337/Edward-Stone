@@ -12,11 +12,12 @@
  */
 
 import { buildKebab } from './kebab.js';
+import { unitProgress } from './planner-data.js';
 
 /**
  * Render one Kanban card for a planner unit.
  *
- * @param {import('./planner-data.js').PlannerUnit} unit
+ * @param {import('./planner-data.js').CatalogueUnit & { term: 1|2|3|4 }} unit
  * @returns {HTMLLIElement}
  */
 export function renderCard(unit) {
@@ -26,23 +27,27 @@ export function renderCard(unit) {
   li.setAttribute('aria-label', 'Move ' + unit.title);
   li.dataset.itemId = unit.id;
 
-  // Kebab (ghost icon button, top-right)
+  // Kebab (ghost icon button, top-right) — opens the unit drawer via
+  // planner.js's delegated "open" action (see setupCardInteractions()).
   const kebabWrap = buildKebab();
 
-  // Body (meta line, title, progress) — clickable, no-op "open"
+  // Body (meta line, title, progress) — clickable, opens the unit drawer
   const body = document.createElement('div');
   body.className = 'pl-card-body';
   body.dataset.action = 'open';
 
   const meta = document.createElement('span');
   meta.className = 'pl-card-meta';
-  meta.textContent = unit.subjectLabel + ' · Year 4';
+  meta.textContent = unit.subjectLabel + ' · ' + unit.yearLabel;
 
   const title = document.createElement('span');
   title.className = 'pl-card-title';
   title.textContent = unit.title;
 
-  const progressPct = Math.round(unit.progress * 100);
+  // Progress is always DERIVED from lessons[].done + assessment.done — never
+  // read from a stored number (see planner-data.js's unitProgress()).
+  const { fraction } = unitProgress(unit);
+  const progressPct = Math.round(fraction * 100);
   const progressWrap = document.createElement('div');
   progressWrap.className = 'pl-card-progress';
   progressWrap.setAttribute('role', 'progressbar');

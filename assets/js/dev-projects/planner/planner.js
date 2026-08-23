@@ -40,7 +40,7 @@ import { renderCard } from './card.js';
 import { renderRow } from './row.js';
 import { attachDragging, shouldSuppressClick } from './drag.js';
 import { createAddUnitsDrawer } from './drawer.js';
-import { showSnackbar } from '../snackbar.js';
+import { createUnitDrawer } from './unit-drawer.js';
 
 /** Column definitions — fixed four terms, in display order (brief §2). */
 const COLUMNS = [
@@ -82,14 +82,18 @@ function closeAllMenus(rootEl) {
 }
 
 /**
- * Wire up the kebab menu (open/close/outside-click) and the card/row body's
- * no-op "open" click. Delegated on a stable root so re-rendering never leaks
- * per-item listeners. Card.js's cards and row.js's rows share the same
- * `.pl-kebab` / `[data-action]` markup, so this same function is called
- * once for the board root and once for the term panel — nothing here is
- * board- or row-specific.
+ * Wire up the kebab/meatballs menu (open/close/outside-click) and the
+ * card/row body's "open" click. Delegated on a stable root so re-rendering
+ * never leaks per-item listeners. Card.js's cards and row.js's rows share
+ * the same `.pl-kebab` / `[data-action]` markup, so this same function is
+ * called once for the board root and once for the term panel — nothing here
+ * is board- or row-specific.
+ * @param {HTMLElement} rootEl
+ * @param {(msg: string) => void} announce
+ * @param {(id: string, triggerEl: HTMLElement) => void} openUnit - Opens the
+ *   unit-detail drawer (round 4: replaces the old no-op "opening" toast).
  */
-function setupCardInteractions(rootEl, announce) {
+function setupCardInteractions(rootEl, announce, openUnit) {
   rootEl.addEventListener('click', (e) => {
     const kebabBtn = e.target.closest('.pl-kebab-btn');
     if (kebabBtn) {
@@ -112,11 +116,12 @@ function setupCardInteractions(rootEl, announce) {
 
       if (actionEl.dataset.action === 'open') {
         // Card/row body clicks can carry a trailing synthetic click after a
-        // real pointer drag; the kebab's "Open" item can't (kebab is
-        // excluded from drag activation), so only guard the body case.
+        // real pointer drag; the kebab/meatballs menu's "Open" item can't
+        // (kebab is excluded from drag activation), so only guard the body
+        // case.
         if (actionEl.classList.contains('pl-card-body') && shouldSuppressClick()) return;
         closeAllMenus(rootEl);
-        showSnackbar("Opening units isn't part of this demo");
+        openUnit(id, card);
         return;
       }
 
@@ -321,6 +326,24 @@ export function initPlanner(rootEl) {
     getActiveTerm: () => activeTab,
   });
 
+  // Unit-detail drawer (round 4) — opens from a row/card's main area or
+  // either menu's "Open" item (wired below via setupCardInteractions()).
+  // Shares the same frame/inert target as the Add Units drawer above; the
+  // two must never be open at once (see drawer-shell.js's requestClose doc)
+  // — enforced by openUnit()/the "+ Add Units" handler below, both of which
+  // force-close whichever drawer is open before opening the other.
+  const unitDrawer = createUnitDrawer({
+    getUnits,
+    fallbackFocusEl: addUnitsBtn,
+    frameEl: frame,
+    inertEl: frameBody,
+  });
+
+  function openUnit(id, triggerEl) {
+    if (drawer.isOpen()) drawer.close({ animate: false });
+    unitDrawer.open(id, triggerEl);
+  }
+
   const board = createBoard({
     root: boardRootEl,
     columns: COLUMNS,
@@ -347,7 +370,10 @@ export function initPlanner(rootEl) {
     },
   });
 
-  addUnitsBtn.addEventListener('click', () => drawer.open(addUnitsBtn));
+  addUnitsBtn.addEventListener('click', () => {
+    if (unitDrawer.isOpen()) unitDrawer.close({ animate: false });
+    drawer.open(addUnitsBtn);
+  });
 
   attachDragging({
     root: boardRootEl,
@@ -379,8 +405,8 @@ export function initPlanner(rootEl) {
     columnEmptyText: COLUMN_EMPTY_TEXT,
   });
 
-  setupCardInteractions(boardRootEl, announce);
-  setupCardInteractions(termPanelEl, announce);
+  setupCardInteractions(boardRootEl, announce, openUnit);
+  setupCardInteractions(termPanelEl, announce, openUnit);
 
   // ------------------------------------------------------------------
   // Tab bar wiring — accessible tablist pattern: roving tabindex,

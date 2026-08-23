@@ -39,7 +39,9 @@ Widget consumes only `--pl-*` semantic tokens (surface, ground, border, 3 text t
 - Demo chrome (Filled/Empty scenario toggle + Reset) sits on the portfolio page above the window, dp-styled. Reset is always enabled and re-seeds the selected scenario.
 - Brand accent is `#531DAB` (supersedes the brief's `#5646ad`).
 - Term tabs are IN scope: All Terms · Term 1–4, active tab in accent; term tabs show unit rows (brief §4) from shared live state; drawer adds target the active term tab (All Terms → fewest-units rule).
-- Planned next: clicking a unit opens a unit-detail drawer (like Add Units) instead of the current no-op toast.
+- Unit row redesign (Edward's reference mock, Jira-epic-like): grab pad → small rounded-square tinted thumbnail → unit name → subject/year stack → lessons/assessments count stack → segmented progress bar (one segment per lesson + distinct assessment segment, filled = done) → meatballs menu. No chevron (mock artifact from an abandoned expand pattern).
+- Data: drawer catalogue is the single source of truth; units carry lessons[] and optional assessment with done flags; progress is derived completion (completed/total), not an abstract %. Units: 4-8 lessons, 0-1 assessments.
+- Clicking a unit (row main area, card body, or menu "Open") opens a read-only unit-detail drawer — same in-frame drawer shell as Add Units — showing unit details plus lessons/assessments with done indicators. Mental model: unit = epic, lessons/assessments = stories.
 
 ## Out of scope (per brief / decisions)
 

@@ -1,32 +1,60 @@
 /**
  * Planner prototype — session-only state store.
  *
- * Single flat array of PlannerUnit (see planner-data.js). There is no Term
- * entity and no placement record: `term` is a field on the unit, and order
- * within a term is the array order — moves splice the array rather than
- * writing an index. Seeded from the fixture; never touches localStorage.
+ * Round 4 data model rework: the store now holds PLACEMENTS only — a flat
+ * array of `{ id, term }` referencing a `planner-data.js` catalogue id.
+ * There is no Term entity and no separate index: order within a term is
+ * the array order — moves splice the array rather than writing an index.
+ * All unit CONTENT (title, lessons, assessment) lives exactly once, in the
+ * catalogue (planner-data.js) — the drawer catalogue is the single source
+ * of truth. `getUnits()` resolves each placement against the catalogue on
+ * every call and returns full unit objects (catalogue fields + `term`), so
+ * a caller never needs to know placements and content are stored
+ * separately. Seeded from `boardSeed`; never touches localStorage.
  */
 
-import { plannerFixture } from './planner-data.js';
+import { boardSeed, findCatalogueUnit } from './planner-data.js';
 
-/** @type {import('./planner-data.js').PlannerUnit[]} */
-let units = [];
+/** @type {Array<{ id: string, term: 1|2|3|4 }>} */
+let placements = [];
 
-/** @type {Array<(units: import('./planner-data.js').PlannerUnit[]) => void>} */
+/** @type {Array<(units: object[]) => void>} */
 const listeners = [];
 
-function clone(list) {
-  return list.map((unit) => ({ ...unit }));
+function clonePlacements(list) {
+  return list.map((p) => ({ ...p }));
+}
+
+/**
+ * Merge a placement with its catalogue content into a full, defensively-
+ * cloned unit object (never a live reference into the catalogue, so a
+ * caller can't accidentally mutate the single source of truth).
+ * @param {{ id: string, term: 1|2|3|4 }} placement
+ * @returns {object|null}
+ */
+function resolveUnit(placement) {
+  const catalogueUnit = findCatalogueUnit(placement.id);
+  if (!catalogueUnit) return null;
+  return {
+    ...catalogueUnit,
+    lessons: catalogueUnit.lessons.map((l) => ({ ...l })),
+    assessment: catalogueUnit.assessment ? { ...catalogueUnit.assessment } : null,
+    term: placement.term,
+  };
+}
+
+function buildUnits() {
+  return placements.map(resolveUnit).filter(Boolean);
 }
 
 function notify() {
-  const snapshot = clone(units);
+  const snapshot = buildUnits();
   listeners.forEach((fn) => fn(snapshot));
 }
 
 /**
  * Subscribe to state changes. Returns an unsubscribe function.
- * @param {(units: import('./planner-data.js').PlannerUnit[]) => void} fn
+ * @param {(units: object[]) => void} fn
  * @returns {() => void}
  */
 export function subscribe(fn) {
@@ -38,18 +66,22 @@ export function subscribe(fn) {
 }
 
 /**
- * Current units, as a defensive copy (array order = display order).
- * @returns {import('./planner-data.js').PlannerUnit[]}
+ * Current units, resolved against the catalogue (array order = display
+ * order). Defensive copy — safe for a caller to hold onto.
+ * @returns {object[]}
  */
 export function getUnits() {
-  return clone(units);
+  return buildUnits();
 }
 
 /**
- * Reseed the store from the fixture, discarding all session changes.
+ * Reseed the store from the fixture, discarding all session changes. Note:
+ * this only resets PLACEMENTS — completion state lives on the catalogue
+ * (planner-data.js) and is never mutated by this prototype (read-only this
+ * round), so it doesn't need resetting.
  */
 export function reset() {
-  units = clone(plannerFixture);
+  placements = clonePlacements(boardSeed);
   notify();
 }
 
@@ -66,18 +98,18 @@ export function reset() {
  * @param {number} index
  */
 export function move(id, term, index) {
-  const from = units.findIndex((u) => u.id === id);
+  const from = placements.findIndex((p) => p.id === id);
   if (from === -1) return;
 
-  const [unit] = units.splice(from, 1);
-  unit.term = term;
+  const [placement] = placements.splice(from, 1);
+  placement.term = term;
 
   const safeIndex = Math.max(0, index);
   let seen = 0;
-  let insertAt = units.length; // default: end of array (= end of this term too)
+  let insertAt = placements.length; // default: end of array (= end of this term too)
 
-  for (let i = 0; i < units.length; i++) {
-    if (units[i].term === term) {
+  for (let i = 0; i < placements.length; i++) {
+    if (placements[i].term === term) {
       if (seen === safeIndex) {
         insertAt = i;
         break;
@@ -86,7 +118,7 @@ export function move(id, term, index) {
     }
   }
 
-  units.splice(insertAt, 0, unit);
+  placements.splice(insertAt, 0, placement);
   notify();
 }
 
@@ -95,20 +127,24 @@ export function move(id, term, index) {
  * @param {string} id
  */
 export function remove(id) {
-  const before = units.length;
-  units = units.filter((u) => u.id !== id);
-  if (units.length !== before) notify();
+  const before = placements.length;
+  placements = placements.filter((p) => p.id !== id);
+  if (placements.length !== before) notify();
 }
 
 /**
- * Add a new unit to a term (appended at the end of that term).
- * @param {import('./planner-data.js').PlannerUnit} unit
+ * Add a new unit to a term (appended at the end of that term). Only the
+ * unit's `id` is used — content is always resolved from the catalogue, so
+ * passing a plain `{ id }` works exactly the same as passing a full
+ * catalogue unit object (drawer.js does the latter, for a stable call
+ * shape with the rest of its code).
+ * @param {{ id: string }} unit
  * @param {1|2|3|4} term
  */
 export function add(unit, term) {
-  units.push({ ...unit, term });
+  placements.push({ id: unit.id, term });
   notify();
 }
 
 // Seed on load.
-units = clone(plannerFixture);
+placements = clonePlacements(boardSeed);

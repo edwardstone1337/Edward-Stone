@@ -1,24 +1,12 @@
 /**
  * Planner prototype — Add Units drawer (brief §6).
  *
- * A drawer sliding in from the right, scoped INSIDE the product window
- * frame (`.pl-frame` in planner.js) rather than the browser's top layer —
- * the frame is a simulated product screen, so nothing here should overlay
- * the rest of the portfolio page. Built on native <dialog>, opened with
- * `.show()` (non-modal) instead of `.showModal()`: this keeps the element
- * in normal document flow (positioned against the frame via CSS, see
- * project-planner.css) instead of the top layer, but forfeits the
- * browser's free focus trapping and Escape-to-cancel, which this module
- * now implements by hand (same idiom as nav-component.js's mobile drawer):
- *  - `inertEl.inert` is toggled while open, so Tab/AT can't reach the
- *    frame's board + toolbar underneath.
- *  - A manual Tab-key focus trap wraps within the dialog's own focusable
- *    elements.
- *  - A manual Escape handler closes it (no native 'cancel' event fires for
- *    a non-modal dialog).
- *  - A scrim element (sibling inside the frame) dims the frame and closes
- *    on click, replacing the native ::backdrop a modal dialog would give
- *    for free.
+ * Built on `drawer-shell.js`'s shared in-frame drawer shell (round 4:
+ * extracted once unit-drawer.js needed the identical mechanics) — this
+ * module owns only the Add Units CONTENT: the two-step header (✕ / ←) and
+ * body (subject list, then a subject's unit list). See drawer-shell.js for
+ * the shell itself (slide-from-right, scrim, inert background, manual focus
+ * trap, Escape/scrim/✕ close, focus return, animation).
  *
  * Two steps:
  *   1. "Add units" — a vertical list of subject cards.
@@ -37,12 +25,14 @@
  */
 
 import { drawerCatalogue } from './planner-data.js';
+import { createDrawerShell } from './drawer-shell.js';
 
 /**
  * Two-letter subject emblem glyphs (brief §6 mockup: En / Ma / Sc / Te / HA).
- * Exported: row.js (brief §4's term-view unit row) reuses the same glyphs
- * for its subject-tinted image panel's placeholder initial, so a subject
- * shows one consistent abbreviation everywhere it appears.
+ * Exported: row.js (brief §4's term-view unit row) and unit-drawer.js
+ * (round 4's unit-detail drawer) reuse the same glyphs for their own
+ * subject-tinted elements, so a subject shows one consistent abbreviation
+ * everywhere it appears.
  */
 export const EMBLEM_GLYPH = {
   english: 'En',
@@ -61,7 +51,7 @@ const TINT_SUFFIX = {
   hass: 'hass',
 };
 
-/** Exported alongside EMBLEM_GLYPH for the same reuse-in-row.js reason. */
+/** Exported alongside EMBLEM_GLYPH for the same reuse reason. */
 export function tintClass(subject) {
   return 'pl-tint-' + (TINT_SUFFIX[subject] || subject);
 }
@@ -76,8 +66,6 @@ const BACK_SVG =
   '<path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
   '</svg>';
 
-const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
 function pluralize(count, word) {
   return count + ' ' + word + (count === 1 ? '' : 's');
 }
@@ -87,7 +75,7 @@ function pluralize(count, word) {
  * lowest term number (brief §6 "Term targeting"). On an empty board every
  * count is 0, so this always returns Term 1.
  *
- * @param {() => import('./planner-data.js').PlannerUnit[]} getUnits
+ * @param {() => object[]} getUnits
  * @returns {1|2|3|4}
  */
 function termWithFewestUnits(getUnits) {
@@ -106,19 +94,17 @@ function termWithFewestUnits(getUnits) {
 
 /**
  * @param {Object} config
- * @param {() => import('./planner-data.js').PlannerUnit[]} config.getUnits
- * @param {(unit: import('./planner-data.js').PlannerUnit, term: 1|2|3|4) => void} config.add
+ * @param {() => object[]} config.getUnits
+ * @param {(unit: { id: string }, term: 1|2|3|4) => void} config.add
  * @param {(msg: string) => void} config.announce
  * @param {HTMLElement} [config.fallbackFocusEl] - Focus target used when the
  *   button that opened the drawer no longer exists when it closes (e.g. the
  *   empty-board state's Add Units button, which gets replaced by the board
  *   render once the first unit lands).
  * @param {HTMLElement} config.frameEl - The product window frame
- *   (`.pl-frame`) the drawer and its scrim mount into as direct children —
- *   it's the frame's `position: relative` that anchors them.
+ *   (`.pl-frame`) the drawer and its scrim mount into as direct children.
  * @param {HTMLElement} config.inertEl - The frame's other content (toolbar +
- *   board), sent `inert` while the drawer is open so it can't be reached by
- *   Tab or assistive tech (no native modal dialog is doing this for free).
+ *   board), sent `inert` while the drawer is open.
  * @param {() => ('all'|1|2|3|4)} [config.getActiveTerm] - Term-targeting rule
  *   (brief §6 callout, updated for tabs): while a TERM tab is active, an
  *   added unit lands in that term; from All Terms (or if this is omitted),
@@ -127,16 +113,14 @@ function termWithFewestUnits(getUnits) {
 export function createAddUnitsDrawer(config) {
   const { getUnits, add, announce, fallbackFocusEl, frameEl, inertEl, getActiveTerm } = config;
 
-  let lastTrigger = null;
-
-  const scrim = document.createElement('div');
-  scrim.className = 'pl-drawer-scrim';
-
-  const dialog = document.createElement('dialog');
-  dialog.className = 'pl-drawer';
-  dialog.setAttribute('role', 'dialog');
-  dialog.setAttribute('aria-modal', 'true');
-  dialog.setAttribute('aria-labelledby', 'pl-drawer-title');
+  const shell = createDrawerShell({
+    frameEl,
+    inertEl,
+    fallbackFocusEl,
+    dialogClassName: 'pl-drawer',
+    labelledBy: 'pl-drawer-title',
+  });
+  const { dialog } = shell;
 
   const header = document.createElement('div');
   header.className = 'pl-drawer-header';
@@ -174,8 +158,6 @@ export function createAddUnitsDrawer(config) {
 
   dialog.appendChild(header);
   dialog.appendChild(body);
-  frameEl.appendChild(scrim);
-  frameEl.appendChild(dialog);
 
   // ------------------------------------------------------------------
   // Step rendering
@@ -215,9 +197,10 @@ export function createAddUnitsDrawer(config) {
     });
 
     body.appendChild(list);
-    // preventScroll: true — see the note in open() below. At this point the
-    // drawer may still be off-canvas (translateX(100%), its closed-state
-    // transform), and a default focus() would scroll .pl-frame to reveal it.
+    // preventScroll: true — see the note in drawer-shell.js's open(). At
+    // this point the drawer may still be off-canvas (translateX(100%), its
+    // closed-state transform), and a default focus() would scroll
+    // .pl-frame to reveal it.
     title.focus({ preventScroll: true });
   }
 
@@ -243,10 +226,13 @@ export function createAddUnitsDrawer(config) {
     unitTitle.className = 'pl-drawer-unit-title';
     unitTitle.textContent = unit.title;
 
+    // Counts derive from the catalogue's lessons/assessment arrays — never
+    // a cached count field (round 4: the catalogue is the single source of
+    // truth for a unit's content, see planner-data.js).
     const meta = document.createElement('span');
     meta.className = 'pl-drawer-unit-meta';
     meta.textContent =
-      pluralize(unit.lessonCount, 'lesson') + ' · ' + pluralize(unit.assessmentCount, 'assessment');
+      pluralize(unit.lessons.length, 'lesson') + ' · ' + pluralize(unit.assessment ? 1 : 0, 'assessment');
 
     unitBody.appendChild(unitTitle);
     unitBody.appendChild(meta);
@@ -266,9 +252,9 @@ export function createAddUnitsDrawer(config) {
         Number.isInteger(active) && active >= 1 && active <= 4
           ? active
           : termWithFewestUnits(getUnits);
-      // Spread so mutating the store's copy never touches this catalogue
-      // entry; term is set explicitly by add(), same contract as the board.
-      add({ ...unit }, term);
+      // planner-state.js's add() only reads `.id` — content always resolves
+      // from the catalogue, never from this object.
+      add({ id: unit.id }, term);
       // Disabling the just-clicked (and currently focused) button below
       // makes the UA blur it to <body> — outside the dialog, where the
       // manual Tab-trap keydown listener (bound to `dialog`) never fires,
@@ -326,149 +312,16 @@ export function createAddUnitsDrawer(config) {
     backBtn.focus({ preventScroll: true });
   }
 
-  // ------------------------------------------------------------------
-  // Open / close
-  // ------------------------------------------------------------------
-
-  let isClosing = false;
-
-  function setInert(value) {
-    if (inertEl) inertEl.inert = value;
-  }
-
-  function finishClose() {
-    isClosing = false;
-    if (dialog.open) dialog.close();
-  }
-
-  function requestClose() {
-    if (!dialog.open || isClosing) return;
-
-    if (reduceMotionQuery.matches) {
-      dialog.classList.remove('pl-drawer--open');
-      scrim.classList.remove('pl-drawer-scrim--visible');
-      dialog.close();
-      return;
-    }
-
-    isClosing = true;
-    dialog.classList.remove('pl-drawer--open');
-    scrim.classList.remove('pl-drawer-scrim--visible');
-
-    const onTransitionEnd = (e) => {
-      if (e.target !== dialog || e.propertyName !== 'transform') return;
-      dialog.removeEventListener('transitionend', onTransitionEnd);
-      finishClose();
-    };
-    dialog.addEventListener('transitionend', onTransitionEnd);
-
-    // Fallback in case the transition never fires (e.g. this browser lacks
-    // support for something above) — matches the nav drawer's own
-    // transitionend + timeout pattern (nav-component.js closeDrawer()).
-    window.setTimeout(() => {
-      dialog.removeEventListener('transitionend', onTransitionEnd);
-      finishClose();
-    }, 300);
-  }
-
-  closeBtn.addEventListener('click', requestClose);
+  closeBtn.addEventListener('click', () => shell.requestClose());
   backBtn.addEventListener('click', renderSubjectStep);
 
-  // Scrim click closes — the in-frame stand-in for a modal dialog's
-  // ::backdrop click (there's no native backdrop without showModal()).
-  scrim.addEventListener('click', requestClose);
-
-  // Manual focus trap + Escape: open() below uses .show(), not
-  // .showModal(), so neither of the browser's usual conveniences apply
-  // here — a non-modal dialog doesn't fire 'cancel' on Escape, and Tab
-  // isn't confined to it. Reimplemented by hand, same idiom as
-  // nav-component.js's mobile drawer keydown handler.
-  function getFocusable() {
-    return Array.from(
-      dialog.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
-    ).filter((el) => el.offsetParent !== null);
-  }
-
-  dialog.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      requestClose();
-      return;
-    }
-
-    if (e.key !== 'Tab') return;
-    const focusable = getFocusable();
-    if (!focusable.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (e.shiftKey) {
-      if (document.activeElement === first || !dialog.contains(document.activeElement)) {
-        e.preventDefault();
-        last.focus();
-      }
-    } else if (document.activeElement === last || !dialog.contains(document.activeElement)) {
-      e.preventDefault();
-      first.focus();
-    }
-  });
-
-  dialog.addEventListener('close', () => {
-    setInert(false);
-    scrim.classList.remove('pl-drawer-scrim--visible');
-    const target =
-      lastTrigger && document.body.contains(lastTrigger) ? lastTrigger : fallbackFocusEl;
-    if (target && typeof target.focus === 'function') target.focus({ preventScroll: true });
-    lastTrigger = null;
-  });
-
   /**
-   * Open the drawer at step 1. `triggerEl` is the button that opened it —
-   * focus returns there on close (or to `fallbackFocusEl` if it's gone by
-   * then, e.g. the empty-board action button after the board re-renders).
+   * Open the drawer at step 1.
    * @param {HTMLElement} [triggerEl]
    */
   function open(triggerEl) {
-    lastTrigger = triggerEl || document.activeElement;
-
-    // Open (and become visible) BEFORE building step 1's content: a
-    // focus() call on an element inside a still-closed <dialog> is a
-    // silent no-op (the UA hides everything under dialog:not([open])).
-    // .show() (not .showModal()) keeps this in normal document flow, inside
-    // .pl-frame, instead of promoting it to the browser's top layer.
-    if (typeof dialog.show === 'function') {
-      dialog.show();
-    } else {
-      dialog.setAttribute('open', '');
-    }
-
-    // Root cause of "everything underneath slides": show() runs the HTML
-    // spec's dialog-focusing steps synchronously and — since nothing inside
-    // has [autofocus] yet (renderSubjectStep() hasn't run) — focuses the
-    // <dialog> itself. At this instant the drawer is still in its
-    // closed-state position (`transform: translateX(100%)`, off-canvas past
-    // .pl-frame's clipped right edge), so the browser's default
-    // focus-scrolls-into-view behaviour scrolls .pl-frame (the nearest
-    // clipping/scrollable ancestor) horizontally to reveal it — and nothing
-    // ever scrolls it back, so the frame's whole content (titlebar, toolbar,
-    // board) stays shifted sideways underneath. This focus step has no
-    // options we can pass (it isn't our .focus() call), so the fix is to
-    // stamp the scroll straight back to (0,0) synchronously, before any
-    // paint. .pl-frame is a clip-only surface — it should never actually
-    // scroll — so this is safe unconditionally.
-    frameEl.scrollLeft = 0;
-    frameEl.scrollTop = 0;
-
-    setInert(true);
-    renderSubjectStep();
-
-    // Force a reflow so the slide-in transition plays from the off-screen
-    // base state rather than jumping straight to open (same trick as the
-    // nav drawer's openDrawer()).
-    void dialog.offsetHeight;
-    dialog.classList.add('pl-drawer--open');
-    scrim.classList.add('pl-drawer-scrim--visible');
+    shell.open(triggerEl, renderSubjectStep);
   }
 
-  return { open };
+  return { open, close: shell.requestClose, isOpen: shell.isOpen };
 }
