@@ -33,6 +33,14 @@ Spec source: "The Class Planner" handover brief (Claude artifact `2f067d7f-4717-
 
 Widget consumes only `--pl-*` semantic tokens (surface, ground, border, 3 text tones, accent, success, radius, subject tint bg+ink ×5, size tokens). Values live in `project-planner.css` under `[data-theme]`-independent `[data-project="planner"]` scope (page is light-locked like other public pages). A future prototype re-skins by supplying its own `--pl-*` values in its own project file — components never fork.
 
+## Revisions (Edward's review rounds)
+
+- Product UI lives inside a simulated 1440×1024 product window (`.pl-frame`): titlebar, white product surface (was paper off-white), drawer opens *within* the frame (non-modal dialog, in-frame scrim, inert background, manual focus trap). Edward wants the window reusable for other embedded prototypes later — keep frame CSS/JS separable; extract when a second consumer exists.
+- Demo chrome (Filled/Empty scenario toggle + Reset) sits on the portfolio page above the window, dp-styled. Reset is always enabled and re-seeds the selected scenario.
+- Brand accent is `#531DAB` (supersedes the brief's `#5646ad`).
+- Term tabs are IN scope: All Terms · Term 1–4, active tab in accent; term tabs show unit rows (brief §4) from shared live state; drawer adds target the active term tab (All Terms → fewest-units rule).
+- Planned next: clicking a unit opens a unit-detail drawer (like Add Units) instead of the current no-op toast.
+
 ## Out of scope (per brief / decisions)
 
-Print button, per-column counts, unit thumbnails on cards, region/framework drawer steps, term tabs (deferred), persistence, real curriculum data.
+Print button, per-column counts, unit thumbnails on cards, region/framework drawer steps, persistence, real curriculum data.

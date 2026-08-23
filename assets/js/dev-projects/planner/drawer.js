@@ -38,8 +38,13 @@
 
 import { drawerCatalogue } from './planner-data.js';
 
-/** Two-letter subject emblem glyphs (brief §6 mockup: En / Ma / Sc / Te / HA). */
-const EMBLEM_GLYPH = {
+/**
+ * Two-letter subject emblem glyphs (brief §6 mockup: En / Ma / Sc / Te / HA).
+ * Exported: row.js (brief §4's term-view unit row) reuses the same glyphs
+ * for its subject-tinted image panel's placeholder initial, so a subject
+ * shows one consistent abbreviation everywhere it appears.
+ */
+export const EMBLEM_GLYPH = {
   english: 'En',
   maths: 'Ma',
   science: 'Sc',
@@ -56,7 +61,8 @@ const TINT_SUFFIX = {
   hass: 'hass',
 };
 
-function tintClass(subject) {
+/** Exported alongside EMBLEM_GLYPH for the same reuse-in-row.js reason. */
+export function tintClass(subject) {
   return 'pl-tint-' + (TINT_SUFFIX[subject] || subject);
 }
 
@@ -113,9 +119,13 @@ function termWithFewestUnits(getUnits) {
  * @param {HTMLElement} config.inertEl - The frame's other content (toolbar +
  *   board), sent `inert` while the drawer is open so it can't be reached by
  *   Tab or assistive tech (no native modal dialog is doing this for free).
+ * @param {() => ('all'|1|2|3|4)} [config.getActiveTerm] - Term-targeting rule
+ *   (brief §6 callout, updated for tabs): while a TERM tab is active, an
+ *   added unit lands in that term; from All Terms (or if this is omitted),
+ *   it falls back to the term with the fewest units.
  */
 export function createAddUnitsDrawer(config) {
-  const { getUnits, add, announce, fallbackFocusEl, frameEl, inertEl } = config;
+  const { getUnits, add, announce, fallbackFocusEl, frameEl, inertEl, getActiveTerm } = config;
 
   let lastTrigger = null;
 
@@ -205,7 +215,10 @@ export function createAddUnitsDrawer(config) {
     });
 
     body.appendChild(list);
-    title.focus();
+    // preventScroll: true — see the note in open() below. At this point the
+    // drawer may still be off-canvas (translateX(100%), its closed-state
+    // transform), and a default focus() would scroll .pl-frame to reveal it.
+    title.focus({ preventScroll: true });
   }
 
   function setAddButtonState(btn, added) {
@@ -245,10 +258,24 @@ export function createAddUnitsDrawer(config) {
 
     addBtn.addEventListener('click', () => {
       if (addBtn.disabled) return;
-      const term = termWithFewestUnits(getUnits);
+      // Term targeting (brief §6, updated by Edward for tabs): a unit added
+      // while a TERM tab is active lands in that term; otherwise (All Terms,
+      // or no tab-awareness wired at all) fall back to fewest-units.
+      const active = typeof getActiveTerm === 'function' ? getActiveTerm() : null;
+      const term =
+        Number.isInteger(active) && active >= 1 && active <= 4
+          ? active
+          : termWithFewestUnits(getUnits);
       // Spread so mutating the store's copy never touches this catalogue
       // entry; term is set explicitly by add(), same contract as the board.
       add({ ...unit }, term);
+      // Disabling the just-clicked (and currently focused) button below
+      // makes the UA blur it to <body> — outside the dialog, where the
+      // manual Tab-trap keydown listener (bound to `dialog`) never fires,
+      // silently breaking the focus trap. Move focus to `backBtn` (always
+      // present and enabled in this step) first, synchronously, so it
+      // never leaves the dialog.
+      backBtn.focus({ preventScroll: true });
       setAddButtonState(addBtn, true);
       announce('Added ' + unit.title + ' to Term ' + term + '.');
     });
@@ -296,7 +323,7 @@ export function createAddUnitsDrawer(config) {
     });
 
     body.appendChild(list);
-    backBtn.focus();
+    backBtn.focus({ preventScroll: true });
   }
 
   // ------------------------------------------------------------------
@@ -391,7 +418,7 @@ export function createAddUnitsDrawer(config) {
     scrim.classList.remove('pl-drawer-scrim--visible');
     const target =
       lastTrigger && document.body.contains(lastTrigger) ? lastTrigger : fallbackFocusEl;
-    if (target && typeof target.focus === 'function') target.focus();
+    if (target && typeof target.focus === 'function') target.focus({ preventScroll: true });
     lastTrigger = null;
   });
 
@@ -414,6 +441,23 @@ export function createAddUnitsDrawer(config) {
     } else {
       dialog.setAttribute('open', '');
     }
+
+    // Root cause of "everything underneath slides": show() runs the HTML
+    // spec's dialog-focusing steps synchronously and — since nothing inside
+    // has [autofocus] yet (renderSubjectStep() hasn't run) — focuses the
+    // <dialog> itself. At this instant the drawer is still in its
+    // closed-state position (`transform: translateX(100%)`, off-canvas past
+    // .pl-frame's clipped right edge), so the browser's default
+    // focus-scrolls-into-view behaviour scrolls .pl-frame (the nearest
+    // clipping/scrollable ancestor) horizontally to reveal it — and nothing
+    // ever scrolls it back, so the frame's whole content (titlebar, toolbar,
+    // board) stays shifted sideways underneath. This focus step has no
+    // options we can pass (it isn't our .focus() call), so the fix is to
+    // stamp the scroll straight back to (0,0) synchronously, before any
+    // paint. .pl-frame is a clip-only surface — it should never actually
+    // scroll — so this is safe unconditionally.
+    frameEl.scrollLeft = 0;
+    frameEl.scrollTop = 0;
 
     setInert(true);
     renderSubjectStep();

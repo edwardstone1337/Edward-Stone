@@ -391,6 +391,17 @@ export function attachDragging(config) {
   /** @type {null | { id: string, originColumnId: string, originIndex: number }} */
   let picked = null;
 
+  // ArrowUp/Down/Left/Right below call render() while a card is still
+  // picked up (mid-gesture), which replaces the focused card's DOM node —
+  // removing a focused element from the document fires a synchronous
+  // `focusout` on it. Without this guard the handler further down (added
+  // to end the gesture when the user Tabs away) misreads that as the user
+  // leaving and clears `picked`, so the very next Enter/Space silently
+  // restarts a pick-up instead of dropping. Sub the flag only for the
+  // render()+focusCard() pair that causes it; the real Tab-away path
+  // leaves it false.
+  let suppressFocusOutClear = false;
+
   function focusCard(id, addPickedClass) {
     const el = root.querySelector('.pl-card[data-item-id="' + id + '"]');
     if (!el) return null;
@@ -459,9 +470,11 @@ export function attachDragging(config) {
       const dir = e.key === 'ArrowDown' ? 1 : -1;
       const newIndex = Math.max(0, Math.min(cards.length - 1, currentIndex + dir));
       if (newIndex === currentIndex) return;
+      suppressFocusOutClear = true;
       move(id, columnId, newIndex);
       render();
       focusCard(id, true);
+      suppressFocusOutClear = false;
       announce('Moved ' + title + ' to position ' + (newIndex + 1) + ' of ' + cards.length + ' in ' + columnLabel(columnId) + '.');
       return;
     }
@@ -474,9 +487,11 @@ export function attachDragging(config) {
       if (targetColumnId == null) return;
       const targetListEl = getColumnListEl(targetColumnId);
       const newIndex = getRealCards(targetListEl).length;
+      suppressFocusOutClear = true;
       move(id, targetColumnId, newIndex);
       render();
       focusCard(id, true);
+      suppressFocusOutClear = false;
       announce('Moved ' + title + ' to ' + columnLabel(targetColumnId) + '.');
     }
   }
@@ -488,7 +503,7 @@ export function attachDragging(config) {
   root.addEventListener(
     'focusout',
     (e) => {
-      if (!picked) return;
+      if (!picked || suppressFocusOutClear) return;
       const card = e.target.closest && e.target.closest('.pl-card');
       if (card && card.dataset.itemId === picked.id) {
         card.classList.remove('pl-card--picked');

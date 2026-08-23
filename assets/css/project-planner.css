@@ -20,9 +20,16 @@
   --pl-ink-3: #8a8e99;
   --pl-line: #dddcd6;
   --pl-line-strong: #c9c8c1;
-  --pl-accent: #5646ad;
+  /* Brand accent (Edward's feedback) — #531DAB gives 9.85:1 contrast on
+     white (AAA for normal text needs 7:1) and the same ratio for white
+     text on the accent fill, so it works directly as text-on-white,
+     fill-with-white-text, and the focus ring — no darker derivative
+     needed. --pl-accent-soft is retuned to the new accent's hue (263°,
+     was 249°) so the wash tint still reads as "this accent, softened"
+     rather than drifting toward the old colour's blue-violet. */
+  --pl-accent: #531DAB;
   --pl-accent-ink: #ffffff;
-  --pl-accent-soft: #eceafd;
+  --pl-accent-soft: #f0e8fd;
   --pl-good: #2e7d54;
 
   /* ---------- subject tints (bg + ink pairs) ---------- */
@@ -77,6 +84,62 @@
   justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* --------------------------------------------
+   Tab bar (brief §2) — All Terms · Term 1–4, with the "+ Add Units" action
+   row (.pl-toolbar above) right-aligned in the same line on every tab.
+   -------------------------------------------- */
+[data-project="planner"] .pl-tabbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-bottom: var(--pl-border-width) solid var(--pl-line);
+}
+
+[data-project="planner"] .pl-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+[data-project="planner"] .pl-tab {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pl-ink-2);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 8px 14px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--pl-duration) ease, border-color var(--pl-duration) ease;
+}
+
+[data-project="planner"] .pl-tab:hover {
+  color: var(--pl-ink);
+}
+
+[data-project="planner"] .pl-tab:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--pl-radius-sm);
+}
+
+[data-project="planner"] .pl-tab[aria-selected="true"] {
+  color: var(--pl-accent);
+  border-bottom-color: var(--pl-accent);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-project="planner"] .pl-tab {
+    transition: none;
+  }
 }
 
 [data-project="planner"] .pl-visually-hidden {
@@ -198,12 +261,20 @@
 /* --------------------------------------------
    Product window frame — a simulated app screen (1440x1024) hosting the
    toolbar/board/drawer below, so the Planner reads as a product, not
-   portfolio-page UI. --pl-paper (the Inquisitive off-white) surfaces here
-   for the first time on the page — the demo chrome above sits on the
-   page's own --dp-* surface instead, so the two visually separate "this is
-   the site" from "this is the product". Never `transform: scale()` here —
-   drag.js's pointer math reads real CSS-pixel getBoundingClientRect()s,
-   which a scale transform would throw out of step with the pointer.
+   portfolio-page UI. The demo chrome above sits on the page's own --dp-*
+   surface instead, so the two visually separate "this is the site" from
+   "this is the product". Never `transform: scale()` here — drag.js's
+   pointer math reads real CSS-pixel getBoundingClientRect()s, which a scale
+   transform would throw out of step with the pointer.
+
+   Kept generic and product-agnostic (frame/titlebar/frame-body naming,
+   nothing planner-specific baked in) — Edward wants this component reusable
+   for later prototypes, so nothing below this rule assumes planner content.
+
+   .pl-frame's own background is --pl-paper, but --pl-frame-body (below)
+   fully covers it with the white product ground (Edward's feedback) — the
+   token stays defined/reachable for a future prototype (or a future dark
+   surface) that wants the off-white one level further out.
    -------------------------------------------- */
 [data-project="planner"] .pl-frame {
   position: relative;
@@ -263,9 +334,12 @@
   color: var(--pl-ink-3);
 }
 
-/* Scrollable product surface: hosts the toolbar + board + drawer's inert
-   sibling content. Padding here is the board's "internal padding" — the
-   board itself carries none. */
+/* Scrollable product surface: hosts the tab bar + board/term panel +
+   drawer's inert sibling content. Padding here is the board's "internal
+   padding" — the board itself carries none. White (Edward's feedback: the
+   product ground reads as WHITE, not the Inquisitive off-white --pl-paper)
+   — cards/rows regain distinctness against it via a border + soft shadow
+   (see .pl-card below) instead of a tinted ground. */
 [data-project="planner"] .pl-frame-body {
   flex: 1;
   min-height: 0;
@@ -274,6 +348,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 24px;
+  background: var(--pl-surface);
 }
 
 /* --------------------------------------------
@@ -346,6 +421,12 @@
   background: var(--pl-surface);
   border: var(--pl-border-width) solid var(--pl-line-strong);
   border-radius: var(--pl-radius);
+  /* The product ground (.pl-frame-body) is white, same as the card's own
+     --pl-surface — the border alone reads thin against it, so a soft shadow
+     (Edward's feedback) restores the card's lift/distinctness. Shared by
+     .pl-row below (same base class), which is exactly the "cards read
+     distinct on white" requirement applied to the term-view rows too. */
+  box-shadow: var(--pl-shadow-card);
   padding: var(--pl-card-padding);
   display: flex;
   flex-direction: column;
@@ -369,7 +450,7 @@
 
 [data-project="planner"] .pl-card--picked {
   border-color: var(--pl-accent);
-  box-shadow: 0 0 0 2px var(--pl-accent-soft);
+  box-shadow: var(--pl-shadow-card), 0 0 0 2px var(--pl-accent-soft);
 }
 
 [data-project="planner"] .pl-card-body {
@@ -515,6 +596,62 @@
 }
 
 /* --------------------------------------------
+   Term view — unit row (brief §4). `.pl-row` is a layout-only modifier on
+   top of the base `.pl-card` (kept via .pl-card so drag.js, its dragging/
+   picked states, and the drag clone all apply completely unchanged — see
+   row.js). `.pl-row-list` reuses `.pl-column-list` verbatim for the same
+   reason (drag.js's column-list selector, empty-state placeholder class).
+   -------------------------------------------- */
+[data-project="planner"] .pl-row {
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  gap: 0;
+}
+
+[data-project="planner"] .pl-row-image {
+  flex: 0 0 120px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  /* Match the row's own left corners (border-radius minus the row's own
+     border width) instead of `overflow: hidden` on .pl-row — that would
+     also clip the kebab's dropdown menu, which needs to paint outside the
+     row's box when open. */
+  border-top-left-radius: calc(var(--pl-radius) - var(--pl-border-width));
+  border-bottom-left-radius: calc(var(--pl-radius) - var(--pl-border-width));
+}
+
+[data-project="planner"] .pl-row .pl-card-body {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+}
+
+[data-project="planner"] .pl-row-title {
+  /* Rows don't clamp to 2 lines like the board card (brief §4 note 2). */
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  min-height: 0;
+  overflow: visible;
+}
+
+[data-project="planner"] .pl-row .pl-kebab {
+  /* Its own trailing column (brief §4 note 4), not an absolute overlay like
+     the card's — `position: relative` (rather than static) keeps this a
+     positioned ancestor so .pl-kebab-menu still anchors to the button. */
+  position: relative;
+  top: auto;
+  right: auto;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding: 8px 8px 0 0;
+}
+
+/* --------------------------------------------
    Full-board empty state (brief §2)
    -------------------------------------------- */
 [data-project="planner"] .pl-empty-board {
@@ -540,6 +677,13 @@
   color: var(--pl-ink-2);
   margin: 0 0 8px;
   max-width: 42ch;
+}
+
+/* Empty term tab (brief §4: "Nothing planned for this term yet") — reuses
+   .pl-empty-board's dashed-box treatment, just a little more compact since
+   there's no description line here. */
+[data-project="planner"] .pl-empty-term {
+  padding: 32px 24px;
 }
 
 /* --------------------------------------------
@@ -580,7 +724,16 @@
    never overlays the rest of the portfolio page. Native modality is gone
    as a result — drawer.js compensates manually (inert on the frame's other
    content, a Tab focus trap, Escape-to-close). */
-[data-project="planner"] .pl-drawer {
+/* display is gated behind [open]: a native <dialog> without [open] is
+   display:none per the UA stylesheet (removed from layout, the a11y tree,
+   and tab order for free) — this ruleset must not override that for the
+   closed state, or the drawer's buttons stay reachable/announced while
+   only visually off-canvas (WCAG AAA violation). [open] stays present for
+   the ~200ms slide-out (drawer.js's requestClose() removes it only after
+   the transitionend/timeout in finishClose()), so the close animation
+   still plays; only the fully-closed state (no [open]) reverts to the UA
+   default. */
+[data-project="planner"] .pl-drawer[open] {
   position: absolute;
   top: 0;
   right: 0;
@@ -628,7 +781,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-project="planner"] .pl-drawer {
+  /* [open] here matches the base ruleset's selector above (an [open]-gated
+     rule always outranks a plain-class one on specificity regardless of
+     source order) — without it this override loses that specificity war
+     and silently never applies. */
+  [data-project="planner"] .pl-drawer[open] {
     transition: none;
   }
   [data-project="planner"] .pl-drawer-scrim {
@@ -637,7 +794,8 @@
 }
 
 @media (max-width: 600px) {
-  [data-project="planner"] .pl-drawer {
+  /* Same specificity note as the reduced-motion block above. */
+  [data-project="planner"] .pl-drawer[open] {
     border-left: none;
   }
 }
@@ -663,6 +821,15 @@
   background: transparent;
   color: var(--pl-ink-2);
   cursor: pointer;
+}
+
+/* drawer.js toggles ✕/← via the `hidden` IDL property (only one of the two
+   is ever shown) — without this override the unconditional display:grid
+   above wins over the UA [hidden]{display:none} rule, same class of bug as
+   the dialog fix above (see .pl-kebab-menu[hidden] for the existing
+   precedent this follows). */
+[data-project="planner"] .pl-drawer-icon-btn[hidden] {
+  display: none;
 }
 
 [data-project="planner"] .pl-drawer-icon-btn:hover {
@@ -711,6 +878,13 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.01em;
+}
+
+/* drawer.js's headerEmblem toggles `hidden` when stepping between the
+   subject list and a drilled-in subject — same override as
+   .pl-drawer-icon-btn[hidden] above, needed for the same reason. */
+[data-project="planner"] .pl-emblem[hidden] {
+  display: none;
 }
 
 [data-project="planner"] .pl-emblem-sm {
