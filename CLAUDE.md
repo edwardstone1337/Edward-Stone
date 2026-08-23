@@ -45,7 +45,7 @@ Light theme tokens live exclusively in `dev-tokens.css` under `[data-theme="ligh
 
 **Theme toggle** (`assets/js/dev-projects/theme-toggle.js`) is **dev-only** — loaded on `dev/design-system.html`. Injects sun/moon into `#dp-nav-actions`, persists to `localStorage`.
 
-**Strips** (`.dp-strip`) are always dark via `color-scheme: dark` regardless of page theme. Preview iframes receive theme via `postMessage`.
+**Strips** (`.dp-strip`) default to dark via `color-scheme: dark` regardless of page theme. **Exception:** `.dp-strip--kaomoji` opts back to `color-scheme: light` and carries kaomoji.click's light palette, so the section and its embedded preview read as one product surface. Any other strip going light needs the same opt-out plus light values for every `--dp-strip-*` token it maps. Preview iframes receive theme via `postMessage`.
 
 ## Key Patterns
 

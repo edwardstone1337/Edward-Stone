@@ -279,18 +279,33 @@
   --dp-strip-flip7-device-border: 1px solid lch(38 8 265);
   --dp-strip-flip7-device-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 
-  /* Strip theme — Kaomoji (warm neutral) */
-  --dp-strip-kaomoji-bg: #1A1817;
-  --dp-strip-kaomoji-orb-1: #403C38;
-  --dp-strip-kaomoji-orb-2: #2B2825;
-  --dp-strip-kaomoji-orb-dark: rgba(0, 0, 0, 0.12);
+  /* Strip theme — Kaomoji (warm neutral, LIGHT).
+     The only light strip: it carries kaomoji.click's own light theme end to
+     end, so the section and the preview inside it read as one product surface
+     rather than a bright panel punched into a dark band. Every other strip is
+     dark — see the exception noted in docs/strip-branding-spec.md.
+     Page background is pure #FFFFFF, so the strip takes the site's --n-0 plus
+     a real border to read as a section, and the preview panel takes --n-50 so
+     the white kaomoji cards inside it still have something to sit on. */
+  --dp-strip-kaomoji-bg: #FFFFFF;
+  --dp-strip-kaomoji-orb-1: #E5E2DF;
+  --dp-strip-kaomoji-orb-2: #F2F0EE;
+  --dp-strip-kaomoji-orb-dark: rgba(26, 24, 23, 0.06);
   --dp-strip-kaomoji-orb-opacity: 0.3;
-  --dp-strip-kaomoji-title-color: #F2F0EE;
-  --dp-strip-kaomoji-text-color: rgba(242, 240, 238, 0.8);
-  --dp-strip-kaomoji-badge-bg: rgba(242, 240, 238, 0.1);
-  --dp-strip-kaomoji-badge-text: rgba(242, 240, 238, 0.95);
+  --dp-strip-kaomoji-title-color: #2B2825;
+  --dp-strip-kaomoji-text-color: #403C38;
+  --dp-strip-kaomoji-badge-bg: #F2F0EE;
+  --dp-strip-kaomoji-badge-text: #2B2825;
+  --dp-strip-kaomoji-border: 1px solid #E5E2DF;
+  /* kaomoji.click's own light-theme accent pair. The site-wide blue primary is
+     both off-palette here and only 5.57:1 on this surface; the product accent
+     is 14.66:1. */
+  --dp-strip-kaomoji-accent: #2B2825;
+  --dp-strip-kaomoji-accent-text: #FFFFFF;
+  --dp-strip-kaomoji-accent-hover: #403C38;
   --dp-strip-kaomoji-device-border: 1px solid rgba(26, 24, 23, 0.12);
-  --dp-strip-kaomoji-device-shadow: 0 2px 4px rgba(0, 0, 0, 0.45), 0 12px 28px rgba(0, 0, 0, 0.36);
+  /* kaomoji.click's light --shadow-hi. */
+  --dp-strip-kaomoji-device-shadow: 0 2px 4px rgba(26, 24, 23, 0.07), 0 10px 24px rgba(26, 24, 23, 0.08);
   /* Even inset on all four sides, against the 64/32 strip default. */
   --dp-strip-kaomoji-padding: var(--dp-space-8);
   /* The preview runs kaomoji.click's LIGHT theme, so the frame behind the

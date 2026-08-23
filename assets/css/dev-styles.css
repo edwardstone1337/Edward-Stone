@@ -1914,6 +1914,16 @@ img { display: block; max-width: 100%; }
   --dp-device-border: var(--dp-strip-kaomoji-device-border);
   --dp-device-shadow: var(--dp-strip-kaomoji-device-shadow);
   --dp-strip-padding: var(--dp-strip-kaomoji-padding);
+  --dp-strip-border: var(--dp-strip-kaomoji-border);
+  /* The one light strip. Base .dp-strip forces color-scheme: dark so strips
+     stay dark on light pages; this one carries the product's light theme
+     instead, so it has to opt back out. */
+  color-scheme: light;
+  /* Retheme the primary button in place rather than adding a strip-only
+     button class: .dp-btn-primary already reads these three. */
+  --dp-btn-bg-primary: var(--dp-strip-kaomoji-accent);
+  --dp-btn-text-primary: var(--dp-strip-kaomoji-accent-text);
+  --dp-btn-hover-bg-primary: var(--dp-strip-kaomoji-accent-hover);
 }
 .dp-strip--kaomoji::before,
 .dp-strip--kaomoji::after {

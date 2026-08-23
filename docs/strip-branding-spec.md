@@ -37,7 +37,9 @@ Step-by-step: add a new strip theme using only tokens and one modifier block.
 
 ### Step 1 — Define named tokens in `dev-tokens.css`
 
-Create `--dp-strip-[name]-*` tokens for your strip in the `:root` block of `dev-tokens.css`. Strips stay dark via `color-scheme: dark` regardless of page theme, so they need no `[data-theme="light"]` variants — note the *pages* are light, the strips are not.
+Create `--dp-strip-[name]-*` tokens for your strip in the `:root` block of `dev-tokens.css`. Strips default to dark via `color-scheme: dark` regardless of page theme, so they need no `[data-theme="light"]` variants — note the *pages* are light, the strips are not.
+
+**A light strip is possible but is an opt-out, not a variant.** `.dp-strip--kaomoji` is the only one: it sets `color-scheme: light` in its modifier block and gives every token it maps a light value. If you take that route, budget for all of it — background, title, text, badge, strip border (a light strip on the white page needs a real border to read as a section), device border and shadow, and the button. The last one is the trap: `.dp-btn-primary-on-dark` is white-on-dark and disappears on a light strip. Retheme `.dp-btn-primary` in place by overriding `--dp-btn-bg-primary` / `--dp-btn-text-primary` / `--dp-btn-hover-bg-primary` inside the modifier, rather than adding a strip-only button class.
 
 Define at least the required tokens (see Token checklist below). Add optional tokens (e.g. `title-from`, `title-to`, `border`, `device-border`, `device-shadow`) when the strip needs them.
 
@@ -160,7 +162,7 @@ modifiers land on — so a strip that sets only `title-color` gets it. Setting
 
 - **All text-on-background** (title, description, overline, badge text on badge background) must meet **7:1** contrast ratio against their backgrounds.
 - **Gradient title:** Check contrast at **both** gradient endpoints (title-from on strip bg, title-to on strip bg). Both must meet 7:1.
-- Strips render dark on every page via `color-scheme: dark`, so validate against the dark strip surface — not the (light) page around it.
+- Strips render dark on every page via `color-scheme: dark`, so validate against the dark strip surface — not the (light) page around it. The exception is `.dp-strip--kaomoji`, which is light: validate that one against its own `#FFFFFF` surface, and its preview panel against `#FAF9F8`.
 
 ---
 
@@ -171,7 +173,7 @@ modifiers land on — so a strip that sets only `title-color` gets it. Setting
 | Fair Share (default) | *(none)* | Teal / pink | — |
 | SCP Reader | `.dp-strip--scp` | Dark red / maroon | `device-border`, `device-shadow` |
 | Flip 7 | `.dp-strip--flip7` | Navy / teal + amber | `title-from`, `title-to`, `border`, `device-border`, `device-shadow` |
-| Kaomoji | `.dp-strip--kaomoji` | Warm neutral | `device-border`, `device-shadow`, `padding`, `panel-bg` |
+| Kaomoji | `.dp-strip--kaomoji` | Warm neutral (**light**) | `border`, `device-border`, `device-shadow`, `padding`, `panel-bg`, `accent` |
 
 **Note:** Kaomoji hides its orbs via extra CSS in the modifier block, and renders no badges — its `badge-bg` / `badge-text` tokens stay defined and mapped so the strip remains re-brandable if badges return. Its colours track kaomoji.click's own palette: `bg` is that site's `--n-900`, `title-color` its `--n-100`, and `device-shadow` its `--shadow-hi`. When the product's palette changes, update these eleven tokens and the preview widget (`assets/previews/kaomoji/index.html`) together — nothing else needs to move.
 
