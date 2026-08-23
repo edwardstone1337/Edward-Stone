@@ -12,14 +12,15 @@
 
     :root {
       /* Brand palette. Self-contained --f7-* namespace: this preview does not
-         import the dp- design system (see docs/new-page-checklist / CLAUDE.md). */
-      --f7-navy: #2b3276;      /* type + every border */
-      --f7-teal: #1d9995;      /* brand teal — non-text accents only (3.16:1 on cream) */
-      --f7-teal-deep: #115c59; /* darkened teal used behind cream text — 7.09:1 AAA */
-      --f7-cream: #fff4d2;     /* surface */
-      --f7-orange: #fbb03a;    /* win accent — fills/glows only, never text */
-      --f7-red: #e53e3e;       /* bust — non-text accents only (3.76:1 on cream) */
-      --f7-red-deep: #952828;  /* darkened red used behind cream text — 7.32:1 AAA */
+         import the dp- design system (see docs/new-page-checklist / CLAUDE.md).
+         Matches production edwardstone.design/flip7 exactly — brand fidelity
+         was prioritised over AAA on the Bank/Bust cards; see contrast report
+         in the change notes for measured ratios and what still passes. */
+      --f7-navy: #2b3276;   /* type, every border, .selected card fill — 10.50:1 on cream, AAA */
+      --f7-teal: #1d9995;   /* Bank card fill + focus rings — 3.16:1 cream-on-teal (AA-large only) */
+      --f7-cream: #fff4d2;  /* surface, and glyph colour on teal/red/navy fills */
+      --f7-orange: #fbb03a; /* win accent — fills/glows only, never text */
+      --f7-red: #e53e3e;    /* Bust card fill — 3.76:1 cream-on-red (AA-large only) */
 
       --f7-border-width: 1px;
       --f7-duration-fast: 0.2s;
@@ -60,19 +61,60 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: clamp(4px, 1.6vw, 10px);
-      padding: clamp(10px, 4vw, 20px);
+      /* Taller 9:19.5 phone: controls anchor to the bottom (thumb zone), the
+         score fills the space above via .f7-scoreboard's flex: 1.
+         The generous bottom value lifts the grid clear of the phone's corner
+         radius — the ✗ and ✓ sit in the two bottom corners, so they are the
+         first things a tight bottom edge clips. */
+      padding: clamp(14px, 5vw, 22px) clamp(10px, 4vw, 18px) clamp(28px, 9vw, 44px);
     }
 
     /* ---- Scoreboard ---- */
     .f7-scoreboard {
       width: 100%;
       max-width: 420px;
+      min-height: 0;
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
+    }
+
+    /* ---- Progressive disclosure ----
+       At rest, only .banked-score and the grid are visible. These four
+       elements stay in the DOM and keep their aria-live wiring at all times —
+       only opacity/max-height change, never display/visibility/aria-hidden —
+       so screen readers keep receiving correct announcements whether or not
+       the row is visually shown. The two purely-decorative labels (.f7-label)
+       additionally get aria-hidden toggled by JS since they carry no live
+       content and are genuinely meaningless before a round starts. */
+    .f7-label,
+    .realtime-score,
+    .f7-status {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity var(--f7-duration-fast) var(--f7-easing-smooth),
+                  max-height var(--f7-duration-fast) var(--f7-easing-smooth);
+    }
+    .f7-widget:not(.round-active) .f7-label--main,
+    .f7-widget:not(.round-active) .realtime-score {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .f7-widget.round-active .f7-label,
+    .f7-widget.round-active .realtime-score {
+      opacity: 1;
+      max-height: 2.4em;
+    }
+    .f7-widget.round-active .f7-status {
+      opacity: 1;
+      max-height: 4.5em;
+      min-height: 1.4em;
     }
 
     .f7-label {
@@ -93,13 +135,20 @@
       color: var(--f7-navy);
       font-family: 'Bebas Neue', sans-serif;
       line-height: 1.3;
-      opacity: 0.9; /* measured 8.01:1 on cream at this opacity — stays AAA (>=7:1) */
+      /* Production ships this row at opacity 0.6, but measured that composites
+         navy-on-cream down to 3.49:1 — this text is 15-18px, under the 18.66px
+         bold "large text" cutoff, so it needs the 4.5:1 AA-normal floor and
+         3.49:1 fails it outright (not just AAA). Held at 0.75 instead: 5.22:1,
+         clears AA-normal with margin. Still short of the 7:1 AAA floor the
+         rest of the UI holds, but no longer an illegible regression from the
+         previous 0.9 (8.05:1). See contrast report for the full sweep. */
+      opacity: 0.75;
       font-variant-numeric: tabular-nums;
     }
 
     .banked-score {
       margin: 0;
-      font-size: clamp(44px, 20vw, 88px);
+      font-size: clamp(40px, 22vw, 88px);
       font-weight: 700;
       color: var(--f7-navy);
       font-family: 'Bebas Neue', sans-serif;
@@ -111,15 +160,26 @@
       margin: 0;
       max-width: 320px;
       text-align: center;
-      font-size: clamp(11px, 2.8vw, 12px);
+      font-size: clamp(10px, 2.8vw, 12px);
       font-weight: 500;
       letter-spacing: 0.01em;
       color: var(--f7-navy);
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity var(--f7-duration-fast) var(--f7-easing-smooth),
+                  max-height var(--f7-duration-fast) var(--f7-easing-smooth);
+    }
+    /* Discoverable on hover/keyboard focus of the grid — not gated on
+       round-active, so it works both before and during a round. */
+    .f7-hint.hint-visible {
+      opacity: 1;
+      max-height: 3em;
     }
 
     .f7-status {
       margin: 0;
-      min-height: 1.4em;
+      min-height: 0;
       max-width: 340px;
       text-align: center;
       font-size: clamp(11px, 2.8vw, 12px);
@@ -133,6 +193,7 @@
       position: relative;
       width: 100%;
       max-width: 420px;
+      flex-shrink: 0;
     }
 
     .grid-draw-btn {
@@ -208,18 +269,18 @@
 
     @keyframes f7-bust-pulse {
       0%   { transform: translateY(-4px) scale(1); }
-      35%  { transform: translateY(-7px) scale(1.1); background: var(--f7-red-deep); color: var(--f7-cream); }
-      100% { transform: translateY(-4px) scale(1); background: var(--f7-red-deep); color: var(--f7-cream); }
+      35%  { transform: translateY(-7px) scale(1.1); background: var(--f7-red); color: var(--f7-cream); }
+      100% { transform: translateY(-4px) scale(1); background: var(--f7-red); color: var(--f7-cream); }
     }
     .card.number.bust-flash {
       animation: f7-bust-pulse 0.4s var(--f7-easing-bounce) forwards;
-      box-shadow: 0 6px 16px rgba(149, 40, 40, 0.4);
+      box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
     }
 
     .card.action { pointer-events: auto; }
 
     .card.action.bust {
-      background: var(--f7-red-deep);
+      background: var(--f7-red);
       border: none;
       color: var(--f7-cream);
       font-size: clamp(20px, 8vw, 34px);
@@ -234,7 +295,7 @@
       appearance: none;
       -webkit-appearance: none;
       cursor: pointer;
-      background: var(--f7-teal-deep);
+      background: var(--f7-teal);
       border: none;
       color: var(--f7-cream);
       font-size: clamp(20px, 8vw, 34px);
@@ -244,12 +305,17 @@
       outline: 3px solid var(--f7-teal);
       outline-offset: 3px;
     }
-    button.card.action.primary:disabled {
-      /* 0.4 washed the teal to a grey-green and lost the app's signature
-         colour at rest, which is the state most visitors ever see. 0.65 still
-         reads as inactive against the live cards without draining the hue. */
-      opacity: 0.65;
-      cursor: not-allowed;
+    /* Unavailable Bank card. NOT faded: fading production teal to 0.65 put the
+       cream glyph at 2.09:1, failing even AA-large — and "nothing banked yet"
+       is the state most visitors ever see, so that is the one state that must
+       stay legible. The card holds full brand teal (3.16:1, exactly what
+       production ships) and signals unavailability through the cursor and the
+       absence of hover lift instead of through contrast.
+       aria-disabled rather than disabled: the button stays focusable and is
+       announced, so a keyboard user can find it and hear that it is not yet
+       available. The click handler already no-ops on this state. */
+    button.card.action.primary[aria-disabled="true"] {
+      cursor: default;
       transform: none;
       box-shadow: none;
     }
@@ -259,14 +325,18 @@
       .card:hover,
       .number-grid,
       .grid-wrap:hover .number-grid,
-      .grid-wrap:focus-within .number-grid {
+      .grid-wrap:focus-within .number-grid,
+      .f7-label,
+      .realtime-score,
+      .f7-status,
+      .f7-hint {
         transition: none !important;
         transform: none !important;
       }
       .card.selected { transform: none !important; }
       .card.number.bust-flash {
         animation: none;
-        background: var(--f7-red-deep);
+        background: var(--f7-red);
         color: var(--f7-cream);
         box-shadow: none;
       }
@@ -274,6 +344,17 @@
 
     @media (max-width: 360px) {
       .f7-widget { gap: 4px; }
+    }
+
+    @media (max-width: 300px) {
+      .f7-widget {
+        /* Sides and top tighten at this width, but the BOTTOM does not: the
+           strip embeds this at ~288px, so this rule is the one that actually
+           runs there, and a tight bottom edge is what pushed the ✗ and ✓ into
+           the phone's corner radius. Keep the grid lifted clear. */
+        padding: clamp(10px, 4vw, 14px) clamp(6px, 3vw, 10px) clamp(24px, 9vw, 36px);
+      }
+      .number-grid { gap: 3px; }
     }
   </style>
 </head>
@@ -310,7 +391,7 @@
         <div class="card number" data-n="10" aria-hidden="true">10</div>
         <div class="card number" data-n="11" aria-hidden="true">11</div>
         <div class="card number" data-n="12" aria-hidden="true">12</div>
-        <button type="button" class="card action primary" id="bankBtn" aria-label="Bank your round score and start a new round" disabled>✓</button>
+        <button type="button" class="card action primary" id="bankBtn" aria-label="Bank your round score and start a new round" aria-disabled="true">✓</button>
       </div>
     </div>
   </div>
@@ -332,6 +413,10 @@
         status: 'playing' // 'playing' | 'bust' | 'win'
       };
 
+      var widgetEl = document.querySelector('.f7-widget');
+      var gridWrap = document.querySelector('.grid-wrap');
+      var hintEl = document.querySelector('.f7-hint');
+      var scoreLabels = document.querySelectorAll('.f7-label');
       var grid = document.getElementById('grid');
       var drawBtn = document.getElementById('drawBtn');
       var bankBtn = document.getElementById('bankBtn');
@@ -342,6 +427,25 @@
       function cardEl(n) {
         return grid.querySelector('.card.number[data-n="' + n + '"]');
       }
+
+      // Progressive disclosure: only opacity/max-height ever change on the
+      // round row / status row, so their aria-live wiring is never disturbed.
+      // The two static labels also get aria-hidden toggled since they carry
+      // no live content and are genuinely meaningless before a round starts.
+      function setRoundActive(active) {
+        widgetEl.classList.toggle('round-active', active);
+        for (var i = 0; i < scoreLabels.length; i++) {
+          if (active) scoreLabels[i].removeAttribute('aria-hidden');
+          else scoreLabels[i].setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      function showHint() { hintEl.classList.add('hint-visible'); }
+      function hideHint() { hintEl.classList.remove('hint-visible'); }
+      gridWrap.addEventListener('mouseenter', showHint);
+      gridWrap.addEventListener('mouseleave', hideHint);
+      gridWrap.addEventListener('focusin', showHint);
+      gridWrap.addEventListener('focusout', hideHint);
 
       function tween(el, from, to, duration) {
         if (duration <= 0 || reducedMotion()) {
@@ -362,7 +466,7 @@
         var from = state.roundScore;
         state.roundScore = v;
         tween(roundScoreVal, from, v, animate ? 300 : 0);
-        bankBtn.disabled = !(state.status === 'playing' && v > 0);
+        bankBtn.setAttribute('aria-disabled', String(!(state.status === 'playing' && v > 0)));
       }
 
       function setBankedScore(v, animate) {
@@ -388,6 +492,7 @@
         state.status = 'playing';
         clearBoard();
         setRoundScore(0, false);
+        setRoundActive(false);
         drawBtn.setAttribute('aria-label', 'Draw a card');
         if (announceIt) announce('New round. Tap the grid to draw.');
       }
@@ -398,7 +503,7 @@
         if (el) el.classList.add('bust-flash');
         announce('Busted on ' + n + '. Round score lost. Tap to play again.');
         drawBtn.setAttribute('aria-label', 'Play again');
-        bankBtn.disabled = true;
+        bankBtn.setAttribute('aria-disabled', 'true');
       }
 
       function resolveWin(baseScore) {
@@ -408,7 +513,7 @@
         setRoundScore(total, true);
         announce('Flip 7! +' + WIN_BONUS + ' bonus — ' + total + ' points banked.');
         drawBtn.setAttribute('aria-label', 'Play again');
-        bankBtn.disabled = true;
+        bankBtn.setAttribute('aria-disabled', 'true');
         var delay = reducedMotion() ? 0 : 450;
         window.setTimeout(function () {
           setBankedScore(state.bankedScore + total, true);
@@ -420,6 +525,7 @@
           startNewRound(true);
           return;
         }
+        setRoundActive(true);
         var n = Math.floor(Math.random() * RANKS);
         if (state.drawnSet.has(n)) {
           resolveBust(n);
@@ -448,6 +554,7 @@
         state.drawnSet.clear();
         clearBoard();
         setRoundScore(0, false);
+        setRoundActive(false);
         announce('Banked ' + amount + ' points. New round started.');
       });
 

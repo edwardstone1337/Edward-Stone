@@ -301,17 +301,23 @@
   --dp-strip-flip7-badge-text: #fff4d2;
   /* The preview is a cream PHONE standing on the teal — flip7scorecard.com is
      a mobile-first app (max-width 400px), so a handset is what it actually
-     looks like. No border: cream on teal is already a hard edge, and the
-     game's own navy card outlines supply the internal structure. The shadow
-     does the lifting instead, so the phone sits on the band rather than being
-     cut into it. */
+     looks like. No border and no shadow: cream against teal is already a hard
+     enough edge to hold the silhouette on its own, and the flat treatment
+     matches the product, which has no gradients or drop shadows anywhere. */
   --dp-strip-flip7-device-border: none;
-  --dp-strip-flip7-device-shadow: 0 24px 48px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
-  --dp-strip-flip7-media-ratio: 9 / 16;
-  --dp-strip-flip7-media-max-h: 620px;
-  /* Handset corner radius — larger than a card's, which is what makes the
-     silhouette read as a phone rather than a portrait panel. */
-  --dp-strip-flip7-phone-radius: 36px;
+  --dp-strip-flip7-device-shadow: none;
+  /* 9:19.5 — a current handset. 9:16 is a 2014 phone and read as a portrait
+     panel rather than a device; the taller silhouette is what sells it. */
+  --dp-strip-flip7-media-ratio: 9 / 19.5;
+  /* Capped against the viewport as well as absolutely: a fixed 700px phone
+     plus the band's 64px padding overflows any viewport under ~830px tall,
+     which would push the band past the 100svh it is trying to fill. */
+  --dp-strip-flip7-media-max-h: min(700px, calc(100svh - 10rem));
+  /* Handset corner radius. 44px bit into the bottom-left and bottom-right
+     cards, which is exactly where the ✗ and ✓ live; 32px still reads as a
+     phone without the curve crowding the corner controls. The widget also
+     carries more bottom padding now, so both levers pull the same way. */
+  --dp-strip-flip7-phone-radius: 32px;
   /* CTA: a CREAM fill carrying navy text. Reads as the cream button asked for,
      and unlike cream-on-teal type it clears AAA at 10.50:1 — the button is the
      one element on the teal that does not have to accept 3.16:1. */
