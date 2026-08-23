@@ -73,12 +73,14 @@ function pluralize(count, word) {
 /**
  * Term with the fewest units currently on the board; ties resolve to the
  * lowest term number (brief §6 "Term targeting"). On an empty board every
- * count is 0, so this always returns Term 1.
+ * count is 0, so this always returns Term 1. Exported (round 6): the
+ * unit-detail drawer's "Add to planner" action (unit-drawer.js) uses the
+ * exact same fallback rule as this drawer's own Add button.
  *
  * @param {() => object[]} getUnits
  * @returns {1|2|3|4}
  */
-function termWithFewestUnits(getUnits) {
+export function termWithFewestUnits(getUnits) {
   const units = getUnits();
   let bestTerm = 1;
   let bestCount = Infinity;

@@ -364,6 +364,82 @@ export function findCatalogueUnit(id) {
 }
 
 /**
+ * Deep-cloned seed completion snapshot (round 6), captured once here at
+ * module load — before the unit-detail drawer's lesson/assessment toggles
+ * (unit-drawer.js) ever mutate a catalogue unit's `done` flags. The
+ * catalogue stays the single source of truth for a unit's CONTENT even
+ * while its completion state is interactive this round (so every renderer
+ * reading `unitProgress()` picks up a toggle immediately, everywhere the
+ * unit appears) — but a session-only prototype still needs Reset to
+ * genuinely reset, so `resetCatalogueCompletion()` below restores exactly
+ * this snapshot rather than the catalogue being permanently mutable.
+ * @type {Map<string, { lessons: boolean[], assessment: boolean|null }>}
+ */
+const seedCompletion = new Map();
+drawerCatalogue.forEach((group) => {
+  group.units.forEach((unit) => {
+    seedCompletion.set(unit.id, {
+      lessons: unit.lessons.map((l) => l.done),
+      assessment: unit.assessment ? unit.assessment.done : null,
+    });
+  });
+});
+
+/**
+ * Toggle one lesson's `done` flag on the catalogue (round 6: the
+ * unit-detail drawer's interactive lesson rows, in-planner units only).
+ * Mutates the single source of truth directly — every open renderer
+ * (board card, term row, the drawer itself) re-derives its progress from
+ * this same object on its next render, so a toggle here is what makes
+ * "progress recalcs live everywhere" true without a duplicated store.
+ * @param {string} unitId
+ * @param {string} lessonId
+ * @returns {boolean|null} the lesson's new done state, or null if either
+ *   id doesn't resolve (caller treats null as a no-op).
+ */
+export function toggleLessonDone(unitId, lessonId) {
+  const unit = catalogueById.get(unitId);
+  if (!unit) return null;
+  const lesson = unit.lessons.find((l) => l.id === lessonId);
+  if (!lesson) return null;
+  lesson.done = !lesson.done;
+  return lesson.done;
+}
+
+/**
+ * Toggle a unit's assessment `done` flag (a unit has at most one, so no
+ * separate id is needed — see the module's `assessment` field doc).
+ * @param {string} unitId
+ * @returns {boolean|null}
+ */
+export function toggleAssessmentDone(unitId) {
+  const unit = catalogueById.get(unitId);
+  if (!unit || !unit.assessment) return null;
+  unit.assessment.done = !unit.assessment.done;
+  return unit.assessment.done;
+}
+
+/**
+ * Restore every catalogue unit's lessons/assessment `done` flags to their
+ * original seed values (see `seedCompletion` above). Called by
+ * `planner-state.js`'s `reset()` alongside placement reseeding, so Reset
+ * undoes BOTH session changes the catalogue can carry this round: board
+ * placement and completion state.
+ */
+export function resetCatalogueCompletion() {
+  seedCompletion.forEach((snapshot, unitId) => {
+    const unit = catalogueById.get(unitId);
+    if (!unit) return;
+    unit.lessons.forEach((lesson, i) => {
+      lesson.done = snapshot.lessons[i];
+    });
+    if (unit.assessment && snapshot.assessment != null) {
+      unit.assessment.done = snapshot.assessment;
+    }
+  });
+}
+
+/**
  * Flattened catalogue in a fixed, deterministic order (subject groups in
  * their declared order above, units in their declared order within each
  * group) — the pool the "Recommended this term" section (round 5) draws
@@ -376,20 +452,23 @@ export const flatCatalogue = drawerCatalogue.flatMap((group) => group.units);
 /**
  * Board seed: which catalogue units start on the board, and in which term.
  * This is a placement list only — no content lives here (see module doc
- * above). Term 4 is deliberately left empty (Edward's feedback): "Night and
- * Day" (id `u7`) is seeded nowhere, but still addable from the drawer under
- * the same id, so visiting the Term 4 tab (or the empty column on All
- * Terms) shows the real zero state on first load.
+ * above). Term 1 is deliberately left empty (round 6, Edward's feedback):
+ * it's the first tab a visitor lands on, so its empty state + pinned
+ * "Recommended this term" section funnel straight into the primary Add
+ * Units action. "Night and Day" (id `u7`) is seeded nowhere at all, but
+ * still addable from the drawer under the same id — visiting Term 1 (or its
+ * empty column on All Terms) shows the real zero state on first load, same
+ * idea as `u7` for whichever term is left empty.
  *
  * @type {Array<{ id: string, term: 1|2|3|4 }>}
  */
 export const boardSeed = [
-  { id: 'u1', term: 1 },
-  { id: 'u2', term: 1 },
-  { id: 'u3', term: 2 },
-  { id: 'u4', term: 2 },
-  { id: 'u5', term: 3 },
-  { id: 'u6', term: 3 },
+  { id: 'u1', term: 2 },
+  { id: 'u2', term: 2 },
+  { id: 'u3', term: 3 },
+  { id: 'u4', term: 3 },
+  { id: 'u5', term: 4 },
+  { id: 'u6', term: 4 },
 ];
 
 /**

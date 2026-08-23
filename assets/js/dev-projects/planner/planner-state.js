@@ -13,7 +13,13 @@
  * separately. Seeded from `boardSeed`; never touches localStorage.
  */
 
-import { boardSeed, findCatalogueUnit } from './planner-data.js';
+import {
+  boardSeed,
+  findCatalogueUnit,
+  toggleLessonDone,
+  toggleAssessmentDone,
+  resetCatalogueCompletion,
+} from './planner-data.js';
 
 /** @type {Array<{ id: string, term: 1|2|3|4 }>} */
 let placements = [];
@@ -75,14 +81,41 @@ export function getUnits() {
 }
 
 /**
- * Reseed the store from the fixture, discarding all session changes. Note:
- * this only resets PLACEMENTS — completion state lives on the catalogue
- * (planner-data.js) and is never mutated by this prototype (read-only this
- * round), so it doesn't need resetting.
+ * Reseed the store from the fixture, discarding all session changes:
+ * PLACEMENTS (which term each unit is in) and, since round 6's unit-detail
+ * drawer made lesson/assessment completion interactive, the catalogue's
+ * `done` flags too (see `resetCatalogueCompletion()` in planner-data.js).
  */
 export function reset() {
   placements = clonePlacements(boardSeed);
+  resetCatalogueCompletion();
   notify();
+}
+
+/**
+ * Toggle a lesson's done state (round 6: the unit-detail drawer's
+ * interactive rows, in-planner units only) and notify subscribers so every
+ * open renderer's progress bar recalculates immediately.
+ * @param {string} unitId
+ * @param {string} lessonId
+ * @returns {boolean|null} the lesson's new done state, or null if the
+ *   toggle was a no-op (unknown unit/lesson id).
+ */
+export function toggleLesson(unitId, lessonId) {
+  const done = toggleLessonDone(unitId, lessonId);
+  if (done !== null) notify();
+  return done;
+}
+
+/**
+ * Toggle a unit's assessment done state. See `toggleLesson` above.
+ * @param {string} unitId
+ * @returns {boolean|null}
+ */
+export function toggleAssessment(unitId) {
+  const done = toggleAssessmentDone(unitId);
+  if (done !== null) notify();
+  return done;
 }
 
 /**

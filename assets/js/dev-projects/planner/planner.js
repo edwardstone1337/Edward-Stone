@@ -33,7 +33,16 @@
  * switching tabs always reflects current data with no separate re-fetch.
  */
 
-import { getUnits, subscribe, move, remove, add, reset } from './planner-state.js';
+import {
+  getUnits,
+  subscribe,
+  move,
+  remove,
+  add,
+  reset,
+  toggleLesson,
+  toggleAssessment,
+} from './planner-state.js';
 import { flatCatalogue, findCatalogueUnit } from './planner-data.js';
 import { createBoard } from './board.js';
 import { createTermView } from './term-view.js';
@@ -66,26 +75,31 @@ const COLUMN_EMPTY_TEXT = 'Drop a unit here';
 const RECOMMENDATION_LIMIT = 3;
 
 /**
- * "Recommended this term" pool (round 5): catalogue units NOT currently on
- * the board (any term — the whole board, not just the term being viewed),
- * in `flatCatalogue`'s fixed order, capped at 3. Deterministic and
- * board-state-only — no per-term filtering beyond "not on the board" and no
- * randomness — so every term tab draws from the identical shared pool (an
- * add on ANY term removes that unit from every tab's recommendations, and
- * Reset always reproduces the same starting set). The `term` argument isn't
- * used for eligibility, only passed through for a stable call shape with
- * term-view.js's `getRecommendations(term)` option.
+ * "Recommended this term" pool (round 5; round 6: picks now DIFFER per
+ * term). Eligibility is still board-wide and deterministic — catalogue
+ * units NOT currently on the board, in ANY term (an add on ANY term removes
+ * that unit from every tab's recommendations, and Reset always reproduces
+ * the same starting set) — but each term now sees a different slice of that
+ * eligible pool: it's rotated by the term's index (Term 1 -> offset 0,
+ * Term 2 -> offset 1, ...), so Term 2's recommendations pick up roughly
+ * where Term 1's left off, wrapping back around once every term has been
+ * offered a turn through the whole pool. This also gives "backfill" for
+ * free — taking the next 3 units from a full rotation of the remaining pool
+ * always returns 3 (or however many are left) without a separate backfill
+ * step, and reproduces exactly after Reset since it depends only on the
+ * catalogue's fixed order and the current on-board ids.
+ * @param {1|2|3|4} term
  * @returns {import('./planner-data.js').CatalogueUnit[]}
  */
-function getRecommendations() {
+function getRecommendations(term) {
   const onBoardIds = new Set(getUnits().map((u) => u.id));
-  const eligible = [];
-  for (const unit of flatCatalogue) {
-    if (onBoardIds.has(unit.id)) continue;
-    eligible.push(unit);
-    if (eligible.length === RECOMMENDATION_LIMIT) break;
-  }
-  return eligible;
+  const pool = flatCatalogue.filter((unit) => !onBoardIds.has(unit.id));
+  if (pool.length === 0) return [];
+
+  const termIndex = typeof term === 'number' ? term - 1 : 0;
+  const offset = ((termIndex % pool.length) + pool.length) % pool.length;
+  const rotated = pool.slice(offset).concat(pool.slice(0, offset));
+  return rotated.slice(0, RECOMMENDATION_LIMIT);
 }
 
 function createAnnouncer(liveRegionEl) {
@@ -324,6 +338,7 @@ export function initPlanner(rootEl) {
   // selectTab() below. There is one row-list at a time, not four hidden ones.
   const termPanelEl = document.createElement('div');
   termPanelEl.id = 'pl-term-panel';
+  termPanelEl.className = 'pl-term-panel';
   termPanelEl.setAttribute('role', 'tabpanel');
   termPanelEl.setAttribute('aria-labelledby', 'pl-tab-term-1');
   termPanelEl.hidden = true;
@@ -370,6 +385,12 @@ export function initPlanner(rootEl) {
   // force-close whichever drawer is open before opening the other.
   const unitDrawer = createUnitDrawer({
     getUnits,
+    add,
+    remove,
+    toggleLesson,
+    toggleAssessment,
+    announce,
+    getActiveTerm: () => activeTab,
     fallbackFocusEl: addUnitsBtn,
     frameEl: frame,
     inertEl: frameBody,
@@ -402,7 +423,8 @@ export function initPlanner(rootEl) {
     renderRow,
     listLabel: (term) => 'Term ' + term + ' units',
     emptyState: {
-      title: 'Nothing planned for this term yet. Use Add Units to plan this term.',
+      title: 'Nothing planned for this term yet',
+      description: 'Use Add Units to plan this term.',
     },
     getRecommendations,
   });
@@ -553,6 +575,11 @@ export function initPlanner(rootEl) {
     closeAllMenus(boardRootEl);
     closeAllMenus(termPanelEl);
     reset();
+    // If the unit drawer is open on a unit whose placement or completion
+    // state just got reseeded, refresh its content in place (round 6: Reset
+    // must restore original done flags everywhere they're visible,
+    // including an already-open drawer) rather than leaving it stale.
+    if (unitDrawer.isOpen()) unitDrawer.refresh();
     announce('Demo reset to the starting units.');
   });
 

@@ -35,6 +35,15 @@
   --pl-accent-soft: #f9f0ff; /* purple-1, the system's active/selected tint */
   /* Success = green-6, the real ProgressBar/status fill (semantic.css). */
   --pl-good: #52c41a;
+  /* Menu hover treatment (round 6, @inquisitive/ui semantic.css values).
+     Normal items: purple-1 wash + brand accent text on hover — same tint as
+     --pl-accent-soft, referenced rather than redefined. Danger items
+     ("Remove unit"/"Remove from planner"): red-1 wash + red-8 text, but
+     ONLY on hover — they read identical to a normal item at rest, the
+     real product's pattern. */
+  --pl-menu-hover-bg: var(--pl-accent-soft);
+  --pl-danger-hover-bg: #fff1f0; /* red-1 */
+  --pl-danger-hover-ink: #a8071a; /* red-8 */
 
   /* ---------- subject tints (bg + ink pairs) ---------- */
   --pl-tint-maths-bg: #dbe7f4;      --pl-tint-maths-ink: #2d5c8f;
@@ -58,10 +67,13 @@
   --pl-progress-track: #f5f5f5; /* grey-3 track */
   --pl-dropzone-min-height: 44px;
 
-  /* ---------- Term-view row (round 4 redesign; round 5 rebalance) ---------- */
+  /* ---------- Term-view row (round 4 redesign; round 5/6 rebalance) ---------- */
   --pl-row-inset: 14px; /* left edge -> grab pad, matches the widget's spacing rhythm */
   --pl-row-thumb-size: 46px;
-  --pl-row-name-width: 200px; /* max-content-ish cap, was minmax(0, 1fr) (flex-greedy) */
+  /* Round 6: the name column is `minmax(140px, 1fr)` in the CSS directly
+     (it's the row's one flexible track — see .pl-row-hit) rather than a
+     token here, since "1fr" isn't a value a future re-skin would want to
+     override independently of the grid structure itself. */
   --pl-row-subject-year-width: 130px;
   --pl-row-content-width: 150px;
   --pl-row-progress-width: 190px; /* also caps the unit drawer's progress bar (round 5) */
@@ -209,6 +221,31 @@
   filter: brightness(1.06);
 }
 
+/* Secondary style (round 6: the unit drawer's "Download unit" action) —
+   bordered, neutral ink, no fill. */
+[data-project="planner"] .pl-btn-secondary {
+  background: var(--pl-surface);
+  color: var(--pl-ink);
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+}
+
+[data-project="planner"] .pl-btn-secondary:hover:not(:disabled) {
+  background: var(--pl-surface-2);
+}
+
+[data-project="planner"] .pl-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+/* Icon wrapper inside a .pl-btn (round 6: Add/Added to planner, Download
+   unit) — `.pl-btn`'s own `gap: 8px` already gives the icon-to-label gap;
+   this just keeps the inline SVG vertically centred against the label. */
+[data-project="planner"] .pl-btn-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* --------------------------------------------
    Demo chrome — Reset (Edward's feedback: this is a control FOR the demo,
    not part of the simulated product, so it sits above the window frame, on
@@ -307,8 +344,8 @@
    drawer's inert sibling content. Padding here is the board's "internal
    padding" — the board itself carries none. White (Edward's feedback: the
    product ground reads as WHITE, not the Inquisitive off-white --pl-paper)
-   — cards/rows regain distinctness against it via a border + soft shadow
-   (see .pl-card below) instead of a tinted ground. */
+   — cards/rows regain distinctness against it via a border alone (round 6:
+   no resting shadow, see .pl-card below) instead of a tinted ground. */
 [data-project="planner"] .pl-frame-body {
   flex: 1;
   min-height: 0;
@@ -325,6 +362,33 @@
      itself is wide, and vice versa. */
   container-type: inline-size;
   container-name: pl-frame;
+}
+
+/* Term panel (round 6): a flex column filling whatever vertical space
+   .pl-frame-body has left below the tab bar. This is what makes
+   .pl-term-reco's `margin-top: auto` (below) actually pin it to the bottom
+   of the visible frame — a flex item's auto margin only has somewhere to
+   push into once its container is taller than its content, which `flex: 1`
+   here guarantees whenever the term's content is short (an empty state, or
+   a handful of planned rows). When content IS tall enough to fill or
+   exceed that space, the auto margin simply collapses to 0 and
+   .pl-frame-body's own overflow-y (above) takes over — "scrolls naturally"
+   rather than needing a second nested scroll container here. */
+[data-project="planner"] .pl-term-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* planner.js toggles the All Terms/term panel split via the `hidden` IDL
+   property — without this override the unconditional `display: flex` above
+   wins over the UA's `[hidden] { display: none }` default at equal
+   specificity (same class of bug as `.pl-kebab-menu[hidden]`/
+   `.pl-drawer-icon-btn[hidden]` elsewhere in this file). */
+[data-project="planner"] .pl-term-panel[hidden] {
+  display: none;
 }
 
 /* --------------------------------------------
@@ -397,12 +461,11 @@
   background: var(--pl-surface);
   border: var(--pl-border-width) solid var(--pl-line-strong);
   border-radius: var(--pl-radius);
-  /* The product ground (.pl-frame-body) is white, same as the card's own
-     --pl-surface — the border alone reads thin against it, so a soft shadow
-     (Edward's feedback) restores the card's lift/distinctness. Shared by
-     .pl-row below (same base class), which is exactly the "cards read
-     distinct on white" requirement applied to the term-view rows too. */
-  box-shadow: var(--pl-shadow-card);
+  /* Round 6 (Edward's feedback, matching @inquisitive/ui): the real system
+     is border-only at rest — no resting shadow on cards or rows (this base
+     class is shared by .pl-row, see below). Elevation is reserved for an
+     actively-dragged/picked card (.pl-card--picked below) and the floating
+     drag clone (.pl-card-clone), which still use --pl-shadow-card. */
   padding: var(--pl-card-padding);
   display: flex;
   flex-direction: column;
@@ -556,8 +619,14 @@
   cursor: pointer;
 }
 
+/* Round 6 (Edward's design-system reference): normal-item hover is a
+   purple-1 wash + brand accent text. Danger items ("Remove unit") share
+   this exact treatment at rest — the destructive rule below overrides ONLY
+   on hover, so a danger item looks identical to a normal one until you're
+   actually about to act on it. */
 [data-project="planner"] .pl-kebab-menu-item:hover {
-  background: var(--pl-surface-2);
+  background: var(--pl-menu-hover-bg);
+  color: var(--pl-accent);
 }
 
 [data-project="planner"] .pl-kebab-menu-item:focus-visible {
@@ -565,8 +634,9 @@
   outline-offset: 2px;
 }
 
-[data-project="planner"] .pl-kebab-menu-item--destructive {
-  color: var(--pl-tint-english-ink);
+[data-project="planner"] .pl-kebab-menu-item--destructive:hover {
+  background: var(--pl-danger-hover-bg);
+  color: var(--pl-danger-hover-ink);
 }
 
 [data-project="planner"] .pl-kebab-menu-separator {
@@ -613,21 +683,27 @@
   color: var(--pl-ink-3);
 }
 
-/* Round 5 (Edward's feedback): the name column was `minmax(0, 1fr)` —
-   flex-greedy, so it ate every pixel of leftover space and pushed
-   subject/year, content and progress apart from it with a large dead gap.
-   Capped to --pl-row-name-width (max-content-ish: a non-fr `minmax(0, Npx)`
-   track sizes to its content up to that cap, still shrinking to 0 for
-   ellipsis truncation on a very long name) so the columns huddle together
-   right after the thumbnail; any leftover space now falls after the
-   progress column, before the kebab, instead of after the name. */
+/* Round 5 capped the name column instead of leaving it flex-greedy, which
+   fixed the columns huddling apart from each other — but with every OTHER
+   track a fixed px width too, the grid's total column width fell short of
+   the row's own box width whenever there was room to spare, leaving a dead
+   gap after the LAST column (progress), before the kebab (Round 6 finding).
+   Fix: keep every other track's width fixed (the "consistent gaps" between
+   them, per Edward's feedback), but let the name column absorb whatever
+   space is left via `minmax(140px, 1fr)` — a hard floor so it never
+   vanishes, `1fr` so it's the one column that grows/shrinks with the row.
+   Because it's the only `fr` track, the grid's total width now always
+   equals the row-hit box's own width, so the progress column sits flush
+   against .pl-row-hit's own right padding and the kebab (a flex sibling,
+   not part of this grid) hugs the row's actual right edge — no leftover
+   space stranded past the last column. */
 [data-project="planner"] .pl-row-hit {
   flex: 1;
   min-width: 0;
   display: grid;
   grid-template-columns:
     var(--pl-row-thumb-size)
-    minmax(0, var(--pl-row-name-width))
+    minmax(140px, 1fr)
     var(--pl-row-subject-year-width)
     var(--pl-row-content-width)
     var(--pl-row-progress-width);
@@ -733,14 +809,15 @@
 }
 
 /* Narrow frame: the content stack (lessons/assessment counts) is the least
-   essential column, so it's the first to go. Name stays capped (round 5,
+   essential column, so it's the first to go. Name stays flexible (round 6,
    same reasoning as the base rule above) — subject/year is still visible
-   here, so there's still a middle stack for a flex-greedy name to crowd. */
+   here, so there's still a fixed-width column for the flexible name to
+   distribute leftover space around. */
 @container pl-frame (max-width: 760px) {
   [data-project="planner"] .pl-row-hit {
     grid-template-columns:
       var(--pl-row-thumb-size)
-      minmax(0, var(--pl-row-name-width))
+      minmax(140px, 1fr)
       var(--pl-row-subject-year-width)
       var(--pl-row-progress-width);
   }
@@ -806,11 +883,66 @@
   max-width: 42ch;
 }
 
-/* Empty term tab (brief §4: "Nothing planned for this term yet") — reuses
-   .pl-empty-board's dashed-box treatment, just a little more compact since
-   there's no description line here. */
-[data-project="planner"] .pl-empty-term {
+/* --------------------------------------------
+   Term-tab empty state (round 6; round 7: compacted). The design system's
+   EmptyState pattern (Edward's reference values were 120px/48px-32px/24px)
+   — a centered column with an illustration, then a title/description text
+   block, DISTINCT from the full-board empty state above (dashed box, no
+   illustration) — this one lives inside the term panel, above the pinned
+   "Recommended this term" section (see .pl-term-panel/.pl-term-reco), not
+   on its own.
+
+   Round 7 (Edward's live review): with the empty term ALSO showing the
+   pinned recommendations below it, the reference values made Term 1's
+   default content taller than the frame, forcing an internal scroll the
+   frame was never meant to have (scrolljacking risk — a page-scrolling
+   visitor's wheel/trackpad input gets captured by the frame's own scroll
+   instead). Compacted the illustration to 88px and tightened the padding/
+   gap so every tab's default content fits the frame with no internal
+   scroll at a standard desktop width — see .pl-term-reco below for the
+   matching recommendations-section trim.
+   -------------------------------------------- */
+[data-project="planner"] .pl-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 32px 24px;
+  gap: 16px;
+  text-align: center;
+}
+
+[data-project="planner"] .pl-empty-state-illo {
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-project="planner"] .pl-empty-state-illo-img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+}
+
+[data-project="planner"] .pl-empty-state-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+}
+
+[data-project="planner"] .pl-empty-state-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--pl-ink);
+  margin: 0;
+}
+
+[data-project="planner"] .pl-empty-state-desc {
+  font-size: 14px;
+  color: var(--pl-ink-2);
+  margin: 0;
 }
 
 /* --------------------------------------------
@@ -1148,47 +1280,39 @@
 }
 
 /* --------------------------------------------
-   Unit-detail drawer (round 4) — read-only view of a single unit's lessons/
-   assessment. Reuses the Add Units drawer's shell classes verbatim
-   (.pl-drawer, .pl-drawer-header, .pl-drawer-icon-btn, .pl-drawer-title,
+   Unit-detail drawer (round 4; round 6 restructure — matches
+   @inquisitive/ui's UnitPage.tsx pattern). Reuses the Add Units drawer's
+   shell classes verbatim (.pl-drawer, .pl-drawer-header, .pl-drawer-icon-btn,
    .pl-drawer-body — see drawer-shell.js) and the term-row's continuous
    progress bar classes verbatim (.pl-row-progress / .pl-row-progress-fill —
-   see above) for the progress summary; only the content below is new.
+   see above) for the progress summary. The old tint hero strip is gone —
+   the unit's name now lives in the body as a heading (title block, below),
+   not the drawer header.
    -------------------------------------------- */
-[data-project="planner"] .pl-unit-drawer-hero {
+[data-project="planner"] .pl-unit-drawer-title-block {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 4px;
   margin-bottom: 20px;
 }
 
-[data-project="planner"] .pl-unit-drawer-emblem {
-  flex: 0 0 auto;
-  width: 56px;
-  height: 56px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--pl-radius);
-  font-size: 20px;
+[data-project="planner"] .pl-unit-drawer-name {
+  font-size: 19px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-[data-project="planner"] .pl-unit-drawer-hero-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-[data-project="planner"] .pl-unit-drawer-hero-subject {
-  font-size: 14px;
-  font-weight: 600;
   color: var(--pl-ink);
+  margin: 0;
 }
 
-[data-project="planner"] .pl-unit-drawer-hero-year {
-  font-size: 12.5px;
-  color: var(--pl-ink-3);
+[data-project="planner"] .pl-unit-drawer-name:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--pl-radius-sm);
+}
+
+[data-project="planner"] .pl-unit-drawer-meta {
+  font-size: 13px;
+  color: var(--pl-ink-2);
+  margin: 0;
 }
 
 [data-project="planner"] .pl-unit-drawer-progress {
@@ -1234,18 +1358,55 @@
   gap: 4px;
 }
 
+/* The <li> just owns the divider; visual styling lives on its one child —
+   either the read-only `.pl-unit-drawer-item-static` span (NOT in planner)
+   or the interactive `.pl-unit-drawer-toggle` button (IN planner, round 6:
+   see unit-drawer.js's buildToggleListItem()). */
 [data-project="planner"] .pl-unit-drawer-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 4px;
-  font-size: 13.5px;
-  color: var(--pl-ink);
   border-bottom: var(--pl-border-width) solid var(--pl-line);
 }
 
 [data-project="planner"] .pl-unit-drawer-item:last-child {
   border-bottom: none;
+}
+
+[data-project="planner"] .pl-unit-drawer-item-static {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  font-size: 13.5px;
+  color: var(--pl-ink);
+}
+
+/* Interactive lesson/assessment toggle (round 6, in-planner units only) —
+   a real role="checkbox" button. min-height 44px meets the touch-target
+   minimum; icon-to-label gap 8px per the design-system reference. */
+[data-project="planner"] .pl-unit-drawer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 8px 8px 4px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--pl-ink);
+  background: transparent;
+  border: none;
+  border-radius: var(--pl-radius-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-project="planner"] .pl-unit-drawer-toggle:hover {
+  background: var(--pl-surface-2);
+}
+
+[data-project="planner"] .pl-unit-drawer-toggle:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: -2px;
 }
 
 [data-project="planner"] .pl-unit-drawer-status {
@@ -1263,18 +1424,86 @@
 }
 
 /* --------------------------------------------
-   Term view — "Recommended this term" section (round 5). Up to 3 catalogue
-   units not yet on the board, rendered with row.js's `variant:
-   'recommendation'` (same thumbnail/name/subject-year/counts/progress
-   anatomy as a planned row, minus the grab pad/kebab, plus a trailing Add
-   button) below the term's planned list (or below its empty state — both
-   coexist, see term-view.js). Hidden entirely when there's nothing left to
+   Unit-detail drawer — actions row (round 6; round 7: moved up under the
+   title block's meta line, before the progress summary — was a footer
+   under everything). State-dependent: NOT-in-planner shows only a primary
+   "Add to planner" button; IN-planner shows an inert "Added to planner"
+   indicator, "Download unit" (secondary style, demo toast) and "Remove
+   from planner" (danger text, pushed to the far side via margin-left: auto
+   — "separated" per the design-system reference's action semantics).
+   -------------------------------------------- */
+[data-project="planner"] .pl-unit-drawer-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+[data-project="planner"] .pl-unit-drawer-save-btn--saved {
+  background: var(--pl-tint-science-bg);
+  color: var(--pl-tint-science-ink);
+  border-color: transparent;
+}
+
+[data-project="planner"] .pl-unit-drawer-remove-btn {
+  margin-left: auto;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pl-danger-hover-ink);
+  background: transparent;
+  border: none;
+  padding: 10px 12px;
+  border-radius: var(--pl-radius-sm);
+  cursor: pointer;
+}
+
+[data-project="planner"] .pl-unit-drawer-remove-btn:hover {
+  background: var(--pl-danger-hover-bg);
+}
+
+[data-project="planner"] .pl-unit-drawer-remove-btn:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------
+   Term view — "Recommended this term" section (round 5; round 6
+   restructure). Up to 3 catalogue units not yet on the board, rendered with
+   row.js's `variant: 'recommendation'` (same thumbnail/name/subject-year/
+   counts/progress anatomy as a planned row, minus the grab pad/kebab, plus
+   a trailing Add button). Hidden entirely when there's nothing left to
    recommend (term-view.js never renders the section in that case).
+
+   Round 6: no more divider-under-the-list — the section is its own
+   bordered/rounded box, and `margin-top: auto` pins it to the bottom of
+   `.pl-term-panel` (a flex column, see above) so it hugs the frame body's
+   bottom edge even when the planned list above it (or the empty state) is
+   short, while still following normal flow (scrolling with the rest of the
+   panel) if content above pushes it down naturally instead.
+
+   Round 7: padding/header spacing tightened (16px/10px -> 12px/8px) as part
+   of the same "every tab fits the frame with no internal scroll" pass as
+   the empty state above — see .pl-empty-state's comment and
+   .pl-row--recommendation .pl-row-hit below (recommendation rows' own
+   tightened vertical padding).
    -------------------------------------------- */
 [data-project="planner"] .pl-term-reco {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: var(--pl-border-width) solid var(--pl-line);
+  margin-top: auto;
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+  border-radius: var(--pl-radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-project="planner"] .pl-term-reco-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 /* Same small-caps eyebrow treatment as the Add Units drawer's year-group
@@ -1288,7 +1517,7 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--pl-ink-3);
-  margin: 0 0 10px;
+  margin: 0;
 }
 
 [data-project="planner"] .pl-term-reco-heading:focus-visible {
@@ -1297,21 +1526,61 @@
   border-radius: var(--pl-radius-sm);
 }
 
+/* Hide/Show toggle (round 6; round 7: Edward's live review — one
+   font-weight step lighter and NOT brand purple, a dark neutral text tone
+   instead so it reads as a quiet utility control, not a second CTA next to
+   the section's Add buttons) — a link-styled text button, right-aligned in
+   the section's header row. The preference it controls is shared across
+   every term tab (term-view.js's `recoCollapsed` closure state), not reset
+   per-term. */
+[data-project="planner"] .pl-term-reco-toggle {
+  flex: 0 0 auto;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--pl-ink-2);
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+[data-project="planner"] .pl-term-reco-toggle:hover {
+  color: var(--pl-ink);
+}
+
+[data-project="planner"] .pl-term-reco-toggle:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--pl-radius-sm);
+}
+
+/* Round 7: gap tightened from --pl-card-gap (12px) to 8px, part of the
+   "every tab fits with no internal scroll" pass — see .pl-term-reco above. */
 [data-project="planner"] .pl-term-reco-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--pl-card-gap);
+  gap: 8px;
 }
 
 /* Recommendation row — same .pl-card/.pl-row look, just not draggable
    (default cursor instead of the base .pl-card's grab/grabbing; drag.js
    itself is blocked via the row's own `data-no-drag` attribute, see
-   row.js/drag.js). */
+   row.js/drag.js). Round 7: its own tighter vertical padding (12px -> 8px
+   top/bottom) — a modifier scoped to the recommendation variant only, so
+   planned rows keep their original height. */
 [data-project="planner"] .pl-row--recommendation {
   cursor: default;
+}
+
+[data-project="planner"] .pl-row--recommendation .pl-row-hit {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 /* The recommendation variant's hit area is a real <button> (row.js), not
