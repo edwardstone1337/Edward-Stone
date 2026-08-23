@@ -1,11 +1,24 @@
 /**
  * Planner prototype — Add Units drawer (brief §6).
  *
- * A modal drawer sliding in from the right, built on native <dialog> +
- * showModal(): the browser gives us focus trapping and top-layer stacking
- * for free, so this module only has to handle content, the slide
- * transition, and closing (X / Escape / backdrop click) — see
- * docs/superpowers/specs/2026-08-23-planner-prototype-design.md.
+ * A drawer sliding in from the right, scoped INSIDE the product window
+ * frame (`.pl-frame` in planner.js) rather than the browser's top layer —
+ * the frame is a simulated product screen, so nothing here should overlay
+ * the rest of the portfolio page. Built on native <dialog>, opened with
+ * `.show()` (non-modal) instead of `.showModal()`: this keeps the element
+ * in normal document flow (positioned against the frame via CSS, see
+ * project-planner.css) instead of the top layer, but forfeits the
+ * browser's free focus trapping and Escape-to-cancel, which this module
+ * now implements by hand (same idiom as nav-component.js's mobile drawer):
+ *  - `inertEl.inert` is toggled while open, so Tab/AT can't reach the
+ *    frame's board + toolbar underneath.
+ *  - A manual Tab-key focus trap wraps within the dialog's own focusable
+ *    elements.
+ *  - A manual Escape handler closes it (no native 'cancel' event fires for
+ *    a non-modal dialog).
+ *  - A scrim element (sibling inside the frame) dims the frame and closes
+ *    on click, replacing the native ::backdrop a modal dialog would give
+ *    for free.
  *
  * Two steps:
  *   1. "Add units" — a vertical list of subject cards.
@@ -94,11 +107,20 @@ function termWithFewestUnits(getUnits) {
  *   button that opened the drawer no longer exists when it closes (e.g. the
  *   empty-board state's Add Units button, which gets replaced by the board
  *   render once the first unit lands).
+ * @param {HTMLElement} config.frameEl - The product window frame
+ *   (`.pl-frame`) the drawer and its scrim mount into as direct children —
+ *   it's the frame's `position: relative` that anchors them.
+ * @param {HTMLElement} config.inertEl - The frame's other content (toolbar +
+ *   board), sent `inert` while the drawer is open so it can't be reached by
+ *   Tab or assistive tech (no native modal dialog is doing this for free).
  */
 export function createAddUnitsDrawer(config) {
-  const { getUnits, add, announce, fallbackFocusEl } = config;
+  const { getUnits, add, announce, fallbackFocusEl, frameEl, inertEl } = config;
 
   let lastTrigger = null;
+
+  const scrim = document.createElement('div');
+  scrim.className = 'pl-drawer-scrim';
 
   const dialog = document.createElement('dialog');
   dialog.className = 'pl-drawer';
@@ -142,7 +164,8 @@ export function createAddUnitsDrawer(config) {
 
   dialog.appendChild(header);
   dialog.appendChild(body);
-  document.body.appendChild(dialog);
+  frameEl.appendChild(scrim);
+  frameEl.appendChild(dialog);
 
   // ------------------------------------------------------------------
   // Step rendering
@@ -282,6 +305,10 @@ export function createAddUnitsDrawer(config) {
 
   let isClosing = false;
 
+  function setInert(value) {
+    if (inertEl) inertEl.inert = value;
+  }
+
   function finishClose() {
     isClosing = false;
     if (dialog.open) dialog.close();
@@ -292,12 +319,14 @@ export function createAddUnitsDrawer(config) {
 
     if (reduceMotionQuery.matches) {
       dialog.classList.remove('pl-drawer--open');
+      scrim.classList.remove('pl-drawer-scrim--visible');
       dialog.close();
       return;
     }
 
     isClosing = true;
     dialog.classList.remove('pl-drawer--open');
+    scrim.classList.remove('pl-drawer-scrim--visible');
 
     const onTransitionEnd = (e) => {
       if (e.target !== dialog || e.propertyName !== 'transform') return;
@@ -318,23 +347,48 @@ export function createAddUnitsDrawer(config) {
   closeBtn.addEventListener('click', requestClose);
   backBtn.addEventListener('click', renderSubjectStep);
 
-  // Backdrop click: a click that lands on the dialog element itself (not a
-  // descendant) means it landed on the ::backdrop or the dialog's own box
-  // outside its content — see brief §6 / task spec.
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) requestClose();
-  });
+  // Scrim click closes — the in-frame stand-in for a modal dialog's
+  // ::backdrop click (there's no native backdrop without showModal()).
+  scrim.addEventListener('click', requestClose);
 
-  // Escape fires 'cancel' (default action: close immediately, no
-  // transition). Intercept so it goes through the same animated close as
-  // every other path, and so the 'close' listener below always owns focus
-  // return.
-  dialog.addEventListener('cancel', (e) => {
-    e.preventDefault();
-    requestClose();
+  // Manual focus trap + Escape: open() below uses .show(), not
+  // .showModal(), so neither of the browser's usual conveniences apply
+  // here — a non-modal dialog doesn't fire 'cancel' on Escape, and Tab
+  // isn't confined to it. Reimplemented by hand, same idiom as
+  // nav-component.js's mobile drawer keydown handler.
+  function getFocusable() {
+    return Array.from(
+      dialog.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    ).filter((el) => el.offsetParent !== null);
+  }
+
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      requestClose();
+      return;
+    }
+
+    if (e.key !== 'Tab') return;
+    const focusable = getFocusable();
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first || !dialog.contains(document.activeElement)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last || !dialog.contains(document.activeElement)) {
+      e.preventDefault();
+      first.focus();
+    }
   });
 
   dialog.addEventListener('close', () => {
+    setInert(false);
+    scrim.classList.remove('pl-drawer-scrim--visible');
     const target =
       lastTrigger && document.body.contains(lastTrigger) ? lastTrigger : fallbackFocusEl;
     if (target && typeof target.focus === 'function') target.focus();
@@ -353,12 +407,15 @@ export function createAddUnitsDrawer(config) {
     // Open (and become visible) BEFORE building step 1's content: a
     // focus() call on an element inside a still-closed <dialog> is a
     // silent no-op (the UA hides everything under dialog:not([open])).
-    if (typeof dialog.showModal === 'function') {
-      dialog.showModal();
+    // .show() (not .showModal()) keeps this in normal document flow, inside
+    // .pl-frame, instead of promoting it to the browser's top layer.
+    if (typeof dialog.show === 'function') {
+      dialog.show();
     } else {
       dialog.setAttribute('open', '');
     }
 
+    setInert(true);
     renderSubjectStep();
 
     // Force a reflow so the slide-in transition plays from the off-screen
@@ -366,6 +423,7 @@ export function createAddUnitsDrawer(config) {
     // nav drawer's openDrawer()).
     void dialog.offsetHeight;
     dialog.classList.add('pl-drawer--open');
+    scrim.classList.add('pl-drawer-scrim--visible');
   }
 
   return { open };

@@ -49,6 +49,12 @@
   --pl-shadow-card: 0 2px 6px rgba(35, 38, 46, 0.08), 0 8px 20px rgba(35, 38, 46, 0.06);
   --pl-duration: 150ms;
 
+  /* ---------- Product window frame ---------- */
+  --pl-radius-lg: 16px;
+  --pl-titlebar-height: 40px;
+  --pl-frame-max-height: 820px;
+  --pl-frame-shadow: 0 32px 64px -24px rgba(35, 38, 46, 0.35), 0 8px 24px rgba(35, 38, 46, 0.12);
+
   /* ---------- Add Units drawer (brief §6) ---------- */
   --pl-drawer-width: 560px;
   --pl-drawer-duration: 200ms;
@@ -68,15 +74,9 @@
 [data-project="planner"] .pl-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-[data-project="planner"] .pl-toolbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 [data-project="planner"] .pl-visually-hidden {
@@ -92,7 +92,8 @@
 }
 
 /* --------------------------------------------
-   Buttons (ghost + primary — planner-scoped, not the shared .dp-btn)
+   Buttons (planner-scoped primary button — product UI, not the shared
+   .dp-btn; the demo chrome's Reset button below uses .dp-btn instead)
    -------------------------------------------- */
 [data-project="planner"] .pl-btn {
   font-family: inherit;
@@ -111,17 +112,6 @@
 [data-project="planner"] .pl-btn:focus-visible {
   outline: 2px solid var(--pl-focus-ring);
   outline-offset: 2px;
-}
-
-[data-project="planner"] .pl-btn-ghost {
-  background: transparent;
-  border: var(--pl-border-width) solid var(--pl-line-strong);
-  color: var(--pl-ink-2);
-}
-
-[data-project="planner"] .pl-btn-ghost:hover {
-  background: var(--pl-surface-2);
-  color: var(--pl-ink);
 }
 
 [data-project="planner"] .pl-btn-primary {
@@ -143,59 +133,147 @@
   filter: none;
 }
 
-/* Reset demo only makes sense against the Filled fixture — disabled (not
-   hidden) on Empty so the toolbar layout doesn't shift when switching. */
-[data-project="planner"] .pl-btn-ghost:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
+/* --------------------------------------------
+   Demo chrome — Filled/Empty toggle + Reset (Edward's feedback: these are
+   controls FOR the demo, not part of the simulated product, so they sit in
+   a row above the window frame, on the portfolio page itself. Styled with
+   --dp-* tokens (referenced via var(), never DEFINED here — see
+   scripts/check-token-hygiene.sh) so they read as page chrome, visually
+   distinct from the --pl-* product surface inside .pl-frame below. Reset
+   itself reuses the shared `.dp-btn .dp-btn-secondary` component directly
+   (see planner.js) rather than a bespoke class.
+   -------------------------------------------- */
+[data-project="planner"] .pl-demo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dp-space-4);
+  flex-wrap: wrap;
 }
 
-/* --------------------------------------------
-   Demo-state segmented control (Filled / Empty)
-   -------------------------------------------- */
-[data-project="planner"] .pl-segmented {
+[data-project="planner"] .pl-demo-segmented {
   display: inline-flex;
-  border: var(--pl-border-width) solid var(--pl-line-strong);
-  border-radius: var(--pl-radius-sm);
+  border: 1px solid var(--dp-border-default);
+  border-radius: var(--dp-radius-sm);
   padding: 2px;
   gap: 2px;
-  background: var(--pl-surface-2);
+  background: var(--dp-bg-card);
 }
 
-[data-project="planner"] .pl-segmented-btn {
+[data-project="planner"] .pl-demo-segmented-btn {
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--dp-text-xs);
+  font-weight: var(--dp-weight-semibold);
   line-height: 1;
   padding: 7px 14px;
   border: none;
-  border-radius: calc(var(--pl-radius-sm) - 2px);
+  border-radius: calc(var(--dp-radius-sm) - 2px);
   background: transparent;
-  color: var(--pl-ink-2);
+  color: var(--dp-text-secondary);
   cursor: pointer;
-  transition: background var(--pl-duration) ease, color var(--pl-duration) ease, box-shadow var(--pl-duration) ease;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
-[data-project="planner"] .pl-segmented-btn:hover {
-  color: var(--pl-ink);
+[data-project="planner"] .pl-demo-segmented-btn:hover {
+  color: var(--dp-text-primary);
 }
 
-[data-project="planner"] .pl-segmented-btn[aria-checked="true"] {
-  background: var(--pl-surface);
-  color: var(--pl-ink);
-  box-shadow: 0 1px 3px rgba(35, 38, 46, 0.12);
+[data-project="planner"] .pl-demo-segmented-btn[aria-checked="true"] {
+  background: var(--dp-bg-card-hover);
+  color: var(--dp-text-primary);
+  box-shadow: var(--dp-shadow-card-sm);
 }
 
-[data-project="planner"] .pl-segmented-btn:focus-visible {
-  outline: 2px solid var(--pl-focus-ring);
+[data-project="planner"] .pl-demo-segmented-btn:focus-visible {
+  outline: 2px solid var(--dp-btn-focus-ring);
   outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-project="planner"] .pl-segmented-btn {
+  [data-project="planner"] .pl-demo-segmented-btn {
     transition: none;
   }
+}
+
+/* --------------------------------------------
+   Product window frame — a simulated app screen (1440x1024) hosting the
+   toolbar/board/drawer below, so the Planner reads as a product, not
+   portfolio-page UI. --pl-paper (the Inquisitive off-white) surfaces here
+   for the first time on the page — the demo chrome above sits on the
+   page's own --dp-* surface instead, so the two visually separate "this is
+   the site" from "this is the product". Never `transform: scale()` here —
+   drag.js's pointer math reads real CSS-pixel getBoundingClientRect()s,
+   which a scale transform would throw out of step with the pointer.
+   -------------------------------------------- */
+[data-project="planner"] .pl-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 1024;
+  max-height: min(78vh, var(--pl-frame-max-height));
+  display: flex;
+  flex-direction: column;
+  background: var(--pl-paper);
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+  border-radius: var(--pl-radius-lg);
+  box-shadow: var(--pl-frame-shadow);
+  overflow: hidden;
+}
+
+/* Small screens: drop the fixed aspect ratio and let the window size to
+   its content instead — a locked 1440:1024 box doesn't serve a narrow
+   viewport. Internal scroll (.pl-frame-body, below) still applies. */
+@media (max-width: 600px) {
+  [data-project="planner"] .pl-frame {
+    aspect-ratio: auto;
+    max-height: 80vh;
+  }
+}
+
+[data-project="planner"] .pl-frame-titlebar {
+  flex: 0 0 auto;
+  position: relative;
+  height: var(--pl-titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: var(--pl-border-width) solid var(--pl-line);
+  background: var(--pl-surface);
+}
+
+[data-project="planner"] .pl-frame-titlebar-dots {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+[data-project="planner"] .pl-frame-titlebar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pl-line-strong);
+}
+
+[data-project="planner"] .pl-frame-titlebar-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--pl-ink-3);
+}
+
+/* Scrollable product surface: hosts the toolbar + board + drawer's inert
+   sibling content. Padding here is the board's "internal padding" — the
+   board itself carries none. */
+[data-project="planner"] .pl-frame-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
 }
 
 /* --------------------------------------------
@@ -496,16 +574,22 @@
 /* --------------------------------------------
    Add Units drawer (brief §6)
    -------------------------------------------- */
+/* Opens INSIDE .pl-frame (a direct child of it, positioned against the
+   frame's own position:relative — see .pl-frame above), not the browser's
+   top layer: drawer.js opens it with dialog.show(), not showModal(), so it
+   never overlays the rest of the portfolio page. Native modality is gone
+   as a result — drawer.js compensates manually (inert on the frame's other
+   content, a Tab focus trap, Escape-to-close). */
 [data-project="planner"] .pl-drawer {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: auto;
-  width: min(var(--pl-drawer-width), 100vw);
-  max-width: 100vw;
-  height: 100vh;
-  max-height: 100vh;
+  width: min(var(--pl-drawer-width), 100%);
+  max-width: 100%;
+  height: auto;
+  max-height: none;
   margin: 0;
   padding: 0;
   border: none;
@@ -518,25 +602,42 @@
   overflow: hidden;
   transform: translateX(100%);
   transition: transform var(--pl-drawer-duration) ease;
+  z-index: 20;
 }
 
 [data-project="planner"] .pl-drawer.pl-drawer--open {
   transform: translateX(0);
 }
 
-[data-project="planner"] .pl-drawer::backdrop {
+/* Scrim — dims the frame only (not the whole page), since the drawer has
+   no native ::backdrop without showModal(). Also the click-to-close
+   target ("backdrop click" in the brief). */
+[data-project="planner"] .pl-drawer-scrim {
+  position: absolute;
+  inset: 0;
   background: var(--pl-backdrop);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--pl-drawer-duration) ease;
+  z-index: 15;
+}
+
+[data-project="planner"] .pl-drawer-scrim--visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-project="planner"] .pl-drawer {
     transition: none;
   }
+  [data-project="planner"] .pl-drawer-scrim {
+    transition: none;
+  }
 }
 
 @media (max-width: 600px) {
   [data-project="planner"] .pl-drawer {
-    width: 100vw;
     border-left: none;
   }
 }
