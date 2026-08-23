@@ -99,6 +99,15 @@
   border-bottom: var(--pl-border-width) solid var(--pl-line);
 }
 
+/* Breathing room below the "+ Add Units" action row so it doesn't sit
+   directly on the divider (Edward's feedback). Scoped to the toolbar
+   nested in the tab bar (not .pl-toolbar generally) and applied as
+   margin-bottom rather than padding on .pl-tabbar itself, so the tabs'
+   own -1px flush-to-divider alignment above is untouched. */
+[data-project="planner"] .pl-tabbar .pl-toolbar {
+  margin-bottom: 12px;
+}
+
 [data-project="planner"] .pl-tabs {
   display: flex;
   gap: 4px;
@@ -187,75 +196,22 @@
   filter: brightness(1.06);
 }
 
-[data-project="planner"] .pl-btn-primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-[data-project="planner"] .pl-btn-primary:disabled:hover {
-  filter: none;
-}
-
 /* --------------------------------------------
-   Demo chrome — Filled/Empty toggle + Reset (Edward's feedback: these are
-   controls FOR the demo, not part of the simulated product, so they sit in
-   a row above the window frame, on the portfolio page itself. Styled with
-   --dp-* tokens (referenced via var(), never DEFINED here — see
-   scripts/check-token-hygiene.sh) so they read as page chrome, visually
-   distinct from the --pl-* product surface inside .pl-frame below. Reset
-   itself reuses the shared `.dp-btn .dp-btn-secondary` component directly
-   (see planner.js) rather than a bespoke class.
+   Demo chrome — Reset (Edward's feedback: this is a control FOR the demo,
+   not part of the simulated product, so it sits above the window frame, on
+   the portfolio page itself, right-aligned, alone. Styled with --dp-*
+   tokens (referenced via var(), never DEFINED here — see
+   scripts/check-token-hygiene.sh) so it reads as page chrome, visually
+   distinct from the --pl-* product surface inside .pl-frame below. Reuses
+   the shared `.dp-btn .dp-btn-secondary` component directly (see
+   planner.js) rather than a bespoke class.
    -------------------------------------------- */
 [data-project="planner"] .pl-demo-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--dp-space-4);
   flex-wrap: wrap;
-}
-
-[data-project="planner"] .pl-demo-segmented {
-  display: inline-flex;
-  border: 1px solid var(--dp-border-default);
-  border-radius: var(--dp-radius-sm);
-  padding: 2px;
-  gap: 2px;
-  background: var(--dp-bg-card);
-}
-
-[data-project="planner"] .pl-demo-segmented-btn {
-  font-family: inherit;
-  font-size: var(--dp-text-xs);
-  font-weight: var(--dp-weight-semibold);
-  line-height: 1;
-  padding: 7px 14px;
-  border: none;
-  border-radius: calc(var(--dp-radius-sm) - 2px);
-  background: transparent;
-  color: var(--dp-text-secondary);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-}
-
-[data-project="planner"] .pl-demo-segmented-btn:hover {
-  color: var(--dp-text-primary);
-}
-
-[data-project="planner"] .pl-demo-segmented-btn[aria-checked="true"] {
-  background: var(--dp-bg-card-hover);
-  color: var(--dp-text-primary);
-  box-shadow: var(--dp-shadow-card-sm);
-}
-
-[data-project="planner"] .pl-demo-segmented-btn:focus-visible {
-  outline: 2px solid var(--dp-btn-focus-ring);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  [data-project="planner"] .pl-demo-segmented-btn {
-    transition: none;
-  }
 }
 
 /* --------------------------------------------

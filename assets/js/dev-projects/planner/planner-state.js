@@ -54,18 +54,6 @@ export function reset() {
 }
 
 /**
- * Empty the board entirely (the "Empty" demo-state toggle in planner.js —
- * shows the full-board empty state to visitors). Session-only, like every
- * other mutation here: switching back to Filled calls `reset()`, which
- * reseeds from the fixture: no attempt is made to preserve edits across
- * either switch.
- */
-export function clearAll() {
-  units = [];
-  notify();
-}
-
-/**
  * Move a unit to a term at a given index. Idempotent, handles both
  * cross-term moves and within-term reorders. `index` counts only the
  * OTHER units already in the destination term (i.e. the position the

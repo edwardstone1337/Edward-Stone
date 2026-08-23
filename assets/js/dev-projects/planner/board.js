@@ -34,10 +34,11 @@ import { captureRects, playFlip, playEnter } from './flip.js';
  * @property {(item: any) => HTMLElement} renderCard - Returns an <li>.
  * @property {string} [boardLabel]
  * @property {string} [columnEmptyText]
- * @property {{ title: string, description: string, actionLabel: string, onAction?: () => void }} [emptyState]
- *   Shown instead of the columns when getItems() is empty. `onAction`, if
- *   given, makes the action button live (click handler); omitted, it stays
- *   disabled as before — board.js has no opinion on what the action does.
+ * @property {{ title: string, description: string }} [emptyState]
+ *   Shown instead of the columns when getItems() is empty. Text-only
+ *   (Edward's feedback: the persistent "+ Add Units" action-row button is
+ *   the ONLY Add Units entry point now) — copy should point at it rather
+ *   than duplicate it as a second button here.
  */
 
 /**
@@ -95,22 +96,6 @@ export function createBoard(options) {
 
     wrap.appendChild(heading);
     wrap.appendChild(desc);
-
-    if (cfg.actionLabel) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'pl-btn pl-btn-primary';
-      btn.textContent = cfg.actionLabel;
-      // Board stays generic (brief §9): it knows nothing about a drawer,
-      // just an optional callback the caller supplies. No callback means
-      // the empty-state action stays inert (disabled), same as before.
-      if (typeof cfg.onAction === 'function') {
-        btn.addEventListener('click', cfg.onAction);
-      } else {
-        btn.disabled = true;
-      }
-      wrap.appendChild(btn);
-    }
 
     return wrap;
   }

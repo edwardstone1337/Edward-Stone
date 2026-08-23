@@ -12,8 +12,8 @@
  *
  * DOM shape (top to bottom, inside #main's hero):
  *   .pl-planner
- *     .pl-demo-row          — demo-only chrome (Filled/Empty, Reset), styled
- *                              as portfolio-page UI, NOT part of the
+ *     .pl-demo-row          — demo-only chrome (Reset, alone, right-aligned),
+ *                              styled as portfolio-page UI, NOT part of the
  *                              simulated product
  *     .pl-frame              — the simulated product window (see
  *                              project-planner.css); position:relative, the
@@ -33,7 +33,7 @@
  * switching tabs always reflects current data with no separate re-fetch.
  */
 
-import { getUnits, subscribe, move, remove, add, reset, clearAll } from './planner-state.js';
+import { getUnits, subscribe, move, remove, add, reset } from './planner-state.js';
 import { createBoard } from './board.js';
 import { createTermView } from './term-view.js';
 import { renderCard } from './card.js';
@@ -234,39 +234,15 @@ export function initPlanner(rootEl) {
   section.setAttribute('aria-label', 'Class planner');
 
   // ------------------------------------------------------------------
-  // Demo chrome (Edward's feedback: these control the DEMO, not the
-  // simulated product — they sit above the window frame, styled as
-  // portfolio-page UI, not product UI). Filled/Empty is an accessible
-  // two-option radiogroup (roving tabindex, arrow-key operable); Reset
-  // re-seeds whichever of the two is currently selected (see resetBtn's
-  // click handler below — this is the bug fix: Reset used to be disabled
-  // on Empty, stranding a visitor who'd added units from the zero state).
+  // Demo chrome (Edward's feedback: this controls the DEMO, not the
+  // simulated product — it sits above the window frame, styled as
+  // portfolio-page UI, not product UI). Reset alone, right-aligned:
+  // re-seeds the 6-unit starting fixture (Term 4 empty by design — see
+  // planner-data.js). No Filled/Empty toggle: the fixture itself now shows
+  // the zero state naturally via Term 4's empty tab / empty board column.
   // ------------------------------------------------------------------
   const demoRow = document.createElement('div');
   demoRow.className = 'pl-demo-row';
-
-  const demoToggle = document.createElement('div');
-  demoToggle.className = 'pl-demo-segmented';
-  demoToggle.setAttribute('role', 'radiogroup');
-  demoToggle.setAttribute('aria-label', 'Demo data');
-
-  const filledBtn = document.createElement('button');
-  filledBtn.type = 'button';
-  filledBtn.className = 'pl-demo-segmented-btn';
-  filledBtn.setAttribute('role', 'radio');
-  filledBtn.setAttribute('aria-checked', 'true');
-  filledBtn.textContent = 'Filled';
-
-  const emptyBtn = document.createElement('button');
-  emptyBtn.type = 'button';
-  emptyBtn.className = 'pl-demo-segmented-btn';
-  emptyBtn.setAttribute('role', 'radio');
-  emptyBtn.setAttribute('aria-checked', 'false');
-  emptyBtn.tabIndex = -1;
-  emptyBtn.textContent = 'Empty';
-
-  demoToggle.appendChild(filledBtn);
-  demoToggle.appendChild(emptyBtn);
 
   // Reuses the shared .dp-btn component (portfolio chrome), not a
   // planner-scoped .pl-btn — this button isn't part of the simulated
@@ -276,7 +252,6 @@ export function initPlanner(rootEl) {
   resetBtn.className = 'dp-btn dp-btn-secondary';
   resetBtn.textContent = 'Reset demo';
 
-  demoRow.appendChild(demoToggle);
   demoRow.appendChild(resetBtn);
 
   // ------------------------------------------------------------------
@@ -357,9 +332,7 @@ export function initPlanner(rootEl) {
     columnEmptyText: COLUMN_EMPTY_TEXT,
     emptyState: {
       title: 'No units yet',
-      description: 'Add units to plan what your class will learn each term.',
-      actionLabel: 'Add Units',
-      onAction: (e) => drawer.open(e.currentTarget),
+      description: 'Use Add Units above to plan what your class will learn each term.',
     },
   });
 
@@ -370,9 +343,7 @@ export function initPlanner(rootEl) {
     renderRow,
     listLabel: (term) => 'Term ' + term + ' units',
     emptyState: {
-      title: 'Nothing planned for this term yet',
-      actionLabel: 'Add Units',
-      onAction: (e) => drawer.open(e.currentTarget),
+      title: 'Nothing planned for this term yet. Use Add Units to plan this term.',
     },
   });
 
@@ -470,60 +441,13 @@ export function initPlanner(rootEl) {
     nextTab.focus();
   });
 
-  // 'filled' | 'empty' — which demo state is currently selected.
-  let demoState = 'filled';
-
-  // Bug fix: Reset is now ALWAYS enabled and re-seeds whichever scenario is
-  // currently selected — Filled restores the 7-unit fixture (as before);
-  // Empty clears the board back to the zero state, so a visitor who added
-  // units from Empty can still get back to a clean slate.
+  // Reset always re-seeds the 6-unit starting fixture (Term 4 empty by
+  // design — see planner-data.js).
   resetBtn.addEventListener('click', () => {
     closeAllMenus(boardRootEl);
     closeAllMenus(termPanelEl);
-    if (demoState === 'empty') {
-      clearAll();
-      announce('Demo reset to the empty planner.');
-    } else {
-      reset();
-      announce('Demo reset to the starting units.');
-    }
-  });
-
-  function setDemoState(next) {
-    if (next === demoState) return;
-    demoState = next;
-
-    filledBtn.setAttribute('aria-checked', String(next === 'filled'));
-    filledBtn.tabIndex = next === 'filled' ? 0 : -1;
-    emptyBtn.setAttribute('aria-checked', String(next === 'empty'));
-    emptyBtn.tabIndex = next === 'empty' ? 0 : -1;
-
-    closeAllMenus(boardRootEl);
-    closeAllMenus(termPanelEl);
-    if (next === 'empty') {
-      clearAll();
-      announce('Switched to the empty demo state.');
-    } else {
-      reset();
-      announce('Switched to the filled demo state.');
-    }
-  }
-
-  filledBtn.addEventListener('click', () => {
-    setDemoState('filled');
-    filledBtn.focus();
-  });
-  emptyBtn.addEventListener('click', () => {
-    setDemoState('empty');
-    emptyBtn.focus();
-  });
-
-  demoToggle.addEventListener('keydown', (e) => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    e.preventDefault();
-    const next = demoState === 'filled' ? 'empty' : 'filled';
-    setDemoState(next);
-    (next === 'filled' ? filledBtn : emptyBtn).focus();
+    reset();
+    announce('Demo reset to the starting units.');
   });
 
   subscribe(() => {

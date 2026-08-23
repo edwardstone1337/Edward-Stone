@@ -30,7 +30,10 @@ import { captureRects, playFlip, playEnter } from './flip.js';
  * @property {(item: any) => string} getItemId
  * @property {(item: any) => HTMLElement} renderRow - Returns an <li>.
  * @property {(term: 1|2|3|4) => string} [listLabel]
- * @property {{ title: string, actionLabel: string, onAction?: (e: Event) => void }} [emptyState]
+ * @property {{ title: string }} [emptyState]
+ *   Text-only (Edward's feedback: the persistent "+ Add Units" action-row
+ *   button is the ONLY Add Units entry point now) — `title` should point at
+ *   it rather than duplicate it as a second button here.
  */
 
 /**
@@ -69,19 +72,6 @@ export function createTermView(options) {
     heading.className = 'pl-empty-board-title';
     heading.textContent = cfg.title;
     wrap.appendChild(heading);
-
-    if (cfg.actionLabel) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'pl-btn pl-btn-primary';
-      btn.textContent = cfg.actionLabel;
-      if (typeof cfg.onAction === 'function') {
-        btn.addEventListener('click', cfg.onAction);
-      } else {
-        btn.disabled = true;
-      }
-      wrap.appendChild(btn);
-    }
 
     return wrap;
   }

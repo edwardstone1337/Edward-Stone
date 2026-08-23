@@ -24,6 +24,12 @@
  * (see planner-state.js `reset()`) so mutating the live store never
  * touches this module's data.
  *
+ * Term 4 is deliberately left empty (Edward's feedback): "Night and Day"
+ * (id `u7`) is seeded nowhere — it stays in `drawerCatalogue` below under
+ * the same id so it's still addable from the drawer, but visiting the
+ * Term 4 tab (or looking at the empty column on All Terms) shows the real
+ * zero state on first load rather than a separate demo toggle.
+ *
  * @type {PlannerUnit[]}
  */
 export const plannerFixture = [
@@ -32,8 +38,7 @@ export const plannerFixture = [
   { id: 'u3', subject: 'science',      subjectLabel: 'Science',      title: 'Forces and Friction',           progress: 0.1, term: 2 },
   { id: 'u4', subject: 'hass',         subjectLabel: 'HASS',         title: 'Mapping Our Place',             progress: 0,   term: 2 },
   { id: 'u5', subject: 'technologies', subjectLabel: 'Technologies', title: 'Digital Systems All Around Us', progress: 0,   term: 3 },
-  { id: 'u6', subject: 'english',      subjectLabel: 'English',      title: 'Stories of the Past',           progress: 0,   term: 3 },
-  { id: 'u7', subject: 'science',      subjectLabel: 'Science',      title: 'Night and Day',                 progress: 0,   term: 4 }
+  { id: 'u6', subject: 'english',      subjectLabel: 'English',      title: 'Stories of the Past',           progress: 0,   term: 3 }
 ];
 
 /**
