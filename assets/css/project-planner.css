@@ -1,9 +1,386 @@
-/* Planner Prototype — project theme overrides
+/* Planner Prototype — project theme + widget CSS.
    Load after dev-tokens.css and dev-styles.css.
-   Only semantic token overrides and layout under [data-project="planner"].
-   Shell only — no values yet. Brief will define the entity model
-   (units/lessons/weeks) and visual language before this file gains rules. */
+   ALL Planner widget CSS lives here, scoped under [data-project="planner"].
+   Class prefix: pl-. Components below consume only --pl-* tokens — this
+   file is the single place a future prototype re-skins by overriding the
+   token sheet, never by forking the components.
+
+   The planner page is light-locked (data-theme="light" is set inline in
+   <head>, same as case studies), so the token sheet below is a single
+   light value set — no [data-theme="dark"] layer needed (see
+   docs/superpowers/specs/2026-08-23-planner-prototype-design.md). */
 
 [data-project="planner"] {
-  /* Inquisitive brand token overrides land here */
+  /* ---------- surfaces & text (brief §9 token sheet) ---------- */
+  --pl-paper: #f5f5f2;
+  --pl-surface: #ffffff;
+  --pl-surface-2: #efeeea;
+  --pl-ink: #23262e;
+  --pl-ink-2: #5a5e6a;
+  --pl-ink-3: #8a8e99;
+  --pl-line: #dddcd6;
+  --pl-line-strong: #c9c8c1;
+  --pl-accent: #5646ad;
+  --pl-accent-ink: #ffffff;
+  --pl-accent-soft: #eceafd;
+  --pl-good: #2e7d54;
+
+  /* ---------- subject tints (bg + ink pairs) ---------- */
+  --pl-tint-maths-bg: #dbe7f4;      --pl-tint-maths-ink: #2d5c8f;
+  --pl-tint-science-bg: #dcefe3;    --pl-tint-science-ink: #2e6e4b;
+  --pl-tint-english-bg: #f6e2dc;    --pl-tint-english-ink: #a04a37;
+  --pl-tint-hass-bg: #f3ead6;       --pl-tint-hass-ink: #8a6420;
+  --pl-tint-tech-bg: #e8e2f5;       --pl-tint-tech-ink: #5c4696;
+
+  /* ---------- size / geometry tokens ---------- */
+  --pl-column-width: 260px;
+  --pl-column-gap: 16px;
+  --pl-card-gap: 12px;
+  --pl-radius: 12px;
+  --pl-radius-sm: 8px;
+  --pl-border-width: 1px;
+  --pl-card-padding: 16px;
+  --pl-card-internal-gap: 8px;
+  --pl-card-body-right-padding: 40px;
+  --pl-kebab-inset: 8px;
+  --pl-progress-height: 4px;
+  --pl-dropzone-min-height: 44px;
+  --pl-focus-ring: var(--pl-accent);
+  --pl-shadow-card: 0 2px 6px rgba(35, 38, 46, 0.08), 0 8px 20px rgba(35, 38, 46, 0.06);
+  --pl-duration: 150ms;
+}
+
+/* --------------------------------------------
+   Layout shell
+   -------------------------------------------- */
+[data-project="planner"] .pl-planner {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+[data-project="planner"] .pl-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+[data-project="planner"] .pl-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------
+   Buttons (ghost + primary — planner-scoped, not the shared .dp-btn)
+   -------------------------------------------- */
+[data-project="planner"] .pl-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--pl-radius-sm);
+  padding: 10px 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--pl-duration) ease, border-color var(--pl-duration) ease, color var(--pl-duration) ease;
+}
+
+[data-project="planner"] .pl-btn:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-project="planner"] .pl-btn-ghost {
+  background: transparent;
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+  color: var(--pl-ink-2);
+}
+
+[data-project="planner"] .pl-btn-ghost:hover {
+  background: var(--pl-surface-2);
+  color: var(--pl-ink);
+}
+
+[data-project="planner"] .pl-btn-primary {
+  background: var(--pl-accent);
+  color: var(--pl-accent-ink);
+  border: var(--pl-border-width) solid transparent;
+}
+
+[data-project="planner"] .pl-btn-primary:hover {
+  filter: brightness(1.06);
+}
+
+[data-project="planner"] .pl-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+[data-project="planner"] .pl-btn-primary:disabled:hover {
+  filter: none;
+}
+
+/* --------------------------------------------
+   Board + columns (brief §2)
+   -------------------------------------------- */
+[data-project="planner"] .pl-board {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pl-column-gap);
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+[data-project="planner"] .pl-column {
+  flex: 0 0 var(--pl-column-width);
+  width: var(--pl-column-width);
+}
+
+[data-project="planner"] .pl-column-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pl-ink);
+  margin: 0 0 12px;
+}
+
+[data-project="planner"] .pl-column-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pl-card-gap);
+  min-height: var(--pl-dropzone-min-height);
+}
+
+[data-project="planner"] .pl-column-list--empty {
+  border: 1.5px dashed var(--pl-line-strong);
+  border-radius: var(--pl-radius);
+  align-items: center;
+  justify-content: center;
+}
+
+[data-project="planner"] .pl-column-empty {
+  font-size: 12.5px;
+  color: var(--pl-ink-3);
+  text-align: center;
+  padding: 14px 8px;
+  width: 100%;
+}
+
+/* Whole-page cursor feedback while a pointer drag is active. html carries
+   [data-project="planner"] (see projects/planner.html), so this still
+   reaches body without an unscoped selector. */
+[data-project="planner"] body.pl-board-dragging {
+  cursor: grabbing;
+}
+
+/* --------------------------------------------
+   Card (brief §3)
+   -------------------------------------------- */
+[data-project="planner"] .pl-card {
+  position: relative;
+  background: var(--pl-surface);
+  border: var(--pl-border-width) solid var(--pl-line-strong);
+  border-radius: var(--pl-radius);
+  padding: var(--pl-card-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pl-card-internal-gap);
+  cursor: grab;
+  touch-action: none;
+  list-style: none;
+}
+
+[data-project="planner"] .pl-card:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-project="planner"] .pl-card--dragging {
+  opacity: 0.4;
+}
+
+[data-project="planner"] .pl-card--picked {
+  border-color: var(--pl-accent);
+  box-shadow: 0 0 0 2px var(--pl-accent-soft);
+}
+
+[data-project="planner"] .pl-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pl-card-internal-gap);
+  padding-right: var(--pl-card-body-right-padding);
+  cursor: pointer;
+}
+
+[data-project="planner"] .pl-card-meta {
+  font-size: 12px;
+  color: var(--pl-ink-3);
+}
+
+[data-project="planner"] .pl-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--pl-ink);
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+[data-project="planner"] .pl-card-progress {
+  height: var(--pl-progress-height);
+  border-radius: 99px;
+  background: var(--pl-surface-2);
+  overflow: hidden;
+}
+
+[data-project="planner"] .pl-card-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--pl-good);
+  border-radius: 99px;
+  transition: width var(--pl-duration) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-project="planner"] .pl-card-progress-fill {
+    transition: none;
+  }
+}
+
+/* Floating drag clone (follows the pointer; source card stays in place at
+   reduced opacity — see .pl-card--dragging above). Appended to
+   document.body, itself under html[data-project="planner"]. */
+[data-project="planner"] .pl-card-clone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+  pointer-events: none;
+  cursor: grabbing;
+  box-shadow: var(--pl-shadow-card);
+  transform: rotate(-1.5deg);
+}
+
+/* --------------------------------------------
+   Kebab (ghost icon button + menu — brief §3)
+   -------------------------------------------- */
+[data-project="planner"] .pl-kebab {
+  position: absolute;
+  top: var(--pl-kebab-inset);
+  right: var(--pl-kebab-inset);
+}
+
+[data-project="planner"] .pl-kebab-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--pl-radius-sm);
+  background: transparent;
+  color: var(--pl-ink-3);
+  cursor: pointer;
+}
+
+[data-project="planner"] .pl-kebab-btn:hover {
+  background: var(--pl-surface-2);
+  color: var(--pl-ink-2);
+}
+
+[data-project="planner"] .pl-kebab-btn:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-project="planner"] .pl-kebab-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 160px;
+  background: var(--pl-surface);
+  border: var(--pl-border-width) solid var(--pl-line);
+  border-radius: var(--pl-radius-sm);
+  padding: 6px;
+  box-shadow: var(--pl-shadow-card);
+  z-index: 10;
+}
+
+[data-project="planner"] .pl-kebab-menu[hidden] {
+  display: none;
+}
+
+[data-project="planner"] .pl-kebab-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--pl-ink);
+  cursor: pointer;
+}
+
+[data-project="planner"] .pl-kebab-menu-item:hover {
+  background: var(--pl-surface-2);
+}
+
+[data-project="planner"] .pl-kebab-menu-item:focus-visible {
+  outline: 2px solid var(--pl-focus-ring);
+  outline-offset: 2px;
+}
+
+[data-project="planner"] .pl-kebab-menu-item--destructive {
+  color: var(--pl-tint-english-ink);
+}
+
+[data-project="planner"] .pl-kebab-menu-separator {
+  height: 1px;
+  margin: 6px 2px;
+  background: var(--pl-line);
+}
+
+/* --------------------------------------------
+   Full-board empty state (brief §2)
+   -------------------------------------------- */
+[data-project="planner"] .pl-empty-board {
+  border: 1.5px dashed var(--pl-line-strong);
+  border-radius: var(--pl-radius);
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+[data-project="planner"] .pl-empty-board-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--pl-ink);
+  margin: 0;
+}
+
+[data-project="planner"] .pl-empty-board-desc {
+  font-size: 14px;
+  color: var(--pl-ink-2);
+  margin: 0 0 8px;
+  max-width: 42ch;
 }

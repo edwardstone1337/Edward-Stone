@@ -41,16 +41,17 @@
       <h1 class="dp-hero-heading">
         <span class="dp-hero-line">Planner</span>
       </h1>
-      <p class="dp-hero-body">Prototype in progress — the working build lands here once the brief is ready.</p>
+      <p class="dp-hero-body">A term-by-term planning board: drag units between terms, reorder within a term, or remove what you don't need. Session-only — nothing here is saved.</p>
     </section>
 
   </main>
 
+  <script src="../assets/js/dev-projects/effects.js"></script>
   <script type="module">
     import { initNav } from '../assets/js/dev-projects/nav-component.js';
     import { initPlanner } from '../assets/js/dev-projects/planner/planner.js';
     initNav();
-    initPlanner();
+    initPlanner(document.getElementById('main'));
   </script>
 </body>
 </html>
