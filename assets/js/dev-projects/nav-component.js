@@ -17,12 +17,12 @@ const isProd = document.documentElement.classList.contains('is-prod');
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
-  { text: 'Case Studies', children: CASE_STUDIES },
+  { text: 'Case Studies', prodHide: true, children: CASE_STUDIES },
   { text: 'Projects', prodHide: true, children: [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' },
     { text: 'Prang Out', href: '/projects/prang-out.html' }
   ]},
-  { text: 'Personal', href: '/personal.html' },
+  { text: 'Personal', href: '/personal.html', prodHide: true },
   { text: 'Gallery', href: '/gallery.html', prodHide: true },
   { text: 'Resume', href: '/resume.html' },
   { text: 'About', href: '/about.html', prodHide: true }
@@ -255,7 +255,7 @@ function initDrawer(hamburger) {
 /**
  * Dynamically load the snake game script.
  * Resolved relative to this module so every page gets the correct path
- * without needing its own <script> tag.
+ * without needing its own <script> tag. Not loaded on production.
  */
 function loadSnakeGame() {
   var script = document.createElement('script');
@@ -316,7 +316,9 @@ export function initNav() {
   var hamburger = nav.querySelector('.dp-nav-hamburger');
   initDrawer(hamburger);
 
-  loadSnakeGame();
+  if (!isProd) {
+    loadSnakeGame();
+  }
   initNavAutoHide();
 }
 

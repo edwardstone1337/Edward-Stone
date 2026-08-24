@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Edward Stone, Lead Product Designer — Homepage v2</title>
+    <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Work-in-progress flagship-led homepage. Not public.">
+
+    <!-- env.js only. third-party.js (GA4 + Hotjar) is deliberately NOT loaded:
+         dev/* pages are excluded from analytics (see CLAUDE.md and
+         scripts/check-ga-coverage.sh). It gets added when this page graduates
+         to index.html, via docs/new-page-checklist.md. -->
+    <script src="/assets/js/env.js"></script>
+
+    <!-- Fonts: Inter with optical sizing (acts as Inter Display at heading sizes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    />
+
+    <link rel="stylesheet" href="../assets/css/dev-tokens.css">
+    <link rel="stylesheet" href="../assets/css/dev-styles.css">
+    <link rel="stylesheet" href="../assets/css/project-planner.css">
+
+    <!--
+      v2-only styles. Deliberately page-local rather than added to
+      dev-styles.css: index.html shares that stylesheet, and the whole point
+      of building v2 at a separate path is that v1 cannot silently change
+      underneath it. Nothing here modifies an existing .dp-* class — these are
+      new names plus spacing overrides scoped to this page.
+
+      When v2 graduates to index.html, these promote into dev-styles.css as
+      proper .dp-* components (with a dev/design-system.html Organisms entry,
+      per CLAUDE.md).
+
+      No raw hex or rgba() values — existing tokens only.
+    -->
+    <style>
+      /* Flagship: intro stacked above the live prototype, both centred. */
+      .dp-flagship {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--dp-space-8);
+        max-width: 1200px;
+        margin-inline: auto;
+        padding-inline: var(--dp-space-8);
+        padding-top: var(--dp-space-16);
+        padding-bottom: var(--dp-space-16);
+        text-align: center;
+      }
+
+      .dp-flagship__intro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 46rem;
+      }
+
+      .dp-flagship__headline {
+        font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+        font-weight: var(--dp-weight-bold);
+        line-height: 1.2;
+        color: var(--dp-text-primary);
+        text-wrap: balance;
+        margin: var(--dp-space-3) 0 0;
+      }
+
+      .dp-flagship__standfirst {
+        font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+        color: var(--dp-text-secondary);
+        text-wrap: balance;
+        margin: var(--dp-space-4) 0 0;
+      }
+
+      /* Mount container for the live Planner widget. Matches the width the
+         widget is tuned for (see .pl-compact in project-planner.css). */
+      .dp-flagship__widget {
+        width: 100%;
+        max-width: 1040px;
+      }
+
+      /* Poster shown at first paint and removed once the prototype mounts.
+         Above the fold the widget competes with LCP, so the section must
+         never be an empty box while ~4,200 lines of module load. If the
+         import fails the poster simply stays, which degrades better than v1. */
+      .dp-flagship__poster {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: var(--dp-radius-lg);
+        border: 1px solid var(--dp-border-default);
+        box-shadow: var(--dp-shadow-showcase-image);
+      }
+
+      /* Second case study sits closer to the flagship than a full section gap,
+         so the page reads as one argument rather than two adverts. */
+      .dp-secondary-case {
+        margin-top: var(--dp-space-8);
+      }
+
+      /* Kaomoji strip is the single piece of personality, placed last so
+         focus stays on the work above it. It needs no spacing rule here:
+         .dp-strip already carries margin-top: var(--dp-section-gap), and
+         #kaomoji-mount cannot be styled at all because kaomoji-strip.js
+         REPLACES that placeholder rather than filling it. */
+
+      .dp-footer { margin-top: var(--dp-space-6); }
+
+      @media (max-width: 768px) {
+        .dp-flagship {
+          padding-inline: var(--dp-space-4);
+          padding-top: var(--dp-space-8);
+          padding-bottom: var(--dp-space-8);
+        }
+        .dp-flagship__poster {
+          box-shadow: var(--dp-shadow-card);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dp-flagship { animation: none; transition: none; }
+      }
+    </style>
+
+    <noscript><link rel="stylesheet" href="../assets/css/noscript.css"></noscript>
+
+    <script>document.documentElement.setAttribute('data-theme','light')</script>
+  </head>
+  <body>
+    <a href="#main" class="dp-skip-link">Skip to content</a>
+    <div id="nav-container"></div>
+
+    <script type="module">
+      import { initNav } from '../assets/js/dev-projects/nav-component.js';
+      import { initKaomojiStrip } from '../assets/js/dev-projects/kaomoji-strip.js';
+
+      initNav();
+      initKaomojiStrip('#kaomoji-mount');
+    </script>
+
+    <main id="main" class="dp-page">
+      <!-- ============================================================
+           FLAGSHIP — above the fold. The Planner story carries the page.
+           ============================================================ -->
+      <section class="dp-flagship" aria-label="Planner, featured case study">
+        <div class="dp-flagship__intro">
+          <div class="dp-avatar-wrap">
+            <img src="../assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
+          </div>
+          <span class="dp-overline">Edward Stone · Lead Product Designer</span>
+          <h1 class="dp-flagship__headline">I designed the feature 25,000 teachers rely on every&nbsp;week.</h1>
+          <p class="dp-flagship__standfirst">It turned a simple save-for-later into the platform's most-loved tool, and lifted free-to-paid conversion by&nbsp;30%.</p>
+        </div>
+
+        <!-- Live Planner prototype. The poster inside is removed by the mount
+             script once initPlanner succeeds (initPlanner appends to this
+             container rather than clearing it, so the removal is explicit). -->
+        <div class="dp-flagship__widget dp-case-promo__widget pl-compact" data-project="planner">
+          <img src="../assets/images/planner.png"
+               class="dp-flagship__poster"
+               alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
+               width="800" height="480">
+        </div>
+
+        <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
+      </section>
+
+      <!-- ============================================================
+           SECOND CASE STUDY — Product Discovery.
+           Copy reuses the existing hero-card line from v1 (Edward's call:
+           no new copy written for this pass).
+           ============================================================ -->
+      <section class="dp-case-promo dp-secondary-case dp-reveal" aria-label="Product Discovery case study">
+        <div class="dp-case-promo__inner">
+          <div class="dp-case-promo__heading">
+            <p class="dp-case-promo__title">Changing how an organisation decides what to&nbsp;build.</p>
+          </div>
+          <a href="/case-studies/product-discovery.html" class="dp-btn dp-btn-primary">Read the case study</a>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           TESTIMONIALS
+           ============================================================ -->
+      <section class="dp-testimonials-section dp-reveal" data-reveal-delay="200" aria-label="Testimonials from colleagues">
+        <div class="dp-testimonials-grid">
+          <blockquote class="dp-testimonial" aria-label="Testimonial from Jason Allen">
+            <p class="dp-testimonial-quote">Ed is a rare talent. He is a world class designer, with a great business mind that understands UX deeply. He is hard working, trustworthy and gets along with everyone. If I was starting a new company he would be one of the first people I would hire.</p>
+            <footer class="dp-testimonial-attribution">
+              <img class="dp-avatar" src="../assets/images/avatars/jason-allen.webp" alt="Jason Allen" width="40" height="40" loading="lazy">
+              <div class="dp-testimonial-details">
+                <cite class="dp-testimonial-name">Jason Allen</cite>
+                <span class="dp-testimonial-role">Product Marketing Manager</span>
+              </div>
+            </footer>
+          </blockquote>
+          <blockquote class="dp-testimonial" aria-label="Testimonial from Chris George">
+            <p class="dp-testimonial-quote">Ed has an exceptional eye for UI and Visual Design. His approach is founded on sound design principles and he always brings new learnings to the table. His work is progressive, relatable, inspiring and always empathetic to the end user's visual experience.</p>
+            <footer class="dp-testimonial-attribution">
+              <img class="dp-avatar" src="../assets/images/avatars/chris-george.webp" alt="Chris George" width="40" height="40" loading="lazy">
+              <div class="dp-testimonial-details">
+                <cite class="dp-testimonial-name">Chris George</cite>
+                <span class="dp-testimonial-role">Head of Product, RunLoyal</span>
+              </div>
+            </footer>
+          </blockquote>
+          <blockquote class="dp-testimonial" aria-label="Testimonial from Bella Jagger">
+            <p class="dp-testimonial-quote">Ed is an incredibly talented designer that I have had the pleasure of working with. He thinks laterally across creative and strategic direction, and brings unique initiatives to the team. He delivers work efficiently to a high standard, and is an effective listener and question asker. I would love to work with Ed again!</p>
+            <footer class="dp-testimonial-attribution">
+              <img class="dp-avatar" src="../assets/images/avatars/bella-jagger.webp" alt="Bella Jagger" width="40" height="40" loading="lazy">
+              <div class="dp-testimonial-details">
+                <cite class="dp-testimonial-name">Bella Jagger</cite>
+                <span class="dp-testimonial-role">Client Partner, Reddit</span>
+              </div>
+            </footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           CONTACT
+           ============================================================ -->
+      <section class="dp-contact-cta dp-reveal" aria-label="Contact">
+        <h2 class="dp-contact-cta__heading">Let's talk</h2>
+        <p class="dp-contact-cta__body">I'm currently open to new opportunities.</p>
+        <div class="dp-contact-cta__actions">
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-primary">Email me</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           KAOMOJI STRIP — the one piece of personality, deliberately last.
+           Markup and behaviour live in kaomoji-strip.js, shared with
+           index.html and personal.html. This placeholder is REPLACED by the
+           strip, so no wrapper survives in the layout.
+           ============================================================ -->
+      <div id="kaomoji-mount"></div>
+      <noscript>
+        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+          <div class="dp-strip-inner">
+            <div class="dp-strip-content">
+              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
+            </div>
+            <div class="dp-strip-actions">
+              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
+            </div>
+          </div>
+        </section>
+      </noscript>
+
+      <footer class="dp-footer">
+        <div class="dp-footer-inner">
+          <p class="dp-footer-text">© 2026 Edward Stone</p>
+          <nav class="dp-footer-links" aria-label="Footer links">
+            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </nav>
+        </div>
+      </footer>
+    </main>
+
+    <script src="../assets/js/dev-projects/back-to-top.js"></script>
+    <script src="../assets/js/dev-projects/effects.js"></script>
+
+    <!-- Live Planner prototype mount, with poster-swap.
+         The poster paints immediately so LCP resolves against a static image
+         rather than a JS-built DOM; it is removed only once initPlanner has
+         actually mounted. On import failure the poster stays put. -->
+    <script type="module">
+      const plannerRoot = document.querySelector('.dp-flagship__widget');
+      if (plannerRoot) {
+        import('../assets/js/dev-projects/planner/planner.js')
+          .then((m) => {
+            m.initPlanner(plannerRoot, { chrome: false });
+            const poster = plannerRoot.querySelector('.dp-flagship__poster');
+            if (poster) poster.remove();
+          })
+          .catch((err) => {
+            console.error('[home-v2] Planner failed to mount; poster retained.', err);
+          });
+      }
+    </script>
+  </body>
+</html>
