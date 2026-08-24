@@ -122,6 +122,10 @@ git reset --hard <previous-commit> && git push --force origin main
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
 | Banner ticker init | `isProd` check | 8 HTML files |
+| Planner prototype page | inline redirect to `/404.html` | `projects/planner.html` |
+| Prang Out prototype page | inline redirect to `/404.html` | `projects/prang-out.html` |
+
+The homepage's live Planner embed (`.dp-case-promo__widget`) is **not** gated — it ships on prod. Its `assets/images/planner.png` screenshot is a `<noscript>` fallback now, not a prod stand-in, so don't re-add `data-prod-hide` to the widget expecting the image to take over.
 
 ## Third-Party Scripts
 
