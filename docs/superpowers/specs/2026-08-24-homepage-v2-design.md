@@ -150,10 +150,13 @@ roles are wanted, availability, and what a useful first message contains.
 - Retiring or rewriting Design Systems and Fair Share.
 - Graduating v2 to `index.html`.
 
-## Open questions
+## Resolved (Edward, 2026-08-24)
 
-1. **Second case study: Product Discovery or Design Systems?** Product Discovery has real
-   numbers (95% feedback captured, 300+ ideas, 2× onboarding) but flags itself WIP. Design
-   Systems is the more lead-shaped story but its outcomes are entirely qualitative
-   ("near-zero questions", "1:1 parity"). Assumed Product Discovery; needs confirming.
-2. **Do Design Systems and Fair Share need any route in**, or are they genuinely retired?
+1. **Second case study: Product Discovery.** Confirmed. It carries real numbers (95% feedback
+   captured, 300+ ideas, 2× onboarding) where Design Systems has only qualitative outcomes.
+   Consequence: its self-flagged "work in progress" banner (`product-discovery.html:159`,
+   dev-only) should be removed as part of promoting it, or it stays an unresolved marker on a
+   page now doing real work.
+2. **Design Systems and Fair Share are retired.** They keep their URLs and sitemap entries so
+   existing links keep working, but get no route in from nav or homepage. No further work on
+   either page.
