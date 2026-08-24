@@ -173,6 +173,39 @@
         max-width: none;
       }
 
+      /* Colleague testimonials borrow the floating quotes' voice: serif
+         italic with real quote marks, so the two sets of testimonials on the
+         page read as the same kind of thing rather than two unrelated
+         treatments. Quote marks are generated content, so they stay out of
+         the accessibility tree and out of the quote text. */
+      .dp-testimonial-quote {
+        font-family: var(--dp-font-serif);
+        font-style: italic;
+        quotes: '\201C' '\201D';
+      }
+
+      .dp-testimonial-quote::before { content: open-quote; }
+      .dp-testimonial-quote::after { content: close-quote; }
+
+      /* ── Let's talk: full blue panel ──
+         --dp-raw-brand-deep, not --dp-raw-brand: the body copy here is
+         normal-size, and white on the standard brand blue is 5.57:1, under
+         the AAA 7:1 bar. The deepened blue carries white at 8.43:1.
+
+         Heading and body are BOTH full white rather than white plus a
+         translucent secondary. --dp-on-dark-text-secondary is 75% white,
+         which lands at 5.45:1 on this blue and would fail; the hierarchy
+         comes from size and weight instead of opacity. */
+      .dp-contact-cta {
+        background: var(--dp-raw-brand-deep, var(--dp-raw-grey-900));
+        border: none;
+      }
+
+      .dp-contact-cta__heading,
+      .dp-contact-cta__body {
+        color: var(--dp-on-dark-text-primary);
+      }
+
       /* Kaomoji strip needs no spacing rule here: .dp-strip already carries
          margin-top: var(--dp-section-gap), and #kaomoji-mount cannot be
          styled at all because kaomoji-strip.js REPLACES that placeholder
@@ -474,9 +507,13 @@
       <section class="dp-contact-cta dp-reveal" aria-label="Contact">
         <h2 class="dp-contact-cta__heading">Let's talk</h2>
         <p class="dp-contact-cta__body">I'm currently open to new opportunities.</p>
+        <!-- on-dark button variants: the section is now a blue panel, so the
+             blue primary button would have vanished into it. These already
+             exist in dev-styles.css for exactly this case (white button with
+             near-black text; outlined white secondary). -->
         <div class="dp-contact-cta__actions">
-          <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-primary">Email me</a>
-          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-primary-on-dark">Email me</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-btn dp-btn-secondary-on-dark" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
       </section>
 
