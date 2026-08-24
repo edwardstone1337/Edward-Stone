@@ -56,7 +56,11 @@
            side and caps content at 1152px. Adding more here only starved the
            prototype of width it needs to show all four terms. */
         padding-top: var(--dp-space-16);
-        padding-bottom: var(--dp-space-16);
+        /* No bottom padding: the kaomoji strip below carries its own
+           margin-top: var(--dp-section-gap) (96px). Adding 64px here stacked
+           on top of that for a ~160px trench, far wider than the 96px gap
+           between every other pair of sections on the page. */
+        padding-bottom: 0;
       }
 
       .dp-flagship__intro {
@@ -113,6 +117,26 @@
       .dp-flagship__widget {
         width: 100%;
         min-width: 0;
+      }
+
+      /* Kanban columns fill the board instead of bunching left.
+         project-planner.css pins them to `flex: 0 0 var(--pl-column-width)`,
+         so at this width four 220px columns left ~180px of dead space on the
+         right. Allowing them to grow shares that space out evenly; the
+         columns keep their own 12px padding untouched.
+
+         min-width holds the 220px floor, so this only ever ADDS width. When
+         the board is too narrow for four full columns they stay at 220px and
+         .pl-board's overflow-x scroll takes over, exactly as before, rather
+         than squashing into unreadable slivers.
+
+         Selector out-specifies `[data-project="planner"] .pl-column` (0,2,0)
+         and is page-local, so index.html and projects/planner.html are
+         untouched. */
+      .dp-flagship__widget[data-project="planner"] .pl-column {
+        flex: 1 1 var(--pl-column-width);
+        width: auto;
+        min-width: var(--pl-column-width);
       }
 
       /* Project bar: context on the left, CTA on the right. Sits directly
