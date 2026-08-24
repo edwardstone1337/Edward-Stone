@@ -122,8 +122,19 @@
         }
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        .dp-flagship { animation: none; transition: none; }
+      /* Visually hidden but exposed to assistive tech. No such utility exists
+         in dev-styles.css yet; promote it there when v2 graduates. */
+      .dp-visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
       }
     </style>
 
@@ -157,6 +168,12 @@
           <p class="dp-flagship__standfirst">It turned a simple save-for-later into the platform's most-loved tool, and lifted free-to-paid conversion by&nbsp;30%.</p>
         </div>
 
+        <!-- The Planner widget mounts its own h3 column headings ("Term 1"...).
+             Without an h2 above them the outline would jump h1 -> h3, so this
+             heading exists to keep the document outline legal. It is hidden
+             visually because the standfirst above already says what this is. -->
+        <h2 class="dp-visually-hidden">Planner: an interactive prototype</h2>
+
         <!-- Live Planner prototype. The poster inside is removed by the mount
              script once initPlanner succeeds (initPlanner appends to this
              container rather than clearing it, so the removal is explicit). -->
@@ -178,7 +195,7 @@
       <section class="dp-case-promo dp-secondary-case dp-reveal" aria-label="Product Discovery case study">
         <div class="dp-case-promo__inner">
           <div class="dp-case-promo__heading">
-            <p class="dp-case-promo__title">Changing how an organisation decides what to&nbsp;build.</p>
+            <h2 class="dp-case-promo__title">Changing how an organisation decides what to&nbsp;build.</h2>
           </div>
           <a href="/case-studies/product-discovery.html" class="dp-btn dp-btn-primary">Read the case study</a>
         </div>
@@ -255,16 +272,21 @@
         </section>
       </noscript>
 
-      <footer class="dp-footer">
-        <div class="dp-footer-inner">
-          <p class="dp-footer-text">© 2026 Edward Stone</p>
-          <nav class="dp-footer-links" aria-label="Footer links">
-            <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
-            <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </nav>
-        </div>
-      </footer>
     </main>
+
+    <!-- Footer sits OUTSIDE <main> deliberately. index.html nests it inside
+         (index.html:613-623), which silently demotes it from the contentinfo
+         landmark, since <footer> only maps to contentinfo when it is not a
+         descendant of main. v2 fixes that. -->
+    <footer class="dp-footer">
+      <div class="dp-footer-inner">
+        <p class="dp-footer-text">© 2026 Edward Stone</p>
+        <nav class="dp-footer-links" aria-label="Footer links">
+          <a href="mailto:edwardstone1337@gmail.com" class="dp-footer-link">Email</a>
+          <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </nav>
+      </div>
+    </footer>
 
     <script src="../assets/js/dev-projects/back-to-top.js"></script>
     <script src="../assets/js/dev-projects/effects.js"></script>
