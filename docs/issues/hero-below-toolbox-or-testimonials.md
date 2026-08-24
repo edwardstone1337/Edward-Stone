@@ -4,6 +4,17 @@
 **Priority:** normal  
 **Effort:** medium  
 
+> **Homepage v2 note (2026-08-24).** Already resolved independent of v2: `index.html` ships
+> both options today — a `dp-toolbox` section (`data-prod-hide`d) and a
+> `dp-testimonials-section` (both pre-date this branch). `dev/home-v2.html`, since shipped as `index.html`,
+> doesn't reopen the choice, but settles it more decisively: testimonials are promoted to
+> directly below the flagship hero and get their own design pass (serif italic quote voice,
+> aligned to the page's full measure) — see `0c45a90` (floating teacher testimonials, headline
+> reframed to "I lead design"), `c1d7592` (align testimonials to the page measure) and
+> `847970d` (testimonials match the quote voice; Let's talk becomes a blue panel). The toolbox
+> is not carried into v2 at all, so if v2 graduates, "toolbox" goes from a hidden-on-prod
+> section to a fully removed one.
+
 ---
 
 ## TL;DR

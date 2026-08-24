@@ -4,6 +4,18 @@
 **Priority:** normal  
 **Effort:** medium (per item; overall theme is ongoing)  
 
+> **Homepage v2 note (2026-08-24).** `dev/home-v2.html`, since shipped as `index.html`, adds real work in the
+> direction this issue asks for: cursor-chat quips reworked into brand blue (`05769a9`) and
+> restored alongside the avatar click-to-spin easter egg (`c4c630c`, "restore cursor-chat and
+> avatar spin, add hero CTAs, rework copy"), plus a new floating-testimonials layer with
+> deliberate, `prefers-reduced-motion`-respecting animation (`0c45a90`, "floating teacher
+> testimonials, headline reframed"; `13467d9`, "bubbles go dark serif, hug their text, and stop
+> colliding"). This is partial, not full: it's copy/motion/one easter egg, not the
+> konami-code-style "hunt" or new playable this issue also asks for. It also cuts the other way
+> on the one playable the site already has — the same v2 change set gates `loadSnakeGame()`
+> behind `!isProd` in `nav-component.js`, so snake no longer loads on production at all (still
+> reachable off-prod / locally).
+
 ---
 
 ## TL;DR

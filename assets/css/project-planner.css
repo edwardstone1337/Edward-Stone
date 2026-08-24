@@ -371,8 +371,16 @@
 
 /* Small screens: drop the fixed aspect ratio and let the window size to
    its content instead — a locked 1440:1024 box doesn't serve a narrow
-   viewport. Internal scroll (.pl-frame-body, below) still applies. */
-@media (max-width: 600px) {
+   viewport. Internal scroll (.pl-frame-body, below) still applies.
+
+   Breakpoint was 600px, which left a dead band: `.pl-tabbar` wraps to two
+   rows from roughly 960px down, but the frame's height is derived purely
+   from its width via the aspect ratio, so between 601px and ~960px the
+   wrapped tabbar ate height the frame never budgeted for and `.pl-frame-body`
+   clipped its own content (measured: 84px hidden at 768px on the v2 homepage,
+   61px on index.html). Raised to 960px so the frame sizes to content across
+   the whole band where the tabbar can wrap. */
+@media (max-width: 960px) {
   [data-project="planner"] .pl-frame {
     aspect-ratio: auto;
     max-height: 80vh;

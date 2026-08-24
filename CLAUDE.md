@@ -9,12 +9,14 @@ Static HTML/CSS/JS portfolio for Edward Stone (UX Designer). No frameworks, buil
 Public pages are the HTML files at the repo root, `projects/`, and `case-studies/`. Which CSS system a page uses is in its own `<link>` tags.
 
 **Not public** — the part you can't infer from the tree:
-- `dev/*` — design system reference, legacy component preview, archived homepage
+- `dev/*` — design system reference, legacy component preview, archived homepages (`old-index.html`, and `old-index-2026-08-24.html`: the pre-redesign homepage, kept browsable because its cut sections may come back)
 - `assets/previews/*` — iframe preview widgets
 - `projects/prang-out.html` — redirects to `/404.html` on prod via an inline gate
 - `projects/planner.html` — same prod-gate pattern as `prang-out.html` (redirects to `/404.html` on prod via an inline gate)
 - `about.html` — live and indexable, but deliberately **not** linked from the prod nav
-- On `index.html`, several strips/toolbox/testimonials carry `data-prod-hide` and are hidden on prod by the `env.js` feature gate. The `.dp-case-promo__widget` live Planner embed is **not** among them any more — it mounts on every environment, including prod. The static PNG (`.dp-case-promo__media`) it used to fall back to now lives inside `<noscript>` as the no-JS fallback only
+- `index.html` is the flagship-led redesign (2026-08-24). It leads with the live Planner prototype, then colleague testimonials, the kaomoji strip and a blue "Let's talk" panel. The ticker, logo bar, side quests, toolbox and product strips are gone; the previous homepage is archived at `dev/old-index-2026-08-24.html`. Design record: `docs/superpowers/specs/2026-08-24-homepage-v2-design.md`
+- On prod the nav shows Case Studies and Resume only; Projects, Personal, Gallery and About are `prodHide`d in `nav-component.js`, and the snake game is not loaded at all
+- `assets/js/env.js` accepts `?prod=1` on non-production hosts to simulate the production experience locally (`?prod=0` clears it). It can only ever ADD `is-prod`, never clear it on a real prod hostname — that direction would let a query string reveal every `data-prod-hide` section
 
 **CSS systems**: "dev" = `dev-tokens.css` + `dev-styles.css` (`dp-` prefix, primary). "legacy" = `tokens.css` + `style.css` (no prefix, being phased out). Never mix them.
 

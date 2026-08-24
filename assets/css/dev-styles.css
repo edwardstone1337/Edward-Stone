@@ -4371,3 +4371,119 @@ body.dp-overlay-active {
     display: none !important;
   }
 }
+
+
+/* ------------------------------------------------
+   Snail — pixel-art snail crawling laps around a host's border.
+   Behaviour and pixel data live in assets/js/dev-projects/snail.js; the
+   sprite's own colours are set inline from that module's palette (sprite
+   data, like the Planner's board colours), so nothing here carries a value.
+
+   The lap uses CSS Motion Path. The module measures the traced element and
+   writes an `offset-path: path(...)` rounded rect; `offset-anchor` puts the
+   snail's FEET on the line and `offset-rotate: auto` turns it to follow the
+   tangent, which is what rounds the corners and flips it upside down along
+   the bottom. Animating `offset-distance` walks one lap.
+   ------------------------------------------------ */
+.dp-snail-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.dp-snail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  will-change: offset-distance;
+  /* Feet on the path, not the sprite's centre. */
+  offset-anchor: 50% 100%;
+  offset-rotate: auto;
+  animation-name: dp-snail-lap;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes dp-snail-lap {
+  from { offset-distance: 0%; }
+  to   { offset-distance: 100%; }
+}
+
+/* Trail sits behind the snail inside the wrap, so it rotates with it. A
+   separately positioned trail cannot follow the snail round a corner. */
+.dp-snail-trail {
+  position: absolute;
+  right: 100%;
+  bottom: 0;
+  transition: opacity var(--dp-duration-slow) ease;
+  pointer-events: none;
+}
+
+.dp-snail__body,
+.dp-snail__shell {
+  transition: transform 380ms cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+
+.dp-snail__body { transform-origin: 6px 6px; }
+.dp-snail__shell { transform-origin: 6px 10px; }
+
+/* Retracted: stops where it is, body pulls into the shell, trail fades. */
+.dp-snail-rail--retracted .dp-snail {
+  animation-play-state: paused;
+}
+
+.dp-snail-rail--retracted .dp-snail__body {
+  transform: translate(-1px, 0.6px) scale(0.14, 0.4);
+}
+
+.dp-snail-rail--retracted .dp-snail__shell {
+  transform: scale(1.06, 0.94);
+}
+
+.dp-snail-rail--retracted .dp-snail-trail {
+  opacity: 0;
+}
+
+/* Fallback for browsers without offset-path: the original top-edge-only
+   crawl. Runs 0% -> 100% with a matching -100% translate so the snail stays
+   fully inside the host at both ends; starting it off the left edge can push
+   a page into horizontal scroll on a full-width host. */
+.dp-snail-rail--edge {
+  right: 0;
+  height: 0;
+}
+
+.dp-snail-rail--edge .dp-snail {
+  top: auto;
+  offset-path: none;
+  offset-rotate: 0deg;
+  will-change: transform;
+  animation-name: dp-snail-crawl;
+}
+
+@keyframes dp-snail-crawl {
+  from { left: 0; transform: translateX(0); }
+  to   { left: 100%; transform: translateX(-100%); }
+}
+
+/* Reduced motion: parked, no lap and no walk cycle. The module also skips its
+   frame timer, so the sprite stays on frame 0. Still clickable, so the
+   retract easter egg survives. */
+.dp-snail-rail--static .dp-snail {
+  animation: none;
+}
+
+.dp-snail-rail--static .dp-snail-trail {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-snail__body,
+  .dp-snail__shell {
+    transition: none;
+  }
+}

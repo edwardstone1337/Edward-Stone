@@ -26,7 +26,7 @@
   width: 4px;
   height: 4px;
   border-radius: var(--dp-radius-full);
-  background: var(--dp-raw-grey-900);
+  background: var(--dp-raw-brand-deep);
   opacity: 0;
   transition: opacity var(--dp-duration-base) var(--_ease-spring);
 }
@@ -36,8 +36,13 @@
 }
 
 /* Bubble — collapsed by default, grows on --active */
+/* Brand blue, not near-black: --dp-raw-brand-deep (#004C99) rather than
+   --dp-raw-brand (#0066CC), because this bubble carries small light text and
+   the standard brand blue only reaches 5.57:1 against it — AA, but under this
+   repo's AAA target of 7:1 for normal-size text. The deepened blue measures
+   7.91:1 against --dp-raw-grey-50. */
 .dp-cursor-chat__bubble {
-  background: var(--dp-raw-grey-900);
+  background: var(--dp-raw-brand-deep);
   backdrop-filter: blur(var(--dp-glass-blur));
   -webkit-backdrop-filter: blur(var(--dp-glass-blur));
   color: var(--dp-raw-grey-50);

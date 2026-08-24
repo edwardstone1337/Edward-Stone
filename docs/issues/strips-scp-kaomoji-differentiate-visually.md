@@ -16,6 +16,14 @@
 > were superseded by Kaomoji going light rather than picking one. Kept for the
 > record.
 
+> **Homepage v2 addendum (2026-08-24).** Separate from the resolution above, which concerns
+> today's `index.html`: `dev/home-v2.html`, since shipped as `index.html`, removes the SCP Reader strip from
+> the homepage altogether, per `docs/superpowers/specs/2026-08-24-homepage-v2-design.md` ("Cut
+> from v1" — Fair Share / Flip 7 / SCP Reader strips). Only the kaomoji strip survives, reused
+> as-is via `initKaomojiStrip()` with no styling changes. If v2 graduates, this issue's
+> "differentiate SCP from Kaomoji" question becomes moot outright: there would be nothing left
+> on the homepage to differentiate it from.
+
 ---
 
 ## Current state
