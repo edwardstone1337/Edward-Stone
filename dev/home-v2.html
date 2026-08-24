@@ -24,6 +24,7 @@
 
     <link rel="stylesheet" href="../assets/css/dev-tokens.css">
     <link rel="stylesheet" href="../assets/css/dev-styles.css">
+    <link rel="stylesheet" href="../assets/css/cursor-chat.css">
     <link rel="stylesheet" href="../assets/css/project-planner.css">
 
     <!--
@@ -96,6 +97,18 @@
         color: var(--dp-text-secondary);
         text-wrap: balance;
         margin: var(--dp-space-4) 0 0;
+      }
+
+      /* Primary CTA sits above the prototype, so the main action is on screen
+         before the visitor scrolls into the board. The bar below the prototype
+         repeats it deliberately: the widget is tall, so by the time you have
+         finished playing with it the hero button is well off screen. */
+      .dp-flagship__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--dp-space-3);
+        margin-top: var(--dp-space-6);
       }
 
       /* Stage: prototype full width, project bar beneath. An earlier revision
@@ -270,7 +283,21 @@
       import { initKaomojiStrip } from '../assets/js/dev-projects/kaomoji-strip.js';
 
       initNav();
-      initKaomojiStrip('#kaomoji-mount');
+
+      // Mounted before initCursorChat below, because cursor-chat resolves each
+      // trigger's selector once at init and silently skips ones matching nothing.
+      const kaomoji = initKaomojiStrip('#kaomoji-mount');
+
+      import('../assets/js/dev-projects/cursor-chat.js').then(m => {
+        m.initCursorChat({
+          triggers: [
+            { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable 🙄' },
+            { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
+            { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
+            kaomoji && kaomoji.cursorTrigger,
+          ].filter(Boolean)
+        });
+      });
     </script>
 
     <main id="main" class="dp-page">
@@ -283,8 +310,12 @@
             <img src="../assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
           </div>
           <span class="dp-overline">Edward Stone · Lead Product Designer</span>
-          <h1 class="dp-flagship__headline">I designed the feature 25,000 teachers rely on every&nbsp;week.</h1>
-          <p class="dp-flagship__standfirst">It turned a simple save-for-later into the platform's most-loved tool, and lifted free-to-paid conversion by&nbsp;30%.</p>
+          <h1 class="dp-flagship__headline">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span> I design the features people actually rely&nbsp;on.</h1>
+          <p class="dp-flagship__standfirst">This one is used by 25,000 teachers every week, and lifted free-to-paid conversion by 30%. Have a play with&nbsp;it.</p>
+          <div class="dp-flagship__actions">
+            <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
+            <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-secondary-on-light">Get in touch</a>
+          </div>
         </div>
 
         <!-- The Planner widget mounts its own h3 column headings ("Term 1"...).
@@ -414,6 +445,13 @@
       </div>
     </footer>
 
+    <!-- Avatar easter egg: click the avatar for a physics spin + confetti.
+         NOTE: this script resolves its spun-avatar swap from the RELATIVE path
+         'assets/images/profile-spun.jpg', so from /dev/ it 404s on the final
+         high-velocity swap. The spin and confetti still work. It fixes itself
+         when this page graduates to /index.html; not worth patching the shared
+         script for a temporary location. -->
+    <script src="../assets/js/dev-projects/avatar-easter-egg.js"></script>
     <script src="../assets/js/dev-projects/back-to-top.js"></script>
     <script src="../assets/js/dev-projects/effects.js"></script>
 
