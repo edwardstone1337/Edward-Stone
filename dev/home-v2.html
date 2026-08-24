@@ -254,6 +254,81 @@
         }
       }
 
+      /* ── Floating teacher testimonials ──
+         Quotes drift up the gutters either side of the prototype. A kanban
+         board on its own only reads as "a kanban board"; these are what say
+         why it mattered to the teachers who used it. Behaviour and the quote
+         list live in assets/js/dev-projects/floating-testimonials.js. */
+      .dp-float-layer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        /* width is set in JS from documentElement.clientWidth, not 100vw:
+           100vw includes the scrollbar and would cause horizontal scroll. */
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .dp-float-quote {
+        position: absolute;
+        /* Hug the text rather than sit at a fixed width, so "Love it!" is a
+           small pill and a longer quote grows to meet the cap. The varied
+           silhouettes are most of what makes these read as speech bubbles
+           instead of a column of boxes. */
+        width: max-content;
+        max-width: var(--dp-float-bubble-w, 200px);
+        box-sizing: border-box;
+        text-align: center;
+        padding: var(--dp-space-4) var(--dp-space-5);
+        /* Tinted, not white: --dp-bg-elevated is pure white under the light
+           theme, so on this white page the bubbles read as floating text with
+           no card at all. --dp-bg-raised (#F0F2FA in light) separates them
+           from the page while keeping --dp-text-secondary at 7.18:1, still
+           above the AAA 7:1 bar. */
+        border: 1px solid var(--dp-border-hover);
+        border-radius: var(--dp-radius-xl);
+        background: var(--dp-bg-raised);
+        box-shadow: var(--dp-shadow-card);
+        font-size: 0.85rem;
+        line-height: 1.45;
+        color: var(--dp-text-secondary);
+        opacity: 0;
+        pointer-events: none;
+        animation-name: dp-float-rise;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: both;
+      }
+
+      /* Anchored to the layer's outer edges, reaching inward only as far as
+         the bubble width demands. */
+      /* --dp-float-jitter is set per bubble in JS. Without it every bubble
+         starts at the same x and the two sides read as two tidy columns
+         rather than something drifting. */
+      .dp-float-quote--left {
+        left: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+      }
+      .dp-float-quote--right {
+        right: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+      }
+
+      /* Long full-opacity plateau: a quote that spends most of its life
+         mid-fade is one nobody manages to read. */
+      @keyframes dp-float-rise {
+        0%   { opacity: 0; transform: translateY(40px) scale(0.96); }
+        12%  { opacity: 1; transform: translateY(24px) scale(1); }
+        85%  { opacity: 1; transform: translateY(-44px) scale(1); }
+        100% { opacity: 0; transform: translateY(-64px) scale(0.98); }
+      }
+
+      /* The module already bails under reduced motion; this is the belt to
+         its braces, in case the layer is ever rendered some other way. */
+      @media (prefers-reduced-motion: reduce) {
+        .dp-float-layer { display: none; }
+      }
+
       /* Visually hidden but exposed to assistive tech. No such utility exists
          in dev-styles.css yet; promote it there when v2 graduates. */
       .dp-visually-hidden {
@@ -281,8 +356,17 @@
     <script type="module">
       import { initNav } from '../assets/js/dev-projects/nav-component.js';
       import { initKaomojiStrip } from '../assets/js/dev-projects/kaomoji-strip.js';
+      import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from '../assets/js/dev-projects/floating-testimonials.js';
 
       initNav();
+
+      // Teacher quotes drifting up the gutters beside the prototype. Measured
+      // against the widget rather than the whole stage so the gutter maths is
+      // relative to the board itself.
+      initFloatingTestimonials({
+        stage: document.querySelector('.dp-flagship__widget'),
+        quotes: PLANNER_TEACHER_QUOTES,
+      });
 
       // Mounted before initCursorChat below, because cursor-chat resolves each
       // trigger's selector once at init and silently skips ones matching nothing.
@@ -310,7 +394,7 @@
             <img src="../assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
           </div>
           <span class="dp-overline">Edward Stone · Lead Product Designer</span>
-          <h1 class="dp-flagship__headline">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span> I design the features people actually rely&nbsp;on.</h1>
+          <h1 class="dp-flagship__headline">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span> I lead design on products people rely&nbsp;on.</h1>
           <p class="dp-flagship__standfirst">This one is used by 25,000 teachers every week, and lifted free-to-paid conversion by 30%. Have a play with&nbsp;it.</p>
           <div class="dp-flagship__actions">
             <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
@@ -349,6 +433,10 @@
               <p class="dp-flagship__bar-eyebrow">The project</p>
               <p class="dp-flagship__bar-title">Planner, at Inquisitive</p>
               <p class="dp-flagship__bar-meta">Curriculum planning for primary teachers. Try it above, or read how it was built.</p>
+              <!-- Answers "are those quotes real?" once, in the spot that
+                   already holds the project's context, rather than repeating
+                   a disclaimer inside every bubble. -->
+              <p class="dp-flagship__bar-meta dp-flagship__bar-note">The quotes drifting past are real, unprompted teacher feedback.</p>
             </div>
             <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
           </aside>
