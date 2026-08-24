@@ -94,15 +94,16 @@
         margin: var(--dp-space-4) 0 0;
       }
 
-      /* Stage: prototype on the left, project card on the right. The CTA was
-         previously a lone button under the widget and got lost against it;
-         giving it a panel of its own also puts the project's context back on
-         screen, which is the "portfolio" signal the strip-down removed. */
+      /* Stage: prototype full width, project bar beneath. An earlier revision
+         put the project card to the RIGHT of the prototype; that stole ~280px
+         from the board, forced the columns down to 200px and truncated a card
+         title. Full width gives the board its proper 220px columns with room
+         to spare, and the bar below still gives the CTA somewhere to live
+         instead of floating as a lone button. */
       .dp-flagship__stage {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 230px;
-        gap: var(--dp-space-6);
-        align-items: start;
+        display: flex;
+        flex-direction: column;
+        gap: var(--dp-space-5);
         width: 100%;
       }
 
@@ -114,33 +115,27 @@
         min-width: 0;
       }
 
-      /* The project card takes width off the prototype, which left the board
-         202px short and visibly cut Term 4 in half. The board scrolls
-         horizontally by design, but a sliced-off column reads as a broken
-         hero rather than a kanban affordance. Trimming the column width for
-         THIS layout only lets all four terms sit on screen at once.
-         .pl-compact's own 220px still applies everywhere else.
-
-         Selector must out-specify `[data-project="planner"].pl-compact`
-         (0,2,0) in project-planner.css, hence the attribute + class pairing
-         rather than the bare class. */
-      @media (min-width: 1025px) {
-        [data-project="planner"].dp-flagship__widget {
-          --pl-column-width: 200px;
-        }
-      }
-
-      .dp-flagship__card {
+      /* Project bar: context on the left, CTA on the right. Sits directly
+         under the prototype so the two read as one unit. */
+      .dp-flagship__bar {
         display: flex;
-        flex-direction: column;
-        gap: var(--dp-space-4);
-        padding: var(--dp-space-6);
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--dp-space-6);
+        padding: var(--dp-space-5) var(--dp-space-6);
         border: 1px solid var(--dp-border-default);
         border-radius: var(--dp-radius-lg);
         background: var(--dp-bg-elevated);
       }
 
-      .dp-flagship__card-eyebrow {
+      .dp-flagship__bar-text {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dp-space-1);
+        min-width: 0;
+      }
+
+      .dp-flagship__bar-eyebrow {
         font-size: 0.75rem;
         font-weight: var(--dp-weight-semibold);
         letter-spacing: 0.08em;
@@ -149,27 +144,35 @@
         margin: 0;
       }
 
-      .dp-flagship__card-title {
-        font-size: 1.125rem;
+      .dp-flagship__bar-title {
+        font-size: 1.05rem;
         font-weight: var(--dp-weight-bold);
         line-height: 1.3;
         color: var(--dp-text-primary);
         margin: 0;
       }
 
-      .dp-flagship__card-meta {
+      .dp-flagship__bar-meta {
         font-size: 0.95rem;
         line-height: 1.5;
         color: var(--dp-text-secondary);
         margin: 0;
       }
 
-      /* Below the two-column threshold the card drops under the prototype
-         rather than squeezing it. 1024px, not 768px: the widget needs real
-         width before the card is worth taking any away. */
-      @media (max-width: 1024px) {
-        .dp-flagship__stage {
-          grid-template-columns: minmax(0, 1fr);
+      /* The CTA must not shrink when the text column is long. */
+      .dp-flagship__bar .dp-btn {
+        flex: 0 0 auto;
+      }
+
+      /* Narrow: bar stacks, CTA goes full width so it stays an easy target. */
+      @media (max-width: 640px) {
+        .dp-flagship__bar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: var(--dp-space-4);
+        }
+        .dp-flagship__bar .dp-btn {
+          width: 100%;
         }
       }
 
@@ -270,22 +273,28 @@
           <!-- Live Planner prototype. The poster inside is removed by the mount
                script once initPlanner succeeds (initPlanner appends to this
                container rather than clearing it, so the removal is explicit). -->
-          <div class="dp-flagship__widget dp-case-promo__widget pl-compact" data-project="planner">
+          <!-- No .dp-case-promo__widget here: that class caps width at 1040px,
+               which left the prototype's right edge 112px short of the bar
+               below it. .pl-compact + data-project do all the work the
+               prototype actually needs. -->
+          <div class="dp-flagship__widget pl-compact" data-project="planner">
             <img src="../assets/images/planner.png"
                  class="dp-flagship__poster"
                  alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
                  width="800" height="480">
           </div>
 
-          <!-- Project card. Gives the CTA somewhere to live (it was getting
+          <!-- Project bar. Gives the CTA somewhere to live (it was getting
                lost as a lone button under the widget) and restores the project
-               context the strip-down removed. Copy is factual and drawn from
-               the existing case study; edit freely. -->
-          <aside class="dp-flagship__card" aria-label="About this project">
-            <p class="dp-flagship__card-eyebrow">The project</p>
-            <p class="dp-flagship__card-title">Planner</p>
-            <p class="dp-flagship__card-meta">Curriculum planning for primary teachers, at Inquisitive. Shipped in four phases off a single research insight.</p>
-            <p class="dp-flagship__card-meta">Try it here, or read how it was built.</p>
+               context the strip-down removed, without taking width off the
+               prototype. Copy is factual, drawn from the existing case study;
+               edit freely. -->
+          <aside class="dp-flagship__bar" aria-label="About this project">
+            <div class="dp-flagship__bar-text">
+              <p class="dp-flagship__bar-eyebrow">The project</p>
+              <p class="dp-flagship__bar-title">Planner, at Inquisitive</p>
+              <p class="dp-flagship__bar-meta">Curriculum planning for primary teachers. Try it above, or read how it was built.</p>
+            </div>
             <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
           </aside>
         </div>
