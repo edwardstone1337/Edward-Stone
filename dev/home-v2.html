@@ -40,7 +40,11 @@
       No raw hex or rgba() values — existing tokens only.
     -->
     <style>
-      /* Flagship: intro stacked above the live prototype, both centred. */
+      /* Flagship: intro stacked above the live prototype.
+         NOTE: text-align: center lives on __intro, NOT on .dp-flagship.
+         Putting it on the parent centred every string inside the Planner
+         prototype too (kanban card titles, subject/year labels, term
+         headings), because the widget is a child and text-align inherits. */
       .dp-flagship {
         display: flex;
         flex-direction: column;
@@ -48,10 +52,11 @@
         gap: var(--dp-space-8);
         max-width: 1200px;
         margin-inline: auto;
-        padding-inline: var(--dp-space-8);
+        /* No padding-inline: the parent .dp-page already supplies 24px each
+           side and caps content at 1152px. Adding more here only starved the
+           prototype of width it needs to show all four terms. */
         padding-top: var(--dp-space-16);
         padding-bottom: var(--dp-space-16);
-        text-align: center;
       }
 
       .dp-flagship__intro {
@@ -59,6 +64,18 @@
         flex-direction: column;
         align-items: center;
         max-width: 46rem;
+        text-align: center;
+      }
+
+      /* Belt and braces: the prototype owns its own alignment, whatever any
+         future ancestor rule tries to impose on it. */
+      .dp-flagship__stage,
+      .dp-flagship__widget {
+        text-align: initial;
+      }
+
+      .dp-flagship__avatar-wrap {
+        margin-bottom: var(--dp-space-5);
       }
 
       .dp-flagship__headline {
@@ -67,7 +84,7 @@
         line-height: 1.2;
         color: var(--dp-text-primary);
         text-wrap: balance;
-        margin: var(--dp-space-3) 0 0;
+        margin: var(--dp-space-4) 0 0;
       }
 
       .dp-flagship__standfirst {
@@ -77,11 +94,83 @@
         margin: var(--dp-space-4) 0 0;
       }
 
-      /* Mount container for the live Planner widget. Matches the width the
-         widget is tuned for (see .pl-compact in project-planner.css). */
+      /* Stage: prototype on the left, project card on the right. The CTA was
+         previously a lone button under the widget and got lost against it;
+         giving it a panel of its own also puts the project's context back on
+         screen, which is the "portfolio" signal the strip-down removed. */
+      .dp-flagship__stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 230px;
+        gap: var(--dp-space-6);
+        align-items: start;
+        width: 100%;
+      }
+
+      /* Mount container for the live Planner widget. Sizing is driven by the
+         grid column now; .pl-compact (project-planner.css) still owns the
+         widget's own density tokens. */
       .dp-flagship__widget {
         width: 100%;
-        max-width: 1040px;
+        min-width: 0;
+      }
+
+      /* The project card takes width off the prototype, which left the board
+         202px short and visibly cut Term 4 in half. The board scrolls
+         horizontally by design, but a sliced-off column reads as a broken
+         hero rather than a kanban affordance. Trimming the column width for
+         THIS layout only lets all four terms sit on screen at once.
+         .pl-compact's own 220px still applies everywhere else.
+
+         Selector must out-specify `[data-project="planner"].pl-compact`
+         (0,2,0) in project-planner.css, hence the attribute + class pairing
+         rather than the bare class. */
+      @media (min-width: 1025px) {
+        [data-project="planner"].dp-flagship__widget {
+          --pl-column-width: 200px;
+        }
+      }
+
+      .dp-flagship__card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--dp-space-4);
+        padding: var(--dp-space-6);
+        border: 1px solid var(--dp-border-default);
+        border-radius: var(--dp-radius-lg);
+        background: var(--dp-bg-elevated);
+      }
+
+      .dp-flagship__card-eyebrow {
+        font-size: 0.75rem;
+        font-weight: var(--dp-weight-semibold);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dp-text-secondary);
+        margin: 0;
+      }
+
+      .dp-flagship__card-title {
+        font-size: 1.125rem;
+        font-weight: var(--dp-weight-bold);
+        line-height: 1.3;
+        color: var(--dp-text-primary);
+        margin: 0;
+      }
+
+      .dp-flagship__card-meta {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--dp-text-secondary);
+        margin: 0;
+      }
+
+      /* Below the two-column threshold the card drops under the prototype
+         rather than squeezing it. 1024px, not 768px: the widget needs real
+         width before the card is worth taking any away. */
+      @media (max-width: 1024px) {
+        .dp-flagship__stage {
+          grid-template-columns: minmax(0, 1fr);
+        }
       }
 
       /* Poster shown at first paint and removed once the prototype mounts.
@@ -97,17 +186,10 @@
         box-shadow: var(--dp-shadow-showcase-image);
       }
 
-      /* Second case study sits closer to the flagship than a full section gap,
-         so the page reads as one argument rather than two adverts. */
-      .dp-secondary-case {
-        margin-top: var(--dp-space-8);
-      }
-
-      /* Kaomoji strip is the single piece of personality, placed last so
-         focus stays on the work above it. It needs no spacing rule here:
-         .dp-strip already carries margin-top: var(--dp-section-gap), and
-         #kaomoji-mount cannot be styled at all because kaomoji-strip.js
-         REPLACES that placeholder rather than filling it. */
+      /* Kaomoji strip needs no spacing rule here: .dp-strip already carries
+         margin-top: var(--dp-section-gap), and #kaomoji-mount cannot be
+         styled at all because kaomoji-strip.js REPLACES that placeholder
+         rather than filling it. */
 
       .dp-footer { margin-top: var(--dp-space-6); }
 
@@ -160,7 +242,7 @@
            ============================================================ -->
       <section class="dp-flagship" aria-label="Planner, featured case study">
         <div class="dp-flagship__intro">
-          <div class="dp-avatar-wrap">
+          <div class="dp-avatar-wrap dp-flagship__avatar-wrap">
             <img src="../assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
           </div>
           <span class="dp-overline">Edward Stone · Lead Product Designer</span>
@@ -174,32 +256,54 @@
              visually because the standfirst above already says what this is. -->
         <h2 class="dp-visually-hidden">Planner: an interactive prototype</h2>
 
-        <!-- Live Planner prototype. The poster inside is removed by the mount
-             script once initPlanner succeeds (initPlanner appends to this
-             container rather than clearing it, so the removal is explicit). -->
-        <div class="dp-flagship__widget dp-case-promo__widget pl-compact" data-project="planner">
-          <img src="../assets/images/planner.png"
-               class="dp-flagship__poster"
-               alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
-               width="800" height="480">
-        </div>
+        <div class="dp-flagship__stage">
+          <!-- Live Planner prototype. The poster inside is removed by the mount
+               script once initPlanner succeeds (initPlanner appends to this
+               container rather than clearing it, so the removal is explicit). -->
+          <div class="dp-flagship__widget dp-case-promo__widget pl-compact" data-project="planner">
+            <img src="../assets/images/planner.png"
+                 class="dp-flagship__poster"
+                 alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
+                 width="800" height="480">
+          </div>
 
-        <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
+          <!-- Project card. Gives the CTA somewhere to live (it was getting
+               lost as a lone button under the widget) and restores the project
+               context the strip-down removed. Copy is factual and drawn from
+               the existing case study; edit freely. -->
+          <aside class="dp-flagship__card" aria-label="About this project">
+            <p class="dp-flagship__card-eyebrow">The project</p>
+            <p class="dp-flagship__card-title">Planner</p>
+            <p class="dp-flagship__card-meta">Curriculum planning for primary teachers, at Inquisitive. Shipped in four phases off a single research insight.</p>
+            <p class="dp-flagship__card-meta">Try it here, or read how it was built.</p>
+            <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
+          </aside>
+        </div>
       </section>
 
       <!-- ============================================================
-           SECOND CASE STUDY — Product Discovery.
-           Copy reuses the existing hero-card line from v1 (Edward's call:
-           no new copy written for this pass).
+           KAOMOJI STRIP — moved up, directly after the flagship (Edward's
+           call). Markup and behaviour live in kaomoji-strip.js, shared with
+           index.html and personal.html. This placeholder is REPLACED by the
+           strip, so no wrapper survives in the layout.
+
+           The Product Discovery block that used to sit here was removed at
+           Edward's request, so this is currently a one-case-study homepage.
            ============================================================ -->
-      <section class="dp-case-promo dp-secondary-case dp-reveal" aria-label="Product Discovery case study">
-        <div class="dp-case-promo__inner">
-          <div class="dp-case-promo__heading">
-            <h2 class="dp-case-promo__title">Changing how an organisation decides what to&nbsp;build.</h2>
+      <div id="kaomoji-mount"></div>
+      <noscript>
+        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+          <div class="dp-strip-inner">
+            <div class="dp-strip-content">
+              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
+            </div>
+            <div class="dp-strip-actions">
+              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
+            </div>
           </div>
-          <a href="/case-studies/product-discovery.html" class="dp-btn dp-btn-primary">Read the case study</a>
-        </div>
-      </section>
+        </section>
+      </noscript>
 
       <!-- ============================================================
            TESTIMONIALS
@@ -250,27 +354,6 @@
           <a href="https://www.linkedin.com/in/edwardstone1337/" class="dp-btn dp-btn-secondary-on-light" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
       </section>
-
-      <!-- ============================================================
-           KAOMOJI STRIP — the one piece of personality, deliberately last.
-           Markup and behaviour live in kaomoji-strip.js, shared with
-           index.html and personal.html. This placeholder is REPLACED by the
-           strip, so no wrapper survives in the layout.
-           ============================================================ -->
-      <div id="kaomoji-mount"></div>
-      <noscript>
-        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
-          <div class="dp-strip-inner">
-            <div class="dp-strip-content">
-              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
-            </div>
-            <div class="dp-strip-actions">
-              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
-            </div>
-          </div>
-        </section>
-      </noscript>
 
     </main>
 
