@@ -17,7 +17,9 @@ const isProd = document.documentElement.classList.contains('is-prod');
 
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
-  { text: 'Case Studies', prodHide: true, children: CASE_STUDIES },
+  // Stays visible on prod: homepage v2 links only Planner, so this is the
+  // only route into Product Discovery, Design Systems and Fair Share.
+  { text: 'Case Studies', children: CASE_STUDIES },
   { text: 'Projects', prodHide: true, children: [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' },
     { text: 'Prang Out', href: '/projects/prang-out.html' }
