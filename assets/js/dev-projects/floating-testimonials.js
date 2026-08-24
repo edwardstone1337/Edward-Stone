@@ -64,6 +64,14 @@ const OVERLAP = 28;
  *  every bubble shares one x and the effect reads as two tidy columns. */
 const MAX_JITTER = 44;
 
+/** Clear space required between two bubbles on the same side, in px. Checked
+ *  against real bounding boxes rather than the `top` percentage: bubbles hug
+ *  their text, so a four-line quote is several times taller than "Love it!"
+ *  and a percentage gap that clears one will not clear the other. Overlapping
+ *  quotes read as a rendering fault rather than a drift. */
+const MIN_VERTICAL_GAP_PX = 24;
+const SPAWN_ATTEMPTS = 10;
+
 function prefersReducedMotion() {
   return typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -124,27 +132,62 @@ export function initFloatingTestimonials(config) {
     layer.hidden = !enabled;
   }
 
+  /** True when `rect` comes within MIN_VERTICAL_GAP_PX of any bubble already
+   *  rising on this side. */
+  function collides(rect, sideClass, ignore) {
+    const siblings = layer.querySelectorAll('.' + sideClass);
+    for (let i = 0; i < siblings.length; i++) {
+      if (siblings[i] === ignore) continue;
+      const other = siblings[i].getBoundingClientRect();
+      const clear = rect.bottom + MIN_VERTICAL_GAP_PX <= other.top
+        || other.bottom + MIN_VERTICAL_GAP_PX <= rect.top;
+      if (!clear) return true;
+    }
+    return false;
+  }
+
   function spawn() {
     if (!enabled || !visible) return;
+
+    const sideClass = side === 0 ? 'dp-float-quote--left' : 'dp-float-quote--right';
+    side = side === 0 ? 1 : 0;
+
     if (queue.length === 0) refillQueue();
 
     const bubble = document.createElement('div');
     bubble.className = 'dp-float-quote';
-    bubble.classList.add(side === 0 ? 'dp-float-quote--left' : 'dp-float-quote--right');
-    side = side === 0 ? 1 : 0;
+    bubble.classList.add(sideClass);
 
     // textContent, never innerHTML — quotes are data, not markup.
-    bubble.textContent = queue.pop();
+    bubble.textContent = queue[queue.length - 1];
 
-    // Spread vertically so they do not all rise along one line, jitter
-    // horizontally so the two sides do not read as columns, and vary the
-    // duration so they never lock into a rhythm.
-    bubble.style.top = (12 + Math.random() * 66) + '%';
+    // Jitter horizontally so the two sides do not read as columns, and vary
+    // the duration so they never lock into a rhythm.
     bubble.style.setProperty('--dp-float-jitter', Math.round(Math.random() * MAX_JITTER) + 'px');
     bubble.style.animationDuration = (7 + Math.random() * 3).toFixed(2) + 's';
 
-    bubble.addEventListener('animationend', () => bubble.remove());
+    // The bubble has to be in the DOM before it can be measured, so try
+    // candidate positions in place and pull it back out if the side is full.
     layer.appendChild(bubble);
+
+    let placed = false;
+    for (let attempt = 0; attempt < SPAWN_ATTEMPTS; attempt++) {
+      bubble.style.top = (12 + Math.random() * 66) + '%';
+      if (!collides(bubble.getBoundingClientRect(), sideClass, bubble)) {
+        placed = true;
+        break;
+      }
+    }
+
+    if (!placed) {
+      // Side is crowded. Drop this beat rather than stacking two quotes, and
+      // leave the quote in the queue so it still gets its turn.
+      bubble.remove();
+      return;
+    }
+
+    queue.pop();
+    bubble.addEventListener('animationend', () => bubble.remove());
   }
 
   function start() {

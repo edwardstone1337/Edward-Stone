@@ -283,18 +283,23 @@
         box-sizing: border-box;
         text-align: center;
         padding: var(--dp-space-4) var(--dp-space-5);
-        /* Tinted, not white: --dp-bg-elevated is pure white under the light
-           theme, so on this white page the bubbles read as floating text with
-           no card at all. --dp-bg-raised (#F0F2FA in light) separates them
-           from the page while keeping --dp-text-secondary at 7.18:1, still
-           above the AAA 7:1 bar. */
-        border: 1px solid var(--dp-border-hover);
+        /* Dark bubbles on a light page. Uses the on-dark semantic set, which
+           is deliberately identical in both themes, so these stay dark
+           whatever the page theme does. White on #111113 is ~18.9:1, well
+           past AAA. A white bubble was invisible on this white page; a tinted
+           one worked but read as another UI card rather than a human voice. */
+        border: none;
         border-radius: var(--dp-radius-xl);
-        background: var(--dp-bg-raised);
+        background: var(--dp-on-dark-surface);
         box-shadow: var(--dp-shadow-card);
-        font-size: 0.85rem;
-        line-height: 1.45;
-        color: var(--dp-text-secondary);
+        /* Serif italic with real quote marks, so it reads as somebody talking
+           rather than as more interface. */
+        font-family: var(--dp-font-serif);
+        font-style: italic;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--dp-on-dark-text-primary);
+        quotes: '\201C' '\201D';
         opacity: 0;
         pointer-events: none;
         animation-name: dp-float-rise;
@@ -302,8 +307,11 @@
         animation-fill-mode: both;
       }
 
-      /* Anchored to the layer's outer edges, reaching inward only as far as
-         the bubble width demands. */
+      /* Curly quotes via generated content: they stay out of the accessibility
+         tree and out of the quote text itself. */
+      .dp-float-quote::before { content: open-quote; }
+      .dp-float-quote::after { content: close-quote; }
+
       /* --dp-float-jitter is set per bubble in JS. Without it every bubble
          starts at the same x and the two sides read as two tidy columns
          rather than something drifting. */
