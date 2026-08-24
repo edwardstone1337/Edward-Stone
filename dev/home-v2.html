@@ -186,6 +186,16 @@
         box-shadow: var(--dp-shadow-showcase-image);
       }
 
+      /* Testimonials are capped at --dp-testimonial-track-max-width (960px)
+         in dev-styles.css, which made them 192px narrower than every other
+         section on this page (flagship, kaomoji strip and contact CTA all sit
+         at .dp-page's full 1152px) and read as visibly pinched. Released here
+         so the page has one consistent measure. Page-local: index.html keeps
+         the 960px track. */
+      .dp-testimonials-section {
+        max-width: none;
+      }
+
       /* Kaomoji strip needs no spacing rule here: .dp-strip already carries
          margin-top: var(--dp-section-gap), and #kaomoji-mount cannot be
          styled at all because kaomoji-strip.js REPLACES that placeholder
