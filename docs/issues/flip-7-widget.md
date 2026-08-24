@@ -8,7 +8,7 @@
 
 > **Homepage v2 note (2026-08-24).** One of this issue's candidate placements, "homepage", gets
 > narrower. Per `docs/superpowers/specs/2026-08-24-homepage-v2-design.md`, `dev/home-v2.html`
-> (not yet public; `index.html` is unchanged) cuts `.dp-side-quests` (Fair Share / Bears / Flip
+> (since shipped as `index.html`) cuts `.dp-side-quests` (Fair Share / Bears / Flip
 > 7 / Lost Cities) and the Fair Share / Flip 7 / SCP Reader strips entirely — there's no "Flip
 > 7" mention anywhere on the flagship-led homepage for a future widget to hang off of. If v2
 > graduates, this widget's entry point would need to live in `dev-projects`, its own page, or

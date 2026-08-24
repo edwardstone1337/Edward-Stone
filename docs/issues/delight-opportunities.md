@@ -4,7 +4,7 @@
 **Priority:** normal  
 **Effort:** medium (per item; overall theme is ongoing)  
 
-> **Homepage v2 note (2026-08-24).** `dev/home-v2.html` (not yet public) adds real work in the
+> **Homepage v2 note (2026-08-24).** `dev/home-v2.html`, since shipped as `index.html`, adds real work in the
 > direction this issue asks for: cursor-chat quips reworked into brand blue (`05769a9`) and
 > restored alongside the avatar click-to-spin easter egg (`c4c630c`, "restore cursor-chat and
 > avatar spin, add hero CTAs, rework copy"), plus a new floating-testimonials layer with

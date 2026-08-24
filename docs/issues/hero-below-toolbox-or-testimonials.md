@@ -6,7 +6,7 @@
 
 > **Homepage v2 note (2026-08-24).** Already resolved independent of v2: `index.html` ships
 > both options today — a `dp-toolbox` section (`data-prod-hide`d) and a
-> `dp-testimonials-section` (both pre-date this branch). `dev/home-v2.html` (not yet public)
+> `dp-testimonials-section` (both pre-date this branch). `dev/home-v2.html`, since shipped as `index.html`,
 > doesn't reopen the choice, but settles it more decisively: testimonials are promoted to
 > directly below the flagship hero and get their own design pass (serif italic quote voice,
 > aligned to the page's full measure) — see `0c45a90` (floating teacher testimonials, headline

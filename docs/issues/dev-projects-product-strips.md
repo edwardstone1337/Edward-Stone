@@ -6,8 +6,7 @@
 **Priority:** normal  
 **Effort:** medium
 
-> **Homepage v2 note (2026-08-24).** `dev/home-v2.html` (not yet public; `index.html` is
-> unchanged) points the opposite direction from this issue. Per
+> **Homepage v2 note (2026-08-24).** `dev/home-v2.html`, since shipped as `index.html`, points the opposite direction from this issue. Per
 > `docs/superpowers/specs/2026-08-24-homepage-v2-design.md`, v2 cuts the Fair Share, Flip 7 and
 > SCP Reader strips entirely rather than adding more, and even the one project-promo bar it
 > tried got pulled back out again: a project card was added in `f36a81d` ("add project card,

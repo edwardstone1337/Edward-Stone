@@ -67,7 +67,7 @@ Semi-transparent composited surfaces with backdrop blur.
 | Token | Value | Use |
 |-------|-------|-----|
 | `--dp-raw-brand` | `#0066CC` | Primary brand blue — feeds `--dp-brand-text`, `--dp-accent` (both themes), and the nav logo gradient's `-to` stop |
-| `--dp-raw-brand-deep` | `#004C99` | Deepened brand blue for light text on brand-coloured surfaces at body size or smaller. `--dp-raw-brand` carries white at only 5.57:1 — AA, but under this repo's AAA target of 7:1 for normal-size text. `--dp-raw-brand-deep` reaches ~8.4:1 against pure white and 7.91:1 against `--dp-raw-grey-50` (the off-white the cursor-chat bubble text uses). Currently used only by (WIP, not yet public) `dev/home-v2.html`, page-locally, for the cursor-chat bubble background and the "Let's talk" panel background |
+| `--dp-raw-brand-deep` | `#004C99` | Deepened brand blue for light text on brand-coloured surfaces at body size or smaller. `--dp-raw-brand` carries white at only 5.57:1 — AA, but under this repo's AAA target of 7:1 for normal-size text. `--dp-raw-brand-deep` reaches ~8.4:1 against pure white and 7.91:1 against `--dp-raw-grey-50` (the off-white the cursor-chat bubble text uses). Used by `cursor-chat.css` for the cursor-chat bubble and dot (so every page carrying cursor-chat picks it up), and by `index.html` for the "Let's talk" panel background |
 
 ### Nav (Static)
 

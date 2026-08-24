@@ -4,8 +4,7 @@
 **Priority:** normal  
 **Effort:** medium  
 
-> **Homepage v2 note (2026-08-24).** `dev/home-v2.html` (not yet public; `index.html` is
-> unchanged) removes the mechanism this issue plans to use. Homepage "strips" don't exist on
+> **Homepage v2 note (2026-08-24).** `dev/home-v2.html`, since shipped as `index.html`, removes the mechanism this issue plans to use. Homepage "strips" don't exist on
 > v2 at all, and the homepage's visible case-study count drops to one (Planner, the flagship) —
 > an earlier revision added a second project card for Product Discovery (`f36a81d`, "add
 > project card, reorder") but it was removed again (`ed9b1ec`, "drop the project bar, explain

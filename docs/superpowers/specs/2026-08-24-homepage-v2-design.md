@@ -1,9 +1,11 @@
 # Homepage v2 — flagship-led redesign
 
 Date: 2026-08-24
-Status: built at `dev/home-v2.html`, not yet public. `index.html` is unchanged
-and still live. See "As built" below, which supersedes the original page
-structure where the two disagree.
+Status: SHIPPED 2026-08-24. Built at `dev/home-v2.html`, then promoted to
+`index.html`; the previous homepage is archived at
+`dev/old-index-2026-08-24.html`, kept browsable because some of its cut
+sections are expected back. See "As built" below, which supersedes the
+original page structure where the two disagree.
 
 ## Goal
 
