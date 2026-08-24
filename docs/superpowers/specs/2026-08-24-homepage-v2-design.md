@@ -41,13 +41,15 @@ regardless (`6d6a2b8`), but a git object cannot be clicked through. Two live pag
 
 1. **Nav** — shared component, `<div id="nav-container">`
 2. **Flagship (above the fold)**
-   - Name + "Lead Product Designer"
+   - Avatar (kept — a face builds trust with a hiring audience), name + "Lead Product Designer"
    - Headline: "I designed the feature 25,000 teachers rely on every week."
    - Subtitle: "It turned a simple save-for-later into the platform's most-loved tool,
      and lifted free-to-paid conversion by 30%."
    - Live Planner widget (`initPlanner(root, { chrome: false })`, `.pl-compact`)
    - Single CTA: "Read the case study" → `case-studies/planner.html`
-3. **Second case study** — compact promo for Product Discovery, its own CTA
+3. **Second case study** — compact promo for Product Discovery, its own CTA. Copy reuses the
+   existing hero-card line, "Changing how an organisation decides what to build" (no new copy
+   written)
 4. **Testimonials** — the existing three-up grid
 5. **Let's talk** — the existing `.dp-contact-cta` pattern (Email + LinkedIn)
 6. **Kaomoji strip** — `initKaomojiStrip('#kaomoji-mount')`, the shared module already used
@@ -128,6 +130,20 @@ own change, not bundled with the page build:
 production gets a nav link to a 404. Either build the page first, or land the nav entry with
 `prodHide: true` and remove that flag when the page goes live. The first two bullets have no
 such dependency and can ship immediately.
+
+## Local prod-simulation switch (`assets/js/env.js`)
+
+`is-prod` is set from `location.hostname`, so on localhost it is never set. Both v1 and v2
+therefore render the full nav with the snake loaded, and the stripped-down experience cannot
+be seen locally at all. Extend `env.js` so the class can be forced on for local preview
+(`?prod=1`, optionally persisted to `localStorage`).
+
+**Security constraint — one direction only.** The switch may only ever ADD `is-prod`, and only
+when the hostname is NOT a production host. It must never remove `is-prod` on a real
+production hostname. `data-prod-hide` is what keeps unfinished and deliberately-private work
+off the public site; a flag that clears the class on `edwardstone.design` would let any
+visitor reveal all of it with a query string. Forcing the class on can only ever hide more,
+which is safe. Clearing it on prod is the failure mode to design out.
 
 ## Contact page
 
