@@ -93,6 +93,19 @@ export function initFloatingTestimonials(config) {
   layer.className = 'dp-float-layer';
   layer.setAttribute('aria-hidden', 'true');
 
+  /* Transparent hover targets filling the gutters. The bubbles themselves are
+     pointer-events: none and moving, so they are hopeless as hover targets and
+     making them hoverable would risk stealing clicks from the board they
+     overlap. These sit in the gutter ONLY, never over the prototype, so
+     cursor-chat can explain the quotes without touching prototype
+     interaction. Sized in measure(). */
+  const zoneLeft = document.createElement('div');
+  zoneLeft.className = 'dp-float-hotzone dp-float-hotzone--left';
+  const zoneRight = document.createElement('div');
+  zoneRight.className = 'dp-float-hotzone dp-float-hotzone--right';
+  layer.appendChild(zoneLeft);
+  layer.appendChild(zoneRight);
+
   if (getComputedStyle(stage).position === 'static') {
     stage.style.position = 'relative';
   }
@@ -130,6 +143,11 @@ export function initFloatingTestimonials(config) {
     layer.style.setProperty('--dp-float-gutter', gutter + 'px');
     layer.style.setProperty('--dp-float-bubble-w', bubbleWidth + 'px');
     layer.hidden = !enabled;
+
+    // Hover zones stop exactly at the board edge, so they never sit over the
+    // interactive prototype.
+    zoneLeft.style.width = gutter + 'px';
+    zoneRight.style.width = gutter + 'px';
   }
 
   /** True when `rect` comes within MIN_VERTICAL_GAP_PX of any bubble already

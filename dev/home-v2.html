@@ -99,10 +99,10 @@
         margin: var(--dp-space-4) 0 0;
       }
 
-      /* Primary CTA sits above the prototype, so the main action is on screen
-         before the visitor scrolls into the board. The bar below the prototype
-         repeats it deliberately: the widget is tall, so by the time you have
-         finished playing with it the hero button is well off screen. */
+      /* Primary CTAs sit above the prototype. These are now the only ones in
+         the flagship: the project bar that used to repeat them underneath was
+         removed, on the grounds that the working prototype speaks for itself
+         without a banner explaining it. */
       .dp-flagship__actions {
         display: flex;
         flex-wrap: wrap;
@@ -111,12 +111,10 @@
         margin-top: var(--dp-space-6);
       }
 
-      /* Stage: prototype full width, project bar beneath. An earlier revision
-         put the project card to the RIGHT of the prototype; that stole ~280px
-         from the board, forced the columns down to 200px and truncated a card
-         title. Full width gives the board its proper 220px columns with room
-         to spare, and the bar below still gives the CTA somewhere to live
-         instead of floating as a lone button. */
+      /* Stage: the prototype at full width, and the positioning context for
+         the floating-quote layer. An earlier revision put a project card to
+         the RIGHT of the prototype; that stole ~280px from the board, forced
+         the columns down to 200px and truncated a card title. */
       .dp-flagship__stage {
         display: flex;
         flex-direction: column;
@@ -150,67 +148,6 @@
         flex: 1 1 var(--pl-column-width);
         width: auto;
         min-width: var(--pl-column-width);
-      }
-
-      /* Project bar: context on the left, CTA on the right. Sits directly
-         under the prototype so the two read as one unit. */
-      .dp-flagship__bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--dp-space-6);
-        padding: var(--dp-space-5) var(--dp-space-6);
-        border: 1px solid var(--dp-border-default);
-        border-radius: var(--dp-radius-lg);
-        background: var(--dp-bg-elevated);
-      }
-
-      .dp-flagship__bar-text {
-        display: flex;
-        flex-direction: column;
-        gap: var(--dp-space-1);
-        min-width: 0;
-      }
-
-      .dp-flagship__bar-eyebrow {
-        font-size: 0.75rem;
-        font-weight: var(--dp-weight-semibold);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--dp-text-secondary);
-        margin: 0;
-      }
-
-      .dp-flagship__bar-title {
-        font-size: 1.05rem;
-        font-weight: var(--dp-weight-bold);
-        line-height: 1.3;
-        color: var(--dp-text-primary);
-        margin: 0;
-      }
-
-      .dp-flagship__bar-meta {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: var(--dp-text-secondary);
-        margin: 0;
-      }
-
-      /* The CTA must not shrink when the text column is long. */
-      .dp-flagship__bar .dp-btn {
-        flex: 0 0 auto;
-      }
-
-      /* Narrow: bar stacks, CTA goes full width so it stays an easy target. */
-      @media (max-width: 640px) {
-        .dp-flagship__bar {
-          flex-direction: column;
-          align-items: stretch;
-          gap: var(--dp-space-4);
-        }
-        .dp-flagship__bar .dp-btn {
-          width: 100%;
-        }
       }
 
       /* Poster shown at first paint and removed once the prototype mounts.
@@ -312,6 +249,19 @@
       .dp-float-quote::before { content: open-quote; }
       .dp-float-quote::after { content: close-quote; }
 
+      /* Invisible hover targets filling the gutters, so cursor-chat can
+         explain the quotes. pointer-events: auto re-enables hovering inside
+         the pointer-events: none layer; they stop at the board edge so the
+         prototype's own interaction is never intercepted. */
+      .dp-float-hotzone {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        pointer-events: auto;
+      }
+      .dp-float-hotzone--left { left: 0; }
+      .dp-float-hotzone--right { right: 0; }
+
       /* --dp-float-jitter is set per bubble in JS. Without it every bubble
          starts at the same x and the two sides read as two tidy columns
          rather than something drifting. */
@@ -385,6 +335,9 @@
           triggers: [
             { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable 🙄' },
             { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
+            // Gutter hover zones beside the prototype. Answers "are those
+            // quotes real?" without a banner, now that the project bar is gone.
+            { type: 'hover', selector: '.dp-float-hotzone', message: 'Real feedback, from real teachers' },
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
             kaomoji && kaomoji.cursorTrigger,
           ].filter(Boolean)
@@ -431,49 +384,8 @@
                  width="800" height="480">
           </div>
 
-          <!-- Project bar. Gives the CTA somewhere to live (it was getting
-               lost as a lone button under the widget) and restores the project
-               context the strip-down removed, without taking width off the
-               prototype. Copy is factual, drawn from the existing case study;
-               edit freely. -->
-          <aside class="dp-flagship__bar" aria-label="About this project">
-            <div class="dp-flagship__bar-text">
-              <p class="dp-flagship__bar-eyebrow">The project</p>
-              <p class="dp-flagship__bar-title">Planner, at Inquisitive</p>
-              <p class="dp-flagship__bar-meta">Curriculum planning for primary teachers. Try it above, or read how it was built.</p>
-              <!-- Answers "are those quotes real?" once, in the spot that
-                   already holds the project's context, rather than repeating
-                   a disclaimer inside every bubble. -->
-              <p class="dp-flagship__bar-meta dp-flagship__bar-note">The quotes drifting past are real, unprompted teacher feedback.</p>
-            </div>
-            <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
-          </aside>
         </div>
       </section>
-
-      <!-- ============================================================
-           KAOMOJI STRIP — moved up, directly after the flagship (Edward's
-           call). Markup and behaviour live in kaomoji-strip.js, shared with
-           index.html and personal.html. This placeholder is REPLACED by the
-           strip, so no wrapper survives in the layout.
-
-           The Product Discovery block that used to sit here was removed at
-           Edward's request, so this is currently a one-case-study homepage.
-           ============================================================ -->
-      <div id="kaomoji-mount"></div>
-      <noscript>
-        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
-          <div class="dp-strip-inner">
-            <div class="dp-strip-content">
-              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
-            </div>
-            <div class="dp-strip-actions">
-              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
-            </div>
-          </div>
-        </section>
-      </noscript>
 
       <!-- ============================================================
            TESTIMONIALS
@@ -512,6 +424,31 @@
           </blockquote>
         </div>
       </section>
+
+      <!-- ============================================================
+           KAOMOJI STRIP — the one piece of personality, sitting between
+           the teacher testimonials and the closing call to action. Markup and
+           behaviour live in kaomoji-strip.js, shared with index.html and
+           personal.html. This placeholder is REPLACED by the strip, so no
+           wrapper survives in the layout.
+
+           Page order is deliberate: prototype, then proof, then personality,
+           then the ask.
+           ============================================================ -->
+      <div id="kaomoji-mount"></div>
+      <noscript>
+        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
+          <div class="dp-strip-inner">
+            <div class="dp-strip-content">
+              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
+              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
+            </div>
+            <div class="dp-strip-actions">
+              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
+            </div>
+          </div>
+        </section>
+      </noscript>
 
       <!-- ============================================================
            CONTACT
