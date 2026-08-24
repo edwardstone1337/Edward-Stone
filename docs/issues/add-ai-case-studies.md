@@ -4,6 +4,15 @@
 **Priority:** normal  
 **Effort:** medium  
 
+> **Homepage v2 note (2026-08-24).** `dev/home-v2.html` (not yet public; `index.html` is
+> unchanged) removes the mechanism this issue plans to use. Homepage "strips" don't exist on
+> v2 at all, and the homepage's visible case-study count drops to one (Planner, the flagship) —
+> an earlier revision added a second project card for Product Discovery (`f36a81d`, "add
+> project card, reorder") but it was removed again (`ed9b1ec`, "drop the project bar, explain
+> quotes via cursor-chat, reorder"). If v2 graduates, "linked from the homepage strips" is no
+> longer a viable plan for a new AI case study; it would need to compete for the single
+> flagship/second-case-study slot instead.
+
 ---
 
 ## TL;DR

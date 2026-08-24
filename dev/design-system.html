@@ -1154,6 +1154,24 @@
             </div>
             <span class="ds-label">.dp-lightbox, .dp-about-lightbox, .dp-lightbox-backdrop, .dp-lightbox-close, .dp-about-lightbox__body, .dp-about-lightbox__image, .dp-about-lightbox__prev, .dp-about-lightbox__next, .dp-about-lightbox__panel, .dp-about-lightbox__description — position: fixed rescoped to this box only</span>
           </div>
+
+          <div class="ds-subsection">
+            <h3 class="ds-subsection-title">6q. Snail</h3>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Pixel-art snail that crawls clockwise laps around any element's border, dragging a slime trail: upright along the top, sideways down the right, upside down along the bottom, rounding each corner along its actual border-radius. Click it and it retracts into its shell and stops; click again and it carries on. Mounted with <code>initSnail(host, { size, speed, mono, pathTarget })</code> from <code>assets/js/dev-projects/snail.js</code>, which builds the sprite, runs the four-frame walk cycle, and appends the <code>.dp-snail-rail</code> below. The sprite's own colours come from that module's palette as inline fills (sprite data, like the Planner's board colours), so no colour lives in <code>dev-styles.css</code>.</p>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">The lap is CSS Motion Path. The module measures the traced element and writes an <code>offset-path: path(…)</code> rounded rect; <code>offset-anchor: 50% 100%</code> puts the snail's feet on the line and <code>offset-rotate: auto</code> turns it to follow the tangent, which is what rounds the corners and flips it underneath. Animating <code>offset-distance</code> walks one lap. Because the path is baked from measured pixels it is rebuilt on resize, via a <code>ResizeObserver</code> on the traced element — a window listener alone would miss the Planner's board changing height when you switch tabs.</p>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Gotchas. The snail rides the <em>outside</em> of the border, so a traced element with <code>overflow: hidden</code> clips it — mount on a wrapper and pass the bordered element as <code>pathTarget</code> (<code>dev/home-v2.html</code> does exactly this, because <code>.pl-frame</code> hides its overflow). Browsers without <code>offset-path</code> fall back to the original top-edge-only crawl, feature-detected rather than sniffed.</p>
+            <p style="font-size: var(--dp-text-sm); color: var(--dp-text-secondary); margin-bottom: var(--dp-space-3);">Decorative: the rail is <code>aria-hidden</code> and not focusable, since a focusable target that slides across the screen is worse than no target at all. Under <code>prefers-reduced-motion</code> it parks at the left edge with no crawl, no walk cycle and no trail, but stays clickable.</p>
+            <!-- padding-top gives the snail somewhere to be: it sits ABOVE
+                 its host's top edge, so a demo box flush with the host clips it. -->
+            <div class="ds-demo" style="position: relative; padding-top: var(--dp-space-10);">
+              <div id="ds-snail-host" style="position: relative; height: 72px; border: 1px solid var(--dp-border-default); border-radius: var(--dp-radius-lg); background: var(--dp-bg-elevated);"></div>
+            </div>
+            <span class="ds-label">.dp-snail-rail, .dp-snail, .dp-snail__body, .dp-snail__shell, .dp-snail-trail-clip, .dp-snail-trail-runner, .dp-snail-trail — --retracted and --static state modifiers on the rail</span>
+            <script type="module">
+              import { initSnail } from '../assets/js/dev-projects/snail.js';
+              initSnail(document.getElementById('ds-snail-host'), { size: 32, speed: 14 });
+            </script>
+          </div>
       </section>
     </main>
 

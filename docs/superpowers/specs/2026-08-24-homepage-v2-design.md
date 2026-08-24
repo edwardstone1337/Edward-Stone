@@ -1,7 +1,9 @@
 # Homepage v2 — flagship-led redesign
 
 Date: 2026-08-24
-Status: approved, not yet implemented
+Status: built at `dev/home-v2.html`, not yet public. `index.html` is unchanged
+and still live. See "As built" below, which supersedes the original page
+structure where the two disagree.
 
 ## Goal
 
@@ -155,6 +157,90 @@ adds no new exposure and no third-party form service is required.
 roles are wanted, availability, and what a useful first message contains.
 
 **Not yet specified.** Contact page content is deferred to its own design pass.
+
+## As built (supersedes "Page structure" above)
+
+Ten rounds of review with Edward moved this a long way from the spec. Where this
+section and the original disagree, this section is what exists.
+
+### Final page order
+
+1. **Nav** — shared component
+2. **Flagship** — avatar, name + role, headline, standfirst, two CTAs, then the live
+   Planner prototype at full width with teacher quotes drifting up both gutters
+3. **Testimonials** — colleague quotes, serif italic with quote marks
+4. **Kaomoji strip** — the one piece of personality
+5. **Let's talk** — a full blue panel with on-dark buttons
+6. **Footer** — outside `<main>`, unlike `index.html`
+
+Order is deliberate: prototype, then proof, then personality, then the ask.
+
+### Changed from the spec
+
+- **The second case study is gone.** Product Discovery was built as a promo block, then
+  removed at Edward's request ("it kind of speaks for itself"). This is now a
+  **one-case-study homepage** — the option weighed and rejected during design. Flagged
+  because it drifted back by increments rather than by decision. Its WIP banner was
+  still cleared, so `product-discovery.html` is ready if it returns.
+- **Headline rewritten twice.** "I designed the feature 25,000 teachers rely on every
+  week" → "I design the features people actually rely on" (read as snarky) → **"Hi, I'm
+  Edward 👋 I lead design on products people rely on."** The greeting and wave came back
+  because the standfirst is the line people skip, so the claim belongs in the headline;
+  "lead" carries the seniority signal a lead-role application needs.
+- **Two hero CTAs**, not one: "Read the case study" and "Get in touch", above the
+  prototype.
+- **A project bar** was added below the prototype to give the CTA a home, then removed
+  for the same "speaks for itself" reason. A project card to the *right* of the
+  prototype was tried first and reverted: it cost the board ~280px, forced the kanban
+  columns down to 200px and truncated a card title.
+- **Floating teacher testimonials** — not in the original spec at all. See below.
+- **Cursor chat and the avatar easter egg** were dropped in the first build and restored
+  later; both are v1 features that the rebuild silently lost.
+- **`--dp-raw-brand-deep` (#004C99)** added to `dev-tokens.css`, used by the cursor chat
+  and the "Let's talk" panel.
+
+### Floating teacher testimonials
+
+`assets/js/dev-projects/floating-testimonials.js`. Real quotes from the Planner case
+study's wall of love drift up the gutters either side of the prototype, because a kanban
+board on its own only reads as "a kanban board" — the quotes are what say why it
+mattered. Dark serif italic bubbles with curly quote marks, hugging their text so a
+short quote is a small pill.
+
+Decorative by construction: `pointer-events: none`, `aria-hidden`, renders nothing under
+`prefers-reduced-motion`, animates transform and opacity only, `textContent` never
+`innerHTML`, and pauses while off screen.
+
+Two things that are easy to get wrong and were:
+- The layer is sized from `documentElement.clientWidth`, **not** `100vw`, which includes
+  the scrollbar and causes horizontal scroll.
+- Collision avoidance measures **real bounding boxes**, not `top` percentages. Bubbles
+  hug their text, so a four-line quote is several times taller than "Love it!" and a
+  percentage gap that clears one will not clear the other.
+
+Because the bubbles are `pointer-events: none` and moving, they cannot be hover targets.
+Two transparent `.dp-float-hotzone` elements fill the gutters instead, stopping exactly
+at the board edge, so cursor-chat can say "Real feedback, from real teachers" without
+intercepting any prototype interaction.
+
+### Production bug found on the way
+
+`.pl-frame` derived its height from its width via `aspect-ratio: 1440/1024` and only
+dropped that below 600px, but `.pl-tabbar` wraps to two rows from roughly 960px down. In
+that band the wrapped tabbar ate height the frame never budgeted for and `.pl-frame-body`
+clipped its own content: **61px hidden at 768px on the live `index.html`**, 84px on v2.
+Breakpoint raised to 960px. This fix affects production, not just v2.
+
+### Still not done
+
+- `contact.html` does not exist, so the Contact nav entry was never added.
+- v2 has not graduated to `index.html`.
+- All v2 CSS is still page-local and needs promoting into `dev-styles.css` (with a
+  `dev/design-system.html` Organisms entry) when it does.
+- The cursor-chat colour override is page-local too; promote it into `cursor-chat.css`
+  at the same time rather than leaving the site two-toned.
+- `.dp-btn-primary` is white on `--dp-raw-brand` at 5.57:1 sitewide, which passes AA but
+  misses this repo's AAA target. Unresolved, and a brand decision rather than a bug fix.
 
 ## Out of scope
 

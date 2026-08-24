@@ -366,8 +366,25 @@
       import { initNav } from '../assets/js/dev-projects/nav-component.js';
       import { initKaomojiStrip } from '../assets/js/dev-projects/kaomoji-strip.js';
       import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from '../assets/js/dev-projects/floating-testimonials.js';
+      import { initSnail } from '../assets/js/dev-projects/snail.js';
 
       initNav();
+
+      // Snail doing laps of the prototype's border. Mounted on the widget
+      // wrapper but tracing .pl-frame: the frame hides its overflow, so a
+      // snail sitting on its border would be clipped if mounted inside it.
+      // The frame only exists once the Planner has mounted, so this waits.
+      function mountSnail() {
+        const widget = document.querySelector('.dp-flagship__widget');
+        const frame = widget && widget.querySelector('.pl-frame');
+        if (!widget || !frame) return false;
+        initSnail(widget, { size: 32, speed: 110, pathTarget: frame });
+        return true;
+      }
+      if (!mountSnail()) {
+        const mo = new MutationObserver(() => { if (mountSnail()) mo.disconnect(); });
+        mo.observe(document.querySelector('.dp-flagship__widget'), { childList: true, subtree: true });
+      }
 
       // Teacher quotes drifting up the gutters beside the prototype. Measured
       // against the widget rather than the whole stage so the gutter maths is
