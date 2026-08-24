@@ -104,3 +104,4 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - A new shared `.dp-*` component that qualifies for the Shared CSS Components table also gets a `dev/design-system.html` Organisms entry in the same change — see `docs/architecture-tokens.md`
 - Run all three check scripts before pushing (see Development above)
 - Accessibility is not optional — WCAG AAA target
+- **No em dashes in prod-visible copy.** Body copy, headings and CTAs on public pages use a comma, colon, or a full stop instead. Name/label separators outside prose (e.g. the `og:image:alt` meta, `aria-label` text) are the existing exception. Comments and docs are unaffected
