@@ -14,7 +14,7 @@ Public pages are the HTML files at the repo root, `projects/`, and `case-studies
 - `projects/prang-out.html` — redirects to `/404.html` on prod via an inline gate
 - `projects/planner.html` — same prod-gate pattern as `prang-out.html` (redirects to `/404.html` on prod via an inline gate)
 - `about.html` — live and indexable, but deliberately **not** linked from the prod nav
-- On `index.html`, several strips/toolbox/testimonials carry `data-prod-hide` and are hidden on prod by the `env.js` feature gate. The `.dp-case-promo__widget` live Planner embed is gated the same way (`data-prod-hide` plus a script-level `isProd` guard that skips mounting it entirely) — a static PNG (`.dp-case-promo__media`) shows in its place on prod
+- On `index.html`, several strips/toolbox/testimonials carry `data-prod-hide` and are hidden on prod by the `env.js` feature gate. The `.dp-case-promo__widget` live Planner embed is **not** among them any more — it mounts on every environment, including prod. The static PNG (`.dp-case-promo__media`) it used to fall back to now lives inside `<noscript>` as the no-JS fallback only
 
 **CSS systems**: "dev" = `dev-tokens.css` + `dev-styles.css` (`dp-` prefix, primary). "legacy" = `tokens.css` + `style.css` (no prefix, being phased out). Never mix them.
 
@@ -104,3 +104,4 @@ For adding a new page, follow: `docs/new-page-checklist.md`.
 - A new shared `.dp-*` component that qualifies for the Shared CSS Components table also gets a `dev/design-system.html` Organisms entry in the same change — see `docs/architecture-tokens.md`
 - Run all three check scripts before pushing (see Development above)
 - Accessibility is not optional — WCAG AAA target
+- **No em dashes in prod-visible copy.** Body copy, headings and CTAs on public pages use a comma, colon, or a full stop instead. Name/label separators outside prose (e.g. the `og:image:alt` meta, `aria-label` text) are the existing exception. Comments and docs are unaffected

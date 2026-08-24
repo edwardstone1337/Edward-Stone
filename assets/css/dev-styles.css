@@ -404,9 +404,8 @@ img { display: block; max-width: 100%; }
 }
 
 /* ------------------------------------------------
-   Case study promo — centered heading + live widget (or, on prod, the
-   fallback screenshot — see the PROD-HIDE comments in index.html and the
-   `.dp-case-promo__widget` / `.dp-case-promo__media` gate rules below)
+   Case study promo — centered heading + live widget (with the screenshot
+   in `.dp-case-promo__media` as the <noscript> fallback)
    ------------------------------------------------ */
 .dp-case-promo {
   margin-top: var(--dp-section-gap);           /* 96px — matches section rhythm */
@@ -446,27 +445,23 @@ img { display: block; max-width: 100%; }
   margin: var(--dp-space-3) 0 0;               /* 12px — separates the two lines without the old bottom-margin gap */
 }
 
-/* Live widget mount (dev/local — see index.html's PROD-HIDE comments and
-   the mount script). `.pl-compact` (project-planner.css) overrides ONLY
-   the widget's size tokens; this rule just sizes/centers the container
-   itself within the section. */
+/* Live widget mount (all environments — see index.html's mount script).
+   `.pl-compact` (project-planner.css) overrides ONLY the widget's size
+   tokens; this rule just sizes/centers the container itself within the
+   section. */
 .dp-case-promo__widget {
   width: 100%;
   max-width: 1040px;
 }
 
-/* Fallback screenshot (prod — the widget above is [data-prod-hide]).
-   Hidden by default (dev/local shows the live widget instead); shown only
-   once `.is-prod` is set on <html> by env.js. See index.html's PROD-HIDE
-   comments for the pairing with `.dp-case-promo__widget`. */
+/* Fallback screenshot. Lives inside <noscript> in index.html, so it only
+   renders for scriptless visitors — the live `.dp-case-promo__widget`
+   above covers everyone else. */
 .dp-case-promo__media {
-  display: none;
+  display: block;
   width: 100%;
   max-width: 800px;
-}
-
-.is-prod .dp-case-promo__media {
-  display: block;
+  margin-inline: auto;
 }
 
 .dp-case-promo__media img {

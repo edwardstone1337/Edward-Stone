@@ -41,7 +41,7 @@ This project has two JS component directories with different conventions. **New 
 
 ## `assets/js/dev-projects/planner/` — Planner Prototype (ES6 Modules)
 
-A self-contained "prototype kit" (14 files) built for the Planner prototype — `projects/planner.html` (full page, prod-gated) and the homepage's compact `.dp-case-promo__widget` embed — but designed so a future case-study prototype can reuse the board/card/row/drawer machinery without forking it. Full design/decision log: `docs/superpowers/specs/2026-08-23-planner-prototype-design.md`.
+A self-contained "prototype kit" (14 files) built for the Planner prototype — `projects/planner.html` (full page, still prod-gated) and the homepage's compact `.dp-case-promo__widget` embed (live on **all** environments, prod included, since the embed mounts this module directly rather than iframing the gated page) — but designed so a future case-study prototype can reuse the board/card/row/drawer machinery without forking it. Full design/decision log: `docs/superpowers/specs/2026-08-23-planner-prototype-design.md`.
 
 | File | Type | Purpose |
 |------|------|---------|

@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="assets/css/dev-styles.css">
     <link rel="stylesheet" href="assets/css/cursor-chat.css">
     <link rel="stylesheet" href="assets/css/bears-creator.css">
-    <!-- Planner prototype widget (dev/local only — see .dp-case-promo__widget's PROD-HIDE gate) -->
+    <!-- Planner prototype widget (live on all environments) -->
     <link rel="stylesheet" href="assets/css/project-planner.css">
 
     <!-- Index-only: spacing between hero, card section, and first strip -->
@@ -308,21 +308,22 @@
         <div class="dp-case-promo__inner">
           <div class="dp-case-promo__heading">
             <p class="dp-case-promo__title">I designed the feature 25,000 teachers rely on every&nbsp;week.</p>
-            <p class="dp-case-promo__subtitle">It turned a simple save-for-later into the platform's most-loved tool — and lifted free-to-paid conversion by&nbsp;30%.</p>
+            <p class="dp-case-promo__subtitle">It turned a simple save-for-later into the platform's most-loved tool, and lifted free-to-paid conversion by&nbsp;30%.</p>
           </div>
 
-          <!-- PROD-HIDE: live Planner widget — the prototype is gated to dev/local via [data-prod-hide] (see assets/css/dev-styles.css's `.is-prod [data-prod-hide]` rule). Swap this block live by removing data-prod-hide (and the media fallback below) once the prototype is ready for prod. -->
-          <div class="dp-case-promo__widget pl-compact" data-project="planner" data-prod-hide></div>
-          <!-- END PROD-HIDE -->
+          <!-- Live Planner widget — mounted on every environment by the module at the end of <body>. -->
+          <div class="dp-case-promo__widget pl-compact" data-project="planner"></div>
 
-          <!-- Fallback PNG — shown only on prod (see `.dp-case-promo__media` in dev-styles.css) until the widget above goes live there too. -->
-          <div class="dp-case-promo__media">
-            <img src="assets/images/planner.png"
-                 class="dp-case-promo__planner-image"
-                 alt="Planner feature showing curriculum browser with term filtering and unit detail panel"
-                 loading="lazy" decoding="async"
-                 width="800" height="480">
-          </div>
+          <!-- No-JS fallback — the live widget needs JS, so scriptless visitors get the screenshot instead. -->
+          <noscript>
+            <div class="dp-case-promo__media">
+              <img src="assets/images/planner.png"
+                   class="dp-case-promo__planner-image"
+                   alt="Planner feature showing curriculum browser with term filtering and unit detail panel"
+                   loading="lazy" decoding="async"
+                   width="800" height="480">
+            </div>
+          </noscript>
 
           <a href="case-studies/planner.html" class="dp-btn dp-btn-primary">
             Learn more
@@ -637,19 +638,15 @@
       }
     </script>
 
-    <!-- PROD-HIDE: live Planner widget mount — the container itself is CSS-hidden on prod ([data-prod-hide]), but skip mounting entirely there too so the prototype never runs on production. Remove this isProd guard (and the CSS gate) once the prototype is ready for prod. -->
+    <!-- Live Planner widget mount — runs on every environment. -->
     <script type="module">
-      const isProd = document.documentElement.classList.contains('is-prod');
-      if (!isProd) {
-        const plannerRoot = document.querySelector('.dp-case-promo__widget');
-        if (plannerRoot) {
-          import('./assets/js/dev-projects/planner/planner.js').then((m) => {
-            m.initPlanner(plannerRoot, { chrome: false });
-          });
-        }
+      const plannerRoot = document.querySelector('.dp-case-promo__widget');
+      if (plannerRoot) {
+        import('./assets/js/dev-projects/planner/planner.js').then((m) => {
+          m.initPlanner(plannerRoot, { chrome: false });
+        });
       }
     </script>
-    <!-- END PROD-HIDE -->
 
     <!-- Project components (projects-grid imports project-card so load order is guaranteed) — hidden for Phase 1 MVP
     <script type="module" src="assets/js/dev-projects/projects-grid.js"></script>
