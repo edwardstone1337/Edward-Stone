@@ -100,6 +100,11 @@
   --dp-raw-brand: #0066CC;           /* ← single place to update brand colour */
   --dp-raw-brand-on-dark: var(--dp-raw-brand);
   --dp-raw-brand-on-light: var(--dp-raw-brand);
+  /* Deepened brand blue for small light-on-blue text. --dp-raw-brand carries
+     white at 5.57:1, which passes AA but misses this repo's AAA target of
+     7:1 for normal-size text; this reaches 8.43:1. Use it wherever light text
+     sits on a brand-coloured surface at body size or smaller. */
+  --dp-raw-brand-deep: #004C99;
 
   /* --- Nav action (shared height for links, toggles, hamburger) --- */
   --dp-nav-action-height: 40px;

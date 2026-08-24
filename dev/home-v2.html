@@ -249,6 +249,24 @@
       .dp-float-quote::before { content: open-quote; }
       .dp-float-quote::after { content: close-quote; }
 
+      /* Cursor chat in brand blue rather than near-black. --dp-raw-brand-deep
+         (#004C99), not --dp-raw-brand (#0066CC): the bubble uses small light
+         text, and the standard brand blue carries it at only 5.57:1, under
+         this repo's AAA target of 7:1. The deepened one reaches 8.43:1 and
+         still reads as the same blue.
+
+         Page-local so index.html, personal.html and resume.html keep the
+         near-black bubble until v2 replaces v1. Promote into cursor-chat.css
+         at that point rather than leaving the site two-toned. */
+      .dp-cursor-chat__bubble,
+      .dp-cursor-chat::before {
+        /* Fallback matters: an unresolved custom property makes the whole
+           declaration invalid-at-computed-value-time, which resolves the
+           background to transparent rather than to the stylesheet's value.
+           A stale cache during development produced exactly that. */
+        background: var(--dp-raw-brand-deep, var(--dp-raw-grey-900));
+      }
+
       /* Invisible hover targets filling the gutters, so cursor-chat can
          explain the quotes. pointer-events: auto re-enables hovering inside
          the pointer-events: none layer; they stop at the board edge so the
