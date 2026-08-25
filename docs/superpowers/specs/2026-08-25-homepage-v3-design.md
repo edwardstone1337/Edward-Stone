@@ -4,6 +4,24 @@
 **Status:** SHIPPED 2026-08-25. Built as described; see `CHANGELOG.md` (unreleased) for the as-built record and the in-browser verification results.
 **Supersedes parts of:** `docs/superpowers/specs/2026-08-24-homepage-v2-design.md`
 
+> **As built, later the same day.** The page kept moving after this spec was
+> approved. Three changes, none of which alter the reasoning above:
+>
+> - **The work ticker came back**, directly under the logo bar, its
+>   pre-redesign position. This spec's homepage showed none of Edward's actual
+>   design work once the prototype left, which turned out to be the shape's one
+>   real weakness. The logos say where the work happened; the ticker shows what
+>   it looked like. It restored `data-prod-hide` for its four doodle tiles, now
+>   the repo's only use of that attribute.
+> - **The hero headline became three deliberate lines** with "I lead design" in
+>   brand blue, and **"Get in touch" was dropped**, leaving one CTA. The hero
+>   asks for one thing; contact stays in the "Let's talk" panel and the footer.
+> - **Vertical rhythm was evened out** to two tiers, 96px within the hero block
+>   and 192px between sections, flattening to ~96px on small screens.
+>
+> Final section order: hero, logo bar, work ticker, testimonials, "Let's talk".
+> `CHANGELOG.md` carries the full as-built record for each.
+
 ## Why
 
 Homepage v2 (shipped 2026-08-24) leads with the live Planner prototype. It is
