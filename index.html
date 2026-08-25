@@ -55,7 +55,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: var(--dp-space-8);
+        /* 48px, not 32px: the snail traces the prototype's frame border and
+           its 32px body overhangs the top edge by half its height. At 32px the
+           snail passed within ~16px of the CTA buttons and read as crowding
+           them; 48px clears it with room to spare. */
+        gap: var(--dp-space-12);
         max-width: 1200px;
         margin-inline: auto;
         /* No padding-inline: the parent .dp-page already supplies 24px each
