@@ -128,7 +128,12 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: var(--dp-space-3);
-        margin-top: var(--dp-space-6);
+        /* 48px, not 24px: the snail laps the OUTSIDE of the button's border and
+           its 32x24 body hangs a full 16px above the top edge. At 24px it passed
+           within 8px of the standfirst and read as crowding it. 48 leaves 32px
+           of clear air, the same clearance the prototype needed on the case
+           study for the same reason. */
+        margin-top: var(--dp-space-12);
       }
 
       /* Testimonials are capped at --dp-testimonial-track-max-width (960px)
@@ -263,8 +268,29 @@
       import { initNav } from './assets/js/dev-projects/nav-component.js';
       import { initImageTicker } from './assets/js/dev-projects/image-ticker.js';
       import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
+      import { initSnail } from './assets/js/dev-projects/snail.js';
 
       initNav();
+
+      // Snail doing slow laps of the page's single call to action, to draw the
+      // eye to it. Mounted on the actions wrapper rather than the button itself
+      // and given the button as pathTarget: the snail rides the OUTSIDE of the
+      // border it traces, so tracing an element from within it risks clipping.
+      // Same wrapper-plus-pathTarget pattern as the Planner case study.
+      //
+      // speed is seconds per lap, not velocity. The case study's 110s covers a
+      // 3624px perimeter (~33px/sec); this button's perimeter is only 450px, so
+      // the same velocity would whip the snail round every 14 seconds, which
+      // reads as frantic next to a CTA rather than as a nudge toward it. 50s is
+      // roughly 9px/sec: unmistakably a slug.
+      //
+      // Click-to-retract comes free with the module, which is also what keeps
+      // this the right side of WCAG 2.2.2 for moving content.
+      const ctaButton = document.querySelector('.dp-flagship__actions .dp-btn-primary');
+      const ctaActions = document.querySelector('.dp-flagship__actions');
+      if (ctaButton && ctaActions) {
+        initSnail(ctaActions, { size: 32, speed: 50, pathTarget: ctaButton });
+      }
 
       // Both ticker rows, driven by a rAF loop rather than CSS keyframes so
       // they can scroll at independently derived speeds. The module reads its

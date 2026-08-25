@@ -69,6 +69,13 @@ const FRAME_MS = 130;
 const FRAME_COUNT = 4;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+/* Trail length caps. The trail is normally size * 1.6, which assumes the snail
+   is circling something much larger than itself. TRAIL_PERIMETER_RATIO keeps it
+   proportionate when it is not; MIN_TRAIL_WIDTH stops it vanishing entirely on
+   a very small target. */
+const TRAIL_PERIMETER_RATIO = 0.05;
+const MIN_TRAIL_WIDTH = 8;
+
 function prefersReducedMotion() {
   return typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -230,6 +237,19 @@ export function initSnail(host, options = {}) {
     const hostRect = host.getBoundingClientRect();
     const cs = getComputedStyle(target);
     const radius = parseFloat(cs.borderTopLeftRadius) || 0;
+
+    // Trail length is derived from the snail's own size (size * 1.6), which is
+    // right on a large target and wrong on a small one: the same 51px wisp that
+    // is 1.4% of a lap around a 3624px prototype frame is 11% of a lap around a
+    // 450px button, and reads as a streak rather than slime. Cap it at a
+    // fraction of the actual perimeter so it stays proportionate to whatever it
+    // is circling. Large targets are unaffected, since the cap only ever binds
+    // when the perimeter is small.
+    const perimeter = 2 * (rect.width + rect.height);
+    trail.style.width = Math.max(
+      MIN_TRAIL_WIDTH,
+      Math.min(Math.round(size * 1.6), Math.round(perimeter * TRAIL_PERIMETER_RATIO))
+    ) + 'px';
 
     // Path coordinates are relative to the wrap's containing block, which is
     // the rail. Offset by where the target sits inside the host.
