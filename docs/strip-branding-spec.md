@@ -194,16 +194,16 @@ import { initKaomojiStrip } from './assets/js/dev-projects/kaomoji-strip.js';
 const kaomoji = initKaomojiStrip('#kaomoji-mount');
 ```
 
-It owns everything about the strip in one place — its markup (`.dp-strip--flipped.dp-strip--kaomoji`, including the preview `<iframe>`), the `kaomoji-copy` `postMessage` listener (with `event.origin` validation), and the iframe `mouseenter`/`mouseleave` bridge that keeps the cursor-chat hover bubble from hanging at the iframe boundary. It is currently live on two pages, `index.html` and `personal.html`, each of which contributes only a placeholder element and a `<noscript>` fallback — no strip markup or wiring of its own.
+It owns everything about the strip in one place — its markup (`.dp-strip--flipped.dp-strip--kaomoji`, including the preview `<iframe>`), the `kaomoji-copy` `postMessage` listener (with `event.origin` validation), and the iframe `mouseenter`/`mouseleave` bridge that keeps the cursor-chat hover bubble from hanging at the iframe boundary. It is currently live on **one** page, `personal.html`, which contributes only a placeholder element and a `<noscript>` fallback — no strip markup or wiring of its own. It was also on `index.html` until homepage v3 (2026-08-25) moved it off.
 
 **Mount contract:**
 - `initKaomojiStrip(mountSelector)` finds the element matching `mountSelector` and **replaces** it with the rendered `<section>` (not fill-in-place), so no extra wrapper `<div>` survives into the layout.
 - Returns `{ section, cursorTrigger }` on success, or `null` if `mountSelector` matches nothing — this lets a page drop the strip entirely just by deleting its placeholder, no JS branch required on the caller's side.
 - `cursorTrigger` is a plain object (`{ type: 'hover', selector: '#strip-kaomoji', message }`) held by reference. The module mutates `cursorTrigger.message` in place when the preview reports a successful copy (`'Try clicking one'` → `'Great choice'`, resetting on `mouseleave`), and `cursor-chat.js` reads `trigger.message` at fire time rather than at init, so the caller doesn't need to do anything to pick up the change.
 
-**Ordering requirement:** the module deliberately does **not** call `initCursorChat` itself — `index.html` composes ten hover triggers into one `initCursorChat()` call (avatar, logo bar, testimonials, hero wave, counter, plus this strip) and `cursor-chat.js` builds one bubble per call, so only the page can own that call. But `initCursorChat` resolves every trigger's `selector` once, at init, and silently skips any selector matching nothing — so **`initKaomojiStrip()` must run, and the strip element must exist in the DOM, before the page's `initCursorChat()` call**, or the hover trigger for the strip is silently dropped. Both `index.html` and `personal.html` mount the strip first and comment this ordering inline.
+**Ordering requirement:** the module deliberately does **not** call `initCursorChat` itself — a host page composes its triggers into one `initCursorChat()` call and `cursor-chat.js` builds one bubble per call, so only the page can own that call. But `initCursorChat` resolves every trigger's `selector` once, at init, and silently skips any selector matching nothing — so **`initKaomojiStrip()` must run, and the strip element must exist in the DOM, before the page's `initCursorChat()` call**, or the hover trigger for the strip is silently dropped. `personal.html` mounts the strip first and comments this ordering inline.
 
-Composing the trigger in looks like this on a page with other triggers (`index.html`):
+Composing the trigger in looks like this on a page with other triggers (`index.html` does the same shape with its avatar, hero-wave, logo-bar and testimonials triggers, minus this strip):
 
 ```js
 const kaomoji = initKaomojiStrip('#kaomoji-mount');
@@ -254,4 +254,4 @@ This drops the `.dp-strip-media` iframe entirely (the preview needs JS regardles
 
 ### Extending this to other strips
 
-Only Kaomoji has been extracted this way so far. SCP Reader and Flip 7 still live as inline markup on `index.html` — moving one of them into its own module would follow the same shape (a module owning markup + behaviour, exporting an `init*(mountSelector)` that replaces a placeholder and returns whatever the page needs to compose elsewhere, e.g. a cursor-chat trigger). See the product-strips backlog and case-study positioning in `docs/issues/dev-projects-product-strips.md` for where that's tracked.
+Only Kaomoji has been extracted this way so far. SCP Reader and Flip 7 no longer appear on any public page — the 2026-08-24 redesign cut them from the homepage and nothing replaced them; their markup survives only in `dev/old-index-2026-08-24.html`. Extracting either into its own module would follow the same shape (a module owning markup + behaviour, exporting an `init*(mountSelector)` that replaces a placeholder and returns whatever the page needs to compose elsewhere, e.g. a cursor-chat trigger). See the product-strips backlog and case-study positioning in `docs/issues/dev-projects-product-strips.md` for where that's tracked.

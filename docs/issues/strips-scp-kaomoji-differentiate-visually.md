@@ -24,6 +24,12 @@
 > "differentiate SCP from Kaomoji" question becomes moot outright: there would be nothing left
 > on the homepage to differentiate it from.
 
+> **Homepage v3 note (2026-08-25).** The v2 addendum above said only the kaomoji strip
+> survives on the homepage. v3 removes that one too: the strip moved to `personal.html`,
+> which is now the only page carrying it, and `Personal` was unhidden in the prod nav so
+> there is a way in. There is no longer any strip on the homepage at all, so this issue's
+> question is moot on `index.html` outright, not merely narrowed.
+
 ---
 
 ## Current state

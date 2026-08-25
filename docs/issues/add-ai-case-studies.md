@@ -12,6 +12,14 @@
 > longer a viable plan for a new AI case study; it would need to compete for the single
 > flagship/second-case-study slot instead.
 
+> **Homepage v3 note (2026-08-25).** The v2 addendum above said the homepage's visible
+> case-study count drops to one. In v3 it drops to **zero sections**: the flagship slot this
+> issue hoped to inherit no longer exists, and the only route to any case study from the
+> page body is the hero's single "Read the case study" button pointing at Planner.
+> Everything else goes through the Case Studies nav dropdown, which is where a new AI case
+> study would surface, via `CASE_STUDIES` in `case-study-data.js`. Homepage placement is no
+> longer an option to plan around.
+
 ---
 
 ## TL;DR

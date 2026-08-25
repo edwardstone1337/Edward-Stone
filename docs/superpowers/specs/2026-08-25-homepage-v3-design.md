@@ -1,7 +1,7 @@
 # Homepage v3: the prototype moves to the case study
 
 **Date:** 2026-08-25
-**Status:** Approved, not yet implemented
+**Status:** SHIPPED 2026-08-25. Built as described; see `CHANGELOG.md` (unreleased) for the as-built record and the in-browser verification results.
 **Supersedes parts of:** `docs/superpowers/specs/2026-08-24-homepage-v2-design.md`
 
 ## Why

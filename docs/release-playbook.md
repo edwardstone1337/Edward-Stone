@@ -109,23 +109,38 @@ git reset --hard <previous-commit> && git push --force origin main
 
 ## Currently Gated Features
 
+**No `data-prod-hide` attribute exists anywhere in the repo as of the 2026-08-24
+homepage redesign.** Every section that used one was either cut or promoted to
+shipping on prod, so prod and dev now differ only by nav links, the banner
+ticker, the snake game, and the two prototype pages. If you are looking for the
+old homepage gating table (toolbox, Fair Share / Flip 7 / SCP Reader strips,
+ticker items), those sections no longer exist; see
+`dev/old-index-2026-08-24.html` and `CHANGELOG.md`.
+
 | Feature | Gate method | File |
 |---|---|---|
-| Toolbox section | `data-prod-hide` | `index.html` |
-| Fair Share strip + testimonial | `data-prod-hide` | `index.html` |
-| Flip 7 strip | `data-prod-hide` | `index.html` |
-| SCP Reader strip + testimonial | `data-prod-hide` | `index.html` |
-| Kaomoji strip | `data-prod-hide` | `index.html` |
-| Ticker composite items (×2) | `data-prod-hide` | `index.html` |
-| Ticker static items (×2) | `data-prod-hide` | `index.html` |
 | Projects nav dropdown | `prodHide: true` | `nav-component.js` |
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
+| Snake game | `!isProd` before `import()` | `nav-component.js` |
 | Banner ticker init | `isProd` check | 8 HTML files |
 | Planner prototype page | inline redirect to `/404.html` | `projects/planner.html` |
 | Prang Out prototype page | inline redirect to `/404.html` | `projects/prang-out.html` |
 
-The homepage's live Planner embed (`.dp-case-promo__widget`) is **not** gated — it ships on prod. Its `assets/images/planner.png` screenshot is a `<noscript>` fallback now, not a prod stand-in, so don't re-add `data-prod-hide` to the widget expecting the image to take over.
+`Personal` is **not** gated as of homepage v3 (2026-08-25): the kaomoji strip
+moved there from the homepage, so the page needs a route in. Prod nav is Case
+Studies, Personal, Resume.
+
+The live Planner embed is **not** gated either — it ships on prod. It moved from
+the homepage to `case-studies/planner.html` in v3 and now mounts into
+`.dp-cs-prototype` (the older `.dp-case-promo__widget` and v2's
+`.dp-flagship__widget` are both gone). Its `assets/images/planner.png` screenshot
+is a first-paint poster removed on successful mount, not a prod stand-in, so
+don't gate the widget expecting the image to take over.
+
+`assets/js/env.js` still honours `data-prod-hide` via the `.is-prod` CSS rule, so
+the mechanism is available if a future section needs it — there is simply nothing
+using it today.
 
 ## Third-Party Scripts
 

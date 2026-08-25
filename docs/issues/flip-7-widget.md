@@ -14,6 +14,11 @@
 > graduates, this widget's entry point would need to live in `dev-projects`, its own page, or
 > nav instead of the homepage.
 
+> **Homepage v3 note (2026-08-25).** Closes the door the v2 note left ajar. v3 cuts the
+> homepage back to hero, logo bar, testimonials and "Let's talk", so there is no section a
+> widget could hang off. `personal.html` is the realistic home for this, matching the v2
+> note's "dev-projects or nav instead of the homepage" steer.
+
 ---
 
 ## Current State

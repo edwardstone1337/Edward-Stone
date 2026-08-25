@@ -107,7 +107,7 @@ The Planner prototype's per-project theme file — `--pl-*` tokens scoped to `[d
 
 Values are sourced from the real `@inquisitive/ui` design system rather than invented: `--pl-line-strong` (resting card/row border) is grey-5 `#d9d9d9`; `--pl-good` (progress fill) is success green-6 `#52c41a`; `--pl-progress-height` is 8px (`ProgressBar size="sm"`); `--pl-canvas` / `--pl-canvas-strong` (`#fdfdfe` / `#f8f9fa`) are that system's cool-grey surface tiers, used for the frame body's ground and the Kanban columns / recommendation tray respectively — a three-tier canvas → tray/column → bordered-card stack. Brand accent is `--pl-accent: #531DAB` (purple-7, Edward's brand colour, 9.85:1 on white — AAA for normal text).
 
-`.pl-compact` is a size-variant class (applied alongside `[data-project="planner"]` on the homepage's `.dp-case-promo__widget` mount) that shrinks only geometry tokens (`--pl-column-width`, `--pl-column-gap`, `--pl-card-gap`) for the compact embed — colour/radius/typography tokens are untouched, so the compact widget and the full `projects/planner.html` page share one visual identity at two densities.
+`.pl-compact` is a size-variant class (applied alongside `[data-project="planner"]` on the Planner case study's `.dp-cs-prototype` mount; it was on the homepage until 2026-08-25) that shrinks only geometry tokens (`--pl-column-width`, `--pl-column-gap`, `--pl-card-gap`) for the compact embed — colour/radius/typography tokens are untouched, so the compact widget and the full `projects/planner.html` page share one visual identity at two densities.
 
 The simulated product window (`.pl-frame` — titlebar, body, tab bar) is Planner-internal today; its CSS lives in this same file rather than a shared `dev-styles.css` component, but is intended for extraction once a second embedded-prototype consumer needs it.
 
@@ -128,6 +128,7 @@ Single-page bespoke layout is intentionally left out — the resume page interna
 | `.dp-nav-hamburger`, `-label` | ~788 | Mobile hamburger button (≤768px), toggles the drawer |
 | `.dp-nav-drawer`, `-backdrop`, `-panel`, `-close`, `-links`, `-heading`, `-link`, `--open` | ~802 | Mobile right-side nav drawer. Focus-trapped + scroll-locked (`.dp-overlay-active`) — see `docs/architecture-nav.md` |
 | `.dp-skip-link` | ~3773 | "Skip to content" link, first focusable element on every page. WCAG AAA requirement — do not remove |
+| `.dp-visually-hidden` | ~4500 | Removed from view, kept in the accessibility tree. For headings that keep a document outline legal, and for content with a richer visual equivalent elsewhere. **Not** interchangeable with `display: none`, which hides it from assistive tech too. `floating-testimonials.js` toggles this class on whatever element is passed as its `fallback`, so it must resolve on any page mounting that layer. Demo: `dev/design-system.html` §4h |
 | `.dp-page` | ~1090 | Root `<main>` wrapper on every page — sets base page padding/max-width |
 | `.dp-footer`, `-inner`, `-text`, `-links`, `-link` | ~2754 | Sitewide footer (copyright, links). Hosts the page counter widget |
 | `.dp-counter`, `__track`, `__digit`, `__reel` | ~2805 | Animated visit-count digits in the footer. Injected by `page-counter.js`, called on nearly every public page |
