@@ -4408,6 +4408,29 @@ body.dp-overlay-active {
   animation-iteration-count: infinite;
 }
 
+/* Hit area, deliberately larger than the artwork.
+
+   The sprite is only 32x24 and it never stops moving, so a cursor that aims at
+   where the snail is arrives where the snail was: at the usual ~32px/sec, a
+   250ms aim-and-click covers about 8px, a quarter of the sprite's own width.
+   The artwork stays the same size; only the target grows.
+
+   -12px on each side takes the target from 32x24 (768px²) to 56x48 (2688px²),
+   which also clears the WCAG 2.5.5 minimum of 44x44 for a pointer target. The
+   sprite's 24px height plus 2x12 leaves 4px of headroom on the tighter axis, so
+   sub-pixel positioning along the motion path cannot drop it under 44.
+
+   Anchored to the sprite, so it rotates with it round corners and sits mostly
+   OUTSIDE whatever is being traced, since offset-anchor: 50% 100% already puts
+   the whole sprite outside the path. Inherits pointer-events: auto and the
+   pointer cursor from .dp-snail, and the click handler is on .dp-snail itself,
+   so a hit here bubbles to the same place a hit on the artwork does. */
+.dp-snail::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+}
+
 @keyframes dp-snail-lap {
   from { offset-distance: 0%; }
   to   { offset-distance: 100%; }
