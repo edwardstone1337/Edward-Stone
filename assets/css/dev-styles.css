@@ -4487,3 +4487,25 @@ body.dp-overlay-active {
     transition: none;
   }
 }
+
+/* --------------------------------------------
+   UTILITIES
+   -------------------------------------------- */
+
+/* Visually hidden but exposed to assistive tech. Promoted here from
+   index.html's page-local block when the Planner prototype moved to the case
+   study: floating-testimonials.js now toggles this class on whatever element
+   is passed as its `fallback`, so it has to resolve on every page that mounts
+   the layer, not only the one page that happened to define it. */
+.dp-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

@@ -11,12 +11,168 @@
   <link rel="stylesheet" href="../assets/css/dev-tokens.css">
   <link rel="stylesheet" href="../assets/css/dev-styles.css">
   <link rel="stylesheet" href="../assets/css/case-study-theme.css">
+  <!-- Live Planner prototype, sitting under the TL;DR -->
+  <link rel="stylesheet" href="../assets/css/project-planner.css">
+  <!-- Needed by the floating quotes' gutter hover bubble -->
+  <link rel="stylesheet" href="../assets/css/cursor-chat.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
 
   <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+
+  <!--
+    Page-local styling for the Planner prototype, moved here from index.html
+    when the prototype left the homepage. No raw hex or rgba() values, existing
+    tokens only.
+  -->
+  <style>
+    /* The prototype needs roughly 1000px to show four terms, so it must not
+       take the 760px --dp-prose-max-width reading measure that .dp-tldr and
+       .dp-prose-section opt into. .dp-prose-layout is `display: contents`, so
+       declaring no max-width is all it takes: this becomes a direct child of
+       .dp-page and fills its 1152px, exactly the width it had on the homepage.
+       No 100vw + negative-margin breakout needed, unlike
+       .dp-testimonials-masonry--full. */
+    .dp-cs-prototype {
+      width: 100%;
+      min-width: 0;
+      /* Clearance for the snail, which rides the OUTSIDE of the frame border
+         and so overhangs the top edge by half its 32px body. Tighter than this
+         and it grazes the TL;DR card on its way round. */
+      margin-block: var(--dp-space-12);
+    }
+
+    /* Kanban columns fill the board instead of bunching left.
+       project-planner.css pins them to `flex: 0 0 var(--pl-column-width)`,
+       which left dead space on the right at this width. min-width holds the
+       220px floor, so this only ever ADDS width: when the board is too narrow
+       for four full columns they stay at 220px and .pl-board's overflow-x
+       scroll takes over rather than squashing into unreadable slivers.
+
+       Selector out-specifies `[data-project="planner"] .pl-column` (0,2,0) and
+       is page-local, so projects/planner.html is untouched. */
+    .dp-cs-prototype[data-project="planner"] .pl-column {
+      flex: 1 1 var(--pl-column-width);
+      width: auto;
+      min-width: var(--pl-column-width);
+    }
+
+    /* Shown at first paint and removed once the prototype mounts, so the
+       section is never an empty box while ~4,200 lines of module load. If the
+       import fails the poster simply stays. */
+    .dp-cs-prototype__poster {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--dp-radius-lg);
+      border: 1px solid var(--dp-border-default);
+      box-shadow: var(--dp-shadow-showcase-image);
+    }
+
+    @media (max-width: 768px) {
+      .dp-cs-prototype__poster {
+        box-shadow: var(--dp-shadow-card);
+      }
+    }
+
+    /* ── Floating teacher testimonials ──
+       Quotes drift up the gutters either side of the prototype. A kanban
+       board on its own only reads as "a kanban board"; these are what say
+       why it mattered to the teachers who used it. Behaviour and the quote
+       list live in assets/js/dev-projects/floating-testimonials.js. */
+    .dp-float-layer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      /* width is set in JS from documentElement.clientWidth, not 100vw:
+         100vw includes the scrollbar and would cause horizontal scroll. */
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dp-float-quote {
+      position: absolute;
+      /* Hug the text rather than sit at a fixed width, so "Love it!" is a
+         small pill and a longer quote grows to meet the cap. The varied
+         silhouettes are most of what makes these read as speech bubbles
+         instead of a column of boxes. */
+      width: max-content;
+      max-width: var(--dp-float-bubble-w, 200px);
+      box-sizing: border-box;
+      text-align: center;
+      padding: var(--dp-space-4) var(--dp-space-5);
+      /* Dark bubbles on a light page. Uses the on-dark semantic set, which
+         is deliberately identical in both themes, so these stay dark
+         whatever the page theme does. White on #111113 is ~18.9:1, well
+         past AAA. A white bubble was invisible on this white page; a tinted
+         one worked but read as another UI card rather than a human voice. */
+      border: none;
+      border-radius: var(--dp-radius-xl);
+      background: var(--dp-on-dark-surface);
+      box-shadow: var(--dp-shadow-card);
+      /* Serif italic with real quote marks, so it reads as somebody talking
+         rather than as more interface. */
+      font-family: var(--dp-font-serif);
+      font-style: italic;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--dp-on-dark-text-primary);
+      quotes: '\201C' '\201D';
+      opacity: 0;
+      pointer-events: none;
+      animation-name: dp-float-rise;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
+    }
+
+    /* Curly quotes via generated content: they stay out of the accessibility
+       tree and out of the quote text itself. */
+    .dp-float-quote::before { content: open-quote; }
+    .dp-float-quote::after { content: close-quote; }
+
+    /* Invisible hover targets filling the gutters, so cursor-chat can
+       explain the quotes. pointer-events: auto re-enables hovering inside
+       the pointer-events: none layer; they stop at the board edge so the
+       prototype's own interaction is never intercepted. */
+    .dp-float-hotzone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      pointer-events: auto;
+    }
+    .dp-float-hotzone--left { left: 0; }
+    .dp-float-hotzone--right { right: 0; }
+
+    /* --dp-float-jitter is set per bubble in JS. Without it every bubble
+       starts at the same x and the two sides read as two tidy columns
+       rather than something drifting. */
+    .dp-float-quote--left {
+      left: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+    }
+    .dp-float-quote--right {
+      right: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+    }
+
+    /* Long full-opacity plateau: a quote that spends most of its life
+       mid-fade is one nobody manages to read. */
+    @keyframes dp-float-rise {
+      0%   { opacity: 0; transform: translateY(40px) scale(0.96); }
+      12%  { opacity: 1; transform: translateY(24px) scale(1); }
+      85%  { opacity: 1; transform: translateY(-44px) scale(1); }
+      100% { opacity: 0; transform: translateY(-64px) scale(0.98); }
+    }
+
+    /* The module already bails under reduced motion; this is the belt to
+       its braces, in case the layer is ever rendered some other way. */
+    @media (prefers-reduced-motion: reduce) {
+      .dp-float-layer { display: none; }
+    }
+  </style>
 
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css"></noscript>
 
@@ -60,6 +216,33 @@
         </ul>
       </aside>
 
+      <!-- ============================================================
+           LIVE PROTOTYPE — directly under the TL;DR, so you can play with
+           the thing before reading how it was built.
+
+           Below the fold here, unlike on homepage v2, so the module lazy-mounts
+           for free rather than competing with first paint. The poster-swap is
+           kept anyway: it keeps the section from being an empty box while the
+           module loads, and it is what degrades if the import ever fails.
+
+           The Planner mounts its own h3 column headings ("Term 1"...). The
+           heading below keeps the outline legal and gives the prototype a name
+           in the document outline; it is hidden visually because the TL;DR
+           immediately above already says what this is.
+           ============================================================ -->
+      <h2 class="dp-visually-hidden">Planner: an interactive prototype</h2>
+      <div class="dp-cs-prototype pl-compact" data-project="planner">
+        <img src="../assets/images/planner.png"
+             class="dp-cs-prototype__poster"
+             alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
+             width="800" height="480">
+      </div>
+
+      <!-- Teacher quotes, in two forms that never both show. Wide screens get
+           them drifting up the gutters beside the prototype; narrower ones get
+           this static wall, because below roughly 1356px there is no gutter to
+           drift in. floating-testimonials.js owns that switch, so the width is
+           never hard-coded here. See the 2026-08-25 homepage-v3 spec. -->
       <section class="dp-testimonials-section dp-reveal" id="wall-of-love" aria-label="Testimonials from teachers">
         <h2>What teachers are saying</h2>
         <div class="dp-testimonials-masonry dp-testimonials-masonry--full">
@@ -246,6 +429,60 @@
   <script type="module">
     import { initShuffleTestimonials } from '../assets/js/case-studies/shuffle-testimonials.js';
     initShuffleTestimonials();
+  </script>
+
+  <!-- Live Planner prototype, its snail, and the floating teacher quotes -->
+  <script type="module">
+    import { initSnail } from '../assets/js/dev-projects/snail.js';
+    import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from '../assets/js/dev-projects/floating-testimonials.js';
+
+    const prototype = document.querySelector('.dp-cs-prototype');
+
+    if (prototype) {
+      import('../assets/js/dev-projects/planner/planner.js')
+        .then(m => {
+          m.initPlanner(prototype, { chrome: false });
+          // initPlanner appends rather than clearing, so removing the poster
+          // has to be explicit.
+          const poster = prototype.querySelector('.dp-cs-prototype__poster');
+          if (poster) poster.remove();
+        })
+        .catch(() => { /* poster stays, which is the intended degradation */ });
+
+      // Snail doing laps of the prototype's border. Mounted on the wrapper but
+      // tracing .pl-frame: the frame hides its overflow, so a snail sitting on
+      // its border would be clipped if mounted inside it. The frame only exists
+      // once the Planner has mounted, so this waits.
+      function mountSnail() {
+        const frame = prototype.querySelector('.pl-frame');
+        if (!frame) return false;
+        initSnail(prototype, { size: 32, speed: 110, pathTarget: frame });
+        return true;
+      }
+      if (!mountSnail()) {
+        const mo = new MutationObserver(() => { if (mountSnail()) mo.disconnect(); });
+        mo.observe(prototype, { childList: true, subtree: true });
+      }
+
+      // Quotes drift up the gutters beside the prototype where there is room
+      // for them, and the static wall of love below hides itself while they
+      // run. Where there is not, the wall is simply what you get.
+      initFloatingTestimonials({
+        stage: prototype,
+        quotes: PLANNER_TEACHER_QUOTES,
+        fallback: document.querySelector('#wall-of-love'),
+      });
+
+      // Answers "are those quotes real?" without a banner. The hotzones sit in
+      // the gutter only, never over the board.
+      import('../assets/js/dev-projects/cursor-chat.js').then(m => {
+        m.initCursorChat({
+          triggers: [
+            { type: 'hover', selector: '.dp-float-hotzone', message: 'Real feedback, from real teachers' },
+          ]
+        });
+      });
+    }
   </script>
 </body>
 </html>

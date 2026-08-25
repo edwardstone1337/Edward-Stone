@@ -24,7 +24,9 @@ const NAV_LINKS = [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' },
     { text: 'Prang Out', href: '/projects/prang-out.html' }
   ]},
-  { text: 'Personal', href: '/personal.html', prodHide: true },
+  // Visible on prod as of homepage v3: the kaomoji strip left the homepage and
+  // personal.html is now the only place it lives, so the page needs a way in.
+  { text: 'Personal', href: '/personal.html' },
   { text: 'Gallery', href: '/gallery.html', prodHide: true },
   { text: 'Resume', href: '/resume.html' },
   { text: 'About', href: '/about.html', prodHide: true }
