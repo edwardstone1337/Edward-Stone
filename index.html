@@ -113,8 +113,37 @@
          at .dp-page's full 1152px) and read as visibly pinched. Released here
          so the page has one consistent measure. Page-local: index.html keeps
          the 960px track. */
+      /* ── Vertical rhythm ──
+         Two tiers at a 1:2 ratio, rather than one flat number:
+
+           hero buttons -> logos       96px  \
+           logos -> ticker             96px  /  one block: who, where, what it looks like
+           ticker -> testimonials     192px  \
+           testimonials -> Let's talk 192px   >  section boundaries
+           Let's talk -> footer       192px  /
+
+         The tight tier groups the hero with its supporting proof; the wide tier
+         separates the major sections, so the page reads as evenly spaced without
+         being uniformly spaced.
+
+         Everything is measured content edge to content edge, not box to box.
+         Several of these sections carry their own padding, so the declared
+         numbers below rarely match the resulting gap: each one is set to whatever
+         makes the *visual* gap land on its tier. That is also what produced the
+         uneven 48/48/192/128/128 rhythm this replaces, where the ticker's
+         padding-bottom stacked on the testimonials' margin-top for a 192px
+         trench beside 48px gaps elsewhere. */
+      .dp-logo-bar {
+        /* Supplies both tight-tier gaps on its own: nothing above or below it
+           contributes padding at this boundary. */
+        padding-top: var(--dp-space-24);
+        padding-bottom: var(--dp-space-24);
+      }
+
       .dp-testimonials-section {
         max-width: none;
+        /* 96 + the ticker's own 96px padding-bottom = 192. */
+        margin-top: var(--dp-space-24);
       }
 
       /* Serif italic with real quote marks, so the testimonials read as
@@ -144,6 +173,9 @@
       .dp-contact-cta {
         background: var(--dp-raw-brand-deep, var(--dp-raw-grey-900));
         border: none;
+        /* 128 + the panel's own 64px padding-top = 192. The panel keeps its
+           internal padding untouched. */
+        margin-top: calc(var(--dp-space-24) + var(--dp-space-8));
       }
 
       .dp-contact-cta__heading,
@@ -151,13 +183,45 @@
         color: var(--dp-on-dark-text-primary);
       }
 
-      .dp-footer { margin-top: var(--dp-space-6); }
+      /* 88, an odd-looking number by design: the footer carries 40px of its own
+         padding-top sitewide and the "Let's talk" panel 64px of padding-bottom,
+         so 64 + 88 + 40 lands this boundary on 192 like the rest of the wide
+         tier. Adjusting the footer's own padding instead would reach into
+         sitewide chrome from a page-local block. */
+      .dp-footer { margin-top: calc(var(--dp-space-20) + var(--dp-space-2)); }
 
       @media (max-width: 768px) {
         .dp-flagship {
           padding-inline: var(--dp-space-4);
           padding-top: var(--dp-space-8);
           padding-bottom: var(--dp-space-8);
+        }
+
+        /* Small screens flatten to a single ~96px rhythm rather than keeping
+           the 96/192 tiers. Two reasons: 192px is roughly a fifth of a phone
+           viewport, so it stops reading as generous and starts reading as
+           sections that failed to load; and the tight-tier grouping it protects
+           is barely legible once everything is one column anyway.
+
+           The values differ per section because several of them change their
+           own padding at this breakpoint (the flagship drops to 32px bottom,
+           the ticker to 40 top / 48 bottom), so each lever is set to whatever
+           lands the visual gap near 96. Measured, not derived. */
+        .dp-logo-bar {
+          padding-top: var(--dp-space-16);
+          padding-bottom: var(--dp-space-12);
+        }
+
+        .dp-testimonials-section {
+          margin-top: var(--dp-space-12);
+        }
+
+        .dp-contact-cta {
+          margin-top: var(--dp-space-8);
+        }
+
+        .dp-footer {
+          margin-top: 0;
         }
       }
 
