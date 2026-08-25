@@ -432,8 +432,25 @@
     import { initSnail } from '../assets/js/dev-projects/snail.js';
     import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from '../assets/js/dev-projects/floating-testimonials.js';
 
-    const prototype = document.querySelector('.dp-cs-prototype');
+    // Snail doing laps of the TL;DR card, not the prototype. The card is the
+    // first thing after the hero, so the snail draws the eye to the summary
+    // rather than decorating the widget below it.
+    //
+    // Mounted directly on the card with no pathTarget: the snail rides the
+    // OUTSIDE of the border it traces, and .dp-tldr is overflow: visible, so
+    // nothing clips it. That is also why none of the MutationObserver waiting
+    // the prototype needs applies here, since the card exists at parse time.
+    //
+    // speed is seconds per lap, not velocity. The card's perimeter is 2154px
+    // against the prototype frame's 3589px, so 66s holds the same ~32.6px/sec
+    // crawl the snail had before it moved. It overhangs its border by 16px,
+    // with roughly 96px of hero padding above and 48px to the prototype below.
+    const tldrCard = document.querySelector('.dp-tldr');
+    if (tldrCard) {
+      initSnail(tldrCard, { size: 32, speed: 66 });
+    }
 
+    const prototype = document.querySelector('.dp-cs-prototype');
     if (prototype) {
       import('../assets/js/dev-projects/planner/planner.js')
         .then(m => {
@@ -444,21 +461,6 @@
           if (poster) poster.remove();
         })
         .catch(() => { /* poster stays, which is the intended degradation */ });
-
-      // Snail doing laps of the prototype's border. Mounted on the wrapper but
-      // tracing .pl-frame: the frame hides its overflow, so a snail sitting on
-      // its border would be clipped if mounted inside it. The frame only exists
-      // once the Planner has mounted, so this waits.
-      function mountSnail() {
-        const frame = prototype.querySelector('.pl-frame');
-        if (!frame) return false;
-        initSnail(prototype, { size: 32, speed: 110, pathTarget: frame });
-        return true;
-      }
-      if (!mountSnail()) {
-        const mo = new MutationObserver(() => { if (mountSnail()) mo.disconnect(); });
-        mo.observe(prototype, { childList: true, subtree: true });
-      }
 
       // Quotes drift up the gutters beside the prototype where there is room
       // for them, and the static wall of love below hides itself while they
