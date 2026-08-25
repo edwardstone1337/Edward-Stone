@@ -173,8 +173,16 @@
 
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
+      import { initImageTicker } from './assets/js/dev-projects/image-ticker.js';
+      import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
 
       initNav();
+
+      // Both ticker rows, driven by a rAF loop rather than CSS keyframes so
+      // they can scroll at independently derived speeds. The module reads its
+      // base speed from --dp-ticker-speed and never starts the loop under
+      // prefers-reduced-motion.
+      initImageTicker();
 
       import('./assets/js/dev-projects/cursor-chat.js').then(m => {
         m.initCursorChat({
@@ -191,6 +199,19 @@
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
           ]
         });
+      });
+
+      // Click a ticker tile to open it full size. dedupe: true because each
+      // row repeats its items to loop seamlessly, so the raw node list holds
+      // every image twice and the viewer would otherwise page through
+      // duplicates.
+      initImageLightbox({
+        selector: '.dp-ticker__item',
+        getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',
+        getImageAlt: (item) => item.querySelector('img')?.getAttribute('alt') || '',
+        getDescription: () => '',
+        ariaLabel: 'Portfolio work viewer',
+        dedupe: true,
       });
     </script>
 
@@ -331,6 +352,78 @@
             </svg>
           </li>
         </ul>
+      </section>
+
+      <!-- ============================================================
+           WORK TICKER — restored 2026-08-25, back in its pre-redesign spot
+           directly under the logo bar. The logos say WHERE the work happened;
+           this says WHAT it looked like. Without it the homepage names Edward
+           a designer and then shows none of his design.
+
+           aria-hidden on the whole section: it is a decorative marquee, and
+           the same work is reachable as real content elsewhere. Clicking a
+           tile opens the shared lightbox (image-lightbox.js, `dedupe: true`
+           because each row duplicates its items to loop seamlessly).
+
+           image-ticker.js drives both rows with a rAF loop rather than CSS
+           keyframes so they can run at independently derived speeds, and
+           never starts that loop under prefers-reduced-motion.
+
+           The four data-prod-hide tiles are the two self-congratulatory
+           doodles ("so pretty!", "COOL HUH"), each appearing twice because of
+           the loop duplication. They show on dev and never on prod. This is
+           currently the only use of data-prod-hide in the repo; the
+           `.is-prod [data-prod-hide]` rule at the top of dev-styles.css is
+           what enforces it.
+           ============================================================ -->
+      <section class="dp-ticker" aria-hidden="true">
+        <div class="dp-ticker__row dp-ticker__row--left">
+          <div class="dp-ticker__track">
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-01.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-02.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-03.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-04.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--composite" data-prod-hide>
+              <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
+              <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
+            </div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-05.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-06.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-07.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-01.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-02.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-03.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-04.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--composite" aria-hidden="true" data-prod-hide>
+              <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
+              <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
+            </div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-05.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-06.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-07.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+          </div>
+        </div>
+        <div class="dp-ticker__row dp-ticker__row--right">
+          <div class="dp-ticker__track">
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-08.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-09.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-10.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-11.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-12.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-13.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-14.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--static" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-08.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-09.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-10.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-11.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-12.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-13.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-14.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--static" aria-hidden="true" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
+          </div>
+        </div>
+        <p class="dp-ticker-caption">All design work shown here is my own, including graphic treatments on photography.</p>
       </section>
 
       <!-- ============================================================

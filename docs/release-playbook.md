@@ -109,16 +109,21 @@ git reset --hard <previous-commit> && git push --force origin main
 
 ## Currently Gated Features
 
-**No `data-prod-hide` attribute exists anywhere in the repo as of the 2026-08-24
-homepage redesign.** Every section that used one was either cut or promoted to
-shipping on prod, so prod and dev now differ only by nav links, the banner
-ticker, the snake game, and the two prototype pages. If you are looking for the
-old homepage gating table (toolbox, Fair Share / Flip 7 / SCP Reader strips,
-ticker items), those sections no longer exist; see
-`dev/old-index-2026-08-24.html` and `CHANGELOG.md`.
+**`data-prod-hide` is used in exactly one place**: the four playful tiles in the
+homepage work ticker (the "so pretty!" chalkboard and the brushed "COOL HUH"
+composite, each appearing twice because both ticker rows duplicate their items
+to loop seamlessly). The 2026-08-24 redesign removed every other use; the ticker
+brought this one back on 2026-08-25. The `.is-prod [data-prod-hide]` rule at the
+top of `dev-styles.css` is what enforces it, so that rule is load-bearing again
+and must not be pruned as dead CSS.
+
+The old homepage gating table (toolbox, Fair Share / Flip 7 / SCP Reader strips)
+is gone with those sections; see `dev/old-index-2026-08-24.html` and
+`CHANGELOG.md`.
 
 | Feature | Gate method | File |
 |---|---|---|
+| Ticker doodle tiles (×4) | `data-prod-hide` | `index.html` |
 | Projects nav dropdown | `prodHide: true` | `nav-component.js` |
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
@@ -138,9 +143,10 @@ the homepage to `case-studies/planner.html` in v3 and now mounts into
 is a first-paint poster removed on successful mount, not a prod stand-in, so
 don't gate the widget expecting the image to take over.
 
-`assets/js/env.js` still honours `data-prod-hide` via the `.is-prod` CSS rule, so
-the mechanism is available if a future section needs it — there is simply nothing
-using it today.
+`assets/js/env.js` honours `data-prod-hide` via the `.is-prod` CSS rule. Use
+`?prod=1` on localhost to check what production actually shows before releasing;
+`?prod=0` clears it (it persists in `localStorage`, so clear it or a later dev
+session will still look like prod).
 
 ## Third-Party Scripts
 
