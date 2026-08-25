@@ -16,6 +16,15 @@
 > behind `!isProd` in `nav-component.js`, so snake no longer loads on production at all (still
 > reachable off-prod / locally).
 
+> **Homepage v3 note (2026-08-25).** The floating-testimonials layer cited above is no
+> longer homepage delight: it moved to `case-studies/planner.html` with the Planner
+> prototype and the snail, on the grounds that quotes about a feature you cannot see do not
+> land. What remains on the homepage is the avatar and hero-wave cursor-chat, and five new
+> logo-bar hover lines restored with the logo bar ("The Rocket Man himself", etc.). The
+> layer also gained a real accessibility improvement worth copying elsewhere: it is
+> `aria-hidden`, so its static equivalent is hidden with `.dp-visually-hidden` rather than
+> `display: none`, keeping the content available to assistive tech at every width.
+
 ---
 
 ## TL;DR

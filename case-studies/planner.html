@@ -11,12 +11,191 @@
   <link rel="stylesheet" href="../assets/css/dev-tokens.css">
   <link rel="stylesheet" href="../assets/css/dev-styles.css">
   <link rel="stylesheet" href="../assets/css/case-study-theme.css">
+  <!-- Live Planner prototype, sitting between the first two prose sections -->
+  <link rel="stylesheet" href="../assets/css/project-planner.css">
+  <!-- Needed by the floating quotes' gutter hover bubble -->
+  <link rel="stylesheet" href="../assets/css/cursor-chat.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../assets/images/Logo.svg" type="image/svg+xml">
 
   <script>document.documentElement.setAttribute('data-theme', 'light');</script>
+
+  <!--
+    Page-local styling for the Planner prototype, moved here from index.html
+    when the prototype left the homepage. No raw hex or rgba() values, existing
+    tokens only.
+  -->
+  <style>
+    /* The prototype sits between the first two prose sections, so it lives
+       inside <article class="dp-prose"> — which caps at the 760px reading
+       measure and would squash a widget that needs roughly 1000px for four
+       terms.
+
+       Rather than break the prototype out of that box, the measure moves off
+       the container and onto the sections. Every direct child of .dp-prose on
+       this page is a .dp-prose-section, so the prose reads identically while
+       the prototype, also a direct child, simply fills the width.
+
+       Both breakout techniques the repo already uses were rejected here. A
+       `transform`-based one makes the element a containing block for
+       position: fixed descendants, which would break the Planner's floating
+       drag clone. A `100vw` one (as .dp-testimonials-masonry--full uses)
+       includes the scrollbar and risks horizontal scroll — the same trap
+       floating-testimonials.js documents avoiding.
+
+       Page-local, so the other three case studies keep .dp-prose as it was. */
+    .dp-prose {
+      max-width: none;
+      padding-inline: 0;
+    }
+
+    .dp-prose-section {
+      max-width: var(--dp-prose-max-width);
+      margin-inline: auto;
+      padding-inline: var(--dp-space-5);
+    }
+
+    /* The prototype fills .dp-page's width rather than the reading measure.
+       Its margin-block matches --dp-prose-section-gap (48px), so the section
+       either side keeps its normal rhythm even though
+       `.dp-prose-section + .dp-prose-section` no longer matches across it. */
+    .dp-cs-prototype {
+      width: 100%;
+      min-width: 0;
+      margin-block: var(--dp-space-12);
+    }
+
+    /* Kanban columns fill the board instead of bunching left.
+       project-planner.css pins them to `flex: 0 0 var(--pl-column-width)`,
+       which left dead space on the right at this width. min-width holds the
+       220px floor, so this only ever ADDS width: when the board is too narrow
+       for four full columns they stay at 220px and .pl-board's overflow-x
+       scroll takes over rather than squashing into unreadable slivers.
+
+       Selector out-specifies `[data-project="planner"] .pl-column` (0,2,0) and
+       is page-local, so projects/planner.html is untouched. */
+    .dp-cs-prototype[data-project="planner"] .pl-column {
+      flex: 1 1 var(--pl-column-width);
+      width: auto;
+      min-width: var(--pl-column-width);
+    }
+
+    /* Shown at first paint and removed once the prototype mounts, so the
+       section is never an empty box while ~4,200 lines of module load. If the
+       import fails the poster simply stays. */
+    .dp-cs-prototype__poster {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--dp-radius-lg);
+      border: 1px solid var(--dp-border-default);
+      box-shadow: var(--dp-shadow-showcase-image);
+    }
+
+    @media (max-width: 768px) {
+      .dp-cs-prototype__poster {
+        box-shadow: var(--dp-shadow-card);
+      }
+    }
+
+    /* ── Floating teacher testimonials ──
+       Quotes drift up the gutters either side of the prototype. A kanban
+       board on its own only reads as "a kanban board"; these are what say
+       why it mattered to the teachers who used it. Behaviour and the quote
+       list live in assets/js/dev-projects/floating-testimonials.js. */
+    .dp-float-layer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      /* width is set in JS from documentElement.clientWidth, not 100vw:
+         100vw includes the scrollbar and would cause horizontal scroll. */
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dp-float-quote {
+      position: absolute;
+      /* Hug the text rather than sit at a fixed width, so "Love it!" is a
+         small pill and a longer quote grows to meet the cap. The varied
+         silhouettes are most of what makes these read as speech bubbles
+         instead of a column of boxes. */
+      width: max-content;
+      max-width: var(--dp-float-bubble-w, 200px);
+      box-sizing: border-box;
+      text-align: center;
+      padding: var(--dp-space-4) var(--dp-space-5);
+      /* Dark bubbles on a light page. Uses the on-dark semantic set, which
+         is deliberately identical in both themes, so these stay dark
+         whatever the page theme does. White on #111113 is ~18.9:1, well
+         past AAA. A white bubble was invisible on this white page; a tinted
+         one worked but read as another UI card rather than a human voice. */
+      border: none;
+      border-radius: var(--dp-radius-xl);
+      background: var(--dp-on-dark-surface);
+      box-shadow: var(--dp-shadow-card);
+      /* Serif italic with real quote marks, so it reads as somebody talking
+         rather than as more interface. */
+      font-family: var(--dp-font-serif);
+      font-style: italic;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--dp-on-dark-text-primary);
+      quotes: '\201C' '\201D';
+      opacity: 0;
+      pointer-events: none;
+      animation-name: dp-float-rise;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
+    }
+
+    /* Curly quotes via generated content: they stay out of the accessibility
+       tree and out of the quote text itself. */
+    .dp-float-quote::before { content: open-quote; }
+    .dp-float-quote::after { content: close-quote; }
+
+    /* Invisible hover targets filling the gutters, so cursor-chat can
+       explain the quotes. pointer-events: auto re-enables hovering inside
+       the pointer-events: none layer; they stop at the board edge so the
+       prototype's own interaction is never intercepted. */
+    .dp-float-hotzone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      pointer-events: auto;
+    }
+    .dp-float-hotzone--left { left: 0; }
+    .dp-float-hotzone--right { right: 0; }
+
+    /* --dp-float-jitter is set per bubble in JS. Without it every bubble
+       starts at the same x and the two sides read as two tidy columns
+       rather than something drifting. */
+    .dp-float-quote--left {
+      left: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+    }
+    .dp-float-quote--right {
+      right: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
+    }
+
+    /* Long full-opacity plateau: a quote that spends most of its life
+       mid-fade is one nobody manages to read. */
+    @keyframes dp-float-rise {
+      0%   { opacity: 0; transform: translateY(40px) scale(0.96); }
+      12%  { opacity: 1; transform: translateY(24px) scale(1); }
+      85%  { opacity: 1; transform: translateY(-44px) scale(1); }
+      100% { opacity: 0; transform: translateY(-64px) scale(0.98); }
+    }
+
+    /* The module already bails under reduced motion; this is the belt to
+       its braces, in case the layer is ever rendered some other way. */
+    @media (prefers-reduced-motion: reduce) {
+      .dp-float-layer { display: none; }
+    }
+  </style>
 
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css"></noscript>
 
@@ -38,16 +217,12 @@
       <p class="dp-hero-body">How I designed Inquisitive's Planner from scratch, turning a simple save-for-later into the platform's most-loved feature and a proven driver of conversion.</p>
     </section>
 
-    <div class="dp-impact-banner dp-reveal" aria-label="Key outcomes">
-      <div class="dp-impact-banner__item">
-        <span class="dp-impact-banner__value">25,000+</span>
-        <span class="dp-impact-banner__label">Weekly users</span>
-      </div>
-      <div class="dp-impact-banner__item">
-        <span class="dp-impact-banner__value">30%</span>
-        <span class="dp-impact-banner__label">Free-to-paid conversion lift</span>
-      </div>
-    </div>
+    <!-- The impact banner (25,000+ weekly users / 30% conversion lift) was
+         removed on 2026-08-25 to get readers to the working prototype faster.
+         Nothing was lost: both figures still appear in the hero heading above,
+         in the TL;DR immediately below, and in "The impact" section's own
+         heading and body. The banner was the fourth statement of the same two
+         numbers before the reader had seen anything. -->
 
     <div class="dp-prose-layout">
 
@@ -60,75 +235,6 @@
         </ul>
       </aside>
 
-      <section class="dp-testimonials-section dp-reveal" id="wall-of-love" aria-label="Testimonials from teachers">
-        <h2>What teachers are saying</h2>
-        <div class="dp-testimonials-masonry dp-testimonials-masonry--full">
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">I find the planner a very useful resource to plan.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Thanks again for all your hard work, we love Inquisitive and the new format for units.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Easy and efficient interface.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Loving the easy access to the planned modules. This was a really great idea.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">love the lesson suggestions and resources that go along with it. It is very user friendly and follows the curriculum well.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Very efficient for retrieving current learning materials.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">This is a game changer for Homeschooling. No longer do I have to stress about curriculum outcomes, assessments or lesson planning, it took me 1 night to organise lessons for 3 of my children. Thank you Inquisitive.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">This is brilliant, I love this feature!</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">I love the planner. It helps me so much to manage my term planning. I can quickly go into the topics.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">I find the planner really useful for my overall termly and yearly planning.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love the planner. I can find my subjects really easy this way</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Helps sort classes. I have a position where I have different classes all day so it's quick to go to each one in the planner.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">it makes my planning very easy</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">planner is helpful!</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">WOW!!! Thank you so much. I played with it a little last year, but this year I want to use it. It was so easy to do my planning. Thank you</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it..set out well</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it thank you</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love the planner.</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">It's awesome</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it!</p>
-          </blockquote>
-          <blockquote class="dp-testimonial">
-            <p class="dp-testimonial-quote" style="margin-bottom: 0;">It s so easy to use</p>
-          </blockquote>
-        </div>
-      </section>
-
       <!-- Article -->
       <article class="dp-prose">
 
@@ -139,6 +245,102 @@
         <p>They needed a planning tool that worked the way they actually planned: by term, by subject, by curriculum. Something that let them build a sequence once and return to it all year. Something simple enough that it did not add another task to an already overwhelming workload.</p>
         <p>This was my first project when I joined Inquisitive. I was the sole designer, working directly with the Head of Product and a small development team. The brief was open-ended: make planning better. Everything from research through to final UI was mine to own.</p>
       </section>
+
+        <!-- ============================================================
+             LIVE PROTOTYPE — directly under the TL;DR, so you can play with
+             the thing before reading how it was built.
+
+             Below the fold here, unlike on homepage v2, so the module lazy-mounts
+             for free rather than competing with first paint. The poster-swap is
+             kept anyway: it keeps the section from being an empty box while the
+             module loads, and it is what degrades if the import ever fails.
+
+             The Planner mounts its own h3 column headings ("Term 1"...). The
+             heading below keeps the outline legal and gives the prototype a name
+             in the document outline; it is hidden visually because the TL;DR
+             immediately above already says what this is.
+             ============================================================ -->
+        <h2 class="dp-visually-hidden">Planner: an interactive prototype</h2>
+        <div class="dp-cs-prototype pl-compact" data-project="planner">
+          <img src="../assets/images/planner.png"
+               class="dp-cs-prototype__poster"
+               alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
+               width="800" height="480">
+        </div>
+
+        <!-- Teacher quotes, in two forms that never both show. Wide screens get
+             them drifting up the gutters beside the prototype; narrower ones get
+             this static wall, because below roughly 1356px there is no gutter to
+             drift in. floating-testimonials.js owns that switch, so the width is
+             never hard-coded here. See the 2026-08-25 homepage-v3 spec. -->
+        <section class="dp-testimonials-section dp-reveal" id="wall-of-love" aria-label="Testimonials from teachers">
+          <h2>What teachers are saying</h2>
+          <div class="dp-testimonials-masonry dp-testimonials-masonry--full">
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">I find the planner a very useful resource to plan.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Thanks again for all your hard work, we love Inquisitive and the new format for units.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Easy and efficient interface.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Loving the easy access to the planned modules. This was a really great idea.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">love the lesson suggestions and resources that go along with it. It is very user friendly and follows the curriculum well.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Very efficient for retrieving current learning materials.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">This is a game changer for Homeschooling. No longer do I have to stress about curriculum outcomes, assessments or lesson planning, it took me 1 night to organise lessons for 3 of my children. Thank you Inquisitive.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">This is brilliant, I love this feature!</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">I love the planner. It helps me so much to manage my term planning. I can quickly go into the topics.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">I find the planner really useful for my overall termly and yearly planning.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love the planner. I can find my subjects really easy this way</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Helps sort classes. I have a position where I have different classes all day so it's quick to go to each one in the planner.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">it makes my planning very easy</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">planner is helpful!</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">WOW!!! Thank you so much. I played with it a little last year, but this year I want to use it. It was so easy to do my planning. Thank you</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it..set out well</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it thank you</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love the planner.</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">It's awesome</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">Love it!</p>
+            </blockquote>
+            <blockquote class="dp-testimonial">
+              <p class="dp-testimonial-quote" style="margin-bottom: 0;">It s so easy to use</p>
+            </blockquote>
+          </div>
+        </section>
 
       <section class="dp-prose-section dp-reveal" id="the-approach">
         <h2>Solo designer. Two dozen teacher interviews. Built in phases.</h2>
@@ -246,6 +448,62 @@
   <script type="module">
     import { initShuffleTestimonials } from '../assets/js/case-studies/shuffle-testimonials.js';
     initShuffleTestimonials();
+  </script>
+
+  <!-- Live Planner prototype, its snail, and the floating teacher quotes -->
+  <script type="module">
+    import { initSnail } from '../assets/js/dev-projects/snail.js';
+    import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from '../assets/js/dev-projects/floating-testimonials.js';
+
+    // Snail doing laps of the TL;DR card, not the prototype. The card is the
+    // first thing after the hero, so the snail draws the eye to the summary
+    // rather than decorating the widget below it.
+    //
+    // Mounted directly on the card with no pathTarget: the snail rides the
+    // OUTSIDE of the border it traces, and .dp-tldr is overflow: visible, so
+    // nothing clips it. That is also why none of the MutationObserver waiting
+    // the prototype needs applies here, since the card exists at parse time.
+    //
+    // speed is seconds per lap, not velocity. The card's perimeter is 2154px
+    // against the prototype frame's 3589px, so 66s holds the same ~32.6px/sec
+    // crawl the snail had before it moved. It overhangs its border by 16px,
+    // with roughly 96px of hero padding above and 48px to the prototype below.
+    const tldrCard = document.querySelector('.dp-tldr');
+    if (tldrCard) {
+      initSnail(tldrCard, { size: 32, speed: 66 });
+    }
+
+    const prototype = document.querySelector('.dp-cs-prototype');
+    if (prototype) {
+      import('../assets/js/dev-projects/planner/planner.js')
+        .then(m => {
+          m.initPlanner(prototype, { chrome: false });
+          // initPlanner appends rather than clearing, so removing the poster
+          // has to be explicit.
+          const poster = prototype.querySelector('.dp-cs-prototype__poster');
+          if (poster) poster.remove();
+        })
+        .catch(() => { /* poster stays, which is the intended degradation */ });
+
+      // Quotes drift up the gutters beside the prototype where there is room
+      // for them, and the static wall of love below hides itself while they
+      // run. Where there is not, the wall is simply what you get.
+      initFloatingTestimonials({
+        stage: prototype,
+        quotes: PLANNER_TEACHER_QUOTES,
+        fallback: document.querySelector('#wall-of-love'),
+      });
+
+      // Answers "are those quotes real?" without a banner. The hotzones sit in
+      // the gutter only, never over the board.
+      import('../assets/js/dev-projects/cursor-chat.js').then(m => {
+        m.initCursorChat({
+          triggers: [
+            { type: 'hover', selector: '.dp-float-hotzone', message: 'Real feedback, from real teachers' },
+          ]
+        });
+      });
+    }
   </script>
 </body>
 </html>

@@ -1,11 +1,32 @@
 # Homepage v2 — flagship-led redesign
 
 Date: 2026-08-24
-Status: SHIPPED 2026-08-24. Built at `dev/home-v2.html`, then promoted to
-`index.html`; the previous homepage is archived at
-`dev/old-index-2026-08-24.html`, kept browsable because some of its cut
-sections are expected back. See "As built" below, which supersedes the
+Status: SHIPPED 2026-08-24, **partly superseded 2026-08-25 by homepage v3**
+(`docs/superpowers/specs/2026-08-25-homepage-v3-design.md`). Built at
+`dev/home-v2.html`, then promoted to `index.html`; the previous homepage is
+archived at `dev/old-index-2026-08-24.html`, kept browsable because some of its
+cut sections are expected back. See "As built" below, which supersedes the
 original page structure where the two disagree.
+
+> **What v3 changed, one day later.** v2's central bet — lead the homepage with
+> the live Planner prototype — did not survive contact with the page. The
+> prototype was the strongest thing on the site and also the entire page:
+> roughly 4,200 lines above the fold carrying a homepage whose job is to say who
+> Edward is. v3 moves the prototype, the snail and the floating teacher quotes to
+> `case-studies/planner.html` (under the TL;DR, below the fold, where it
+> lazy-mounts for free), moves the kaomoji strip to `personal.html`, restores the
+> logo bar this spec had cut, and leaves the homepage as hero, logo bar,
+> testimonials, "Let's talk".
+>
+> **Still true from v2, and worth keeping:** the testimonials promotion and their
+> serif-italic quote voice; the full-page measure; the blue `--dp-raw-brand-deep`
+> "Let's talk" panel; the `.dp-visually-hidden` utility (since promoted to
+> `dev-styles.css`); the floating-testimonials module itself, which simply moved
+> pages and gained a `fallback` option. The poster-swap technique also survives,
+> though it matters less below the fold.
+>
+> Read this document for the reasoning behind the components; read the v3 spec
+> for where they actually live.
 
 ## Goal
 

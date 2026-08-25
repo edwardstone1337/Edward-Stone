@@ -82,11 +82,22 @@ function prefersReducedMotion() {
  * @param {HTMLElement} config.stage    Centred element to drift quotes beside. Gets position:relative.
  * @param {string[]}    config.quotes   Quote strings. Rendered as text, never as HTML.
  * @param {number}      [config.intervalMs=2400]  Gap between spawns.
+ * @param {HTMLElement} [config.fallback]  Element showing the same content in a
+ *   static form, visually hidden while this layer is actually running. Lets a
+ *   page offer both treatments without hard-coding the width at which this one
+ *   gives up: that width is not a round number, it falls out of the gutter
+ *   maths in measure(), and would drift if the stage's max-width or the bubble
+ *   constants ever changed. Visually hidden rather than removed on purpose,
+ *   because the layer itself is aria-hidden: display:none here would leave a
+ *   screen reader with neither copy of the content.
  * @returns {{destroy: function}|null}  null when the effect does not apply.
  */
 export function initFloatingTestimonials(config) {
-  const { stage, quotes, intervalMs = 2400 } = config || {};
+  const { stage, quotes, intervalMs = 2400, fallback = null } = config || {};
   if (!stage || !Array.isArray(quotes) || quotes.length === 0) return null;
+  // Returns before touching `fallback`, so under reduced motion the static
+  // version simply stays visible. Same for a page with JavaScript off: the
+  // fallback is the default state and this layer has to actively suppress it.
   if (prefersReducedMotion()) return null;
 
   const layer = document.createElement('div');
@@ -138,6 +149,11 @@ export function initFloatingTestimonials(config) {
 
     enabled = available >= MIN_BUBBLE_WIDTH;
     bubbleWidth = Math.min(MAX_BUBBLE_WIDTH, available);
+
+    // Single source of truth for "is there room for this treatment". The
+    // fallback hides exactly when this layer runs, so the two can never both
+    // show or both vanish.
+    if (fallback) fallback.classList.toggle('dp-visually-hidden', enabled);
 
     layer.style.width = viewportWidth + 'px';
     layer.style.setProperty('--dp-float-gutter', gutter + 'px');
@@ -251,6 +267,8 @@ export function initFloatingTestimonials(config) {
       window.clearTimeout(resizeTimer);
       if (observer) observer.disconnect();
       layer.remove();
+      // Restore the static version: with this layer gone it is the only copy.
+      if (fallback) fallback.classList.remove('dp-visually-hidden');
     }
   };
 }

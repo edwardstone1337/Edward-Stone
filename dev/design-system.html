@@ -495,6 +495,24 @@
             <span class="ds-label">.dp-section-label</span>
           </div>
         </div>
+
+        <!-- 4h. .dp-visually-hidden -->
+        <div class="ds-subsection">
+          <h3 class="ds-subsection-title">4h. .dp-visually-hidden</h3>
+          <div class="ds-demo">
+            <p style="color: var(--dp-text-primary); font-size: var(--dp-text-base);">
+              There is a heading<span class="dp-visually-hidden"> that only a screen reader will announce</span> inside this sentence.
+            </p>
+            <span class="ds-label">
+              .dp-visually-hidden, removed from view but kept in the accessibility tree.
+              Use it for headings that keep a document outline legal, and for content that
+              has a richer visual equivalent elsewhere on the page. Not interchangeable with
+              display: none, which removes it from assistive tech too.
+              floating-testimonials.js toggles this class on whatever element is passed as
+              its fallback.
+            </span>
+          </div>
+        </div>
       </section>
 
       <!-- 5. Molecules -->

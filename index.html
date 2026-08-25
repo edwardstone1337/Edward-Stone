@@ -33,13 +33,12 @@
     <link rel="stylesheet" href="assets/css/dev-tokens.css">
     <link rel="stylesheet" href="assets/css/dev-styles.css">
     <link rel="stylesheet" href="assets/css/cursor-chat.css">
-    <link rel="stylesheet" href="assets/css/project-planner.css">
 
     <!--
       Homepage-local styles. These were page-local while the redesign lived at
       dev/home-v2.html so the old homepage could not change underneath it. Now
       that this IS index.html, the genuinely reusable pieces have been promoted
-      into dev-styles.css (.dp-snail*) and cursor-chat.css; what remains here is
+      into dev-styles.css and cursor-chat.css; what remains here is
       layout and spacing specific to this page, plus overrides of shared
       components for this page only.
 
@@ -55,17 +54,16 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: var(--dp-space-8);
         max-width: 1200px;
         margin-inline: auto;
         /* No padding-inline: the parent .dp-page already supplies 24px each
            side and caps content at 1152px. Adding more here only starved the
            prototype of width it needs to show all four terms. */
         padding-top: var(--dp-space-16);
-        /* No bottom padding: the kaomoji strip below carries its own
-           margin-top: var(--dp-section-gap) (96px). Adding 64px here stacked
-           on top of that for a ~160px trench, far wider than the 96px gap
-           between every other pair of sections on the page. */
+        /* No bottom padding: the logo bar below carries its own section
+           spacing. Adding 64px here stacked on top of that for a ~160px
+           trench, far wider than the gap between every other pair of sections
+           on the page. */
         padding-bottom: 0;
       }
 
@@ -77,13 +75,6 @@
         text-align: center;
       }
 
-      /* Belt and braces: the prototype owns its own alignment, whatever any
-         future ancestor rule tries to impose on it. */
-      .dp-flagship__stage,
-      .dp-flagship__widget {
-        text-align: initial;
-      }
-
       .dp-flagship__avatar-wrap {
         margin-bottom: var(--dp-space-5);
       }
@@ -93,8 +84,32 @@
         font-weight: var(--dp-weight-bold);
         line-height: 1.2;
         color: var(--dp-text-primary);
-        text-wrap: balance;
         margin: var(--dp-space-4) 0 0;
+      }
+
+      /* Three deliberate lines rather than one balanced paragraph. Reuses the
+         .dp-hero-line / .dp-hero-accent vocabulary from dev-styles.css, which
+         scopes those to .dp-hero-heading; this headline is .dp-flagship__headline,
+         so the pattern is mirrored here rather than inherited.
+
+         display: block makes the line count deterministic at every width. The
+         previous `text-wrap: balance` on the h1 let the browser choose the break
+         points, which is exactly the "weird reflow on tablet" risk: at some
+         widths "I lead design" would have been split across lines, breaking the
+         brand-coloured phrase in half. Each line now wraps only within itself,
+         and only if genuinely too narrow to fit. balance is kept per line so a
+         line that does wrap breaks evenly rather than leaving one orphan word. */
+      .dp-flagship__headline .dp-hero-line {
+        display: block;
+        text-wrap: balance;
+      }
+
+      /* #0066CC on white is 5.57:1. That is under the AAA 7:1 bar for normal
+         text, which is why --dp-raw-brand is flagged elsewhere in this repo, but
+         this headline is 28px minimum and bold, so it is WCAG large text and the
+         bar is 4.5:1. Passes with room. Do not reuse this colour for body copy. */
+      .dp-flagship__headline .dp-hero-accent {
+        color: var(--dp-brand-text);
       }
 
       .dp-flagship__standfirst {
@@ -113,76 +128,59 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: var(--dp-space-3);
-        margin-top: var(--dp-space-6);
-      }
-
-      /* Stage: the prototype at full width, and the positioning context for
-         the floating-quote layer. An earlier revision put a project card to
-         the RIGHT of the prototype; that stole ~280px from the board, forced
-         the columns down to 200px and truncated a card title. */
-      .dp-flagship__stage {
-        display: flex;
-        flex-direction: column;
-        gap: var(--dp-space-5);
-        width: 100%;
-      }
-
-      /* Mount container for the live Planner widget. Sizing is driven by the
-         grid column now; .pl-compact (project-planner.css) still owns the
-         widget's own density tokens. */
-      .dp-flagship__widget {
-        width: 100%;
-        min-width: 0;
-      }
-
-      /* Kanban columns fill the board instead of bunching left.
-         project-planner.css pins them to `flex: 0 0 var(--pl-column-width)`,
-         so at this width four 220px columns left ~180px of dead space on the
-         right. Allowing them to grow shares that space out evenly; the
-         columns keep their own 12px padding untouched.
-
-         min-width holds the 220px floor, so this only ever ADDS width. When
-         the board is too narrow for four full columns they stay at 220px and
-         .pl-board's overflow-x scroll takes over, exactly as before, rather
-         than squashing into unreadable slivers.
-
-         Selector out-specifies `[data-project="planner"] .pl-column` (0,2,0)
-         and is page-local, so index.html and projects/planner.html are
-         untouched. */
-      .dp-flagship__widget[data-project="planner"] .pl-column {
-        flex: 1 1 var(--pl-column-width);
-        width: auto;
-        min-width: var(--pl-column-width);
-      }
-
-      /* Poster shown at first paint and removed once the prototype mounts.
-         Above the fold the widget competes with LCP, so the section must
-         never be an empty box while ~4,200 lines of module load. If the
-         import fails the poster simply stays, which degrades better than v1. */
-      .dp-flagship__poster {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: var(--dp-radius-lg);
-        border: 1px solid var(--dp-border-default);
-        box-shadow: var(--dp-shadow-showcase-image);
+        /* 48px, not 24px. Originally clearance for the snail that lapped this
+           button; the snail has since moved to the Planner case study, but the
+           looser spacing was kept because it suits the page's floatier vertical
+           rhythm and the hero reads better with the CTA given room. Safe to
+           tighten back to --dp-space-6 if the hero ever feels too airy. */
+        margin-top: var(--dp-space-12);
       }
 
       /* Testimonials are capped at --dp-testimonial-track-max-width (960px)
          in dev-styles.css, which made them 192px narrower than every other
-         section on this page (flagship, kaomoji strip and contact CTA all sit
+         section on this page (flagship, logo bar and contact CTA all sit
          at .dp-page's full 1152px) and read as visibly pinched. Released here
          so the page has one consistent measure. Page-local: index.html keeps
          the 960px track. */
-      .dp-testimonials-section {
-        max-width: none;
+      /* ── Vertical rhythm ──
+         Two tiers at a 1:2 ratio, rather than one flat number:
+
+           hero buttons -> logos       96px  \
+           logos -> ticker             96px  /  one block: who, where, what it looks like
+           ticker -> testimonials     192px  \
+           testimonials -> Let's talk 192px   >  section boundaries
+           Let's talk -> footer       192px  /
+
+         The tight tier groups the hero with its supporting proof; the wide tier
+         separates the major sections, so the page reads as evenly spaced without
+         being uniformly spaced.
+
+         Everything is measured content edge to content edge, not box to box.
+         Several of these sections carry their own padding, so the declared
+         numbers below rarely match the resulting gap: each one is set to whatever
+         makes the *visual* gap land on its tier. That is also what produced the
+         uneven 48/48/192/128/128 rhythm this replaces, where the ticker's
+         padding-bottom stacked on the testimonials' margin-top for a 192px
+         trench beside 48px gaps elsewhere. */
+      .dp-logo-bar {
+        /* Supplies both tight-tier gaps on its own: nothing above or below it
+           contributes padding at this boundary. */
+        padding-top: var(--dp-space-24);
+        padding-bottom: var(--dp-space-24);
       }
 
-      /* Colleague testimonials borrow the floating quotes' voice: serif
-         italic with real quote marks, so the two sets of testimonials on the
-         page read as the same kind of thing rather than two unrelated
-         treatments. Quote marks are generated content, so they stay out of
-         the accessibility tree and out of the quote text. */
+      .dp-testimonials-section {
+        max-width: none;
+        /* 96 + the ticker's own 96px padding-bottom = 192. */
+        margin-top: var(--dp-space-24);
+      }
+
+      /* Serif italic with real quote marks, so the testimonials read as
+         people talking rather than as more interface. Kept when the floating
+         quotes left with the prototype: this is now the page's only quoted
+         voice, and it is the treatment the case study's quotes share. Quote
+         marks are generated content, so they stay out of the accessibility
+         tree and out of the quote text. */
       .dp-testimonial-quote {
         font-family: var(--dp-font-serif);
         font-style: italic;
@@ -204,6 +202,9 @@
       .dp-contact-cta {
         background: var(--dp-raw-brand-deep, var(--dp-raw-grey-900));
         border: none;
+        /* 128 + the panel's own 64px padding-top = 192. The panel keeps its
+           internal padding untouched. */
+        margin-top: calc(var(--dp-space-24) + var(--dp-space-8));
       }
 
       .dp-contact-cta__heading,
@@ -211,12 +212,12 @@
         color: var(--dp-on-dark-text-primary);
       }
 
-      /* Kaomoji strip needs no spacing rule here: .dp-strip already carries
-         margin-top: var(--dp-section-gap), and #kaomoji-mount cannot be
-         styled at all because kaomoji-strip.js REPLACES that placeholder
-         rather than filling it. */
-
-      .dp-footer { margin-top: var(--dp-space-6); }
+      /* 88, an odd-looking number by design: the footer carries 40px of its own
+         padding-top sitewide and the "Let's talk" panel 64px of padding-bottom,
+         so 64 + 88 + 40 lands this boundary on 192 like the rest of the wide
+         tier. Adjusting the footer's own padding instead would reach into
+         sitewide chrome from a page-local block. */
+      .dp-footer { margin-top: calc(var(--dp-space-20) + var(--dp-space-2)); }
 
       @media (max-width: 768px) {
         .dp-flagship {
@@ -224,121 +225,35 @@
           padding-top: var(--dp-space-8);
           padding-bottom: var(--dp-space-8);
         }
-        .dp-flagship__poster {
-          box-shadow: var(--dp-shadow-card);
+
+        /* Small screens flatten to a single ~96px rhythm rather than keeping
+           the 96/192 tiers. Two reasons: 192px is roughly a fifth of a phone
+           viewport, so it stops reading as generous and starts reading as
+           sections that failed to load; and the tight-tier grouping it protects
+           is barely legible once everything is one column anyway.
+
+           The values differ per section because several of them change their
+           own padding at this breakpoint (the flagship drops to 32px bottom,
+           the ticker to 40 top / 48 bottom), so each lever is set to whatever
+           lands the visual gap near 96. Measured, not derived. */
+        .dp-logo-bar {
+          padding-top: var(--dp-space-16);
+          padding-bottom: var(--dp-space-12);
+        }
+
+        .dp-testimonials-section {
+          margin-top: var(--dp-space-12);
+        }
+
+        .dp-contact-cta {
+          margin-top: var(--dp-space-8);
+        }
+
+        .dp-footer {
+          margin-top: 0;
         }
       }
 
-      /* ── Floating teacher testimonials ──
-         Quotes drift up the gutters either side of the prototype. A kanban
-         board on its own only reads as "a kanban board"; these are what say
-         why it mattered to the teachers who used it. Behaviour and the quote
-         list live in assets/js/dev-projects/floating-testimonials.js. */
-      .dp-float-layer {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        /* width is set in JS from documentElement.clientWidth, not 100vw:
-           100vw includes the scrollbar and would cause horizontal scroll. */
-        overflow: hidden;
-        pointer-events: none;
-        z-index: 1;
-      }
-
-      .dp-float-quote {
-        position: absolute;
-        /* Hug the text rather than sit at a fixed width, so "Love it!" is a
-           small pill and a longer quote grows to meet the cap. The varied
-           silhouettes are most of what makes these read as speech bubbles
-           instead of a column of boxes. */
-        width: max-content;
-        max-width: var(--dp-float-bubble-w, 200px);
-        box-sizing: border-box;
-        text-align: center;
-        padding: var(--dp-space-4) var(--dp-space-5);
-        /* Dark bubbles on a light page. Uses the on-dark semantic set, which
-           is deliberately identical in both themes, so these stay dark
-           whatever the page theme does. White on #111113 is ~18.9:1, well
-           past AAA. A white bubble was invisible on this white page; a tinted
-           one worked but read as another UI card rather than a human voice. */
-        border: none;
-        border-radius: var(--dp-radius-xl);
-        background: var(--dp-on-dark-surface);
-        box-shadow: var(--dp-shadow-card);
-        /* Serif italic with real quote marks, so it reads as somebody talking
-           rather than as more interface. */
-        font-family: var(--dp-font-serif);
-        font-style: italic;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        color: var(--dp-on-dark-text-primary);
-        quotes: '\201C' '\201D';
-        opacity: 0;
-        pointer-events: none;
-        animation-name: dp-float-rise;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: both;
-      }
-
-      /* Curly quotes via generated content: they stay out of the accessibility
-         tree and out of the quote text itself. */
-      .dp-float-quote::before { content: open-quote; }
-      .dp-float-quote::after { content: close-quote; }
-
-      /* Invisible hover targets filling the gutters, so cursor-chat can
-         explain the quotes. pointer-events: auto re-enables hovering inside
-         the pointer-events: none layer; they stop at the board edge so the
-         prototype's own interaction is never intercepted. */
-      .dp-float-hotzone {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        pointer-events: auto;
-      }
-      .dp-float-hotzone--left { left: 0; }
-      .dp-float-hotzone--right { right: 0; }
-
-      /* --dp-float-jitter is set per bubble in JS. Without it every bubble
-         starts at the same x and the two sides read as two tidy columns
-         rather than something drifting. */
-      .dp-float-quote--left {
-        left: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
-      }
-      .dp-float-quote--right {
-        right: calc(max(8px, calc(var(--dp-float-gutter, 0px) - var(--dp-float-bubble-w, 200px) + 28px)) + var(--dp-float-jitter, 0px));
-      }
-
-      /* Long full-opacity plateau: a quote that spends most of its life
-         mid-fade is one nobody manages to read. */
-      @keyframes dp-float-rise {
-        0%   { opacity: 0; transform: translateY(40px) scale(0.96); }
-        12%  { opacity: 1; transform: translateY(24px) scale(1); }
-        85%  { opacity: 1; transform: translateY(-44px) scale(1); }
-        100% { opacity: 0; transform: translateY(-64px) scale(0.98); }
-      }
-
-      /* The module already bails under reduced motion; this is the belt to
-         its braces, in case the layer is ever rendered some other way. */
-      @media (prefers-reduced-motion: reduce) {
-        .dp-float-layer { display: none; }
-      }
-
-      /* Visually hidden but exposed to assistive tech. No such utility exists
-         in dev-styles.css yet; promote it there when v2 graduates. */
-      .dp-visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        margin: -1px;
-        padding: 0;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
     </style>
 
     <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
@@ -351,52 +266,39 @@
 
     <script type="module">
       import { initNav } from './assets/js/dev-projects/nav-component.js';
-      import { initKaomojiStrip } from './assets/js/dev-projects/kaomoji-strip.js';
-      import { initFloatingTestimonials, PLANNER_TEACHER_QUOTES } from './assets/js/dev-projects/floating-testimonials.js';
-      import { initSnail } from './assets/js/dev-projects/snail.js';
+      import { initImageTicker } from './assets/js/dev-projects/image-ticker.js';
+      import { initImageLightbox } from './assets/js/dev-projects/image-lightbox.js';
 
       initNav();
-
-      // Snail doing laps of the prototype's border. Mounted on the widget
-      // wrapper but tracing .pl-frame: the frame hides its overflow, so a
-      // snail sitting on its border would be clipped if mounted inside it.
-      // The frame only exists once the Planner has mounted, so this waits.
-      function mountSnail() {
-        const widget = document.querySelector('.dp-flagship__widget');
-        const frame = widget && widget.querySelector('.pl-frame');
-        if (!widget || !frame) return false;
-        initSnail(widget, { size: 32, speed: 110, pathTarget: frame });
-        return true;
-      }
-      if (!mountSnail()) {
-        const mo = new MutationObserver(() => { if (mountSnail()) mo.disconnect(); });
-        mo.observe(document.querySelector('.dp-flagship__widget'), { childList: true, subtree: true });
-      }
-
-      // Teacher quotes drifting up the gutters beside the prototype. Measured
-      // against the widget rather than the whole stage so the gutter maths is
-      // relative to the board itself.
-      initFloatingTestimonials({
-        stage: document.querySelector('.dp-flagship__widget'),
-        quotes: PLANNER_TEACHER_QUOTES,
-      });
-
-      // Mounted before initCursorChat below, because cursor-chat resolves each
-      // trigger's selector once at init and silently skips ones matching nothing.
-      const kaomoji = initKaomojiStrip('#kaomoji-mount');
 
       import('./assets/js/dev-projects/cursor-chat.js').then(m => {
         m.initCursorChat({
           triggers: [
-            { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable 🙄' },
+            { type: 'hover', selector: '.dp-avatar-wrap', message: 'Please, don\'t click me', clickMessage: 'Unbelievable \ud83d\ude44' },
             { type: 'hover', selector: '.dp-hero-wave', message: 'Helloo' },
-            // Gutter hover zones beside the prototype. Answers "are those
-            // quotes real?" without a banner, now that the project bar is gone.
-            { type: 'hover', selector: '.dp-float-hotzone', message: 'Real feedback, from real teachers' },
+            // The logo bar says where, these say what it was like. Restored
+            // alongside the bar itself from dev/old-index-2026-08-24.html.
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(1)', message: 'Where I transitioned to UX' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(2)', message: 'Where I\'m making teachers\' lives easier' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(3)', message: 'The Rocket Man himself' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(4)', message: 'My time in agency' },
+            { type: 'hover', selector: '.dp-logo-bar__item:nth-child(5)', message: 'My former clothing brand' },
             { type: 'hover', selector: '.dp-testimonials-section', message: 'Aww, aren\'t they sweet' },
-            kaomoji && kaomoji.cursorTrigger,
-          ].filter(Boolean)
+          ]
         });
+      });
+
+      // Click a ticker tile to open it full size. dedupe: true because each
+      // row repeats its items to loop seamlessly, so the raw node list holds
+      // every image twice and the viewer would otherwise page through
+      // duplicates.
+      initImageLightbox({
+        selector: '.dp-ticker__item',
+        getImageSrc: (item) => item.querySelector('img')?.getAttribute('src') || '',
+        getImageAlt: (item) => item.querySelector('img')?.getAttribute('alt') || '',
+        getDescription: () => '',
+        ariaLabel: 'Portfolio work viewer',
+        dedupe: true,
       });
     </script>
 
@@ -410,35 +312,206 @@
             <img src="assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
           </div>
           <span class="dp-overline">Edward Stone · Lead Product Designer</span>
-          <h1 class="dp-flagship__headline">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span> I lead design on products people rely&nbsp;on.</h1>
-          <p class="dp-flagship__standfirst">This one is used by 25,000 teachers every week, and lifted free-to-paid conversion by 30%. Have a play with&nbsp;it.</p>
+          <h1 class="dp-flagship__headline">
+            <span class="dp-hero-line">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span></span>
+            <span class="dp-hero-line dp-hero-accent">I lead design</span>
+            <span class="dp-hero-line">on products people rely&nbsp;on.</span>
+          </h1>
+          <p class="dp-flagship__standfirst">One is used by 25,000 teachers every week, and lifted free-to-paid conversion by&nbsp;30%.</p>
           <div class="dp-flagship__actions">
-            <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
-            <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-secondary-on-light">Get in touch</a>
+            <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read a case study</a>
           </div>
         </div>
 
-        <!-- The Planner widget mounts its own h3 column headings ("Term 1"...).
-             Without an h2 above them the outline would jump h1 -> h3, so this
-             heading exists to keep the document outline legal. It is hidden
-             visually because the standfirst above already says what this is. -->
-        <h2 class="dp-visually-hidden">Planner: an interactive prototype</h2>
+      </section>
 
-        <div class="dp-flagship__stage">
-          <!-- Live Planner prototype. The poster inside is removed by the mount
-               script once initPlanner succeeds (initPlanner appends to this
-               container rather than clearing it, so the removal is explicit). -->
-          <!-- No .dp-case-promo__widget here: that class caps width at 1040px,
-               which left the prototype's right edge 112px short of the bar
-               below it. .pl-compact + data-project do all the work the
-               prototype actually needs. -->
-          <div class="dp-flagship__widget pl-compact" data-project="planner">
-            <img src="assets/images/planner.png"
-                 class="dp-flagship__poster"
-                 alt="Planner feature showing a curriculum browser with term filtering and unit detail panel"
-                 width="800" height="480">
+      <!-- ============================================================
+           LOGO BAR — where the work happened. Restored from
+           dev/old-index-2026-08-24.html when the Planner prototype moved to
+           its case study and the homepage needed proof of its own. The
+           .dp-logo-bar styles survived the v2 redesign in dev-styles.css, so
+           this is markup only.
+           ============================================================ -->
+      <section class="dp-logo-bar dp-reveal" data-reveal-delay="200" aria-label="Companies I've worked with">
+        <ul class="dp-logo-bar__list">
+          <li class="dp-logo-bar__item">
+                        <svg viewBox="0 0 772 200" fill="currentColor" class="dp-logo-bar__logo" role="img" aria-label="PlaySport" style="--logo-h: 32px" xmlns="http://www.w3.org/2000/svg">
+              <path d="M338.902 151.445C338.902 178.261 317.163 199.999 290.348 199.999V199.998C277.893 200.02 265.432 195.281 255.93 185.778L273.097 168.612C277.97 173.486 284.4 175.853 290.786 175.716C290.808 175.715 290.829 175.715 290.851 175.715C296.866 175.57 302.838 173.203 307.429 168.612L307.47 168.653C311.888 164.257 314.625 158.171 314.625 151.445V139.165C307.483 143.296 299.192 145.662 290.349 145.662C263.533 145.662 241.794 123.923 241.794 97.1074V48.5537C255.202 48.5538 266.071 59.4233 266.071 72.8311V97.1074C266.071 110.515 276.94 121.385 290.348 121.385C303.755 121.385 314.624 110.515 314.624 97.1074H314.625V72.8311C314.625 59.4232 325.495 48.5537 338.902 48.5537V151.445ZM48.5547 48.5537C75.3701 48.5538 97.1082 70.292 97.1084 97.1074C97.1084 123.923 75.3702 145.662 48.5547 145.662H24.2773V175.723C24.2771 189.13 13.4084 199.999 0.000976562 199.999V169.86C0.000894346 169.886 2.06102e-07 169.912 0 169.938V145.665H0.000976562V145.662L0 97.1074C0.000191664 70.292 21.7392 48.5537 48.5547 48.5537ZM480.679 48.5537C507.494 48.5537 529.233 70.2918 529.233 97.1074C529.233 123.923 507.494 145.661 480.679 145.661L456.402 145.662V175.722C456.402 189.129 445.533 199.999 432.125 199.999V145.662L432.124 97.1074C432.124 70.2919 453.863 48.5539 480.679 48.5537ZM129.15 121.385C129.15 134.792 118.282 145.662 104.874 145.662V24.2773C104.874 10.8696 115.743 0.000131119 129.15 0V121.385ZM185.472 48.5537C212.287 48.5537 234.026 70.2928 234.026 97.1084V145.662C226.085 145.662 219.034 141.848 214.604 135.952C206.489 142.048 196.403 145.662 185.472 145.662C158.656 145.662 136.918 123.924 136.918 97.1084C136.918 70.2928 158.656 48.5537 185.472 48.5537ZM385.516 48.5537C395.008 48.5537 404.139 51.1562 411.237 55.9961C418.274 60.7941 424.359 68.6781 424.359 78.9004H400.082V78.8975C400.082 78.8632 400.084 78.6583 399.808 78.2119C399.492 77.7024 398.82 76.9126 397.562 76.0547C394.995 74.3047 390.772 72.8311 385.516 72.8311C380.259 72.8311 376.037 74.3048 373.471 76.0547C372.213 76.9126 371.541 77.7024 371.225 78.2119C370.948 78.6583 370.95 78.8632 370.95 78.8975V78.9004C370.95 79.3235 370.979 79.5917 371.005 79.7432C371.101 79.8292 371.267 79.9622 371.533 80.1377C373.623 81.5149 378.19 83.2104 387.959 85.2178C397.684 87.2161 406.47 89.5964 412.859 93.8076C416.334 96.0979 419.419 99.1192 421.534 103.144C423.637 107.143 424.359 111.331 424.359 115.315C424.359 125.538 418.274 133.422 411.237 138.22C404.139 143.06 395.008 145.662 385.516 145.662C376.024 145.662 366.893 143.06 359.795 138.22C352.758 133.422 346.673 125.538 346.673 115.315H370.95V115.318C370.95 115.352 370.947 115.557 371.225 116.004C371.541 116.513 372.213 117.303 373.471 118.161C376.037 119.911 380.259 121.385 385.516 121.385C390.772 121.385 394.995 119.911 397.562 118.161C398.82 117.303 399.492 116.513 399.808 116.004C400.085 115.557 400.082 115.352 400.082 115.318V115.315C400.082 114.892 400.053 114.624 400.027 114.473C399.931 114.387 399.765 114.254 399.499 114.078C397.41 112.701 392.842 111.005 383.073 108.998C373.348 107 364.562 104.619 358.173 100.408C354.698 98.1179 351.614 95.0967 349.498 91.0723C347.396 87.0727 346.673 82.885 346.673 78.9004C346.673 68.6781 352.758 60.7941 359.795 55.9961C366.893 51.1563 376.024 48.5538 385.516 48.5537ZM585.556 48.5537C612.371 48.5537 634.11 70.2928 634.11 97.1084C634.11 123.924 612.371 145.662 585.556 145.662C558.74 145.662 537.002 123.924 537.002 97.1084C537.002 70.2929 558.74 48.5539 585.556 48.5537ZM715.197 48.5537C715.197 61.9614 704.329 72.8309 690.921 72.8311H690.436C677.054 72.8314 666.203 83.6579 666.16 97.0293V121.385C666.16 134.793 655.291 145.662 641.883 145.662V96.1367C641.883 95.3514 641.92 94.5748 641.993 93.8086C643.652 69.0814 663.824 49.4262 688.767 48.583C689.158 48.5642 689.553 48.5537 689.949 48.5537H715.197ZM747.24 48.3418H771.518C771.518 61.5401 760.985 72.279 747.867 72.6113L747.24 72.6191V121.385C747.24 134.792 736.372 145.662 722.964 145.662V24.2773C722.964 10.8697 733.833 0.000212108 747.24 0V48.3418ZM48.5537 72.8311C35.1461 72.8312 24.2775 83.6998 24.2773 97.1074V97.1406C24.2952 110.533 35.157 121.385 48.5537 121.385C61.9615 121.385 72.8311 110.515 72.8311 97.1074C72.8309 83.6997 61.9615 72.8311 48.5537 72.8311ZM185.472 72.8311C172.064 72.8311 161.195 83.7006 161.195 97.1084C161.196 110.516 172.064 121.385 185.472 121.385C198.879 121.385 209.749 110.516 209.749 97.1084C209.749 83.7006 198.879 72.8311 185.472 72.8311ZM480.679 72.8301C467.271 72.8303 456.402 83.6997 456.402 97.1074C456.402 110.515 467.271 121.385 480.679 121.385C494.086 121.385 504.956 110.515 504.956 97.1074C504.956 83.6996 494.087 72.8301 480.679 72.8301ZM585.56 72.8311C572.152 72.8311 561.282 83.7006 561.282 97.1084C561.282 110.516 572.152 121.385 585.56 121.385C598.967 121.385 609.836 110.516 609.836 97.1084C609.836 83.7007 598.967 72.8313 585.56 72.8311Z"/>
+            </svg>
+          </li>
+          <li class="dp-logo-bar__item">
+            <svg viewBox="0 0 632 140" fill="currentColor" class="dp-logo-bar__logo" role="img" aria-label="Inquisitive" style="--logo-h: 28px" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M462.851 1.97728e-05C459.206 -0.00152666 455.71 1.44454 453.131 4.02028C450.552 6.59601 449.101 10.0905 449.098 13.7355C449.101 17.3804 450.552 20.875 453.131 23.4507C455.71 26.0264 459.206 27.4725 462.851 27.471C464.656 27.4725 466.444 27.1184 468.113 26.429C469.781 25.7395 471.297 24.7282 472.575 23.4528C473.853 22.1773 474.867 20.6627 475.559 18.9954C476.251 17.3281 476.608 15.5408 476.61 13.7355C476.607 10.0905 475.156 6.59601 472.577 4.02028C469.998 1.44454 466.496 -0.00152666 462.851 1.97728e-05ZM372.979 1.97728e-05C369.333 -0.00152787 365.836 1.44436 363.257 4.01992C360.677 6.59549 359.225 10.09 359.22 13.7355C359.225 17.38 360.676 20.8736 363.254 23.449C365.833 26.0244 369.329 27.471 372.973 27.471C374.779 27.4733 376.567 27.1198 378.237 26.4307C379.906 25.7416 381.423 24.7304 382.701 23.4548C383.979 22.1793 384.994 20.6644 385.686 18.9967C386.379 17.3291 386.736 15.5413 386.738 13.7355C386.736 11.9302 386.379 10.1429 385.687 8.47558C384.995 6.80829 383.981 5.29367 382.703 4.01822C381.425 2.74276 379.909 1.73144 378.241 1.042C376.572 0.352553 374.784 -0.00151144 372.979 1.97728e-05ZM275.17 1.97728e-05C273.364 -0.00227734 271.575 0.351221 269.906 1.04032C268.237 1.72942 266.72 2.74062 265.442 4.01615C264.164 5.29169 263.149 6.80656 262.457 8.47423C261.764 10.1419 261.407 11.9297 261.405 13.7355C261.41 17.382 262.862 20.8774 265.444 23.4531C268.025 26.0289 271.523 27.4741 275.17 27.471C278.815 27.4725 282.311 26.0264 284.89 23.4507C287.469 20.875 288.92 17.3804 288.923 13.7355C288.92 10.0915 287.47 6.5979 284.892 4.02234C282.314 1.44677 278.814 1.84632e-05 275.17 1.97728e-05ZM13.753 1.97728e-05C10.108 -0.00152666 6.61163 1.44454 4.03262 4.02028C1.45361 6.59601 0.00308993 10.0905 0 13.7355C0.00308993 17.3804 1.45361 20.875 4.03262 23.4507C6.61163 26.0264 10.108 27.4725 13.753 27.471C15.559 27.4733 17.3478 27.1198 19.0173 26.4308C20.6868 25.7417 22.2042 24.7306 23.4829 23.4552C24.7616 22.1797 25.7766 20.6649 26.4698 18.9972C27.1631 17.3295 27.5211 15.5416 27.5234 13.7355C27.5219 11.9292 27.1644 10.1409 26.4714 8.47288C25.7784 6.80483 24.7634 5.2897 23.4846 4.01409C22.2057 2.73848 20.688 1.7274 19.0182 1.03865C17.3484 0.349889 15.5592 -0.00304367 13.753 1.97728e-05ZM408.515 21.1015V42.2729H393.136V59.5165H408.521V114.47H427.303V59.5165H442.682V42.2729H427.303V21.1015H408.515ZM558.481 78.2287C558.481 57.203 575.007 40.0992 595.311 40.0992C615.619 40.0992 631.22 57.203 631.22 78.2287C631.22 80.2217 631.068 82.1797 630.783 84.0912L576.762 84.1203C578.947 93.4094 586.237 100.245 595.322 100.245C600.8 100.245 605.765 97.7625 609.355 93.7532H628.935C623.178 107.063 610.276 116.364 595.311 116.364C575.007 116.364 558.481 99.2602 558.481 78.2287ZM595.322 56.2123C587.339 56.2123 580.753 61.4862 577.781 69.0562H612.572C609.699 61.4804 603.306 56.2123 595.322 56.2123ZM295.187 63.6191C295.187 73.7007 301.755 82.0282 316.26 85.0935L326.196 87.2905C331.994 88.456 334.284 91.0784 334.284 94.301C334.284 98.1005 331.079 101.457 324.354 101.457C315.496 101.457 311.067 96.2008 310.613 90.5014H293.206C293.206 100.169 301.912 116.364 324.506 116.364C344.208 116.364 353.678 104.383 353.678 92.6926C353.678 82.1739 346.196 73.555 331.388 70.6354L320.694 68.4385C316.569 67.71 313.824 65.5247 313.824 62.0107C313.824 57.9256 318.101 54.8545 323.439 54.8545C331.994 54.8545 335.199 60.2566 335.811 64.499H352.769C352.769 55.2216 344.669 40.0992 323.288 40.0992C307.099 40.0992 295.187 50.7636 295.187 63.6191ZM106.603 78.2287C106.603 57.203 123.118 40.0992 143.427 40.0992C150.1 40.0992 156.248 41.9465 161.521 45.175V42.2729H180.403V139.861H161.521V111.422C155.998 114.83 149.637 116.635 143.147 116.638C126.178 116.644 111.871 104.447 107.832 88.0014C107.016 84.8081 106.603 81.5249 106.603 78.2287ZM125.624 78.5026C125.624 89.266 133.211 98.0248 143.176 98.0248C153.141 98.0248 161.253 89.266 161.253 78.5026C161.253 67.745 153.141 58.9804 143.176 58.9804C133.211 58.9804 125.624 67.745 125.624 78.5026ZM33.922 68.59V114.47H53.3976V71.9524C53.3976 61.7543 60.4256 57.6342 66.0083 57.6342C71.5911 57.6342 78.6249 61.7543 78.6249 71.9524V114.47H98.0889V68.59C98.0889 52.809 83.8697 40.105 66.0083 40.105C48.147 40.105 33.9162 52.7974 33.9162 68.5841L33.922 68.59ZM538.405 42.2729H559.751L530.188 114.464H510.578L481.01 42.2729H502.362L520.38 90.3732L538.405 42.2729ZM453.119 114.464H472.583V42.2729H453.119V114.464ZM363.247 114.464H382.711V42.2729H363.247V114.464ZM265.432 114.464H284.902V42.2729H265.432V114.464ZM235.537 42.2729V84.7905C235.537 94.9828 228.497 99.1087 222.92 99.1087C217.337 99.1087 210.304 94.9828 210.304 84.7905V42.2729H190.84V88.1471C190.84 103.928 205.059 116.644 222.92 116.644C240.782 116.644 255.001 103.928 255.001 88.1471V42.2729H235.537ZM4.02099 114.464H23.4907V42.2729H4.02682L4.02099 114.464Z"/>
+            </svg>
+          </li>
+          <li class="dp-logo-bar__item">
+            <svg
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:cc="http://creativecommons.org/ns#"
+               xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:svg="http://www.w3.org/2000/svg"
+               xmlns="http://www.w3.org/2000/svg"
+               xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+               xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+               viewBox="0 0 500 316.96634"
+               version="1.1"
+               id="svg8"
+               inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+               sodipodi:docname="Elton John Logo.svg"
+               fill="currentColor"
+               class="dp-logo-bar__logo"
+               role="img"
+               aria-label="Elton John"
+               style="--logo-h: 48px">
+              <defs id="defs2" />
+              <sodipodi:namedview
+                 id="base"
+                 pagecolor="#ffffff"
+                 bordercolor="#666666"
+                 borderopacity="1.0"
+                 inkscape:pageopacity="0.0"
+                 inkscape:pageshadow="2"
+                 inkscape:zoom="0.43083312"
+                 inkscape:cx="1701.2887"
+                 inkscape:cy="922.64544"
+                 inkscape:document-units="mm"
+                 inkscape:current-layer="layer1"
+                 inkscape:document-rotation="0"
+                 showgrid="false"
+                 inkscape:window-width="1898"
+                 inkscape:window-height="964"
+                 inkscape:window-x="0"
+                 inkscape:window-y="0"
+                 inkscape:window-maximized="0"
+                 fit-margin-top="0"
+                 fit-margin-left="0"
+                 fit-margin-right="0"
+                 fit-margin-bottom="0" />
+              <metadata id="metadata5">
+                <rdf:RDF>
+                  <cc:Work rdf:about="">
+                    <dc:format>image/svg+xml</dc:format>
+                    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                    <dc:title />
+                  </cc:Work>
+                </rdf:RDF>
+              </metadata>
+              <g inkscape:label="Calque 1" inkscape:groupmode="layer" id="layer1" transform="translate(340.45519,-23.375834)">
+                <g id="g500">
+                  <path sodipodi:nodetypes="cccccccccccccccccccccccc" d="m -175.22079,23.375834 18.65846,13.647576 v 167.88562 l -18.65846,13.64759 H 2.5662155 V 150.18953 H -0.74452218 C -25.741077,189.59641 -53.655711,208.05748 -95.019624,211.87994 V 108.46427 l 23.849637,17.78195 -10.016483,30.15487 26.024594,-18.8458 26.024592,18.8458 -9.682621,-30.40357 25.624077,-19.10508 H -45.235245 L -55.161876,76.300934 -65.357185,106.89244 H -95.019624 V 29.506644 c 35.225386,5.268109 67.377359,19.791983 89.3138416,55.836492 h 2.7851297 V 23.375834 Z" style="opacity:1;stroke:none;stroke-width:0.150341px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" id="path30" />
+                  <path d="m -180.32838,286.13149 c -3.60069,0 -7.05325,0.66614 -10.35799,1.99788 -3.30481,1.33179 -6.1909,3.20601 -8.65717,5.62293 -2.46622,2.41693 -4.38917,5.27755 -5.77036,8.58236 -1.38102,3.30475 -2.07158,6.8315 -2.07158,10.58022 0,3.74872 0.69056,7.27543 2.07158,10.58023 1.38119,3.30475 3.30414,6.16648 5.77036,8.58341 2.46627,2.41692 5.35236,4.29114 8.65717,5.62293 3.30474,1.33179 6.7573,1.99788 10.35799,1.99788 3.60069,0 7.05319,-0.66609 10.358,-1.99788 3.3048,-1.33179 6.19089,-3.20601 8.65716,-5.62293 2.46622,-2.41693 4.38917,-5.27866 5.7703,-8.58341 1.38119,-3.3048 2.0727,-6.83151 2.0727,-10.58023 0,-3.74872 -0.69151,-7.27547 -2.0727,-10.58022 -1.38113,-3.30481 -3.30408,-6.16543 -5.7703,-8.58236 -2.46627,-2.41692 -5.35236,-4.29114 -8.65716,-5.62293 -3.30481,-1.33174 -6.75731,-1.99788 -10.358,-1.99788 z m 0,8.88805 c 2.46849,0 4.77258,0.45213 6.91183,1.35722 2.18054,0.90514 4.05192,2.16039 5.61533,3.76487 1.60447,1.60453 2.83908,3.51732 3.70309,5.73893 0.90498,2.22156 1.35721,4.56589 1.35721,7.03432 0,2.46844 -0.45223,4.81382 -1.35721,7.03543 -0.86401,2.22156 -2.09862,4.13441 -3.70309,5.73888 -1.56341,1.60454 -3.43479,2.85979 -5.61533,3.76487 -2.13925,0.90509 -4.44334,1.35722 -6.91183,1.35722 -2.46849,0 -4.79322,-0.45213 -6.97365,-1.35722 -2.13925,-0.90508 -4.01081,-2.16033 -5.61534,-3.76487 -1.60447,-1.60447 -2.85973,-3.51732 -3.76487,-5.73888 -0.86395,-2.22161 -1.29538,-4.56699 -1.29538,-7.03543 0,-2.46843 0.43143,-4.81276 1.29538,-7.03432 0.90514,-2.22161 2.1604,-4.1344 3.76487,-5.73893 1.60453,-1.60448 3.47609,-2.85973 5.61534,-3.76487 2.18043,-0.90509 4.50516,-1.35722 6.97365,-1.35722 z" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.2701px;line-height:1.25;font-family:HurmeGeometricSans3W03-Rg;-inkscape-font-specification:HurmeGeometricSans3W03-Rg;opacity:1;stroke-width:1.84969" id="path164" />
+                  <path sodipodi:nodetypes="ccccccccccccc" d="m -340.45519,286.80251 v 51.86048 h 31.56835 v -8.57364 h -22.39412 v -13.72724 h 20.34746 v -7.9167 h -20.34746 v -13.0692 h 22.39412 v -8.5737 z" style="opacity:1;stroke:none;stroke-width:1.96339;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect186" />
+                  <path sodipodi:nodetypes="ccccccc" d="m -290.61425,286.80251 v 51.86048 h 31.5683 v -8.57364 h -22.39407 v -43.28684 z" style="opacity:1;stroke:none;stroke-width:1.96339;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect186-8" />
+                  <path d="m -257.29955,286.80251 v 8.5737 h 16.37661 v 43.28678 h 9.17423 v -43.28678 h 16.37656 v -8.5737 h -16.37656 -9.17423 z" style="opacity:1;stroke:none;stroke-width:2.58212;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect277" />
+                  <path transform="matrix(2.469211,0,0,2.4578131,-3778.9834,-1429.9522)" inkscape:transform-center-y="-0.29760933" inkscape:transform-center-x="1.6641053e-06" inkscape:randomized="0" inkscape:rounded="0" inkscape:flatsided="false" sodipodi:arg2="-0.9424778" sodipodi:arg1="-1.5707963" sodipodi:r2="1.8335885" sodipodi:r1="4.680686" sodipodi:cy="709.0354" sodipodi:cx="1457.4111" sodipodi:sides="5" id="path302" style="opacity:1;stroke:none;stroke-width:0.899583;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" sodipodi:type="star" d="m 1457.4111,704.35471 1.0778,3.19729 3.3738,0.037 -2.7077,2.01302 1.0074,3.22014 -2.7513,-1.95316 -2.7512,1.95316 1.0074,-3.22014 -2.7078,-2.01302 3.3739,-0.037 z" />
+                  <path sodipodi:nodetypes="ccccccccc" d="m -137.32017,285.12333 v 53.53966 h 9.17423 v -32.37592 l 33.15207,34.0551 v -53.53966 h -9.17423 v 32.02148 z" style="opacity:1;stroke:none;stroke-width:1.88709;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect304" />
+                  <path id="path164-6" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.2701px;line-height:1.25;font-family:HurmeGeometricSans3W03-Rg;-inkscape-font-specification:HurmeGeometricSans3W03-Rg;opacity:1;stroke-width:1.84969" d="m 12.114224,286.13151 c -3.6005692,0 -7.0532483,0.66613 -10.3580315,1.99786 -3.3047889,1.3318 -6.1908687,3.20601 -8.6571882,5.62295 -2.4661093,2.41691 -4.3891093,5.27755 -5.7702673,8.58234 -1.380942,3.30476 -2.071521,6.83151 -2.071521,10.58022 0,3.74874 0.690579,7.27544 2.071521,10.58023 1.381158,3.30477 3.304158,6.16649 5.7702673,8.58341 2.4663195,2.41694 5.3523993,4.29115 8.6571882,5.62294 3.3047832,1.3318 6.7574623,1.99788 10.3580315,1.99788 3.60078,0 7.053249,-0.66608 10.358038,-1.99788 3.304789,-1.33179 6.190868,-3.206 8.657188,-5.62294 2.466109,-2.41692 4.389109,-5.27864 5.770267,-8.58341 1.381153,-3.30479 2.072783,-6.83149 2.072783,-10.58023 0,-3.74871 -0.69163,-7.27546 -2.072783,-10.58022 -1.381158,-3.30479 -3.304158,-6.16543 -5.770267,-8.58234 -2.46632,-2.41694 -5.352399,-4.29115 -8.657188,-5.62295 -3.304789,-1.33173 -6.757258,-1.99786 -10.358038,-1.99786 z m 0,8.88806 c 2.468627,0 4.772584,0.45212 6.911865,1.35719 2.180602,0.90514 4.052002,2.16041 5.615246,3.76487 1.604564,1.60454 2.839088,3.51733 3.703144,5.73895 0.904968,2.22155 1.357242,4.56589 1.357242,7.0343 0,2.46844 -0.452274,4.81383 -1.357242,7.03544 -0.864056,2.22156 -2.09858,4.1344 -3.703144,5.73889 -1.563244,1.60452 -3.434644,2.85977 -5.615246,3.76486 -2.139281,0.9051 -4.443238,1.35722 -6.911865,1.35722 -2.468416,0 -4.7931354,-0.45212 -6.9735329,-1.35722 -2.1392812,-0.90509 -4.0108859,-2.16034 -5.61545055,-3.76486 -1.60436005,-1.60449 -2.85964625,-3.51733 -3.76482445,-5.73889 -0.8640619,-2.22161 -1.295357,-4.567 -1.295357,-7.03544 0,-2.46841 0.4312951,-4.81275 1.295357,-7.0343 0.9051782,-2.22162 2.1604644,-4.13441 3.76482445,-5.73895 1.60456465,-1.60446 3.47616935,-2.85973 5.61545055,-3.76487 2.1803975,-0.90507 4.5051169,-1.35719 6.9735329,-1.35719 z" />
+                  <path sodipodi:type="star" style="opacity:1;stroke:none;stroke-width:0.899583;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="path302-2" sodipodi:sides="5" sodipodi:cx="1457.4111" sodipodi:cy="709.0354" sodipodi:r1="4.680686" sodipodi:r2="1.8335885" sodipodi:arg1="-1.5707963" sodipodi:arg2="-0.9424778" inkscape:flatsided="false" inkscape:rounded="0" inkscape:randomized="0" inkscape:transform-center-x="9.1827755e-05" inkscape:transform-center-y="-0.29760933" transform="matrix(2.469211,0,0,2.4578131,-3586.5408,-1429.9522)" d="m 1457.4111,704.35471 1.0778,3.19729 3.3738,0.037 -2.7077,2.01302 1.0074,3.22014 -2.7513,-1.95316 -2.7512,1.95316 1.0074,-3.22014 -2.7078,-2.01302 3.3739,-0.037 z" />
+                  <path id="rect304-9" style="opacity:1;stroke:none;stroke-width:1.88709;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" d="m 117.2184,285.12335 v 53.53964 h 9.17428 v -32.37591 l 33.15213,34.05509 v -53.53964 h -9.17428 V 318.824 Z" sodipodi:nodetypes="ccccccccc" />
+                  <path d="m 54.935345,286.80251 v 51.86048 h 9.174234 v -22.30088 h 23.564896 v 22.30088 h 9.175285 v -51.86048 h -9.175285 v 21.6429 H 64.109579 v -21.6429 z" style="opacity:1;stroke:none;stroke-width:1.88709;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect415" />
+                  <path sodipodi:nodetypes="ccccccccc" d="m -39.015091,286.80251 v 36.73295 c 0,3.83219 -2.688947,6.55389 -6.285642,6.55389 h -9.349511 v 8.57364 h 10.372703 c 6.659564,0 14.437735,-4.43802 14.437735,-15.05526 v -36.80522 z" style="opacity:1;stroke:none;stroke-width:1.5771;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:131.528;paint-order:stroke fill markers" id="rect440" />
+                </g>
+              </g>
+            </svg>
+          </li>
+          <li class="dp-logo-bar__item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120.22 17" fill="currentColor" class="dp-logo-bar__logo" role="img" aria-label="Insignia" style="--logo-h: 18px"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="Layer_1-2-2" data-name="Layer 1-2"><g id="Layer_2-2" data-name="Layer 2-2"><g id="Layer_1-2-2-2" data-name="Layer 1-2-2"><path d="M5.78,14.34c0,1.48,1.34,1.42,2.05,1.42v.47H0v-.47c.71,0,2.05.06,2.05-1.4v-12C2.05.91.71,1,0,1V.49H7.83V1c-.71,0-2,0-2,1.42Z"></path><path d="M15.58,1.19l10,10.92v-9c0-2.18-1.75-2.2-3-2.2V.49h6.57V.91c-1.21,0-3,0-3,2.2V16.23h-2L13.72,4.9v8.71c0,2.18,1.79,2.21,3,2.21v.41H10.15v-.41c1.23,0,3,0,3-2.21V3.84c0-1.71-1-3.14-2.44-3.14h-.42V.49h3.15A2.5,2.5,0,0,1,15.58,1.19Z"></path><path d="M30.84,4.77c0-2.49,1.39-4.49,4.65-4.49a8.42,8.42,0,0,1,3.25.65,1.35,1.35,0,0,0,.45.11c.08,0,.16,0,.16-.37V.2h.52V5.58h-.5C39.35,3.29,37.88.8,35.43.8c-1.89,0-3.07.94-3.07,2.13,0,1.71,1.63,2.26,4.1,3.63,2.68,1.48,4.39,2.7,4.39,5.21a4.47,4.47,0,0,1-4.26,4.67h-.5a10,10,0,0,1-4.28-.78c-.19-.08-.26,0-.26.34v.39H31v-6.2h.53c.07,3.22,1.94,5.73,4.54,5.73,1.7,0,3.23-.75,3.23-2.28,0-1.74-2.21-2.36-4.36-3.48C32.44,8.89,30.84,7.55,30.84,4.77Z"></path><path d="M49.29,14.34c0,1.48,1.34,1.42,2,1.42v.47H43.51v-.47c.71,0,2.05.06,2.05-1.4v-12C45.56.91,44.22,1,43.51,1V.49h7.82V1c-.7,0-2,0-2,1.42Z"></path><path d="M62.12,9h8.14v.49c-1.52,0-2.18.57-2.18,2.07V17h-.57c0-1.32-.14-1.76-.87-1.76-.94,0-2.36,1.19-5.15,1.19-5.44,0-8.56-2.57-8.56-7.6,0-5.68,4.49-8.56,9.19-8.56a10,10,0,0,1,4.1.89c.37.15.52.15.52-.26V.31h.56V5.83h-.48a4.84,4.84,0,0,0-4.67-5h0c-3.68,0-5.28,3.32-5.28,8,0,4.14,1.66,7.1,4.91,7.1,1.68,0,2.79-.91,2.79-3.08V11.51c0-1.37-.66-2-2.42-2Z"></path><path d="M76.2,1.19l10,10.92v-9c0-2.18-1.76-2.2-3-2.2V.49h6.56V.91c-1.2,0-3,0-3,2.2V16.23h-2L74.34,4.9v8.71c0,2.18,1.78,2.21,3,2.21v.41H70.76v-.41c1.24,0,3,0,3-2.21V3.84c0-1.71-1-3.14-2.45-3.14h-.42V.49h3.16A2.52,2.52,0,0,1,76.2,1.19Z"></path><path d="M97.26,14.34c0,1.48,1.34,1.42,2,1.42v.47H91.48v-.47c.71,0,2,.06,2-1.4v-12c0-1.45-1.34-1.4-2-1.4V.49h7.83V1c-.71,0-2,0-2,1.42Z"></path><path d="M106.31,15.84v.39h-5.46v-.39A2.92,2.92,0,0,0,104,13.9h.42a2.61,2.61,0,0,0-.23,1C104.19,15.53,104.71,15.84,106.31,15.84Zm2.5-13.3h-1V2.15A5.76,5.76,0,0,0,111.49,0l6,13.66c.61,1.4,1.29,2.1,2.73,2.1v.47h-9.06v-.47c1.71,0,2.45-.23,2.45-.95a3.52,3.52,0,0,0-.35-1.46Z"></path><path d="M105.32,10.61c.13-.34.1-.55-.21-.7l-2.45-1.3h2.82c.49,0,.6,0,.68-.36L107,5.16l.76,3.06c.08.34.15.39.68.39h2.73l-2.36,1.3c-.29.15-.34.36-.21.7l1.1,2.67-2.18-1.77a1,1,0,0,0-.52-.28,1,1,0,0,0-.53.28l-2.18,1.77Z"></path></g></g></g></g></g></svg>
+          </li>
+
+          <li class="dp-logo-bar__item">
+            <svg viewBox="0 0 1599 1234" fill="currentColor" class="dp-logo-bar__logo" role="img" aria-label="Prang Out" style="--logo-h: 56px" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_2907_1479)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M784.183 0.334993C807.441 -0.631367 830.738 0.71695 853.729 4.36008C875.297 7.78979 894.216 13.0895 911.041 20.6617C944.826 35.8648 967.415 60.9964 986.251 92.5095C995.41 107.822 1003.58 123.721 1009.58 142.823C1015.44 161.38 1019.47 183.636 1016.82 207.627C1015.58 218.17 1013.78 228.639 1011.42 238.989C1005.94 264.029 998.661 286.837 990.106 309.629C989.343 311.667 988.706 313.998 987.693 316.472C986.93 318.334 984.844 321.503 985.078 323.315C985.221 324.38 986.394 325.101 987.693 326.132C994.295 331.407 1000.94 338.367 999.557 350.887C998.862 357.193 997.68 363.239 996.742 369.402C995.845 375.272 994.53 381.544 994.53 388.32C994.53 390.71 995.887 391.615 997.747 393.351C1001.22 396.588 1004.53 402.441 1006.39 406.433C1010.27 414.676 1014.29 423.657 1015.44 433.803C1015.7 436.101 1015.75 438.29 1016.05 440.445C1016.56 444.059 1018.8 447.195 1020.67 450.306C1031.44 468.117 1046.12 482.893 1062.5 495.589C1079.64 508.871 1096.94 518.154 1113.98 531.211C1124.79 539.487 1135.77 548.611 1140.32 563.009C1142.65 570.363 1142.39 579.621 1140.53 588.568C1137.17 604.501 1129.76 616.928 1119.21 625.398C1113.52 630.177 1106.64 633.308 1099.3 634.454C1091.23 635.762 1082.54 634.454 1073.56 632.442C1065.55 630.664 1058.38 628.693 1050.43 626.404C1043.14 624.299 1034.44 621.037 1026.3 622.781C1018.68 624.417 1013.96 630.597 1012.06 637.674C1009.91 645.531 1010.87 655.376 1011.66 664.642C1012.44 673.908 1013.12 683.611 1011.46 691.61C1008.26 706.914 997.127 715.929 985.112 723.207C974.395 729.681 955.995 736.985 938.86 732.666C931.319 730.763 924.967 727.174 919.152 723.442C901.389 711.937 886.005 698.52 868.409 686.78C862.644 682.931 856.678 678.948 850.109 676.114C843.306 673.179 834.751 672.022 826.581 670.68C817.868 669.22 809.067 668.346 800.238 668.064C790.794 667.837 782.139 669.296 773.492 670.479C764.845 671.661 756.843 673.045 749.964 675.912C736.356 681.59 725.413 689.933 714.168 698.252C703.502 706.151 692.383 715.3 680.585 722.805C674.661 726.57 668.754 730.587 661.314 732.465C644.556 736.658 625.912 730.293 614.659 723.811C608.653 720.384 603.168 716.114 598.371 711.132C593.519 706.067 589.388 700.642 587.713 692.65C584.311 676.474 590.788 654.076 586.875 638.513C585.048 631.175 581.009 624.844 573.602 622.815C565.651 620.643 555.688 624.148 549.069 626.035C541.385 628.24 534.59 630.597 526.546 632.475C518.167 634.446 508.841 635.829 500.403 634.689C493.01 633.657 486.049 630.591 480.294 625.834C469.895 617.448 462.111 604.87 458.575 589.407C456.598 580.736 456.271 570.9 458.575 563.411C460.747 556.6 464.386 550.349 469.233 545.097C478.45 535.034 490.659 526.749 501.409 519.337C513.139 511.328 524.2 504.704 536.031 495.823C551.951 483.874 567.486 468.637 578.06 450.742C579.786 447.833 582.157 444.671 582.886 441.082C583.682 437.191 583.724 432.906 584.696 428.403C586.307 420.99 588.876 413.819 592.338 407.07C594.608 402.483 597.047 397.536 600.784 393.787C602.87 391.708 604.043 391.272 604.404 387.917C604.722 384.966 604.219 381.628 603.8 378.257C602.703 369.259 600.449 359.415 599.376 350.685C597.935 338.51 604.714 331.214 611.442 325.931C612.447 325.143 613.956 324.338 614.056 323.315C614.207 322.107 612.422 318.719 611.643 316.875C605.548 302.095 600.31 286.976 595.957 271.592C590.462 252.912 586.163 233.899 583.087 214.671C579.736 193.246 582.199 169.741 586.908 151.88C591.485 134.556 598.171 117.861 606.817 102.17C622.921 72.5434 643.793 46.2629 672.776 28.7119C698.173 13.3327 730.348 5.32443 767.693 1.54252C773.165 0.98907 778.754 0.594947 784.183 0.334993ZM1001.57 220.709C1002.5 215.728 1003.62 210.713 1004.18 205.614C1006.08 188.315 1003.45 172.206 999.993 157.716C995.627 139.943 988.79 122.871 979.682 107C962.254 76.3085 941.65 50.7408 909.868 34.7495C894.208 26.867 876.051 21.5338 855.572 18.0454C830.729 13.9184 805.518 12.4343 780.363 13.6178C740.101 15.6219 705.412 24.7539 678.809 40.3846C664.69 48.678 652.834 59.8057 642.612 72.5853C632.389 85.365 623.097 98.6562 615.464 113.842C607.831 129.029 601.295 145.825 597.566 164.357C595.441 174.563 594.363 184.959 594.349 195.384C594.407 205.782 596.226 216.071 598.17 225.773C605.711 263.375 617.265 297.529 631.149 329.621C624.111 333.025 617.743 335.944 614.257 341.696C611.216 346.669 613.051 352.388 614.056 358.601C614.626 362.09 615.145 365.754 615.665 369.268C616.746 376.572 618.581 384.362 617.274 391.607C616.721 394.676 614.366 396.337 612.447 398.249C603.901 406.802 596.527 419.045 595.756 434.877C595.622 437.552 596.284 440.411 595.957 443.732C595.647 446.927 593.62 450.189 591.936 453.191C590.251 456.193 588.525 459.12 586.908 461.644C569.044 489.601 543.58 507.873 516.122 525.643C505.489 532.485 493.918 540.032 484.751 548.351C480.009 552.669 475.534 557.659 472.686 563.244C469.569 569.474 469.451 578.681 471.077 586.153C472.561 592.904 475.288 599.32 479.121 605.071C482.472 610.253 486.896 615.469 492.795 618.555C506.478 625.725 524.719 619.578 537.204 615.939C550.183 612.165 567.812 605.239 581.847 612.115C588.24 615.243 592.53 620.081 595.723 625.196C599.493 631.242 600.75 637.406 601.152 646.731C601.89 662.202 595.782 682.789 602.761 695.434C605.727 700.809 611.048 705.396 616.235 708.918C621.745 712.765 627.77 715.814 634.132 717.975C641.514 720.49 649.55 721.53 657.459 719.585C664.506 717.857 669.475 714.277 675.357 710.361C686.35 702.998 696.246 695.116 706.527 687.619C717.026 679.971 727.86 672.047 739.305 666.286C750.751 660.525 765.532 656.659 782.139 655.217C798.511 653.791 816.451 654.311 832.815 657.431C848.006 660.332 859.77 666.051 871.023 673.128C887.781 683.644 902.688 695.417 918.281 706.738C928.428 714.109 939.513 723.325 957.495 720.222C971.571 717.799 984.442 709.631 992.284 700.935C996.792 695.904 999.23 690.202 999.323 681.011C999.499 664.5 994.806 645.431 1000.33 631.1C1005.29 618.245 1015.63 608.995 1032.1 609.364C1040.22 609.549 1047.28 611.88 1054.42 613.993C1061.56 616.106 1068.54 618.119 1075.74 619.863C1084.12 621.851 1091.93 623.058 1099.27 621.272C1105.77 619.68 1111.6 616.091 1115.96 611.008C1119.99 606.488 1123.22 600.526 1125.61 593.7C1127.94 587.042 1129.92 578.723 1128.63 570.556C1127.54 563.654 1123.32 557.617 1119.18 553.047C1114.74 548.158 1109.96 544.544 1104.7 540.569C1094.2 532.661 1082.73 525.777 1072.32 518.833C1051.31 504.72 1030.96 488.1 1015.88 467.245C1012.02 461.961 1008.59 456.375 1005.62 450.541C1004.8 449.068 1004.13 447.518 1003.61 445.912C1003.17 443.863 1002.97 441.769 1003.01 439.673C1002.97 435.496 1002.63 431.326 1002 427.196C999.809 413.938 993.156 404.454 985.313 396.605C984.031 395.322 982.053 394.089 981.894 393.184C980.487 385.033 982.221 377.385 983.503 369.436C984.081 365.888 984.517 361.939 985.112 358.165C985.74 354.207 986.955 350.191 986.519 346.493C985.975 341.855 982.238 338.476 979.079 336.027C976.485 334.11 973.725 332.426 970.834 330.996C969.796 330.562 968.843 329.949 968.019 329.185C983.339 294.44 994.597 258.04 1001.57 220.709Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M917.912 323.147C918.197 325.906 921.121 326.56 923.14 327.574C935.91 333.998 952.065 336.597 963.963 344.48C965.865 345.737 968.462 347.364 968.789 349.108C969.284 351.716 968.06 355.138 967.583 357.964C965.933 366.989 965.259 376.165 965.572 385.334C955.023 381.007 941.842 378.928 929.777 381.51C919.48 383.786 910.014 388.872 902.428 396.202C895.003 403.573 889.721 412.825 887.144 422.969C884.374 434.978 885.285 447.544 889.759 459.027C893.685 468.399 900.166 476.477 908.46 482.339C917.032 488.62 926.123 492.787 939.463 493.24C966.954 494.079 981.953 479.999 992.351 462.213C1000.07 471.161 1006.19 480.402 1013.67 488.578C1021.14 496.754 1030.17 503.773 1038.8 511.118C1047.48 518.469 1056.61 525.258 1066.15 531.445C1070.97 534.59 1075.88 537.659 1080.83 540.669C1090.33 546.539 1101.85 551.881 1106.98 562.203C1113.59 575.495 1106.59 589.222 1098.53 596.215C1093.81 600.433 1087.73 602.814 1081.4 602.924C1074.53 603.175 1067.86 601.146 1061.7 599.1C1055.66 597.104 1049.55 594.521 1044.2 592.861C1037.94 590.916 1031.31 589.071 1024.49 588.836C1009.85 588.333 1000 596.719 993.122 605.138C989.552 609.507 986.243 614.27 984.274 620.03C982.179 626.169 982.229 633.657 982.464 641.766C982.69 649.489 982.925 657.338 983.302 664.709C983.712 673.556 982.464 678.436 978.878 683.828C972.828 692.876 961.667 699.761 946.903 699.526C939.262 699.409 934.913 696.692 930.011 692.683C921.146 685.421 913.496 677.304 904.874 670.143C896.252 662.982 887.278 656.063 876.922 650.42C856.36 639.175 830.879 633.112 799.064 633.112C766.788 633.112 741.945 639.636 721.441 650.822C706.183 659.158 693.388 670.537 680.82 681.849C676.63 685.589 672.784 689.564 668.352 693.119C663.274 697.203 658.557 699.56 650.857 699.56C636.755 699.56 625.334 692.381 619.687 683.057C616.444 677.69 615.497 672.34 615.866 663.535C616.059 659.502 615.866 655.543 616.067 651.661C616.536 640.76 618.17 628.106 614.458 619.259C612.16 613.977 609.05 609.088 605.241 604.769C598.412 596.735 588.651 587.897 573.669 588.668C566.849 589.021 560.388 590.974 554.397 593.096C549.068 594.974 542.667 597.347 536.701 599.335C530.425 601.414 523.965 603.528 516.793 603.159C510.514 602.851 504.54 600.36 499.9 596.115C493.968 590.639 488.765 582.304 489.846 570.958C490.885 560.057 496.809 554.824 504.09 549.625C508.849 546.271 513.793 543.336 518.77 540.401C523.747 537.466 528.615 534.422 533.45 531.344C543.013 525.175 552.079 518.267 560.564 510.682C564.821 506.942 569.228 503.336 573.435 499.613C577.641 495.89 581.981 492.234 585.701 488.142C592.405 480.829 597.625 472.528 604.202 464.998C604.998 464.092 605.602 462.616 607.018 462.381C611.448 471.42 618.262 479.075 626.725 484.519C635.246 490.028 646.206 493.651 659.906 493.173C672.893 492.72 682.412 488.469 690.908 482.272C699.087 476.324 705.484 468.251 709.409 458.926C713.749 448.402 714.805 434.113 711.822 422.701C709.124 412.571 703.276 402.508 696.505 396.202C686.04 386.45 671.042 378.316 649.851 380.907C645.527 381.425 641.276 382.438 637.182 383.925C636.031 384.479 634.815 384.884 633.562 385.133C633.707 375.901 633.034 366.674 631.551 357.561C631.007 354.458 629.8 351.322 630.546 348.706C631.049 346.962 633.546 345.352 635.573 344.077C641.707 340.373 648.254 337.401 655.08 335.222C662.202 332.798 669.5 330.643 676.027 327.574C678.063 326.61 680.552 325.578 681.256 323.381C678.742 322.14 676.002 322.493 673.614 322.778C668.704 323.373 664.355 324.455 659.37 325.394C656.956 325.847 654.066 326.467 651.728 325.797C648.435 324.857 647.061 319.709 645.494 315.935C640.902 304.866 635.59 292.933 631.618 281.923C625.929 266.125 620.139 249.815 616.536 233.018C612.581 214.57 612.011 193.212 614.525 174.252C618.271 146.085 628.166 123.938 641.673 105.624C646.139 99.5865 651.058 93.8843 656.152 88.115C676.128 65.541 700.678 47.1262 735.585 39.814C753.055 36.1579 773.29 35.5541 794.104 34.5814C803.824 34.1285 816.627 34.6988 826.279 35.4199C836.46 36.1495 846.029 37.2061 855.438 38.64C874.274 41.5079 890.379 47.0927 903.902 55.1429C917.426 63.193 928.939 73.5912 939.697 84.3247C950.641 95.4034 959.921 108.013 967.248 121.758C975.435 136.827 981.075 153.148 983.939 170.059C987.039 189.069 987.097 210.931 983.335 229.597C981.524 238.301 979.242 246.901 976.498 255.357C971.404 271.584 966.033 287.34 959.405 303.055C957.98 306.409 955.819 310.174 954.176 314.124C952.249 318.778 951.478 325.646 946.535 326.199C944.222 326.459 941.767 325.662 939.295 325.193C932.927 323.96 925.076 321.729 917.912 323.147Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M654.476 396.806C673.798 395.38 686.559 406.248 693.087 418.541C695.67 423.394 697.168 428.75 697.477 434.239C698.315 447.505 693.288 457.014 687.054 464.025C680.593 471.32 671.62 475.974 659.906 476.905C654.521 477.354 649.101 476.692 643.982 474.962C638.863 473.231 634.153 470.467 630.143 466.842C622.904 460.084 618.094 451.899 617.072 439.673C615.949 426.189 621.228 417.091 627.328 410.055C630.492 406.421 634.312 403.416 638.59 401.2C643.514 398.626 648.929 397.128 654.476 396.806V396.806ZM646.834 436.218C646.24 444.101 652.507 448.486 659.101 446.885C666.182 445.166 669.659 436.344 665.737 430.382C664.162 427.984 659.872 426.03 655.079 426.759C650.077 427.547 647.203 431.355 646.834 436.252V436.218Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M938.625 396.806C957.897 395.381 970.725 406.198 977.235 418.542C979.854 423.382 981.365 428.744 981.659 434.24C982.346 447.573 977.554 456.956 971.202 464.025C964.692 471.271 955.877 475.966 944.054 476.906C938.671 477.338 933.255 476.67 928.139 474.94C923.022 473.209 918.311 470.455 914.292 466.843C907.086 460.185 902.193 451.749 901.221 439.674C900.132 426.139 905.452 416.974 911.477 410.089C914.643 406.458 918.463 403.454 922.738 401.234C927.661 398.649 933.076 397.14 938.625 396.806ZM932.592 443.296C936.002 448.655 945.16 448.135 949.283 443.095C952.635 438.978 952.073 431.967 948.445 428.839C946.912 427.498 943.418 426.19 939.228 426.827C932.299 427.841 928.428 436.764 932.592 443.296V443.296Z"/>
+              </g>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1040.28 833.743C1034.72 843.147 1035.36 863.087 1035.36 879.373C1035.36 930.451 1035.04 980.263 1035.03 1031.69C1035.03 1062.55 1035.03 1102.67 1035.03 1133.45C1035.03 1150.72 1037.21 1165.01 1045.21 1174.16C1052.99 1183.05 1066.95 1186.85 1083.29 1186.96C1097.84 1187.06 1109.56 1180.03 1117.75 1170.55C1125.85 1161.18 1131.62 1150.26 1134.17 1136.08C1136.77 1121.58 1135.81 1104.1 1135.81 1086.84C1135.81 1035.24 1136.46 987.098 1136.47 935.507C1136.47 920.891 1136.24 903.155 1136.14 884.954C1136.03 864.862 1137.55 841.498 1128.26 831.774C1117.98 821.015 1090.9 822.018 1072.13 822.912C1058.99 823.536 1045.76 824.494 1040.28 833.743ZM1072.13 774H1109.55C1121.1 775.116 1133.26 777.438 1142.38 781.22C1160.74 788.845 1174.2 803.855 1179.47 823.568C1182.33 834.263 1182.1 846.112 1182.1 860.006C1182.09 939.072 1182.1 1019.88 1182.1 1098.66C1182.1 1112.44 1182.38 1125.56 1181.44 1137.72C1178.59 1174.6 1167 1204.21 1143.69 1219.46C1135.73 1224.66 1125.96 1227.74 1114.47 1229.97C1103.42 1232.1 1090.84 1233.7 1077.71 1233.25C1052.62 1232.38 1030.92 1226.28 1015.66 1215.85C1007.82 1210.49 1001.17 1203.23 997.28 1194.51C993.26 1185.5 991.06 1174.76 989.403 1162.34C986.256 1138.74 986.45 1112.51 986.448 1085.85C986.448 1059.31 986.724 1033.04 986.448 1006.74C986.175 980.759 986.066 953.908 987.105 927.958C988.165 901.488 988.368 875.952 990.716 851.798C991.86 840.012 993.474 828.424 995.967 817.331C998.422 806.412 1001.54 796.39 1008.77 790.412C1016.05 784.398 1024.7 779.856 1035.69 777.611C1046.4 775.42 1058.47 774.727 1072.13 774Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M46.9425 819.957V952.905C57.7763 953.495 68.2702 953.284 77.7999 951.593C86.9425 949.97 95.8477 947.28 101.108 941.744C110.922 931.417 109.97 909.536 109.97 889.221C109.97 869.655 109.48 850.885 102.091 838.011C92.6919 821.635 72.0397 818.657 47.2717 818.973C46.8869 819.027 46.9147 819.491 46.9425 819.957ZM0 1229.31V775.313C40.96 773.626 78.3322 776.748 107.344 786.801C122.358 792.005 135.828 799.035 141.813 812.407C147.832 825.858 149.649 843.423 151.003 863.288C152.341 882.901 152.269 903.029 151.003 921.392C150.329 931.154 149.341 939.403 147.064 947.325C140.635 969.69 125.841 987.896 102.091 992.625C86.8569 995.661 67.2097 996.243 50.5538 997.222C49.6921 997.274 47.8341 996.619 47.2717 997.879C48.4798 1074.22 47.74 1152.94 46.9425 1229.31H0Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1599 853.11V897.1H1520.87V1229.64C1520.85 1229.84 1520.82 1230.02 1520.54 1229.96C1505.99 1229.75 1490.56 1230.4 1476.55 1229.64V897.1C1450.73 896.88 1424.03 897.536 1398.75 896.771V853.11H1599Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1196.54 853.439H1237.57C1237.58 908.295 1237.57 963.191 1237.57 1018.89C1237.58 1058.51 1235.68 1103.02 1240.86 1139.03C1242.53 1150.68 1245.13 1162.46 1249.72 1171.21C1256.39 1183.91 1271.96 1188.32 1287.8 1189.59C1324.79 1192.54 1341 1167 1344.59 1134.11C1346.41 1117.42 1345.58 1097.79 1345.58 1078.96C1345.57 1003.33 1345.58 928.265 1345.58 853.439H1390.22C1390.22 931.971 1390.22 1013.62 1390.22 1091.44C1390.22 1112.86 1390.66 1132.15 1388.25 1149.21C1383.54 1182.52 1370.28 1211.57 1342.95 1223.07C1336.13 1225.94 1327.98 1227.78 1319.31 1229.31C1311.03 1230.77 1301.98 1231.88 1292.39 1231.93C1272.82 1232.04 1256.04 1229.18 1241.18 1223.4C1227.06 1217.9 1214.26 1209.46 1207.37 1197.47C1200.09 1184.76 1197.76 1167.98 1196.21 1148.88C1194.77 1131.19 1194.57 1110.81 1194.57 1091.11C1194.57 1012.15 1195.49 932.405 1196.21 854.423C1196.18 853.959 1196.16 853.493 1196.54 853.439Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M204.182 907.452V979.167C215.181 979.923 228.313 979.147 238.324 978.181C242.23 977.805 246.021 977.61 248.829 976.541C257.187 973.355 260.637 961.713 261.63 949.622C262.596 937.849 261.937 930.005 258.02 921.897C254.608 914.839 253.46 910.851 245.414 908.996C235.555 906.718 216.864 906.355 204.512 906.468C204.129 906.522 204.155 906.988 204.182 907.452ZM341.567 1228.98C326.686 1229.74 310.383 1229.09 294.954 1229.31C272.782 1158.58 250.469 1087.99 228.645 1016.92H205.168C204.403 1087.06 205.059 1158.62 204.841 1229.31H159.866V866.898C196.09 866.898 233.804 865.585 256.049 870.509C275.095 874.726 288.638 887.315 295.442 903.992C302.741 921.882 305.955 951.752 300.206 971.296C295.083 988.715 286.678 1004.1 273.449 1010.68C272.848 1010.98 273.887 1011.99 274.272 1012.98C296.609 1085.08 318.957 1157.15 341.567 1228.98Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M957.561 1013.31H913.573C913.703 990.735 914.95 969.855 913.9 947.325C913.19 932.05 910.045 921.811 898.144 916.795C888.993 912.94 874.264 912.857 860.721 912.857C842.277 912.857 825.324 913.115 818.702 923.688C811.39 935.369 813.451 962.196 813.451 981.465C813.451 1023.75 813.12 1063.69 813.122 1107.19C813.124 1128.41 812.023 1151.6 818.375 1164.97C824.3 1177.44 837.315 1182.99 853.171 1184.66C870.227 1186.46 885.636 1183.42 895.519 1174.16C914.967 1155.92 914.533 1123.42 913.573 1083.88C897.924 1083.12 880.856 1083.77 864.661 1083.56V1038.26C895.737 1037.71 929.111 1037.71 960.186 1038.26C958.326 1074.33 962.622 1109.75 959.203 1141.99C955.94 1172.74 945.837 1199.27 926.376 1214.53C916.447 1222.32 903.537 1226.42 887.967 1228.98C839.382 1236.96 787.971 1224.86 774.058 1189.92C764.084 1164.86 764.537 1129.09 764.54 1094.06C764.54 1076.32 764.867 1058.78 764.867 1041.54C764.867 1023.81 764.067 1006.24 764.54 989.341C765.529 953.799 763.877 919.403 775.701 895.129C781.608 883.002 791.26 875.275 803.93 870.836C816.814 866.325 831.987 865.448 850.216 864.601C870.456 863.658 895.643 863.624 911.602 868.21C928.628 873.105 940.845 882.608 948.698 895.459C957.503 909.863 959.209 927.819 958.217 949.622C957.272 970.404 957.864 991.108 957.561 1013.31Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M707.748 865.585H751.081C751.846 985.732 751.19 1107.3 751.408 1227.99C737.399 1228.76 721.973 1228.11 707.421 1228.32C706.651 1227.53 707.801 1224.3 705.778 1225.7C704.382 1225.01 704.594 1223.27 704.138 1222.08C674.598 1146.02 645.746 1068.27 616.488 991.311C615.723 1070.21 616.379 1150.52 616.161 1229.96H572.171V867.227H616.161C616.373 868.655 615.731 870.937 616.488 871.822C618.342 870.616 618.15 871.788 618.787 872.808C619.899 874.582 620.407 877.744 621.415 880.357C649.958 954.584 678.951 1031.78 706.764 1105.55C707.527 1026.55 706.873 946.119 707.091 866.571C707.076 866.008 707.335 865.72 707.748 865.585Z"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M448.087 906.29C444.416 929.538 440.272 956.585 436.597 979.831H472.708C469.034 956.585 464.991 929.436 461.217 906.29C458.113 906.25 452.276 906.32 448.087 906.29ZM412.962 866.241H496.672C518.102 987.391 540.041 1108.02 561.339 1229.31H515.382C503.298 1157.36 491.08 1089.81 479.272 1017.58H430.36C417.937 1089.31 406.263 1157.5 393.922 1229.31H347.965C369.522 1108.17 390.918 986.887 412.962 866.241Z"/>
+              <defs>
+              <clipPath id="clip0_2907_1479">
+              <rect width="685" height="734" transform="translate(457)"/>
+              </clipPath>
+              </defs>
+            </svg>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================================
+           WORK TICKER — restored 2026-08-25, back in its pre-redesign spot
+           directly under the logo bar. The logos say WHERE the work happened;
+           this says WHAT it looked like. Without it the homepage names Edward
+           a designer and then shows none of his design.
+
+           aria-hidden on the whole section: it is a decorative marquee, and
+           the same work is reachable as real content elsewhere. Clicking a
+           tile opens the shared lightbox (image-lightbox.js, `dedupe: true`
+           because each row duplicates its items to loop seamlessly).
+
+           image-ticker.js drives both rows with a rAF loop rather than CSS
+           keyframes so they can run at independently derived speeds, and
+           never starts that loop under prefers-reduced-motion.
+
+           The four data-prod-hide tiles are the two self-congratulatory
+           doodles ("so pretty!", "COOL HUH"), each appearing twice because of
+           the loop duplication. They show on dev and never on prod. This is
+           currently the only use of data-prod-hide in the repo; the
+           `.is-prod [data-prod-hide]` rule at the top of dev-styles.css is
+           what enforces it.
+           ============================================================ -->
+      <section class="dp-ticker" aria-hidden="true">
+        <div class="dp-ticker__row dp-ticker__row--left">
+          <div class="dp-ticker__track">
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-01.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-02.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-03.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-04.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--composite" data-prod-hide>
+              <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
+              <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
+            </div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-05.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-06.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-07.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-01.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-02.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-03.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-04.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--composite" aria-hidden="true" data-prod-hide>
+              <img class="dp-ticker__composite-bg" src="assets/images/ticker/background-1.png" alt="" width="647" height="437" loading="lazy" decoding="async" />
+              <img class="dp-ticker__composite-fg" src="assets/images/ticker/foreground-1.png" alt="" width="692" height="479" loading="lazy" decoding="async" />
+            </div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-05.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-06.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-07.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
           </div>
-
+        </div>
+        <div class="dp-ticker__row dp-ticker__row--right">
+          <div class="dp-ticker__track">
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-08.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-09.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-10.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-11.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-12.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-13.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item"><img src="assets/images/ticker/ticker-14.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--static" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-08.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-09.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-10.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-11.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-12.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-13.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item" aria-hidden="true"><img src="assets/images/ticker/ticker-14.webp" alt="" class="dp-ticker__img" width="640" height="416" loading="lazy" decoding="async" /></div>
+            <div class="dp-ticker__item dp-ticker__item--static" aria-hidden="true" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
+          </div>
         </div>
       </section>
 
@@ -479,31 +552,6 @@
           </blockquote>
         </div>
       </section>
-
-      <!-- ============================================================
-           KAOMOJI STRIP — the one piece of personality, sitting between
-           the teacher testimonials and the closing call to action. Markup and
-           behaviour live in kaomoji-strip.js, shared with index.html and
-           personal.html. This placeholder is REPLACED by the strip, so no
-           wrapper survives in the layout.
-
-           Page order is deliberate: prototype, then proof, then personality,
-           then the ask.
-           ============================================================ -->
-      <div id="kaomoji-mount"></div>
-      <noscript>
-        <section class="dp-strip dp-strip--compact dp-strip--kaomoji" aria-label="Kaomoji.click, featured project">
-          <div class="dp-strip-inner">
-            <div class="dp-strip-content">
-              <span class="dp-strip-emoji" aria-hidden="true">ʕ•ᴥ•ʔ</span>
-              <h2 class="dp-strip-title">There are hundreds of kaomoji.<br>I built a home to find the one you need.</h2>
-            </div>
-            <div class="dp-strip-actions">
-              <a href="https://www.kaomoji.click/" class="dp-btn dp-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Go to Kaomoji.click (opens in new tab)">Go to Kaomoji.click</a>
-            </div>
-          </div>
-        </section>
-      </noscript>
 
       <!-- ============================================================
            CONTACT
@@ -547,24 +595,6 @@
     <script src="assets/js/dev-projects/back-to-top.js"></script>
     <script src="assets/js/dev-projects/effects.js"></script>
 
-    <!-- Live Planner prototype mount, with poster-swap.
-         The poster paints immediately so LCP resolves against a static image
-         rather than a JS-built DOM; it is removed only once initPlanner has
-         actually mounted. On import failure the poster stays put. -->
-    <script type="module">
-      const plannerRoot = document.querySelector('.dp-flagship__widget');
-      if (plannerRoot) {
-        import('./assets/js/dev-projects/planner/planner.js')
-          .then((m) => {
-            m.initPlanner(plannerRoot, { chrome: false });
-            const poster = plannerRoot.querySelector('.dp-flagship__poster');
-            if (poster) poster.remove();
-          })
-          .catch((err) => {
-            console.error('[homepage] Planner failed to mount; poster retained.', err);
-          });
-      }
-    </script>
     <!-- Page view counter -->
     <script type="module">
       import { initPageCounter } from './assets/js/dev-projects/page-counter.js';

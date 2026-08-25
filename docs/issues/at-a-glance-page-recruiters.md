@@ -4,6 +4,16 @@
 **Priority:** normal  
 **Effort:** medium  
 
+> **Homepage v3 note (2026-08-25).** The "Current state" below is stale: the homepage has
+> had no project strips or project grid since 2026-08-24, and as of v3 it is hero, logo bar,
+> testimonials and "Let's talk". That materially changes this issue: the homepage is now
+> much closer to the at-a-glance summary described here (positioning, the 25,000-teacher and
+> 30%-conversion proof, where he has worked, what colleagues say, one CTA), so the open
+> question is arguably whether a *separate* page is still warranted, or whether this is
+> already most of the way built. Edward has also flagged possibly bringing "How I make an
+> impact" (`dev/old-index-2026-08-24.html`, a `.dp-hero-card`) onto the homepage, which
+> would overlap this issue further.
+
 ---
 
 ## TL;DR

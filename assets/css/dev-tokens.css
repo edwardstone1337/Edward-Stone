@@ -423,7 +423,14 @@
 
   /* Accent / brand */
   --dp-accent: var(--dp-raw-brand-on-light);
-  --dp-accent-hover: var(--dp-raw-grey-800);
+  /* Deepened brand blue, not grey-800. This token's only consumer is
+     --dp-btn-hover-bg-primary, and so the only thing it paints is
+     .dp-btn-primary:hover — which meant every primary button on every public
+     page turned near-black (#18181B) when hovered, having started brand blue.
+     --dp-raw-brand-deep keeps the hover on-brand and improves contrast on the
+     way: white on #004C99 is 8.42:1 against 5.57:1 on the resting #0066CC, so
+     the hover state moves from AA-only to AAA rather than degrading. */
+  --dp-accent-hover: var(--dp-raw-brand-deep);
   /* Hardcoded RGB of brand primitive — update when brand colour changes */
   --dp-accent-glow: rgba(0, 102, 204, 0.06);
   --dp-brand-on-brand: var(--dp-on-dark-text-primary);

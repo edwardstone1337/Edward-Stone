@@ -12,6 +12,11 @@
 > every text pairing clears WCAG AAA. The hardcoded `#141414` / `#5a5a5a` noted
 > below are gone — the media frame inherits from tokens. Kept for the record.
 
+> **Homepage v3 note (2026-08-25).** The resolution above still stands, but the strip's
+> home changed: it left `index.html` and now lives only on `personal.html`. Anything
+> revisiting the strip's theme should look there. The `postMessage` `kaomoji-copy` receiver
+> that swaps the cursor-chat wording moved with it.
+
 ---
 
 ## TL;DR

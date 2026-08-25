@@ -15,6 +15,15 @@
 > is not carried into v2 at all, so if v2 graduates, "toolbox" goes from a hidden-on-prod
 > section to a fully removed one.
 
+> **Homepage v3 note (2026-08-25).** The testimonials answer above survives, with one
+> change: they are no longer *directly* below the hero. `index.html` is now hero, logo
+> bar, testimonials, "Let's talk", so the logo bar sits between the hero and them. The
+> testimonials keep their v2 design pass (serif italic quote voice, full page measure) and
+> are now the page's only quoted voice, since the floating teacher quotes left with the
+> Planner prototype. Option A (toolbox) is settled as **not happening**: it was absent from
+> v2 and is absent from v3, so the class is fully removed rather than hidden on prod. See
+> `docs/superpowers/specs/2026-08-25-homepage-v3-design.md`.
+
 ---
 
 ## TL;DR

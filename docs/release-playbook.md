@@ -109,23 +109,44 @@ git reset --hard <previous-commit> && git push --force origin main
 
 ## Currently Gated Features
 
+**`data-prod-hide` is used in exactly one place**: the four playful tiles in the
+homepage work ticker (the "so pretty!" chalkboard and the brushed "COOL HUH"
+composite, each appearing twice because both ticker rows duplicate their items
+to loop seamlessly). The 2026-08-24 redesign removed every other use; the ticker
+brought this one back on 2026-08-25. The `.is-prod [data-prod-hide]` rule at the
+top of `dev-styles.css` is what enforces it, so that rule is load-bearing again
+and must not be pruned as dead CSS.
+
+The old homepage gating table (toolbox, Fair Share / Flip 7 / SCP Reader strips)
+is gone with those sections; see `dev/old-index-2026-08-24.html` and
+`CHANGELOG.md`.
+
 | Feature | Gate method | File |
 |---|---|---|
-| Toolbox section | `data-prod-hide` | `index.html` |
-| Fair Share strip + testimonial | `data-prod-hide` | `index.html` |
-| Flip 7 strip | `data-prod-hide` | `index.html` |
-| SCP Reader strip + testimonial | `data-prod-hide` | `index.html` |
-| Kaomoji strip | `data-prod-hide` | `index.html` |
-| Ticker composite items (×2) | `data-prod-hide` | `index.html` |
-| Ticker static items (×2) | `data-prod-hide` | `index.html` |
+| Ticker doodle tiles (×4) | `data-prod-hide` | `index.html` |
 | Projects nav dropdown | `prodHide: true` | `nav-component.js` |
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
+| Snake game | `!isProd` before `import()` | `nav-component.js` |
 | Banner ticker init | `isProd` check | 8 HTML files |
 | Planner prototype page | inline redirect to `/404.html` | `projects/planner.html` |
 | Prang Out prototype page | inline redirect to `/404.html` | `projects/prang-out.html` |
 
-The homepage's live Planner embed (`.dp-case-promo__widget`) is **not** gated — it ships on prod. Its `assets/images/planner.png` screenshot is a `<noscript>` fallback now, not a prod stand-in, so don't re-add `data-prod-hide` to the widget expecting the image to take over.
+`Personal` is **not** gated as of homepage v3 (2026-08-25): the kaomoji strip
+moved there from the homepage, so the page needs a route in. Prod nav is Case
+Studies, Personal, Resume.
+
+The live Planner embed is **not** gated either — it ships on prod. It moved from
+the homepage to `case-studies/planner.html` in v3 and now mounts into
+`.dp-cs-prototype` (the older `.dp-case-promo__widget` and v2's
+`.dp-flagship__widget` are both gone). Its `assets/images/planner.png` screenshot
+is a first-paint poster removed on successful mount, not a prod stand-in, so
+don't gate the widget expecting the image to take over.
+
+`assets/js/env.js` honours `data-prod-hide` via the `.is-prod` CSS rule. Use
+`?prod=1` on localhost to check what production actually shows before releasing;
+`?prod=0` clears it (it persists in `localStorage`, so clear it or a later dev
+session will still look like prod).
 
 ## Third-Party Scripts
 

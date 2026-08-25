@@ -15,6 +15,12 @@
 > banner explaining it. If v2 graduates to `index.html`, this issue's "give every project its
 > own strip" direction is superseded, not just parked.
 
+> **Homepage v3 note (2026-08-25).** Completes the direction the v2 note describes: the
+> kaomoji strip, the last one standing, left `index.html` for `personal.html`. No product
+> strip appears on the homepage at all now. If "give every project its own strip" is ever
+> revived, `personal.html` is the page to build it on, and that page is explicitly expected
+> to grow over time.
+
 ---
 
 ## Current State
