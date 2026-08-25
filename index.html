@@ -84,8 +84,32 @@
         font-weight: var(--dp-weight-bold);
         line-height: 1.2;
         color: var(--dp-text-primary);
-        text-wrap: balance;
         margin: var(--dp-space-4) 0 0;
+      }
+
+      /* Three deliberate lines rather than one balanced paragraph. Reuses the
+         .dp-hero-line / .dp-hero-accent vocabulary from dev-styles.css, which
+         scopes those to .dp-hero-heading; this headline is .dp-flagship__headline,
+         so the pattern is mirrored here rather than inherited.
+
+         display: block makes the line count deterministic at every width. The
+         previous `text-wrap: balance` on the h1 let the browser choose the break
+         points, which is exactly the "weird reflow on tablet" risk: at some
+         widths "I lead design" would have been split across lines, breaking the
+         brand-coloured phrase in half. Each line now wraps only within itself,
+         and only if genuinely too narrow to fit. balance is kept per line so a
+         line that does wrap breaks evenly rather than leaving one orphan word. */
+      .dp-flagship__headline .dp-hero-line {
+        display: block;
+        text-wrap: balance;
+      }
+
+      /* #0066CC on white is 5.57:1. That is under the AAA 7:1 bar for normal
+         text, which is why --dp-raw-brand is flagged elsewhere in this repo, but
+         this headline is 28px minimum and bold, so it is WCAG large text and the
+         bar is 4.5:1. Passes with room. Do not reuse this colour for body copy. */
+      .dp-flagship__headline .dp-hero-accent {
+        color: var(--dp-brand-text);
       }
 
       .dp-flagship__standfirst {
@@ -289,11 +313,14 @@
             <img src="assets/images/profile.png" alt="Edward Stone" class="dp-hero-avatar" width="96" height="96" />
           </div>
           <span class="dp-overline">Edward Stone · Lead Product Designer</span>
-          <h1 class="dp-flagship__headline">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">👋</span> I lead design on products people rely&nbsp;on.</h1>
+          <h1 class="dp-flagship__headline">
+            <span class="dp-hero-line">Hi, I'm Edward <span class="dp-hero-wave" aria-hidden="true">🙌</span></span>
+            <span class="dp-hero-line dp-hero-accent">I lead design</span>
+            <span class="dp-hero-line">on products people rely&nbsp;on.</span>
+          </h1>
           <p class="dp-flagship__standfirst">One is used by 25,000 teachers every week, and lifted free-to-paid conversion by&nbsp;30%.</p>
           <div class="dp-flagship__actions">
             <a href="/case-studies/planner.html" class="dp-btn dp-btn-primary">Read the case study</a>
-            <a href="mailto:edwardstone1337@gmail.com" class="dp-btn dp-btn-secondary-on-light">Get in touch</a>
           </div>
         </div>
 
@@ -487,7 +514,6 @@
             <div class="dp-ticker__item dp-ticker__item--static" aria-hidden="true" data-prod-hide><img class="dp-ticker__img" src="assets/images/ticker/ticker-pretty.png" alt="" width="640" height="416" loading="lazy" decoding="async" /></div>
           </div>
         </div>
-        <p class="dp-ticker-caption">All design work shown here is my own, including graphic treatments on photography.</p>
       </section>
 
       <!-- ============================================================
