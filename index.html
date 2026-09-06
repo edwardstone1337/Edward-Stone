@@ -128,12 +128,14 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: var(--dp-space-3);
-        /* 48px, not 24px. Originally clearance for the snail that lapped this
-           button; the snail has since moved to the Planner case study, but the
-           looser spacing was kept because it suits the page's floatier vertical
-           rhythm and the hero reads better with the CTA given room. Safe to
-           tighten back to --dp-space-6 if the hero ever feels too airy. */
-        margin-top: var(--dp-space-12);
+        /* 24px. Was 48px, originally clearance for the snail that lapped this
+           button; the snail moved to the Planner case study and the loose
+           spacing outlived its reason, leaving the CTA floating away from the
+           copy it belongs to. Tightened to the value the previous comment
+           already nominated. Sits one step above the 16px that separates the
+           headline and standfirst, so the CTA still reads as a distinct beat
+           after the text rather than a third line of it. */
+        margin-top: var(--dp-space-6);
       }
 
       /* Testimonials are capped at --dp-testimonial-track-max-width (960px)
