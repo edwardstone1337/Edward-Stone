@@ -144,7 +144,7 @@ Single-page bespoke layout is intentionally left out — the resume page interna
 | `.dp-hero`, `-heading`, `-line`, `-accent`, `-body` | ~1107 | Standard page-top hero (overline + heading + intro paragraph) used on the homepage and every case study / project page. Not the homepage's split hero — that's `.dp-hero--split` (excluded, index-only) |
 | `.dp-overline` | ~93 | Small uppercase eyebrow label, typically sits above a hero heading or section title |
 | `.dp-contact-cta`, `__heading`, `__body`, `__actions` | ~2332 | "Let's talk" closing CTA block. Hard-coded on the homepage, injected via `initContactCta()` on resume and all 4 case studies + Prang Out |
-| `.dp-read-more`, `__heading`, `__list`, `__link` | ~2229 | "Read more" related-links list at the end of a case study. Injected by `case-study-read-more.js` on all 4 case studies + Prang Out |
+| `.dp-read-more`, `__heading`, `__list`, `__link` | ~2229 | "Read more" related-links list at the end of a case study. Injected by `case-study-read-more.js` on all 4 case studies + Prang Out. **Non-prod only** as of 2026-09-06 — the module returns early on prod, so these rules paint nothing on the live site. Live CSS, not dead: keep it, the gate is expected to lift |
 | `.dp-prose`, `-section`, `-layout` | ~2475 | Long-form article wrapper for case-study body copy (headings/paragraphs/lists styled via bare-tag selectors inside `.dp-prose`) |
 | `.dp-prose-image`, `-figure`, `-figure--wide`, `-figure--full`, `-caption` | ~2531 | Captioned image inside a case-study article, with wide/full-bleed size variants |
 | `.dp-pullquote` | ~2437 | Large blockquote-style pullquote inside case-study prose |

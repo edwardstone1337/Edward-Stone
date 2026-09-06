@@ -39,6 +39,11 @@ const NAV_LINKS = [
 ];
 ```
 
+**Prod substitution (2026-09-06).** On prod the first entry is not the dropdown at all: it is replaced by a flat `{ text: 'Case Study', href: '/case-studies/planner.html' }` while the site leads with one case study. The featured entry is resolved out of `CASE_STUDIES` by matching `FEATURED_CASE_STUDY_HREF` rather than taking `CASE_STUDIES[0]`, so reordering the array cannot silently change what prod points at, and it falls back to the full dropdown if that href ever stops matching an entry. Two knock-on effects worth knowing:
+
+- On prod no `NAV_LINKS` entry has `children`, so `hasChildGroups` is false and the drawer renders **no** "More" heading — the flat-link heading logic below is dormant there. The prod drawer is just `Case Study` and `Resume`, unheaded. The logic still governs the non-prod drawer, which has both dropdowns.
+- The `min-width: 400px` on the dropdown panel (see the CSS table) is likewise non-prod-only now, since prod renders no panel.
+
 The `Case Studies` children come from `CASE_STUDIES` in `case-study-data.js` (imported, not inlined, in the real file — reproduced above for reference). `Prang Out` is a real nav entry despite redirecting to `/404.html` on prod via its own inline gate (see `CLAUDE.md`'s Page Inventory) — the link itself carries no `prodHide`, only `Projects` as a whole does.
 
 - **Top-level items with `href`** render as direct links
@@ -60,8 +65,8 @@ This is why `Personal` sits **after both dropdowns** (`Case Studies`, `Projects`
 On production (`is-prod`), only items without `prodHide: true` are rendered:
 
 ```
-[ Logo  Edward Stone ]    [ Case Studies ▾ ] [ Personal ] [ Resume ]    [ actions: hamburger hidden ]
-        brand                       links (centre)                          #dp-nav-actions
+[ Logo  Edward Stone ]    [ Case Study ] [ Resume ]    [ actions: hamburger hidden ]
+        brand                    links (centre)                #dp-nav-actions
 ```
 
 On non-production hostnames, all items are rendered:

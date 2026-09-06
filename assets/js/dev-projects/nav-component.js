@@ -15,11 +15,25 @@ import { CASE_STUDIES } from './case-study-data.js';
 
 const isProd = document.documentElement.classList.contains('is-prod');
 
+/* The one case study the site leads with on prod. Looked up by href rather
+   than taken as CASE_STUDIES[0], so reordering the array cannot silently
+   change which case study prod points at. */
+const FEATURED_CASE_STUDY_HREF = '/case-studies/planner.html';
+const FEATURED_CASE_STUDY = CASE_STUDIES.find(function (item) {
+  return item.href === FEATURED_CASE_STUDY_HREF;
+});
+
 /** Nav link definitions — add new links here */
 const NAV_LINKS = [
-  // Stays visible on prod: homepage v2 links only Planner, so this is the
-  // only route into Product Discovery, Design Systems and Fair Share.
-  { text: 'Case Studies', children: CASE_STUDIES },
+  // Prod shows a single link straight to Planner rather than the four-item
+  // dropdown: the site is deliberately leading with one case study for now.
+  // Off prod the full dropdown stays, so the other three are still one click
+  // away while they are worked on. Falls back to the dropdown if the featured
+  // href ever stops matching an entry, so a renamed file degrades to "all four
+  // reachable" rather than to a nav item pointing at nothing.
+  (isProd && FEATURED_CASE_STUDY)
+    ? { text: 'Case Study', href: FEATURED_CASE_STUDY.href }
+    : { text: 'Case Studies', children: CASE_STUDIES },
   { text: 'Projects', prodHide: true, children: [
     { text: 'SCP Reader', href: '/projects/scp-reader.html' },
     { text: 'Prang Out', href: '/projects/prang-out.html' }
