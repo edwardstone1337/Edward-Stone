@@ -124,7 +124,10 @@ is gone with those sections; see `dev/old-index-2026-08-24.html` and
 | Feature | Gate method | File |
 |---|---|---|
 | Ticker doodle tiles (×4) | `data-prod-hide` | `index.html` |
+| Case Studies nav dropdown | replaced by a flat `Case Study` link when `isProd` | `nav-component.js` |
+| "Read another case study" section | `is-prod` check, placeholder removed | `case-study-read-more.js` |
 | Projects nav dropdown | `prodHide: true` | `nav-component.js` |
+| Personal nav link | `prodHide: true` | `nav-component.js` |
 | Gallery nav link | `prodHide: true` | `nav-component.js` |
 | About nav link | `prodHide: true` | `nav-component.js` |
 | Snake game | `!isProd` before `import()` | `nav-component.js` |
@@ -132,9 +135,18 @@ is gone with those sections; see `dev/old-index-2026-08-24.html` and
 | Planner prototype page | inline redirect to `/404.html` | `projects/planner.html` |
 | Prang Out prototype page | inline redirect to `/404.html` | `projects/prang-out.html` |
 
-`Personal` is **not** gated as of homepage v3 (2026-08-25): the kaomoji strip
-moved there from the homepage, so the page needs a route in. Prod nav is Case
-Studies, Personal, Resume.
+`Personal` was ungated in homepage v3 (2026-08-25) because the kaomoji strip
+moved there from the homepage, then re-gated on 2026-09-06 when the site
+narrowed to a single case study. Prod nav is now just **Case Study** (a flat
+link to `case-studies/planner.html`, not a dropdown) and **Resume**.
+
+That same change suppressed the "Read another case study" section on prod. The
+two go together: the nav stopped offering the other three case studies, so the
+cross-links at the foot of each page would have reopened exactly the routes the
+nav had just closed. Both are prod-gated rather than deleted, so off prod the
+full dropdown and the full read-more list still render. The other three case
+studies are **unlinked on prod, not unpublished** — still live, still indexable,
+still in `sitemap.xml`. Reversing this is two gates, not a rebuild.
 
 The live Planner embed is **not** gated either — it ships on prod. It moved from
 the homepage to `case-studies/planner.html` in v3 and now mounts into

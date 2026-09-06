@@ -20,6 +20,20 @@
 > study would surface, via `CASE_STUDIES` in `case-study-data.js`. Homepage placement is no
 > longer an option to plan around.
 
+> **Single-case-study note (2026-09-06).** The v3 addendum above ends by saying a new AI case
+> study would surface through the Case Studies nav dropdown. On prod that dropdown no longer
+> exists: the nav is a single flat "Case Study" link straight to Planner, and the "Read another
+> case study" cross-links at the foot of each case study are suppressed on prod too. The site is
+> deliberately leading with one case study for now. So on prod there is currently **no route at
+> all** to a case study other than Planner, dropdown included, and adding an entry to
+> `CASE_STUDIES` would surface it off prod only.
+>
+> This does not block the issue, it changes the last step: shipping an AI case study now needs a
+> decision about prod exposure alongside it, either widening the nav back to a dropdown or
+> promoting the new study into the single featured slot (`FEATURED_CASE_STUDY_HREF` in
+> `nav-component.js`). Note the existing case studies were not unpublished by that change, only
+> unlinked, so "add the page, decide its route later" remains viable.
+
 ---
 
 ## TL;DR

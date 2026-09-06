@@ -103,6 +103,12 @@ Both CTAs stay. "Read the case study" → `/case-studies/planner.html` is now th
 only link to Edward's work in the page body; everything else routes through the
 Case Studies nav dropdown. This is deliberate and confirmed.
 
+> **Superseded on prod (2026-09-06).** "Everything else routes through the Case
+> Studies nav dropdown" no longer holds on prod: the dropdown is replaced there by
+> a flat `Case Study` link to Planner, and the read-more cross-links are suppressed
+> too. The sentence still describes the non-prod site. Recorded here rather than
+> edited away, since this document is the v3 decision log.
+
 ### Added
 
 The logo bar, restored from `dev/old-index-2026-08-24.html:194`. Its
